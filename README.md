@@ -17,7 +17,7 @@
 >
 > **如果已经是最新版本的`gsuid_core`, 可以直接对bot发送`core安装插件pokemon`，然后重启core以应用安装**
 >
-> <del>如使用命令缺失素材可尝试使用命令`poke下载全部资源`</del>还没写，可以先进群下载资源包
+> <del>如使用命令缺失素材可尝试使用命令`pm下载全部资源`</del>还没写，可以先进群下载资源包
 >
 > 支持NoneBot2 & HoshinoBot & ZeroBot & YunzaiBot的宝可梦小游戏插件
 >
