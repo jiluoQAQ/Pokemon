@@ -1,7 +1,7 @@
 # Pokemon
 
 <p align="center">
-  <a href="https://github.com/qwerdvd/StarRailUID"><img src="https://s2.loli.net/2023/04/30/kvZgaVLo5fATI6h.png" width="256" height="256" alt="StarRailUID"></a>
+  <a href="https://github.com/jiluoQAQ/pokemon"><img src="https://s2.loli.net/2023/11/03/mW1ykVxItGRSqjN.png" width="256" height="256" alt="pokemon"></a>
 </p>
 <h1 align = "center">Pokemon 0.2</h1>
 <h4 align = "center">🚧支持OneBot(QQ)、QQ频道、微信、开黑啦、Telegram的全功能宝可梦小游戏插件🚧</h4>
