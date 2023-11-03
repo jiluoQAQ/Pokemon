@@ -126,7 +126,7 @@ def get_win_pic(name, enname):
     return base64_str
     
 
-@sv_pokemon_whois.on_fullmatch('pm我是谁')
+@sv_pokemon_whois.on_fullmatch('我是谁')
 async def pokemon_whois(bot: Bot, ev: Event):
     if winner_judger.get_on_off_status(ev.group_id):
         await bot.send("此轮游戏还没结束，请勿重复使用指令")
