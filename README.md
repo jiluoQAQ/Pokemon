@@ -34,4 +34,4 @@
 ## 丨其他
 
 + 本项目仅供学习使用，请勿用于商业用途
-+ [GPL-3.0 License](https://github.com/jluoQAQ/pokemon/tree/main/LICENSE)
++ [GPL-3.0 License](https://github.com/jiluoQAQ/pokemon/blob/main/LICENSE)
