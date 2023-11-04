@@ -77,7 +77,7 @@ async def get_fight_poke_xl(bot, ev: Event):
             myinfo.append(POKEMON_LIST[bianhao1][7])
             myinfo.append(mypokemon_info[0])
             myshux = []
-            myshux = get_pokemon_shuxing(gid,uid,bianhao1,mypokemon_info)
+            myshux = get_pokemon_shuxing(bianhao1,mypokemon_info)
             for shuzhimy in myshux:
                 myinfo.append(shuzhimy)
             for num in range(1,9):
@@ -92,7 +92,7 @@ async def get_fight_poke_xl(bot, ev: Event):
             #等级
             diinfo.append(dipokemon_info[0])
             dishux = []
-            dishux = get_pokemon_shuxing(gid,uid,bianhao2,dipokemon_info)
+            dishux = get_pokemon_shuxing(bianhao2,dipokemon_info)
 
             #属性值HP,ATK,DEF,SP.ATK,SP.DEF,SPD
             for shuzhidi in dishux:
@@ -152,8 +152,8 @@ async def get_fight_poke_info(bot, ev: Event):
         zhuangtai2 = "无"
     gid = ev.group_id
     uid = ev.user_id
-    mypokemon_info = get_pokeon_info_sj(gid,uid,bianhao1)
-    dipokemon_info = get_pokeon_info_sj(gid,uid,bianhao2)
+    mypokemon_info = get_pokeon_info_sj(bianhao1)
+    dipokemon_info = get_pokeon_info_sj(bianhao2)
     myinfo = []
     diinfo = []
     
@@ -169,8 +169,8 @@ async def get_fight_poke_info(bot, ev: Event):
     
     myshux = []
     dishux = []
-    myshux = get_pokemon_shuxing(gid,uid,bianhao1,mypokemon_info)
-    dishux = get_pokemon_shuxing(gid,uid,bianhao2,dipokemon_info)
+    myshux = get_pokemon_shuxing(bianhao1,mypokemon_info)
+    dishux = get_pokemon_shuxing(bianhao2,dipokemon_info)
     
     #属性值HP,ATK,DEF,SP.ATK,SP.DEF,SPD
     for shuzhimy in myshux:
@@ -238,8 +238,8 @@ async def get_jn_poke_info(bot, ev: Event):
     if jinenginfo2[6] == '':
         await bot.send(f'{jineng2}的技能效果在写了在写了(新建文件夹)。', at_sender=True)
         return
-    mypokemon_info = get_pokeon_info_sj(gid,uid,bianhao1)
-    dipokemon_info = get_pokeon_info_sj(gid,uid,bianhao2)
+    mypokemon_info = get_pokeon_info_sj(bianhao1)
+    dipokemon_info = get_pokeon_info_sj(bianhao2)
     myinfo = []
     diinfo = []
     
@@ -255,8 +255,8 @@ async def get_jn_poke_info(bot, ev: Event):
     
     myshux = []
     dishux = []
-    myshux = get_pokemon_shuxing(gid,uid,bianhao1,mypokemon_info)
-    dishux = get_pokemon_shuxing(gid,uid,bianhao2,dipokemon_info)
+    myshux = get_pokemon_shuxing(bianhao1,mypokemon_info)
+    dishux = get_pokemon_shuxing(bianhao2,dipokemon_info)
     
     #属性值HP,ATK,DEF,SP.ATK,SP.DEF,SPD
     for shuzhimy in myshux:
@@ -296,7 +296,7 @@ async def get_aj_poke_info(bot, ev: Event):
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
     pokemon_info = get_pokeon_info_sj(gid,uid,bianhao)
-    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(gid,uid,bianhao,pokemon_info)
+    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
     img = await convert_img(img)
     mes = []
@@ -337,7 +337,7 @@ async def get_my_poke_info(bot, ev: Event):
     pokemon_info = get_pokeon_info(gid,uid,bianhao)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
-    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(gid,uid,bianhao,pokemon_info)
+    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
     img = await convert_img(img)
     mes = []
@@ -380,7 +380,7 @@ async def get_chushi_pokemon(bot, ev: Event):
     if bianhao not in chushi_list:
         return await bot.send(f'{POKEMON_LIST[bianhao][0]}不属于初始精灵，无法领取。', at_sender=True)
     pokemon_info = add_pokemon(gid,uid,bianhao)
-    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(gid,uid,bianhao,pokemon_info)
+    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     picfile = os.path.join(FILE_PATH, 'icon', f'{POKEMON_LIST[bianhao][0]}.png')
     mes = []
     mes.append(MessageSegment.text(f"恭喜！您领取到了初始精灵\n"))

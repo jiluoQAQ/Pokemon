@@ -12,6 +12,9 @@ import json
 from .pokemon import *
 from .PokeCounter import *
 from .until import *
+from gsuid_core.utils.image.convert import convert_img
+from gsuid_core.segment import MessageSegment
+from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 
 FILE_PATH = os.path.dirname(__file__)
 
@@ -40,6 +43,16 @@ youxian = ['电光一闪','音速拳','神速','真空波','子弹拳','冰砾',
 list_xingge = ['实干','孤僻','勇敢','固执','调皮','大胆','坦率','悠闲','淘气','无虑','胆小','急躁','认真','天真','保守','稳重','冷静','害羞','马虎','沉着','温顺','狂妄','慎重','浮躁']
 #初始精灵列表
 chushi_list = [1,4,7,152,155,158,252,255,258,387,390,393,495,498,501,650,653,656,810,813,816]
+#种族值对照表
+zhongzu_list = {
+    0:['HP','生命'],
+    1:['ATK','攻击'],
+    2:['DEF','防御'],
+    3:['STK','特攻'],
+    4:['SEF','特防'],
+    5:['SPD','速度'],
+}
+
 #生成精灵初始技能
 def add_new_pokemon_jineng(level,bianhao):
     jinenglist = get_level_jineng(level,bianhao)
@@ -90,9 +103,8 @@ def add_pokemon(gid,uid,bianhao):
     return pokemon_info
 
 #获取宝可梦，随机个体，随机努力，测试用
-def get_pokeon_info_sj(gid,uid,bianhao):
+def get_pokeon_info_sj(bianhao,level = 100):
     pokemon_info = []
-    level = 100
     pokemon_info.append(level)
     gt_hp = int(math.floor(random.uniform(1,32)))
     
@@ -137,7 +149,7 @@ def get_pokeon_info(gid,uid,bianhao):
     return pokemon_info
 
 #计算宝可梦属性
-def get_pokemon_shuxing(gid,uid,bianhao,pokemon_info):
+def get_pokemon_shuxing(bianhao,pokemon_info):
     zhongzu_info = POKEMON_LIST[bianhao]
     xingge_info = XINGGE_LIST[pokemon_info[13]]
     #print(xingge_info)
@@ -512,3 +524,121 @@ def get_pokemon_name_list(pokemon_list):
         name_str += CHARA_NAME[pokemonid][0]
     return name_str
 
+def new_pokemon_info(pokemonid, pokemon_info):
+    pokemoninfo = []
+    pokemoninfo.append(POKEMON_LIST[pokemonid][0])
+    pokemoninfo.append(POKEMON_LIST[pokemonid][7])
+    pokemoninfo.append(pokemon_info[0])
+    pokemonshux = []
+    pokemonshux = get_pokemon_shuxing(pokemonid,pokemon_info)
+    for shuzhi in pokemonshux:
+        pokemoninfo.append(shuzhi)
+    for num in range(1,9):
+        pokemoninfo.append(0)
+    pokemoninfo.append(pokemonshux[0])
+    return pokemoninfo
+
+def get_nl_info(gid, uid, pokemon_info, zhongzhuid, nl_num):
+    nl_z = pokemon_info[7] + pokemon_info[8] + pokemon_info[9] + pokemon_info[10] + pokemon_info[11] + pokemon_info[12]
+    if nl_z >= 510:
+        mes = ''
+        return mes,pokemon_info
+    nl_index = zhongzhuid + 7
+    change_nl = min(255, nl_num + pokemon_info[nl_index])
+    if change_nl > pokemon_info[nl_index]:
+        change_nl_num = change_nl - pokemon_info[nl_index]
+        pokemon_info[nl_index] = change_nl
+        mes = f'获得了{zhongzu_list[zhongzhuid][1]}努力值{change_nl_num}\n'
+        return mes,pokemon_info
+    else:
+        mes = ''
+        return mes,pokemon_info
+
+def get_win_reward(gid, uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
+    mes = ''
+    zhongzu = POKEMON_LIST[pokemonid]
+    zhongzu_info = []
+    for item in [1,2,3,4,5,6]:
+        zhongzu_info.append(int(zhongzu[item]))
+    zhongzu_num = 0
+    max_zhongzu = 0
+    max_zhongzuid = 0
+    for index, num in enumerate(zhongzu_info):
+        if int(num) >= int(max_zhongzu):
+            max_zhongzu = int(num)
+            max_zhongzuid = index
+        zhongzu_num += int(num)
+    # 获得经验值
+    get_exp = (zhongzu_num * level/10) * 0.5
+    mes = f'{myinfo[0]}获得了经验{get_exp}\n'
+    #获得努力值
+    nl_num = 0
+    if max_zhongzu >= 30:
+        nl_num += 1
+    if max_zhongzu >= 50:
+        nl_num += 1
+    if max_zhongzu >= 100:
+        nl_num += 1
+    mesg,pokemon_info = get_nl_info(gid, uid, pokemon_info, max_zhongzuid, nl_num)
+    if mesg:
+        mes += mesg
+    newinfo = new_pokemon_info(mypokemonid, pokemon_info)
+    newinfo[17] = myinfo[17]
+    return mes,newinfo
+
+async def fight_yw_ys(gid,uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
+    myzhuangtai = [['无', 0],['无', 0]]
+    dizhuangtai = [['无', 0],['无', 0]]
+    changdi = [['无天气', 99],['', 0]]
+    mesg = []
+    changci = 1
+    myinfo = []
+    diinfo = []
+    while len(mypokelist) > 0 and len(dipokelist) > 0:
+        # mes = f'第{changci}场\n'
+        # mesg.append(MessageSegment.text(mes))
+        changci += 1
+        if len(myinfo) == 0:
+            bianhao1 = random.sample(mypokelist, 1)[0]
+            mypokemon_info = get_pokeon_info_sj(bianhao1,100)
+            myinfo = new_pokemon_info(bianhao1, mypokemon_info)
+        if len(diinfo) == 0:
+            bianhao2 = random.sample(dipokelist, 1)[0]
+            dilevel = int(math.floor(random.uniform(minlevel,maxlevel)))
+            dipokemon_info = get_pokeon_info_sj(bianhao2,dilevel)
+            diinfo = new_pokemon_info(bianhao2, dipokemon_info)
+        if myinfo[3] == myinfo[17]:
+            mes = f'我方派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}'
+            mesg.append(MessageSegment.text(mes))
+            img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
+            img = await convert_img(img)
+            mesg.append(MessageSegment.image(img))
+        if diinfo[3] == diinfo[17]:
+            if ys == 1:
+                mes = f'野生精灵出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}'
+            else:
+                mes = f'敌方派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}'
+            mesg.append(MessageSegment.text(mes))
+            img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
+            img = await convert_img(img)
+            mesg.append(MessageSegment.image(img))
+        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info)
+        mesg.append(MessageSegment.text(mes))
+        if myinfo[17] == 0:
+            myinfo = []
+            myzhuangtai = [['无', 0],['无', 0]]
+            mypokelist.remove(bianhao1)
+            mes = f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            mesg.append(MessageSegment.text(mes))
+        if diinfo[17] == 0:
+            diinfo = []
+            dizhuangtai = [['无', 0],['无', 0]]
+            dipokelist.remove(bianhao2)
+            mes = f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
+            mesg.append(MessageSegment.text(mes))
+            # 我方获得经验/努力值奖励
+            mes,myinfo = get_win_reward(gid, uid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
+            mesg.append(MessageSegment.text(mes))
+    return mesg,mypokelist,dipokelist
+        
+        

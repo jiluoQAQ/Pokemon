@@ -99,7 +99,7 @@ def get_mingzhong(jineng_mz, my_mngzhong, di_shanbi, changdi):
     if changdi[0][0] == '起雾' and int(changdi[0][1]) > 0:
         changdixuzheng = 0.6
     mingzhong = int((jineng_b * xiuzheng * changdixuzheng) / 255)
-    print(mingzhong)
+    # print(mingzhong)
     suiji = int(math.floor(random.uniform(0,100)))
     if suiji <= mingzhong:
         return 1
