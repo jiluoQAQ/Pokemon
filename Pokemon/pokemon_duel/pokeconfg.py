@@ -503,3 +503,12 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
                 changdi[0][1] = shengyutianqi
                 mesg = mesg + f"{changdi[0][0]}持续中\n"
     return mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi
+    
+def get_pokemon_name_list(pokemon_list):
+    name_str = ''
+    for index, pokemonid in enumerate(pokemon_list):
+        if index > 0:
+            name_str += ','
+        name_str += CHARA_NAME[pokemonid][0]
+    return name_str
+
