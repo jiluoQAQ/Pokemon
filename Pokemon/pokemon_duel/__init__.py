@@ -44,7 +44,6 @@ async def pokemon_help(bot, ev: Event):
 
 @sv_pokemon_duel.on_prefix(['训练家战斗测试'])
 async def get_fight_poke_xl(bot, ev: Event):
-    gid = ev.group_id
     uid = ev.user_id
     args = ev.text.split()
     if len(args)<2:
@@ -69,8 +68,8 @@ async def get_fight_poke_xl(bot, ev: Event):
         changci += 1
         bianhao1 = random.sample(mypokelist, 1)[0]
         bianhao2 = random.sample(dipokelist, 1)[0]
-        mypokemon_info = get_pokeon_info_sj(gid,uid,bianhao1)
-        dipokemon_info = get_pokeon_info_sj(gid,uid,bianhao2)
+        mypokemon_info = get_pokeon_info_sj(bianhao1)
+        dipokemon_info = get_pokeon_info_sj(bianhao2)
         if len(myinfo) == 0:
             myinfo = []
             myinfo.append(POKEMON_LIST[bianhao1][0])
@@ -150,7 +149,6 @@ async def get_fight_poke_info(bot, ev: Event):
     else:
         zhuangtai1 = "无"
         zhuangtai2 = "无"
-    gid = ev.group_id
     uid = ev.user_id
     mypokemon_info = get_pokeon_info_sj(bianhao1)
     dipokemon_info = get_pokeon_info_sj(bianhao2)
@@ -228,7 +226,6 @@ async def get_jn_poke_info(bot, ev: Event):
         zhuangtai1 = "无"
         zhuangtai2 = "无"
     
-    gid = ev.group_id
     uid = ev.user_id
     jinenginfo1 = JINENG_LIST[jineng1]
     if jinenginfo1[6] == '':
@@ -290,12 +287,11 @@ async def get_jn_poke_info(bot, ev: Event):
 async def get_aj_poke_info(bot, ev: Event):
     args = ev.text
     pokename = args
-    gid = ev.group_id
     uid = ev.user_id
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = get_pokeon_info_sj(gid,uid,bianhao)
+    pokemon_info = get_pokeon_info_sj(bianhao)
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
     img = await convert_img(img)
@@ -311,10 +307,9 @@ async def get_aj_poke_info(bot, ev: Event):
 
 @sv_pokemon_duel.on_fullmatch(['我的精灵列表'])
 async def my_pokemon_list(bot, ev: Event):
-    gid = ev.group_id
     uid = ev.user_id
     POKE = PokeCounter()
-    mypokelist = POKE._get_pokemon_list(gid,uid)
+    mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 初始精灵列表 开局。', at_sender=True)
     mes = []
@@ -329,12 +324,11 @@ async def get_my_poke_info(bot, ev: Event):
     if len(args)!=1:
         return await bot.send('请输入 我的精灵+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
-    gid = ev.group_id
     uid = ev.user_id
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = get_pokeon_info(gid,uid,bianhao)
+    pokemon_info = get_pokeon_info(uid,bianhao)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
@@ -366,11 +360,10 @@ async def get_chushi_pokemon(bot, ev: Event):
     if len(args)!=1:
         return await bot.finish(ev, '请输入 领取初始精灵+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
-    gid = ev.group_id
     uid = ev.user_id
     
     POKE = PokeCounter()
-    mypokelist = POKE._get_pokemon_list(gid,uid)
+    mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist != 0:
         return await bot.send('您已经有精灵了，无法领取初始精灵。', at_sender=True)
     
@@ -379,7 +372,7 @@ async def get_chushi_pokemon(bot, ev: Event):
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
     if bianhao not in chushi_list:
         return await bot.send(f'{POKEMON_LIST[bianhao][0]}不属于初始精灵，无法领取。', at_sender=True)
-    pokemon_info = add_pokemon(gid,uid,bianhao)
+    pokemon_info = add_pokemon(uid,bianhao)
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     picfile = os.path.join(FILE_PATH, 'icon', f'{POKEMON_LIST[bianhao][0]}.png')
     mes = []
@@ -393,9 +386,8 @@ async def get_chushi_pokemon(bot, ev: Event):
     
 @sv_pokemon_duel.on_fullmatch(['宝可梦重开'])
 async def chongkai_pokemon(bot, ev: Event):
-    gid = ev.group_id
     uid = ev.user_id
-    chongkai(gid,uid)
+    chongkai(uid)
     await bot.send('重开成功，请重新领取初始精灵开局', at_sender=True)
 
 @sv_pokemon_duel.on_prefix(['放生精灵'])
@@ -404,15 +396,14 @@ async def fangsheng_pokemon(bot, ev: Event):
     if len(args)!=1:
         return await bot.send('请输入 放生精灵+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
-    gid = ev.group_id
     uid = ev.user_id
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = get_pokeon_info(gid,uid,bianhao)
+    pokemon_info = get_pokeon_info(uid,bianhao)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
-    fangshen(gid,uid,bianhao)
+    fangshen(uid,bianhao)
     await bot.send(f'放生成功，{POKEMON_LIST[bianhao][0]}离你而去了', at_sender=True)
 
 @sv_pokemon_duel.on_prefix(['学习精灵技能'])
@@ -421,12 +412,11 @@ async def add_pokemon_jineng(bot, ev: Event):
     if len(args)!=2:
         return await bot.send(ev, '请输入 学习精灵技能+宝可梦名称+技能名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
-    gid = ev.group_id
     uid = ev.user_id
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = get_pokeon_info(gid,uid,bianhao)
+    pokemon_info = get_pokeon_info(uid,bianhao)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinengname = args[1]
@@ -440,7 +430,7 @@ async def add_pokemon_jineng(bot, ev: Event):
         return await bot.send(f'学习失败，不存在该技能或该技能无法在当前等级学习(学习机技能请使用技能学习机进行教学)。', at_sender=True)
     jineng = pokemon_info[14] + ',' + jinengname
     POKE = PokeCounter()
-    POKE._add_pokemon_jineng(gid, uid, bianhao, jineng)
+    POKE._add_pokemon_jineng(uid, bianhao, jineng)
     await bot.send(f'恭喜，您的精灵{POKEMON_LIST[bianhao][0]}学会了技能{jinengname}', at_sender=True)
     
 @sv_pokemon_duel.on_prefix(['遗忘精灵技能'])
@@ -449,12 +439,11 @@ async def del_pokemon_jineng(bot, ev: Event):
     if len(args)!=2:
         return await bot.send('请输入 学习精灵技能+宝可梦名称+技能名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
-    gid = ev.group_id
     uid = ev.user_id
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = get_pokeon_info(gid,uid,bianhao)
+    pokemon_info = get_pokeon_info(uid,bianhao)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinengname = args[1]
@@ -470,7 +459,7 @@ async def del_pokemon_jineng(bot, ev: Event):
         jineng = jineng + name
         shul = shul + 1
     POKE = PokeCounter()
-    POKE._add_pokemon_jineng(gid, uid, bianhao, jineng)
+    POKE._add_pokemon_jineng(uid, bianhao, jineng)
     await bot.send(f'成功，您的精灵{POKEMON_LIST[bianhao][0]}遗忘了技能{jinengname}', at_sender=True)
 
 @sv_pokemon_duel.on_prefix(['精灵技能信息'])

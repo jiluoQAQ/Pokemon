@@ -19,8 +19,7 @@ class PokeCounter:
     def _create_table(self):
         try:
             self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_TABLE
-                          (GID             INT    NOT NULL,
-                           UID             INT    NOT NULL,
+                          (UID             INT    NOT NULL,
                            BIANHAO         INT    NOT NULL,
                            LEVEL           INT    NOT NULL,
                            EXP             INT    NOT NULL,
@@ -38,61 +37,61 @@ class PokeCounter:
                            NL_SPD          INT   NOT NULL,
                            XINGGE          TEXT   NOT NULL,
                            JINENG          TEXT   NOT NULL,
-                           PRIMARY KEY(GID,UID,BIANHAO));''')
+                           PRIMARY KEY(UID,BIANHAO));''')
         except:
             raise Exception('创建表发生错误')
     
-    def _add_pokemon_info(self, gid, uid, bianhao, pokemon_info):
+    def _add_pokemon_info(self, uid, bianhao, pokemon_info):
         level, gt_hp, gt_atk, gt_def, gt_stk, gt_sdf, gt_spd, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, xingge, jineng = pokemon_info
         #print(pokemon_info)
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO POKEMON_TABLE (GID,UID,BIANHAO,LEVEL,EXP,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG) \
-                                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (gid, uid, bianhao, level, 0, gt_hp, gt_atk, gt_def, gt_stk, gt_sdf, gt_spd, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, xingge, jineng)
+                    "INSERT OR REPLACE INTO POKEMON_TABLE (UID,BIANHAO,LEVEL,EXP,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG) \
+                                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (uid, bianhao, level, 0, gt_hp, gt_atk, gt_def, gt_stk, gt_sdf, gt_spd, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, xingge, jineng)
                 )
                   
         except:
             raise Exception('更新表发生错误')
             
-    def _add_pokemon_level(self, gid, uid, bianhao, level):
+    def _add_pokemon_level(self, uid, bianhao, level, exp):
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO POKEMON_TABLE (GID,UID,BIANHAO,LEVEL) \
-                                VALUES (?,?,?,?)", (gid, uid, bianhao, level)
+                    "INSERT OR REPLACE INTO POKEMON_TABLE (UID,BIANHAO,LEVEL, EXP) \
+                                VALUES (?,?,?,?)", (uid, bianhao, level, exp)
                 )
                   
         except:
             raise Exception('更新表发生错误')
             
-    def _add_pokemon_nuli(self, gid, uid, bianhao, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd):
+    def _add_pokemon_nuli(self, uid, bianhao, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd):
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO POKEMON_TABLE (GID,UID,BIANHAO,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD) \
-                                VALUES (?,?,?,?,?,?,?,?,?)", (gid, uid, bianhao, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd)
+                    "INSERT OR REPLACE INTO POKEMON_TABLE (UID,BIANHAO,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD) \
+                                VALUES (?,?,?,?,?,?,?,?)", (uid, bianhao, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd)
                 )
                   
         except:
             raise Exception('更新表发生错误')
             
-    def _add_pokemon_jineng(self, gid, uid, bianhao, jineng):
+    def _add_pokemon_jineng(self, uid, bianhao, jineng):
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_TABLE SET JINENG = ? WHERE GID=? AND UID=? AND BIANHAO=?",
-                    (jineng, gid, uid, bianhao),
+                    "UPDATE POKEMON_TABLE SET JINENG = ? WHERE UID=? AND BIANHAO=?",
+                    (jineng, uid, bianhao),
                 )
                   
         except:
             raise Exception('更新表发生错误')
             
-    def _get_pokemon_info(self, gid, uid, bianhao):
+    def _get_pokemon_info(self, uid, bianhao):
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT LEVEL,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG FROM POKEMON_TABLE WHERE GID={gid} AND UID={uid} AND BIANHAO={bianhao}").fetchall()
+                    f"SELECT LEVEL,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG FROM POKEMON_TABLE WHERE UID={uid} AND BIANHAO={bianhao}").fetchall()
                 if r:
                     return r[0]
                 else:
@@ -100,11 +99,11 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
             
-    def _get_pokemon_list(self, gid, uid):
+    def _get_pokemon_list(self, uid):
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT BIANHAO,LEVEL FROM POKEMON_TABLE WHERE GID={gid} AND UID={uid} ORDER BY LEVEL desc LIMIT 20").fetchall()
+                    f"SELECT BIANHAO,LEVEL FROM POKEMON_TABLE WHERE UID={uid} ORDER BY LEVEL desc LIMIT 20").fetchall()
                 if r:
                     return r
                 else:
@@ -112,16 +111,16 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
             
-    def _delete_poke_info(self, gid, uid):
+    def _delete_poke_info(self, uid):
         with self._connect() as conn:
             conn.execute(
-                "DELETE FROM POKEMON_TABLE  WHERE GID=? AND UID=?",
-                (gid, uid),
+                "DELETE FROM POKEMON_TABLE  WHERE UID=?",
+                (uid),
             )
             
-    def _delete_poke_bianhao(self, gid, uid, bianhao):
+    def _delete_poke_bianhao(self, uid, bianhao):
         with self._connect() as conn:
             conn.execute(
-                "DELETE FROM POKEMON_TABLE  WHERE GID=? AND UID=? AND BIANHAO=?",
-                (gid, uid, bianhao),
+                "DELETE FROM POKEMON_TABLE  WHERE UID=? AND BIANHAO=?",
+                (uid, bianhao),
             )

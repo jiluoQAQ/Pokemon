@@ -78,7 +78,7 @@ def get_level_jineng(level,bianhao):
     return kexuelist
 
 #添加宝可梦，随机生成个体值
-def add_pokemon(gid,uid,bianhao):
+def add_pokemon(uid,bianhao):
     POKE = PokeCounter()
     pokemon_info = []
     level = 5
@@ -99,7 +99,7 @@ def add_pokemon(gid,uid,bianhao):
         jineng = jineng + jinengname
         shul = shul + 1
     pokemon_info.append(jineng)
-    POKE._add_pokemon_info(gid,uid,bianhao,pokemon_info)
+    POKE._add_pokemon_info(uid,bianhao,pokemon_info)
     return pokemon_info
 
 #获取宝可梦，随机个体，随机努力，测试用
@@ -143,9 +143,9 @@ def get_pokeon_info_sj(bianhao,level = 100):
     return pokemon_info
 
 #获取宝可梦信息
-def get_pokeon_info(gid,uid,bianhao):
+def get_pokeon_info(uid,bianhao):
     POKE = PokeCounter()
-    pokemon_info = POKE._get_pokemon_info(gid,uid,bianhao)
+    pokemon_info = POKE._get_pokemon_info(uid,bianhao)
     return pokemon_info
 
 #计算宝可梦属性
@@ -163,14 +163,14 @@ def get_pokemon_shuxing(bianhao,pokemon_info):
     return HP,W_atk,W_def,M_atk,M_def,speed
     
 #重开，清除宝可梦列表个人信息
-def chongkai(gid,uid):
+def chongkai(uid):
     POKE = PokeCounter()
-    POKE._delete_poke_info(gid,uid)
+    POKE._delete_poke_info(uid)
 
 #放生
-def fangshen(gid,uid,bianhao):
+def fangshen(uid,bianhao):
     POKE = PokeCounter()
-    POKE._delete_poke_bianhao(gid,uid,bianhao)
+    POKE._delete_poke_bianhao(uid,bianhao)
     
 # 技能使用ai
 def now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi):
@@ -538,7 +538,7 @@ def new_pokemon_info(pokemonid, pokemon_info):
     pokemoninfo.append(pokemonshux[0])
     return pokemoninfo
 
-def get_nl_info(gid, uid, pokemon_info, zhongzhuid, nl_num):
+def get_nl_info(uid, pokemon_info, zhongzhuid, nl_num):
     nl_z = pokemon_info[7] + pokemon_info[8] + pokemon_info[9] + pokemon_info[10] + pokemon_info[11] + pokemon_info[12]
     if nl_z >= 510:
         mes = ''
@@ -554,7 +554,43 @@ def get_nl_info(gid, uid, pokemon_info, zhongzhuid, nl_num):
         mes = ''
         return mes,pokemon_info
 
-def get_win_reward(gid, uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
+#增加角色经验
+def add_exp(uid,pokemonid,exp):
+    CE = CECounter()
+    zslevel = CE._get_zhuansheng(uid, cid)
+    if zslevel>0:
+        expzf = 1+((zslevel+zslevel-1)/10)
+    else:
+        expzf = 1
+    now_level = CE._get_card_level(uid, cid)
+    level_flag = 0
+    need_exp = math.ceil((now_level+1)*100*expzf)
+    exp_info = CE._get_card_exp(uid, cid)
+    now_exp = exp_info + exp
+    if now_level>=CARD_LEVEL_MAX:
+        level_flag = 1
+        last_exp = now_exp
+        now_exp = 0
+    while now_exp>=need_exp:
+        now_level = now_level+1
+        now_exp = now_exp-need_exp
+        need_exp = math.ceil((now_level+1)*100*expzf)
+        if now_level>=CARD_LEVEL_MAX:
+            level_flag = 1
+            last_exp = now_exp
+            now_exp = 0
+            break
+    if level_flag == 1:
+        CE._add_card_exp(uid, cid, now_level, now_exp)
+        CE._add_exp_chizi(uid, last_exp)
+        msg = f"\n目前等级为{now_level}，由于超出等级上限，{last_exp}点经验加入经验池"
+        return [1,last_exp,msg]
+    else:
+        CE._add_card_exp(uid, cid, now_level, now_exp)
+        msg = f"\n目前等级为{now_level}"
+        return [0,now_level,msg]
+
+def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
     mes = ''
     zhongzu = POKEMON_LIST[pokemonid]
     zhongzu_info = []
@@ -579,14 +615,14 @@ def get_win_reward(gid, uid, mypokemonid, myinfo, pokemon_info, pokemonid, level
         nl_num += 1
     if max_zhongzu >= 100:
         nl_num += 1
-    mesg,pokemon_info = get_nl_info(gid, uid, pokemon_info, max_zhongzuid, nl_num)
+    mesg,pokemon_info = get_nl_info(uid, pokemon_info, max_zhongzuid, nl_num)
     if mesg:
         mes += mesg
     newinfo = new_pokemon_info(mypokemonid, pokemon_info)
     newinfo[17] = myinfo[17]
     return mes,newinfo
 
-async def fight_yw_ys(gid,uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
+async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
     myzhuangtai = [['无', 0],['无', 0]]
     dizhuangtai = [['无', 0],['无', 0]]
     changdi = [['无天气', 99],['', 0]]
@@ -637,7 +673,7 @@ async def fight_yw_ys(gid,uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
             mes = f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             mesg.append(MessageSegment.text(mes))
             # 我方获得经验/努力值奖励
-            mes,myinfo = get_win_reward(gid, uid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
+            mes,myinfo = get_win_reward(uid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
             mesg.append(MessageSegment.text(mes))
     return mesg,mypokelist,dipokelist
         
