@@ -118,7 +118,8 @@ def get_pokeon_info_sj(bianhao,level = 100):
         gt_num = int(math.floor(random.uniform(1,32)))
         pokemon_info.append(gt_num)
     
-    nuli = 510
+    max_nl = level * 5.1 + 1
+    nuli = int(math.floor(random.uniform(0,max_nl)))
     for num in range(1,6):
         MAXNULI = nuli
         if nuli > 255:
@@ -172,6 +173,7 @@ def get_pokemon_shuxing(bianhao,pokemon_info):
 def chongkai(uid):
     POKE = PokeCounter()
     POKE._delete_poke_info(uid)
+    POKE.delete_pokemon_egg(uid)
 
 #放生
 def fangshen(uid,bianhao):
@@ -544,24 +546,27 @@ def new_pokemon_info(pokemonid, pokemon_info):
     pokemoninfo.append(pokemonshux[0])
     return pokemoninfo
 
-def get_nl_info(uid, pokemon_info, zhongzhuid, nl_num):
+def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
     nl_z = pokemon_info[7] + pokemon_info[8] + pokemon_info[9] + pokemon_info[10] + pokemon_info[11] + pokemon_info[12]
     if nl_z >= 510:
         mes = ''
         return mes,pokemon_info
-    nl_index = zhongzhuid + 7
+    nl_index = int(zhongzhuid + 7)
     change_nl = min(255, nl_num + pokemon_info[nl_index])
     if change_nl > pokemon_info[nl_index]:
         change_nl_num = change_nl - pokemon_info[nl_index]
+        # print(nl_index)
+        pokemon_info = list(pokemon_info)
         pokemon_info[nl_index] = change_nl
+        POKE = PokeCounter()
+        POKE._add_pokemon_nuli(uid, pokemonid, pokemon_info[7], pokemon_info[8], pokemon_info[9], pokemon_info[10], pokemon_info[11], pokemon_info[12])
         mes = f'获得了{zhongzu_list[zhongzhuid][1]}努力值{change_nl_num}\n'
         return mes,pokemon_info
     else:
         mes = ''
         return mes,pokemon_info
 
-#增加角色经验
-def add_exp(uid,pokemonid,exp):
+def get_need_exp(pokemonid, level):
     zhongzu = POKEMON_LIST[pokemonid]
     zhongzu_info = []
     for item in [1,2,3,4,5,6]:
@@ -569,12 +574,18 @@ def add_exp(uid,pokemonid,exp):
     zhongzu_num = 0
     for index, num in enumerate(zhongzu_info):
         zhongzu_num += int(num)
+    exp_xz = 10 * math.ceil(level/10)/10
+    need_exp = math.ceil((zhongzu_num * level/10) * exp_xz)
+    return need_exp
     
+#增加角色经验
+def add_exp(uid,pokemonid,exp):
     POKE = PokeCounter()
     levelinfo = POKE._get_pokemon_level(uid,pokemonid)
     now_level = levelinfo[0]
-    need_exp = math.ceil((zhongzu_num * now_level/10) * 10)
+    need_exp = get_need_exp(pokemonid, now_level)
     now_exp = levelinfo[1] + exp
+    level_flag = 0
     if now_level>=100:
         level_flag = 1
         last_exp = now_exp * 0.1
@@ -582,7 +593,7 @@ def add_exp(uid,pokemonid,exp):
     while now_exp>=need_exp:
         now_level = now_level+1
         now_exp = now_exp-need_exp
-        need_exp = math.ceil((zhongzu_num * now_level/10) * 10)
+        need_exp = get_need_exp(pokemonid, now_level)
         if now_level>=100:
             level_flag = 1
             last_exp = now_exp * 0.1
@@ -615,7 +626,10 @@ def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
             max_zhongzuid = index
         zhongzu_num += int(num)
     # 获得经验值
-    get_exp = (zhongzu_num * level/10) * 0.5
+    level_xz = level - myinfo[2]
+    if myinfo[2] > level:
+        level_xz = max((0 - level)/2, level_xz)
+    get_exp = math.ceil((zhongzu_num * (level + level_xz)/10) * 0.5)
     mes = f'{myinfo[0]}获得了经验{get_exp}\n'
     mesg = add_exp(uid,mypokemonid,get_exp)
     mes += mesg
@@ -627,7 +641,7 @@ def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
         nl_num += 1
     if max_zhongzu >= 100:
         nl_num += 1
-    mesg,pokemon_info = get_nl_info(uid, pokemon_info, max_zhongzuid, nl_num)
+    mesg,pokemon_info = get_nl_info(uid, mypokemonid, pokemon_info, max_zhongzuid, nl_num)
     if mesg:
         mes += mesg
     newinfo = new_pokemon_info(mypokemonid, pokemon_info)
@@ -648,7 +662,7 @@ async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
         changci += 1
         if len(myinfo) == 0:
             bianhao1 = random.sample(mypokelist, 1)[0]
-            mypokemon_info = get_pokeon_info_sj(bianhao1,100)
+            mypokemon_info = get_pokeon_info(uid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]

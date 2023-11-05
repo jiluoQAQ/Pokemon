@@ -342,6 +342,9 @@ async def get_my_poke_info(bot, ev: Event):
     mes.append(MessageSegment.text('\n当前等级可学习的技能为：\n'))
     for jn_name in jinenglist:
         mes.append(MessageSegment.text(f'{jn_name},'))
+    if pokemon_info[0]<100:
+        need_exp = get_need_exp(bianhao, pokemon_info[0]) - pokemon_info[15]
+        mes.append(MessageSegment.text(f'\n下级所需经验{need_exp}'))
     await bot.send(mes, at_sender=True)
     
 @sv_pokemon_duel.on_fullmatch(['初始精灵列表'])
