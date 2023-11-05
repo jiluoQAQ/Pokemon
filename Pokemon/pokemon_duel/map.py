@@ -158,7 +158,7 @@ async def map_ts_test(bot, ev: Event):
             if len(dipokelist) == 0:
                 mes = f'您打败了{pokename}\n'
                 zs_num = int(math.floor(random.uniform(0,100)))
-                if zs_num <= WIN_EGG:
+                # if zs_num <= WIN_EGG:
                     # mes += f'您获得了{pokename}精灵蛋'
                 mes_list.append(MessageSegment.text(mes))
                 await bot.send(MessageSegment.node(mes_list))

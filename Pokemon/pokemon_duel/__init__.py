@@ -311,7 +311,7 @@ async def my_pokemon_list(bot, ev: Event):
     POKE = PokeCounter()
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
-        return await bot.send('您还没有精灵，请输入 初始精灵列表 开局。', at_sender=True)
+        return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。', at_sender=True)
     mes = []
     mes.append(MessageSegment.text('您的精灵信息为(只显示等级最高的前20只):\n'))
     for pokemoninfo in mypokelist:
