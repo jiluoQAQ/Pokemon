@@ -15,8 +15,12 @@ from .until import *
 from gsuid_core.utils.image.convert import convert_img
 from gsuid_core.segment import MessageSegment
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
+from ..utils.convert import DailyAmountLimiter
 
 FILE_PATH = os.path.dirname(__file__)
+
+RESET_HOUR = 0  # 每日使用次数的重置时间，0代表凌晨0点，1代表凌晨1点，以此类推
+WORK_NUM = 2
 
 def get_poke_bianhao(name):
     for bianhao in CHARA_NAME:
@@ -52,6 +56,8 @@ zhongzu_list = {
     4:['SEF','特防'],
     5:['SPD','速度'],
 }
+
+daily_work_limiter = DailyAmountLimiter("work", WORK_NUM, RESET_HOUR)
 
 #生成精灵初始技能
 def add_new_pokemon_jineng(level,bianhao):
@@ -556,39 +562,43 @@ def get_nl_info(uid, pokemon_info, zhongzhuid, nl_num):
 
 #增加角色经验
 def add_exp(uid,pokemonid,exp):
-    CE = CECounter()
-    zslevel = CE._get_zhuansheng(uid, cid)
-    if zslevel>0:
-        expzf = 1+((zslevel+zslevel-1)/10)
-    else:
-        expzf = 1
-    now_level = CE._get_card_level(uid, cid)
-    level_flag = 0
-    need_exp = math.ceil((now_level+1)*100*expzf)
-    exp_info = CE._get_card_exp(uid, cid)
-    now_exp = exp_info + exp
-    if now_level>=CARD_LEVEL_MAX:
+    zhongzu = POKEMON_LIST[pokemonid]
+    zhongzu_info = []
+    for item in [1,2,3,4,5,6]:
+        zhongzu_info.append(int(zhongzu[item]))
+    zhongzu_num = 0
+    for index, num in enumerate(zhongzu_info):
+        zhongzu_num += int(num)
+    
+    POKE = PokeCounter()
+    levelinfo = POKE._get_pokemon_level(uid,pokemonid)
+    now_level = levelinfo[0]
+    need_exp = math.ceil((zhongzu_num * now_level/10) * 10)
+    now_exp = levelinfo[1] + exp
+    if now_level>=100:
         level_flag = 1
-        last_exp = now_exp
+        last_exp = now_exp * 0.1
         now_exp = 0
     while now_exp>=need_exp:
         now_level = now_level+1
         now_exp = now_exp-need_exp
-        need_exp = math.ceil((now_level+1)*100*expzf)
-        if now_level>=CARD_LEVEL_MAX:
+        need_exp = math.ceil((zhongzu_num * now_level/10) * 10)
+        if now_level>=100:
             level_flag = 1
-            last_exp = now_exp
+            last_exp = now_exp * 0.1
             now_exp = 0
             break
+    msg = ''
+    if now_level > levelinfo[0]:
+        msg += f'等级提升到了{now_level}\n'
     if level_flag == 1:
-        CE._add_card_exp(uid, cid, now_level, now_exp)
-        CE._add_exp_chizi(uid, last_exp)
-        msg = f"\n目前等级为{now_level}，由于超出等级上限，{last_exp}点经验加入经验池"
-        return [1,last_exp,msg]
+        POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
+        # CE._add_exp_chizi(uid, last_exp)
+        msg += f"由于超出等级上限，{last_exp}点经验加入经验池"
+        return msg
     else:
-        CE._add_card_exp(uid, cid, now_level, now_exp)
-        msg = f"\n目前等级为{now_level}"
-        return [0,now_level,msg]
+        POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
+        return msg
 
 def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
     mes = ''
@@ -607,6 +617,8 @@ def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
     # 获得经验值
     get_exp = (zhongzu_num * level/10) * 0.5
     mes = f'{myinfo[0]}获得了经验{get_exp}\n'
+    mesg = add_exp(uid,mypokemonid,get_exp)
+    mes += mesg
     #获得努力值
     nl_num = 0
     if max_zhongzu >= 30:

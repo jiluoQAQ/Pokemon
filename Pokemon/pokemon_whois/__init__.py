@@ -6,7 +6,6 @@ from io import BytesIO
 import base64
 from os import path
 from PIL import Image
-import time
 import math
 import random
 import pygtrie
@@ -19,11 +18,15 @@ from gsuid_core.segment import MessageSegment
 import importlib
 from async_timeout import timeout
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
+from ..utils.convert import DailyAmountLimiter
+from ..utils.dbbase.ScoreCounter import SCORE_DB
+from ..utils.dbbase.GameCounter import GAME_DB
 
 PIC_SIDE_LENGTH = 25 
 LH_SIDE_LENGTH = 75
 ONE_TURN_TIME = 20
-
+WHOIS_NUM = 6
+daily_whois_limiter = DailyAmountLimiter("whois", WHOIS_NUM, 0)
 FILE_PATH = path.dirname(__file__)
 FONTS_PATH = path.join(FILE_PATH,'font')
 FONTS_PATH = path.join(FONTS_PATH,'sakura.ttf')
@@ -207,9 +210,6 @@ async def pokemon_whois(bot: Bot, ev: Event):
     mes = [MessageSegment.image(base64_str),MessageSegment.text(mes)]
     #print(img_send)
     await bot.send(mes)
-    starttime = time.time()
-    starttime = math.ceil(starttime)
-    gotime = 0
     try:
         async with timeout(ONE_TURN_TIME):
             while True:
@@ -217,14 +217,23 @@ async def pokemon_whois(bot: Bot, ev: Event):
                 if resp is not None:
                     s = resp.text
                     gid = resp.group_id
+                    uid = resp.user_id
                     cid = roster.get_id(s)
                     # await bot.send(f'你说的是 {resp.text} 吧？')
                     if cid != 9999 and cid == winner_judger.get_correct_chara_id(ev.group_id) and winner_judger.get_winner(ev.group_id) == '':
+                        GAME = GAME_DB()
+                        win_num = GAME.update_game_num(uid,'whois')
+                        SCORE = SCORE_DB()
+                        mesg = ''
+                        if daily_whois_limiter.check(uid):
+                            SCORE.update_score(uid, 1000)
+                            daily_whois_limiter.increase(uid)
+                            mesg = '获得1000金币\n'
                         winner_judger.record_winner(ev.group_id, ev.user_id)
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
-                        msg =  [MessageSegment.text('猜对了，真厉害！\n正确答案是:'),MessageSegment.image(win_mes)]
-                        await bot.send(msg)
+                        msg =  [MessageSegment.text(f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:'),MessageSegment.image(win_mes)]
+                        await bot.send(msg, at_sender=True)
                         return
     except asyncio.TimeoutError:
         pass
