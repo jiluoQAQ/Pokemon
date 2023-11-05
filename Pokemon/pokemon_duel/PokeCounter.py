@@ -72,7 +72,7 @@ class PokeCounter:
         except:
             raise Exception('创建表发生错误')
     
-    def _add_pokem_group(self, uid, pokemon_list):
+    def _add_pokemon_group(self, uid, pokemon_list):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -100,7 +100,7 @@ class PokeCounter:
                 (uid),
             )
     
-    def _add_pokem_rgg(self, uid, bianhao, use_num):
+    def _add_pokemon_egg(self, uid, bianhao, use_num):
         eggnum = self.get_pokemon_egg(uid, bianhao) + use_num
         try:
             with self._connect() as conn:

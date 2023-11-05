@@ -376,6 +376,7 @@ async def get_chushi_pokemon(bot, ev: Event):
     if bianhao not in chushi_list:
         return await bot.send(f'{POKEMON_LIST[bianhao][0]}不属于初始精灵，无法领取。', at_sender=True)
     pokemon_info = add_pokemon(uid,bianhao)
+    POKE._add_poke_group(uid,pokename)
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     picfile = os.path.join(FILE_PATH, 'icon', f'{POKEMON_LIST[bianhao][0]}.png')
     mes = []

@@ -66,7 +66,7 @@ async def map_my_group(bot, ev: Event):
         name_str += f'{pokemon_name} Lv.{pokemon_info[0]}\n'
     POKE = PokeCounter()
     pokemon_str = ','.join(pokemon_list)
-    POKE._add_pokem_group(uid,pokemon_str)
+    POKE._add_pokemon_group(uid,pokemon_str)
     
     await bot.send(f'编组成功，当前队伍\n{name_str}', at_sender=True)
 
@@ -127,6 +127,8 @@ async def map_ts_test(bot, ev: Event):
     POKE = PokeCounter()
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
     my_team = POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send('您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。', at_sender=True)
@@ -160,6 +162,7 @@ async def map_ts_test(bot, ev: Event):
                 zs_num = int(math.floor(random.uniform(0,100)))
                 # if zs_num <= WIN_EGG:
                     # mes += f'您获得了{pokename}精灵蛋'
+                    # POKE._add_pokemon_egg(uid,pokemonid,1)
                 mes_list.append(MessageSegment.text(mes))
                 await bot.send(MessageSegment.node(mes_list))
         else:
