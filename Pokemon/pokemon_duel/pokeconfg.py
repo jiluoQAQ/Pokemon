@@ -9,6 +9,7 @@ from io import BytesIO
 from PIL import Image
 import copy
 import json
+from async_timeout import timeout
 from .pokemon import *
 from .PokeCounter import *
 from .until import *
@@ -408,7 +409,6 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
                     mesg = mesg + f"{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败\n"
             if myinfo[17] == 0 or diinfo[17] == 0:
                 jieshu = 1
-                break
             
             if dichushou == 1:
                 #敌方攻击
@@ -424,7 +424,6 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
                     mesg = mesg + f"{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败\n"
             if myinfo[17] == 0 or diinfo[17] == 0:
                 jieshu = 1
-                break
         
         else:
             if dichushou == 1:
@@ -441,7 +440,6 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
                     mesg = mesg + f"{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败\n"
             if myinfo[17] == 0 or diinfo[17] == 0:
                 jieshu = 1
-                break
             
             if mychushou == 1:
                 #我方攻击
@@ -457,7 +455,6 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
                     mesg = mesg + f"{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败\n"
             if myinfo[17] == 0 or diinfo[17] == 0:
                 jieshu = 1
-                break
         
         #回合结束天气与状态伤害计算
         if myzhuangtai[0][0] in kouxuelist and int(myzhuangtai[0][1]) > 0:
@@ -465,21 +462,18 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
             mesg = mesg + mes + '\n'
         if myinfo[17] == 0 or diinfo[17] == 0:
             jieshu = 1
-            break
         
         if dizhuangtai[0][0] in kouxuelist and int(dizhuangtai[0][1]) > 0:
             mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = get_zhuangtai_sh(diinfo,myinfo,dizhuangtai,myzhuangtai,changdi)
             mesg = mesg + mes + '\n'
         if myinfo[17] == 0 or diinfo[17] == 0:
             jieshu = 1
-            break
         
         if changdi[0][0] in tq_kouxuelist and int(changdi[0][1]) > 0:
             mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = get_tianqi_sh(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)
             mesg = mesg + mes + '\n'
         if myinfo[17] == 0 or diinfo[17] == 0:
             jieshu = 1
-            break
         
         if myzhuangtai[0][0] in hh_yichanglist and int(myzhuangtai[0][1]) > 0:
             myshengyuyc = int(myzhuangtai[0][1]) - 1
@@ -524,6 +518,221 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
                 mesg = mesg + f"{changdi[0][0]}持续中\n"
     return mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi
     
+async def pokemon_fight_s(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,jineng1 = None,jineng2 = None):
+    shul = 1
+    fight_flag = 0
+    while fight_flag == 0:
+        jieshu = 0
+        mesg = ''
+        myjinenglist = re.split(',',mypokemon_info[14])
+        dijinenglist = re.split(',',dipokemon_info[14])
+        jineng_use = 0
+        try:
+            async with timeout(60):
+                while jineng_use == 0:
+                    resp = await bot.receive_resp(f'请在60秒内选择一个技能使用!\n{myjinenglist}',myjinenglist)
+                    if resp is not None:
+                        s = resp.text
+                        uid = resp.user_id
+                        if s in myjinenglist:
+                            jineng1 = s
+                            # await bot.send(f'你选择的是{resp.text}')
+                            jineng_use = 1
+        except asyncio.TimeoutError:
+            jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
+        jinenginfo1 = JINENG_LIST[jineng1]
+        
+        jineng2 = now_use_jineng(diinfo,myinfo,dijinenglist,myjinenglist,changdi)
+        jinenginfo2 = JINENG_LIST[jineng2]
+        
+        mesg = mesg + f"回合：{shul}\n"
+        shul = shul + 1
+        mysd = get_nowshuxing(myinfo[8], myinfo[13])
+        if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1])>0:
+            mysd = int(mysd*0.5)
+        disd = get_nowshuxing(diinfo[8], diinfo[13])
+        if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1])>0:
+            disd = int(mysd*0.5)
+        
+        #先手判断
+        myxianshou = 1
+        if jineng1 in xianzhi or jineng2 in xianzhi:
+            if jineng1 in xianzhi and jineng2 in xianzhi:
+                if mysd < disd:
+                    myxianshou = 0
+            else:
+                if jineng1 in xianzhi:
+                    myxianshou = 1
+                if jineng2 in xianzhi:
+                    myxianshou = 0
+        elif jineng1 in youxian or jineng2 in youxian:
+            if jineng1 in youxian and jineng2 in youxian:
+                if mysd < disd:
+                    myxianshou = 0
+            else:
+                if jineng1 in youxian:
+                    myxianshou = 1
+                if jineng2 in youxian:
+                    myxianshou = 0
+        else:
+            if mysd < disd:
+                myxianshou = 0
+        
+        #判断我方能否发动攻击
+        mychushou = 1
+        if myzhuangtai[0][0] in tingzhilist and int(myzhuangtai[0][1]) > 0:
+            mychushou = 0
+        if myzhuangtai[0][0] in chushoulist and int(myzhuangtai[0][1]) > 0:
+            if myzhuangtai[0][0] == '麻痹':
+                shuzhi = 25
+            if myzhuangtai[0][0] == '混乱':
+                shuzhi = 33
+            suiji = int(math.floor(random.uniform(0,100)))
+            if suiji <= shuzhi:
+                mychushou = 0
+        
+        #判断敌方能否发动攻击
+        dichushou = 1
+        if dizhuangtai[0][0] in tingzhilist and int(dizhuangtai[0][1]) > 0:
+            dichushou = 0
+        if dizhuangtai[0][0] in chushoulist and int(dizhuangtai[0][1]) > 0:
+            if dizhuangtai[0][0] == '麻痹':
+                shuzhi = 25
+            if dizhuangtai[0][0] == '混乱':
+                shuzhi = 33
+            suiji = int(math.floor(random.uniform(0,100)))
+            if suiji <= shuzhi:
+                dichushou = 0
+        
+        #双方出手
+        if myxianshou == 1:
+            if mychushou == 1:
+                #我方攻击
+                canshu1 = {'jineng':jineng1,'myinfo':myinfo,'diinfo':diinfo,'myzhuangtai':myzhuangtai,'dizhuangtai':dizhuangtai,'changdi':changdi}
+                exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = canshu1['ret']
+                mesg = mesg + mes + '\n'
+            else:
+                if myzhuangtai[0][0] == '混乱' and int(myzhuangtai[0][1]) > 0:
+                    mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = get_hunluan_sh(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)
+                    mesg = mesg + mes + '\n'
+                    
+                else:
+                    mesg = mesg + f"{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败\n"
+            if myinfo[17] == 0 or diinfo[17] == 0:
+                jieshu = 1
+            
+            if dichushou == 1:
+                #敌方攻击
+                canshu2 = {'jineng':jineng2,'myinfo':diinfo,'diinfo':myinfo,'myzhuangtai':dizhuangtai,'dizhuangtai':myzhuangtai,'changdi':changdi}
+                exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = canshu2['ret']
+                mesg = mesg + mes + '\n'
+            else:
+                if dizhuangtai[0][0] == '混乱' and int(dizhuangtai[0][1]) > 0:
+                    mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = get_hunluan_sh(diinfo,myinfo,dizhuangtai,myzhuangtai,changdi)
+                    mesg = mesg + mes + '\n'
+                else:
+                    mesg = mesg + f"{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败\n"
+            if myinfo[17] == 0 or diinfo[17] == 0:
+                jieshu = 1
+        
+        else:
+            if dichushou == 1:
+                #敌方攻击
+                canshu2 = {'jineng':jineng2,'myinfo':diinfo,'diinfo':myinfo,'myzhuangtai':dizhuangtai,'dizhuangtai':myzhuangtai,'changdi':changdi}
+                exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = canshu2['ret']
+                mesg = mesg + mes + '\n'
+            else:
+                if dizhuangtai[0][0] == '混乱' and int(dizhuangtai[0][1]) > 0:
+                    mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = get_hunluan_sh(diinfo,myinfo,dizhuangtai,myzhuangtai,changdi)
+                    mesg = mesg + mes + '\n'
+                else:
+                    mesg = mesg + f"{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败\n"
+            if myinfo[17] == 0 or diinfo[17] == 0:
+                jieshu = 1
+            
+            if mychushou == 1:
+                #我方攻击
+                canshu1 = {'jineng':jineng1,'myinfo':myinfo,'diinfo':diinfo,'myzhuangtai':myzhuangtai,'dizhuangtai':dizhuangtai,'changdi':changdi}
+                exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = canshu1['ret']
+                mesg = mesg + mes + '\n'
+            else:
+                if myzhuangtai[0][0] == '混乱' and int(myzhuangtai[0][1]) > 0:
+                    mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = get_hunluan_sh(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)
+                    mesg = mesg + mes + '\n'
+                else:
+                    mesg = mesg + f"{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败\n"
+            if myinfo[17] == 0 or diinfo[17] == 0:
+                jieshu = 1
+        
+        #回合结束天气与状态伤害计算
+        if myzhuangtai[0][0] in kouxuelist and int(myzhuangtai[0][1]) > 0:
+            mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = get_zhuangtai_sh(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)
+            mesg = mesg + mes + '\n'
+        if myinfo[17] == 0 or diinfo[17] == 0:
+            jieshu = 1
+        
+        if dizhuangtai[0][0] in kouxuelist and int(dizhuangtai[0][1]) > 0:
+            mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = get_zhuangtai_sh(diinfo,myinfo,dizhuangtai,myzhuangtai,changdi)
+            mesg = mesg + mes + '\n'
+        if myinfo[17] == 0 or diinfo[17] == 0:
+            jieshu = 1
+        
+        if changdi[0][0] in tq_kouxuelist and int(changdi[0][1]) > 0:
+            mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = get_tianqi_sh(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)
+            mesg = mesg + mes + '\n'
+        if myinfo[17] == 0 or diinfo[17] == 0:
+            jieshu = 1
+        
+        if myzhuangtai[0][0] in hh_yichanglist and int(myzhuangtai[0][1]) > 0:
+            myshengyuyc = int(myzhuangtai[0][1]) - 1
+            if myshengyuyc == 0:
+                mesg = mesg + f"{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n"
+                myzhuangtai[0][0] = '无'
+                myzhuangtai[0][1] = 0
+            else:
+                myzhuangtai[0][1] = myshengyuyc
+                
+        if dizhuangtai[0][0] in hh_yichanglist and int(dizhuangtai[0][1]) > 0:
+            dishengyuyc = int(dizhuangtai[0][1]) - 1
+            if dishengyuyc == 0:
+                mesg = mesg + f"{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n"
+                dizhuangtai[0][0] = '无'
+                dizhuangtai[0][1] = 0
+            else:
+                dizhuangtai[0][1] = dishengyuyc
+        
+        if myzhuangtai[0][0] in jiechulist and int(myzhuangtai[0][1]) > 0:
+            suiji = int(math.floor(random.uniform(0,100)))
+            if suiji <= 20:
+                mesg = mesg + f"{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n"
+                myzhuangtai[0][0] = '无'
+                myzhuangtai[0][1] = 0
+
+        if dizhuangtai[0][0] in jiechulist and int(dizhuangtai[0][1]) > 0:
+            suiji = int(math.floor(random.uniform(0,100)))
+            if suiji <= 20:
+                mesg = mesg + f"{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n"
+                dizhuangtai[0][0] = '无'
+                dizhuangtai[0][1] = 0
+        
+        if int(changdi[0][1]) > 0 and changdi[0][0] != '无天气':
+            shengyutianqi = int(changdi[0][1]) - 1
+            if shengyutianqi == 0:
+                mesg = mesg + f"{changdi[0][0]}停止了，天气影响消失了\n"
+                changdi[0][0] = '无天气'
+                changdi[0][1] = 99
+            else:
+                changdi[0][1] = shengyutianqi
+                mesg = mesg + f"{changdi[0][0]}持续中\n"
+        await bot.send(MessageSegment.text(mesg))
+        if(jieshu == 1):
+            fight_flag = 1
+    return mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi
+
 def get_pokemon_name_list(pokemon_list):
     name_str = ''
     for index, pokemonid in enumerate(pokemon_list):
@@ -647,6 +856,66 @@ def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
     newinfo = new_pokemon_info(mypokemonid, pokemon_info)
     newinfo[17] = myinfo[17]
     return mes,newinfo
+
+async def fight_yw_ys_s(bot,ev,uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
+    myzhuangtai = [['无', 0],['无', 0]]
+    dizhuangtai = [['无', 0],['无', 0]]
+    changdi = [['无天气', 99],['', 0]]
+    mesg = []
+    changci = 1
+    myinfo = []
+    diinfo = []
+    while len(mypokelist) > 0 and len(dipokelist) > 0:
+        # mes = f'第{changci}场\n'
+        # mesg.append(MessageSegment.text(mes))
+        changci += 1
+        if len(myinfo) == 0:
+            bianhao1 = random.sample(mypokelist, 1)[0]
+            mypokemon_info = get_pokeon_info(uid,bianhao1)
+            myinfo = new_pokemon_info(bianhao1, mypokemon_info)
+        if len(diinfo) == 0:
+            bianhao2 = random.sample(dipokelist, 1)[0]
+            dilevel = int(math.floor(random.uniform(minlevel,maxlevel)))
+            dipokemon_info = get_pokeon_info_sj(bianhao2,dilevel)
+            diinfo = new_pokemon_info(bianhao2, dipokemon_info)
+        if myinfo[3] == myinfo[17]:
+            mes = f'我方派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}'
+            # mesg.append(MessageSegment.text(mes))
+            img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
+            img = await convert_img(img)
+            # mesg.append(MessageSegment.image(img))
+            await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+        if diinfo[3] == diinfo[17]:
+            if ys == 1:
+                mes = f'野生精灵出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}'
+            else:
+                mes = f'敌方派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}'
+            # mesg.append(MessageSegment.text(mes))
+            img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
+            img = await convert_img(img)
+            # mesg.append(MessageSegment.image(img))
+            await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await pokemon_fight_s(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info)
+        # mesg.append(MessageSegment.text(mes))
+        if myinfo[17] == 0:
+            myinfo = []
+            myzhuangtai = [['无', 0],['无', 0]]
+            mypokelist.remove(bianhao1)
+            mes = f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            # mesg.append(MessageSegment.text(mes))
+            await bot.send(mes)
+        if diinfo[17] == 0:
+            diinfo = []
+            dizhuangtai = [['无', 0],['无', 0]]
+            dipokelist.remove(bianhao2)
+            mes = f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
+            # mesg.append(MessageSegment.text(mes))
+            await bot.send(mes)
+            # 我方获得经验/努力值奖励
+            mes,myinfo = get_win_reward(uid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
+            # mesg.append(MessageSegment.text(mes))
+            await bot.send(mes)
+    return mesg,mypokelist,dipokelist
 
 async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
     myzhuangtai = [['无', 0],['无', 0]]

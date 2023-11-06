@@ -72,6 +72,7 @@ async def map_my_group(bot, ev: Event):
 
 @sv_pokemon_map.on_fullmatch(['训练家名片'])
 async def map_my_info(bot, ev: Event):
+    print(ev)
     uid = ev.user_id
     POKE = PokeCounter()
     SCORE = SCORE_DB()
@@ -193,6 +194,80 @@ async def map_ts_test(bot, ev: Event):
                 for item in range(0,pokenum):
                     dipokelist.append(random.sample(pokelist, 1)[0])
                 mes_list,mypokelist,dipokelist = await fight_yw_ys(uid,mypokelist,dipokelist,min_level,max_level)
+                if len(mypokelist) == 0:
+                    mes = f'您被{diname}打败了，眼前一黑'
+                    mes_list.append(MessageSegment.text(mes))
+                    await bot.send(MessageSegment.node(mes_list))
+                if len(dipokelist) == 0:
+                    mes = f'您打败了{diname}\n'
+                    SCORE = SCORE_DB()
+                    get_score = (int(didianlist[this_map]['need']) + 1) * 500
+                    SCORE.update_score(uid, get_score)
+                    mes += f'您获得了{get_score}金钱'
+                    mes_list.append(MessageSegment.text(mes))
+                    await bot.send(MessageSegment.node(mes_list))
+            else:
+                await bot.send('您获得了道具[还没写好]', at_sender=True)
+
+@sv_pokemon_map.on_fullmatch(['手动野外探索'])
+async def map_ts_test_noauto(bot, ev: Event):
+    uid = ev.user_id
+    POKE = PokeCounter()
+    mapinfo = POKE._get_map_now(uid)
+    this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
+    my_team = POKE.get_pokemon_group(uid)
+    if my_team == '':
+        return await bot.send('您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。', at_sender=True)
+    pokemon_team = my_team.split(',')
+    mypokelist = []
+    for bianhao in pokemon_team:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+    if didianlist[this_map]['type'] == "城镇":
+        return await bot.send(f'您当前处于城镇中没有可探索的区域', at_sender=True)
+    mes = []
+    if didianlist[this_map]['type'] == "野外":
+        pokelist = list(CHARA_NAME.keys())
+        ts_z = TS_FIGHT + TS_PROP + TS_POKEMON
+        ts_num = int(math.floor(random.uniform(0,ts_z)))
+        ts_quality = TS_POKEMON
+        if ts_num <= ts_quality:
+            # 遇怪
+            pokelist = didianlist[this_map]['pokemon']
+            dipokelist = random.sample(pokelist, 1)
+            pokename = CHARA_NAME[dipokelist[0]][0]
+            pokemonid = dipokelist[0]
+            await bot.send(f'野生宝可梦{pokename}出现了', at_sender=True)
+            mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bot,ev,uid,mypokelist,dipokelist,didianlist[this_map]['level'][0],didianlist[this_map]['level'][1],1)
+            if len(mypokelist) == 0:
+                mes = f'您被野生宝可梦{pokename}打败了'
+                # mes_list.append(MessageSegment.text(mes))
+                await bot.send(mes)
+            if len(dipokelist) == 0:
+                mes = f'您打败了{pokename}\n'
+                zs_num = int(math.floor(random.uniform(0,100)))
+                # if zs_num <= WIN_EGG:
+                    # mes += f'您获得了{pokename}精灵蛋'
+                    # POKE._add_pokemon_egg(uid,pokemonid,1)
+                # mes_list.append(MessageSegment.text(mes))
+                await bot.send(mes)
+        else:
+            ts_quality += TS_FIGHT
+            if ts_num <= ts_quality:
+                # 对战
+                diname = str(random.sample(Call_Name, 1)[0]) + ' ' + str(random.sample(First_Name, 1)[0]) + str(random.sample(Last_Name, 1)[0])
+                pokelist = didianlist[this_map]['pokemon']
+                maxnum = min(5,int(didianlist[this_map]['need']) + 1)
+                min_level = didianlist[this_map]['level'][0]/2 + didianlist[this_map]['level'][0]
+                max_level = didianlist[this_map]['level'][0]/2 + didianlist[this_map]['level'][1]
+                pokenum = int(math.floor(random.uniform(1,maxnum)))
+                dipokelist = []
+                await bot.send(f'{diname}向您发起了对战', at_sender=True)
+                for item in range(0,pokenum):
+                    dipokelist.append(random.sample(pokelist, 1)[0])
+                mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bot,ev,uid,mypokelist,dipokelist,min_level,max_level)
                 if len(mypokelist) == 0:
                     mes = f'您被{diname}打败了，眼前一黑'
                     mes_list.append(MessageSegment.text(mes))

@@ -350,6 +350,7 @@ async def get_my_poke_info(bot, ev: Event):
 @sv_pokemon_duel.on_fullmatch(['初始精灵列表'])
 async def get_chushi_list(bot, ev: Event):
     mes = []
+    mes.append(MessageSegment.text("可输入领取初始精灵+精灵名称领取"))
     for bianhao in chushi_list:
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
         img = await convert_img(img)
@@ -376,7 +377,8 @@ async def get_chushi_pokemon(bot, ev: Event):
     if bianhao not in chushi_list:
         return await bot.send(f'{POKEMON_LIST[bianhao][0]}不属于初始精灵，无法领取。', at_sender=True)
     pokemon_info = add_pokemon(uid,bianhao)
-    POKE._add_poke_group(uid,pokename)
+    POKE._add_pokemon_group(uid,bianhao)
+    
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     picfile = os.path.join(FILE_PATH, 'icon', f'{POKEMON_LIST[bianhao][0]}.png')
     mes = []
