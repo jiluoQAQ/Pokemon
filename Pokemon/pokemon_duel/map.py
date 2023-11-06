@@ -81,12 +81,15 @@ async def map_my_info(bot, ev: Event):
         return await bot.send('您还没有领取初始精灵成为训练家哦', at_sender=True)
     my_team = POKE.get_pokemon_group(uid)
     pokemon_list = my_team.split(',')
-    mes = ''
-    # sender = ev.sender
-    # name = sender["card"] or sender["nickname"]
-    mes += f'训练家名称:{uid}\n'
-    mes += f'拥有金钱:{my_score}\n'
     mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
+    if name == uid:
+        if ev.sender:
+            sender = ev.sender
+            name = sender['card'] or sender['nickname']
+    mes = ''
+    mes += f'训练家名称:{name}\n'
+    mes += f'拥有金钱:{my_score}\n'
     mes += f'拥有徽章:{mapinfo[0]}\n'
     if mapinfo[1]:
         this_map = mapinfo[1]
@@ -96,11 +99,22 @@ async def map_my_info(bot, ev: Event):
     mes += f'当前队伍:\n'
     if my_team:
         for bianhao in pokemon_list:
-            print(bianhao)
             bianhao = int(bianhao)
             pokemon_info = get_pokeon_info(uid,bianhao)
             mes += f'{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}\n'
     await bot.send(mes, at_sender=True)
+
+@sv_pokemon_map.on_prefix(('修改训练家名称','修改名称'))
+async def update_my_name(bot, ev: Event):
+    args = ev.text.split()
+    if len(args)<1:
+        return await bot.send('请输入 修改训练家名称+昵称。', at_sender=True)
+    uid = ev.user_id
+    name = args[0]
+    POKE = PokeCounter()
+    POKE._update_map_name(uid,name)
+    
+    await bot.send(f'编组成功，当前队伍\n{name_str}', at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['打工'])
 async def map_work_test(bot, ev: Event):
@@ -214,7 +228,12 @@ async def pokemom_new_map(bot, ev: Event):
         return await bot.send(f'地图上没有{go_map},请输入正确的地区名称', at_sender=True)
     if diqulist[go_map]['open'] == 1:
         go_didian = diqulist[go_map]['chushi']
-        POKE._add_map_now(uid, go_didian)
+        if ev.sender:
+            sender = ev.sender
+            name = sender['card'] or sender['nickname']
+        else:
+            name = uid
+        POKE._new_map_info(uid, go_didian, name)
         await bot.send(f"您已成功选择初始地区{diqulist[go_map]['name']}\n当前所在地{go_didian}\n可输入[当前地点信息]查询", at_sender=True)
     else:
         return await bot.send(f"当前地区暂未开放请先前往其他地区冒险", at_sender=True)

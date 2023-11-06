@@ -49,6 +49,7 @@ class PokeCounter:
                           (UID             INT    NOT NULL,
                            HUIZHANG        INT    NOT NULL,
                            MAP_NAME        TEXT   NOT NULL,
+                           NICKNAME        TEXT   NOT NULL,
                            PRIMARY KEY(UID));''')
         except:
             raise Exception('创建表发生错误')
@@ -134,7 +135,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT HUIZHANG,MAP_NAME FROM POKEMON_MAP WHERE UID={uid}").fetchall()
+                    f"SELECT HUIZHANG,MAP_NAME,NICKNAME FROM POKEMON_MAP WHERE UID={uid}").fetchall()
                 if r:
                     return r[0]
                 else:
@@ -143,12 +144,28 @@ class PokeCounter:
             raise Exception('查找表发生错误')
     
     def _add_map_now(self,uid,map_name):
-        mapinfo = self._get_map_now(uid)
-        huizhang = mapinfo[0]
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO POKEMON_MAP (UID,HUIZHANG,MAP_NAME) VALUES (?,?,?)", (uid, huizhang, map_name)
+                    "UPDATE POKEMON_MAP SET MAP_NAME=? WHERE UID=?",(map_name, uid)
+                )  
+        except:
+            raise Exception('更新表发生错误')
+    
+    def _new_map_info(self,uid,map_name,nickname):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    "INSERT OR REPLACE INTO POKEMON_MAP (UID,HUIZHANG,MAP_NAME,NICKNAME) VALUES (?,?,?,?)", (uid, 0, map_name,nickname)
+                )  
+        except:
+            raise Exception('更新表发生错误')
+    
+    def _update_map_name(self,uid,nickname):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    "UPDATE POKEMON_MAP SET NICKNAME=? WHERE UID=?",(nickname, uid)
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -161,12 +178,10 @@ class PokeCounter:
             )
     
     def _add_huizhang_now(self,uid,huizhang):
-        mapinfo = self._get_map_now(uid)
-        map_name = mapinfo[1]
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO POKEMON_MAP (UID,HUIZHANG,MAP_NAME) VALUES (?,?,?)", (uid, huizhang, map_name)
+                    "UPDATE POKEMON_MAP SET HUIZHANG=? WHERE UID=?",(huizhang, uid)
                 )  
         except:
             raise Exception('更新表发生错误')
