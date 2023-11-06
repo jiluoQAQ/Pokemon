@@ -113,8 +113,7 @@ async def update_my_name(bot, ev: Event):
     name = args[0]
     POKE = PokeCounter()
     POKE._update_map_name(uid,name)
-    
-    await bot.send(f'编组成功，当前队伍\n{name_str}', at_sender=True)
+    await bot.send(f'修改成功，当前训练家名称为 {name}', at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['打工'])
 async def map_work_test(bot, ev: Event):
