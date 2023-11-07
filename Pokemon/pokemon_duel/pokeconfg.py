@@ -47,7 +47,7 @@ youxian = ['电光一闪','音速拳','神速','真空波','子弹拳','冰砾',
 #性格列表
 list_xingge = ['实干','孤僻','勇敢','固执','调皮','大胆','坦率','悠闲','淘气','无虑','胆小','急躁','认真','天真','保守','稳重','冷静','害羞','马虎','沉着','温顺','狂妄','慎重','浮躁']
 #初始精灵列表
-chushi_list = [1,4,7,152,155,158,252,255,258,387,390,393,495,498,501,650,653,656,810,813,816]
+chushi_list = [1,4,7,152,155,158,252,255,258,387,390,393,495,498,501,650,653,656,722,725,728,810,813,816]
 #种族值对照表
 zhongzu_list = {
     0:['HP','生命'],
@@ -175,6 +175,8 @@ def chongkai(uid):
     POKE = PokeCounter()
     POKE._delete_poke_info(uid)
     POKE.delete_pokemon_egg(uid)
+    POKE.delete_pokemon_map(uid)
+    POKE.delete_pokemon_group(uid)
 
 #放生
 def fangshen(uid,bianhao):

@@ -97,9 +97,8 @@ class PokeCounter:
     def delete_pokemon_group(self, uid):
         with self._connect() as conn:
             conn.execute(
-                "DELETE FROM POKEMON_TEAM WHERE UID=?",
-                (uid),
-            )
+                f"DELETE FROM POKEMON_TEAM WHERE UID={uid}"
+            ).fetchall()
     
     def _add_pokemon_egg(self, uid, bianhao, use_num):
         eggnum = self.get_pokemon_egg(uid, bianhao) + use_num
@@ -127,9 +126,8 @@ class PokeCounter:
         
         with self._connect() as conn:
             conn.execute(
-                "DELETE FROM POKEMON_EGG WHERE UID=?",
-                (uid),
-            )
+                f"DELETE FROM POKEMON_EGG WHERE UID={uid}"
+            ).fetchall()
     
     def _get_map_now(self,uid):
         try:
@@ -173,9 +171,8 @@ class PokeCounter:
     def delete_pokemon_map(self, uid):
         with self._connect() as conn:
             conn.execute(
-                "DELETE FROM POKEMON_MAP  WHERE UID=?",
-                (uid),
-            )
+                f"DELETE FROM POKEMON_MAP  WHERE UID={uid}"
+            ).fetchall()
     
     def _add_huizhang_now(self,uid,huizhang):
         try:
@@ -281,14 +278,10 @@ class PokeCounter:
             
     def _delete_poke_info(self, uid):
         with self._connect() as conn:
-            conn.execute(
-                "DELETE FROM POKEMON_TABLE  WHERE UID=?",
-                (uid),
-            )
+            conn.execute(f"DELETE FROM POKEMON_TABLE WHERE UID={uid}").fetchall()
             
     def _delete_poke_bianhao(self, uid, bianhao):
         with self._connect() as conn:
             conn.execute(
-                "DELETE FROM POKEMON_TABLE  WHERE UID=? AND BIANHAO=?",
-                (uid, bianhao),
-            )
+                f"DELETE FROM POKEMON_TABLE WHERE UID={uid} AND BIANHAO={bianhao}"
+            ).fetchall()

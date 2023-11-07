@@ -416,7 +416,12 @@ async def fangsheng_pokemon(bot, ev: Event):
     pokemon_info = get_pokeon_info(uid,bianhao)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
+    POKE = PokeCounter()
+    my_pokemon = POKE._get_pokemon_num(uid)
+    if my_pokemon == 1:
+        return await bot.send('您就这么一只精灵了，无法放生。', at_sender=True)
     fangshen(uid,bianhao)
+    
     await bot.send(f'放生成功，{POKEMON_LIST[bianhao][0]}离你而去了', at_sender=True)
 
 @sv_pokemon_duel.on_prefix(['学习精灵技能'])
