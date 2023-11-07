@@ -86,7 +86,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT TEAM FROM POKEMON_TEAM WHERE UID={uid}").fetchall()
+                    f"SELECT TEAM FROM POKEMON_TEAM WHERE UID='{uid}'").fetchall()
                 if r:
                     return r[0][0]
                 else:
@@ -114,7 +114,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT NUM FROM POKEMON_EGG WHERE UID={uid} AND BIANHAO={bianhao}").fetchall()
+                    f"SELECT NUM FROM POKEMON_EGG WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
                 if r:
                     return r[0]
                 else:
@@ -133,7 +133,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT HUIZHANG,MAP_NAME,NICKNAME FROM POKEMON_MAP WHERE UID={uid}").fetchall()
+                    f"SELECT HUIZHANG,MAP_NAME,NICKNAME FROM POKEMON_MAP WHERE UID='{uid}'").fetchall()
                 if r:
                     return r[0]
                 else:
@@ -145,7 +145,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_MAP SET MAP_NAME=? WHERE UID=?",(map_name, uid)
+                    f"UPDATE POKEMON_MAP SET MAP_NAME={map_name} WHERE UID='{uid}'"
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -163,7 +163,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_MAP SET NICKNAME=? WHERE UID=?",(nickname, uid)
+                    f"UPDATE POKEMON_MAP SET NICKNAME={nickname} WHERE UID='{uid}'"
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -171,14 +171,14 @@ class PokeCounter:
     def delete_pokemon_map(self, uid):
         with self._connect() as conn:
             conn.execute(
-                f"DELETE FROM POKEMON_MAP  WHERE UID={uid}"
+                f"DELETE FROM POKEMON_MAP  WHERE UID='{uid}'"
             ).fetchall()
     
     def _add_huizhang_now(self,uid,huizhang):
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_MAP SET HUIZHANG=? WHERE UID=?",(huizhang, uid)
+                    f"UPDATE POKEMON_MAP SET HUIZHANG={huizhang} WHERE UID='{uid}'"
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -200,7 +200,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_TABLE SET LEVEL=?, EXP=? WHERE UID=? AND BIANHAO=?",(level, exp, uid, bianhao)
+                    f"UPDATE POKEMON_TABLE SET LEVEL=?, EXP=? WHERE UID='{uid}' AND BIANHAO=?",(level, exp, bianhao)
                 )
                   
         except:
@@ -210,8 +210,8 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_TABLE SET NL_HP=?,NL_ATK=?,NL_DEF=?,NL_STK=?,NL_SEF=?,NL_SPD=? WHERE UID=? AND BIANHAO=?",
-                    (nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, uid, bianhao)
+                    f"UPDATE POKEMON_TABLE SET NL_HP=?,NL_ATK=?,NL_DEF=?,NL_STK=?,NL_SEF=?,NL_SPD=? WHERE UID='{uid}' AND BIANHAO=?",
+                    (nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, bianhao)
                 )
                   
         except:
@@ -221,8 +221,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_TABLE SET JINENG = ? WHERE UID=? AND BIANHAO=?",
-                    (jineng, uid, bianhao),
+                    f"UPDATE POKEMON_TABLE SET JINENG={jineng} WHERE UID='{uid}' AND BIANHAO={bianhao}"
                 )
                   
         except:
@@ -232,7 +231,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT LEVEL,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG,EXP FROM POKEMON_TABLE WHERE UID={uid} AND BIANHAO={bianhao}").fetchall()
+                    f"SELECT LEVEL,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG,EXP FROM POKEMON_TABLE WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
                 if r:
                     return r[0]
                 else:
@@ -244,7 +243,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT LEVEL,EXP FROM POKEMON_TABLE WHERE UID={uid} AND BIANHAO={bianhao}").fetchall()
+                    f"SELECT LEVEL,EXP FROM POKEMON_TABLE WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
                 if r:
                     return r[0]
                 else:
@@ -256,7 +255,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT COUNT(BIANHAO) AS NUM FROM POKEMON_TABLE WHERE UID={uid}").fetchall()
+                    f"SELECT COUNT(BIANHAO) AS NUM FROM POKEMON_TABLE WHERE UID='{uid}'").fetchall()
                 if r:
                     return r[0][0]
                 else:
@@ -268,7 +267,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT BIANHAO,LEVEL FROM POKEMON_TABLE WHERE UID={uid} ORDER BY LEVEL desc LIMIT 20").fetchall()
+                    f"SELECT BIANHAO,LEVEL FROM POKEMON_TABLE WHERE UID='{uid}' ORDER BY LEVEL desc LIMIT 20").fetchall()
                 if r:
                     return r
                 else:
@@ -278,10 +277,10 @@ class PokeCounter:
             
     def _delete_poke_info(self, uid):
         with self._connect() as conn:
-            conn.execute(f"DELETE FROM POKEMON_TABLE WHERE UID={uid}").fetchall()
+            conn.execute(f"DELETE FROM POKEMON_TABLE WHERE UID='{uid}'").fetchall()
             
     def _delete_poke_bianhao(self, uid, bianhao):
         with self._connect() as conn:
             conn.execute(
-                f"DELETE FROM POKEMON_TABLE WHERE UID={uid} AND BIANHAO={bianhao}"
+                f"DELETE FROM POKEMON_TABLE WHERE UID='{uid}' AND BIANHAO={bianhao}"
             ).fetchall()

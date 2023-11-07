@@ -38,7 +38,7 @@ class GAME_DB:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT NUM FROM POKEMON_GAME WHERE UID={uid} AND TYPE='{gametype}'").fetchall()
+                    f"SELECT NUM FROM POKEMON_GAME WHERE UID='{uid}' AND TYPE='{gametype}'").fetchall()
                 if r:
                     return r[0][0]
                 else:
@@ -52,8 +52,8 @@ class GAME_DB:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_GAME SET NUM = ? WHERE UID=? AND TYPE=?",
-                    (game_num, uid, gametype),
+                    f"UPDATE POKEMON_GAME SET NUM = ? WHERE UID='{uid}' AND TYPE=?",
+                    (game_num, gametype),
                 )
                 return game_num
         except:

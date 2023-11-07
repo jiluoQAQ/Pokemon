@@ -38,7 +38,7 @@ class SCORE_DB:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT SCORE FROM POKEMON_SCORE WHERE UID={uid}").fetchall()
+                    f"SELECT SCORE FROM POKEMON_SCORE WHERE UID='{uid}'").fetchall()
                 if r:
                     return r[0][0]
                 else:
@@ -52,8 +52,7 @@ class SCORE_DB:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "UPDATE POKEMON_SCORE SET SCORE = ? WHERE UID=?",
-                    (now_score, uid),
+                    f"UPDATE POKEMON_SCORE SET SCORE = {now_score} WHERE UID='{uid}'"
                 )
                 
         except:
