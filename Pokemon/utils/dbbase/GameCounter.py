@@ -18,7 +18,7 @@ class GAME_DB:
     def _create_table(self):
         try:
             self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_GAME
-                          (UID             INT    NOT NULL,
+                          (UID             TEXT   NOT NULL,
                            TYPE            TEXT   NOT NULL,
                            NUM             INT    NOT NULL,
                            PRIMARY KEY(UID, TYPE));''')

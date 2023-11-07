@@ -18,7 +18,7 @@ class SCORE_DB:
     def _create_table(self):
         try:
             self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_SCORE
-                          (UID             INT    NOT NULL,
+                          (UID             TEXT   NOT NULL,
                            SCORE           INT    NOT NULL,
                            SHENGWANG       INT    NOT NULL,
                            PRIMARY KEY(UID));''')

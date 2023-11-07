@@ -21,7 +21,7 @@ class PokeCounter:
     def _create_table(self):
         try:
             self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_TABLE
-                          (UID             INT    NOT NULL,
+                          (UID             TEXT   NOT NULL,
                            BIANHAO         INT    NOT NULL,
                            LEVEL           INT    NOT NULL,
                            EXP             INT    NOT NULL,
@@ -46,8 +46,8 @@ class PokeCounter:
     def _create_table_map(self):
         try:
             self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_MAP
-                          (UID             INT    NOT NULL,
-                           HUIZHANG        INT    NOT NULL,
+                          (UID             TEXT   NOT NULL,
+                           HUIZHANG        TEXT   NOT NULL,
                            MAP_NAME        TEXT   NOT NULL,
                            NICKNAME        TEXT   NOT NULL,
                            PRIMARY KEY(UID));''')
@@ -57,7 +57,7 @@ class PokeCounter:
     def _create_table_group(self):
         try:
             self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_TEAM
-                          (UID             INT    NOT NULL,
+                          (UID             TEXT   NOT NULL,
                            TEAM            TEXT   NOT NULL,
                            PRIMARY KEY(UID));''')
         except:
@@ -66,7 +66,7 @@ class PokeCounter:
     def _create_table_egg(self):
         try:
             self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_EGG
-                          (UID             INT    NOT NULL,
+                          (UID             TEXT   NOT NULL,
                            BIANHAO         INT    NOT NULL,
                            NUM             INT    NOT NULL,
                            PRIMARY KEY(UID, BIANHAO));''')

@@ -367,8 +367,8 @@ async def get_chushi_pokemon(bot, ev: Event):
     uid = ev.user_id
     
     POKE = PokeCounter()
-    mypokelist = POKE._get_pokemon_list(uid)
-    if mypokelist != 0:
+    my_pokemon = POKE._get_pokemon_num(uid)
+    if my_pokemon > 0:
         return await bot.send('您已经有精灵了，无法领取初始精灵。', at_sender=True)
     
     bianhao = get_poke_bianhao(pokename)
