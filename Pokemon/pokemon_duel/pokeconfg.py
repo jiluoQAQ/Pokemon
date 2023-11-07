@@ -537,7 +537,7 @@ async def pokemon_fight_s(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,m
         try:
             async with timeout(60):
                 while jineng_use == 0:
-                    resp = await bot.receive_resp(f'请在60秒内选择一个技能使用!\n{myjinenglist}',myjinenglist)
+                    resp = await bot.receive_resp(f'请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=True)
                     if resp is not None:
                         s = resp.text
                         uid = resp.user_id

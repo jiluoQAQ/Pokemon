@@ -207,7 +207,7 @@ async def map_ts_test(bot, ev: Event):
                     mes_list.append(MessageSegment.text(mes))
                     await bot.send(MessageSegment.node(mes_list))
             else:
-                await bot.send('您获得了道具[还没写好]', at_sender=True)
+                await bot.send('您获得了道具', at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['手动野外探索'])
 async def map_ts_test_noauto(bot, ev: Event):
