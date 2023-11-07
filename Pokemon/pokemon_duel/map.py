@@ -213,6 +213,9 @@ async def map_ts_test(bot, ev: Event):
 async def map_ts_test_noauto(bot, ev: Event):
     uid = ev.user_id
     POKE = PokeCounter()
+    mypokelist = POKE._get_pokemon_list(uid)
+    if mypokelist == 0:
+        return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':

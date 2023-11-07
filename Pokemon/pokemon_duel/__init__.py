@@ -378,6 +378,13 @@ async def get_chushi_pokemon(bot, ev: Event):
         return await bot.send(f'{POKEMON_LIST[bianhao][0]}不属于初始精灵，无法领取。', at_sender=True)
     pokemon_info = add_pokemon(uid,bianhao)
     POKE._add_pokemon_group(uid,bianhao)
+    go_didian = '1号道路'
+    if ev.sender:
+        sender = ev.sender
+        name = sender['card'] or sender['nickname']
+    else:
+        name = uid
+    POKE._new_map_info(uid, go_didian, name)
     
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     picfile = os.path.join(FILE_PATH, 'icon', f'{POKEMON_LIST[bianhao][0]}.png')
