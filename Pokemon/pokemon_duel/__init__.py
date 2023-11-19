@@ -281,7 +281,6 @@ async def get_jn_poke_info(bot, ev: Event):
     
     mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,jineng1,jineng2)
     await bot.send(mesg)
-    
 
 @sv_pokemon_duel.on_prefix(['属性测试'])
 async def get_aj_poke_info(bot, ev: Event):
@@ -317,7 +316,38 @@ async def my_pokemon_list(bot, ev: Event):
     for pokemoninfo in mypokelist:
         mes.append(MessageSegment.text(f'{POKEMON_LIST[pokemoninfo[0]][0]}({pokemoninfo[1]}),'))
     await bot.send(mes, at_sender=True)
+
+@sv_pokemon_duel.on_prefix(['技能测试'])
+async def get_my_poke_jineng_button_test(bot, ev: Event):
+    print(str(ev))
+    args = ev.text.split()
+    if len(args)!=1:
+        return await bot.send('请输入 技能测试+宝可梦名称。', at_sender=True)
+    pokename = args[0]
+    uid = ev.user_id
+    bianhao = get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    pokemon_info = get_pokeon_info(uid,bianhao)
+    if pokemon_info == 0:
+        return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
+    jinenglist = re.split(',',pokemon_info[14])
+    jineng_use = 0
+    try:
+        async with timeout(60):
+            while jineng_use == 0:
+                resp = await bot.receive_resp(f'请在60秒内选择一个技能使用!',jinenglist,unsuported_platform=True)
+                if resp is not None:
+                    s = resp.text
+                    uid = resp.user_id
+                    if s in jinenglist:
+                        jineng1 = s
+                        await bot.send(f'你选择的是{resp.text}', at_sender=True)
+                        jineng_use = 1
+    except asyncio.TimeoutError:
+        await bot.send('你没有使用技能', at_sender=True)
     
+
 @sv_pokemon_duel.on_prefix(['精灵状态'])
 async def get_my_poke_info(bot, ev: Event):
     args = ev.text.split()
@@ -335,7 +365,7 @@ async def get_my_poke_info(bot, ev: Event):
     img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
     img = await convert_img(img)
     mes = []
-    mes.append(MessageSegment.image(img))
+    # mes.append(MessageSegment.image(img))
     mes.append(MessageSegment.text(f'{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\n属性值[种族值](个体值)\nHP:{HP}[{POKEMON_LIST[bianhao][1]}]({pokemon_info[1]})\n物攻:{W_atk}[{POKEMON_LIST[bianhao][2]}]({pokemon_info[2]})\n物防:{W_def}[{POKEMON_LIST[bianhao][3]}]({pokemon_info[3]})\n特攻:{M_atk}[{POKEMON_LIST[bianhao][4]}]({pokemon_info[4]})\n特防:{M_def}[{POKEMON_LIST[bianhao][5]}]({pokemon_info[5]})\n速度:{speed}[{POKEMON_LIST[bianhao][6]}]({pokemon_info[6]})\n努力值:{pokemon_info[7]},{pokemon_info[8]},{pokemon_info[9]},{pokemon_info[10]},{pokemon_info[11]},{pokemon_info[12]}\n'))
     mes.append(MessageSegment.text(f'可用技能\n{pokemon_info[14]}'))
     jinenglist = get_level_jineng(pokemon_info[0],bianhao)
@@ -381,7 +411,8 @@ async def get_chushi_pokemon(bot, ev: Event):
     go_didian = '1号道路'
     if ev.sender:
         sender = ev.sender
-        name = sender['card'] or sender['nickname']
+        if sender.get('nickname','') != '':
+            name = sender['nickname']
     else:
         name = uid
     POKE._new_map_info(uid, go_didian, name)
@@ -392,7 +423,7 @@ async def get_chushi_pokemon(bot, ev: Event):
     mes.append(MessageSegment.text(f"恭喜！您领取到了初始精灵\n"))
     img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
     img = await convert_img(img)
-    mes.append(MessageSegment.image(img))
+    # mes.append(MessageSegment.image(img))
     mes.append(MessageSegment.text(f'{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\nHP:{HP}({pokemon_info[1]})\n物攻:{W_atk}({pokemon_info[2]})\n物防:{W_def}({pokemon_info[3]})\n特攻:{M_atk}({pokemon_info[4]})\n特防:{M_def}({pokemon_info[5]})\n速度:{speed}({pokemon_info[6]})\n'))
     mes.append(MessageSegment.text(f'可用技能\n{pokemon_info[14]}'))
     await bot.send(mes, at_sender=True)

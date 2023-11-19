@@ -145,7 +145,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    f"UPDATE POKEMON_MAP SET MAP_NAME={map_name} WHERE UID='{uid}'"
+                    f"UPDATE POKEMON_MAP SET MAP_NAME='{map_name}' WHERE UID='{uid}'"
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -163,7 +163,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    f"UPDATE POKEMON_MAP SET NICKNAME={nickname} WHERE UID='{uid}'"
+                    f"UPDATE POKEMON_MAP SET NICKNAME='{nickname}' WHERE UID='{uid}'"
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -178,7 +178,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    f"UPDATE POKEMON_MAP SET HUIZHANG={huizhang} WHERE UID='{uid}'"
+                    f"UPDATE POKEMON_MAP SET HUIZHANG='{huizhang}' WHERE UID='{uid}'"
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -221,7 +221,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    f"UPDATE POKEMON_TABLE SET JINENG={jineng} WHERE UID='{uid}' AND BIANHAO={bianhao}"
+                    f"UPDATE POKEMON_TABLE SET JINENG='{jineng}' WHERE UID='{uid}' AND BIANHAO={bianhao}"
                 )
                   
         except:

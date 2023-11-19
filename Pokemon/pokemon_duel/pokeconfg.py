@@ -530,25 +530,26 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
 async def pokemon_fight_s(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,jineng1 = None,jineng2 = None):
     shul = 1
     fight_flag = 0
+    mesg = ''
     while fight_flag == 0:
         jieshu = 0
-        mesg = ''
         myjinenglist = re.split(',',mypokemon_info[14])
         dijinenglist = re.split(',',dipokemon_info[14])
         jineng_use = 0
-        try:
-            async with timeout(60):
-                while jineng_use == 0:
-                    resp = await bot.receive_resp(f'请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=True)
-                    if resp is not None:
-                        s = resp.text
-                        uid = resp.user_id
-                        if s in myjinenglist:
-                            jineng1 = s
-                            # await bot.send(f'你选择的是{resp.text}')
-                            jineng_use = 1
-        except asyncio.TimeoutError:
-            jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
+        # try:
+            # async with timeout(60):
+                # while jineng_use == 0:
+                    # resp = await bot.receive_resp(f'请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=False)
+                    # if resp is not None:
+                        # s = resp.text
+                        # uid = resp.user_id
+                        # if s in myjinenglist:
+                            # jineng1 = s
+                            # # await bot.send(f'你选择的是{resp.text}')
+                            # jineng_use = 1
+        # except asyncio.TimeoutError:
+            # jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
+        jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         jinenginfo1 = JINENG_LIST[jineng1]
         
         jineng2 = now_use_jineng(diinfo,myinfo,dijinenglist,myjinenglist,changdi)
@@ -741,7 +742,7 @@ async def pokemon_fight_s(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,m
             else:
                 changdi[0][1] = shengyutianqi
                 mesg = mesg + f"{changdi[0][0]}持续中\n"
-        await bot.send(MessageSegment.text(mesg))
+        #await bot.send(mesg, at_sender=True)
         if(jieshu == 1):
             fight_flag = 1
     return mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi
@@ -878,8 +879,9 @@ async def fight_yw_ys_s(bot,ev,uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 
     changci = 1
     myinfo = []
     diinfo = []
+    mesg = ''
     while len(mypokelist) > 0 and len(dipokelist) > 0:
-        # mes = f'第{changci}场\n'
+        mesg += f'第{changci}场\n'
         # mesg.append(MessageSegment.text(mes))
         changci += 1
         if len(myinfo) == 0:
@@ -892,42 +894,48 @@ async def fight_yw_ys_s(bot,ev,uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 
             dipokemon_info = get_pokeon_info_sj(bianhao2,dilevel)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info)
         if myinfo[3] == myinfo[17]:
-            mes = f'我方派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}'
+            mesg += f'我方派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
             # mesg.append(MessageSegment.text(mes))
             img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
             img = await convert_img(img)
             # mesg.append(MessageSegment.image(img))
-            await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+            # await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+            #await bot.send(mes, at_sender=True)
+            #await bot.send(img, at_sender=True)
         if diinfo[3] == diinfo[17]:
             if ys == 1:
-                mes = f'野生精灵出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}'
+                mesg += f'野生精灵出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
             else:
-                mes = f'敌方派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}'
+                mesg += f'敌方派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
             # mesg.append(MessageSegment.text(mes))
             img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
             img = await convert_img(img)
             # mesg.append(MessageSegment.image(img))
-            await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+            # await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+            #await bot.send(mes, at_sender=True)
+            #await bot.send(img, at_sender=True)
         mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await pokemon_fight_s(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info)
+        mesg += mes
         # mesg.append(MessageSegment.text(mes))
         if myinfo[17] == 0:
             myinfo = []
             myzhuangtai = [['无', 0],['无', 0]]
             mypokelist.remove(bianhao1)
-            mes = f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            mesg += f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             # mesg.append(MessageSegment.text(mes))
-            await bot.send(mes)
+            #await bot.send(mes, at_sender=True)
         if diinfo[17] == 0:
             diinfo = []
             dizhuangtai = [['无', 0],['无', 0]]
             dipokelist.remove(bianhao2)
-            mes = f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
+            mesg += f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             # mesg.append(MessageSegment.text(mes))
-            await bot.send(mes)
+            #await bot.send(mes, at_sender=True)
             # 我方获得经验/努力值奖励
             mes,myinfo = get_win_reward(uid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
+            mesg += mes
             # mesg.append(MessageSegment.text(mes))
-            await bot.send(mes)
+            #await bot.send(mes, at_sender=True)
     return mesg,mypokelist,dipokelist
 
 async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
