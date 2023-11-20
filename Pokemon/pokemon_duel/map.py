@@ -7,7 +7,7 @@ import sqlite3
 import math
 from datetime import datetime, timedelta
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageDraw
 from gsuid_core.sv import SV
 from gsuid_core.bot import Bot
 from gsuid_core.models import Event
@@ -23,18 +23,30 @@ from .PokeCounter import *
 from .until import *
 from pathlib import Path
 from .nameconfig import First_Name, Last_Name, Call_Name
+from ..utils.fonts.starrail_fonts import (
+    sr_font_18,
+    sr_font_20,
+    sr_font_23,
+    sr_font_24,
+    sr_font_26,
+    sr_font_28,
+    sr_font_34,
+    sr_font_38,
+)
 
 TS_FIGHT = 20
 TS_PROP = 10
 TS_POKEMON = 70
 WIN_EGG = 10
-
+black_color = (0, 0, 0)
 
 Excel_path = Path(__file__).parent
 with Path.open(Excel_path / 'map.json', encoding='utf-8') as f:
     map_dict = json.load(f)
     diqulist = map_dict['diqulist']
     didianlist = map_dict['didianlist']
+
+TEXT_PATH = Path(__file__).parent / 'texture2D'
 
 sv_pokemon_map = SV('宝可梦探索', priority=5)
 
@@ -231,7 +243,19 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         mypokelist.append(bianhao)
     if didianlist[this_map]['type'] == "城镇":
         return await bot.send(f'您当前处于城镇中没有可探索的区域', at_sender=True)
+    
+    mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
+    if name == uid:
+        if ev.sender:
+            sender = ev.sender
+            if sender.get('nickname','') != '':
+                name = sender['nickname']
     mes = ''
+    bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
+    vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
+    bg_img.paste(vs_img, (300, 12), vs_img)
+    trainers_path = TEXT_PATH / 'trainers'
     if didianlist[this_map]['type'] == "野外":
         pokelist = list(CHARA_NAME.keys())
         ts_z = TS_FIGHT + TS_PROP + TS_POKEMON
@@ -243,26 +267,70 @@ async def map_ts_test_noauto_use(bot, ev: Event):
             dipokelist = random.sample(pokelist, 1)
             pokename = CHARA_NAME[dipokelist[0]][0]
             pokemonid = dipokelist[0]
-            mes += f'野生宝可梦{pokename}出现了\n'
-            mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bot,ev,uid,mypokelist,dipokelist,didianlist[this_map]['level'][0],didianlist[this_map]['level'][1],1)
-            mes += mes_list
-            if len(mypokelist) == 0:
-                mes += f'您被野生宝可梦{pokename}打败了'
-                # mes_list.append(MessageSegment.text(mes))
-                await bot.send(mes, at_sender=True)
-            if len(dipokelist) == 0:
-                mes += f'您打败了{pokename}'
-                zs_num = int(math.floor(random.uniform(0,100)))
-                # if zs_num <= WIN_EGG:
-                    # mes += f'您获得了{pokename}精灵蛋'
-                    # POKE._add_pokemon_egg(uid,pokemonid,1)
-                # mes_list.append(MessageSegment.text(mes))
-                await bot.send(mes, at_sender=True)
+            # mes += f'野生宝可梦{pokename}出现了\n'
+            my_image = Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
+            di_image = Image.open(CHAR_ICON_PATH / f'{pokename}.png').convert('RGBA').resize((120, 120))
+            bg_img.paste(my_image, (0, 0), my_image)
+            bg_img.paste(di_image, (580, 0), di_image)
+            img_draw = ImageDraw.Draw(bg_img)
+            img_draw.text(
+                (125, 30),
+                '训练家',
+                black_color,
+                sr_font_26,
+                'lm',
+            )
+            img_draw.text(
+                (125, 65),
+                f'{name}',
+                black_color,
+                sr_font_26,
+                'lm',
+            )
+            img_draw.text(
+                (575, 30),
+                '野生宝可梦',
+                black_color,
+                sr_font_26,
+                'rm',
+            )
+            img_draw.text(
+                (575, 65),
+                f'{pokename}',
+                black_color,
+                sr_font_26,
+                'rm',
+            )
+            bg_img,img_height,mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,didianlist[this_map]['level'][0],didianlist[this_map]['level'][1],1)
+            img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
+            if img_height/1280 > 1:
+                bg_img_bg = Image.open(TEXT_PATH / 'duel_bg.jpg')
+                use_bg_img = math.ceil(img_height/1280)
+                for img_num in range(0,use_bg_img):
+                    img_bg.paste(bg_img_bg, (0, 1280 * img_num))
+            img_bg.paste(bg_img, (0, 0))
+            img_bg = await convert_img(img_bg)
+            await bot.send(img_bg)
+            # mes += mes_list
+            # if len(mypokelist) == 0:
+                # mes += f'您被野生宝可梦{pokename}打败了'
+                # # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
+            # if len(dipokelist) == 0:
+                # mes += f'您打败了{pokename}'
+                # zs_num = int(math.floor(random.uniform(0,100)))
+                # # if zs_num <= WIN_EGG:
+                    # # mes += f'您获得了{pokename}精灵蛋'
+                    # # POKE._add_pokemon_egg(uid,pokemonid,1)
+                # # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
         else:
             ts_quality += TS_FIGHT
             if ts_num <= ts_quality:
                 # 对战
-                diname = str(random.sample(Call_Name, 1)[0]) + ' ' + str(random.sample(First_Name, 1)[0]) + str(random.sample(Last_Name, 1)[0])
+                chenghao = str(random.sample(Call_Name, 1)[0])
+                xingming = str(random.sample(First_Name, 1)[0]) + str(random.sample(Last_Name, 1)[0])
+                diname = chenghao + ' ' + xingming
                 pokelist = didianlist[this_map]['pokemon']
                 maxnum = min(5,int(didianlist[this_map]['need']) + 1)
                 min_level = didianlist[this_map]['level'][0]/2 + didianlist[this_map]['level'][0]
@@ -272,20 +340,63 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 mes += f'{diname}向您发起了对战\n'
                 for item in range(0,pokenum):
                     dipokelist.append(random.sample(pokelist, 1)[0])
-                mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bot,ev,uid,mypokelist,dipokelist,min_level,max_level)
+                
+                my_image = Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
+                di_image = Image.open(trainers_path / f'{chenghao}.png').convert('RGBA').resize((120, 120))
+                bg_img.paste(my_image, (0, 0), my_image)
+                bg_img.paste(di_image, (580, 0), di_image)
+                img_draw = ImageDraw.Draw(bg_img)
+                img_draw.text(
+                    (125, 30),
+                    '训练家',
+                    black_color,
+                    sr_font_26,
+                    'lm',
+                )
+                img_draw.text(
+                    (125, 65),
+                    f'{name}',
+                    black_color,
+                    sr_font_26,
+                    'lm',
+                )
+                img_draw.text(
+                    (575, 30),
+                    chenghao,
+                    black_color,
+                    sr_font_26,
+                    'rm',
+                )
+                img_draw.text(
+                    (575, 65),
+                    xingming,
+                    black_color,
+                    sr_font_26,
+                    'rm',
+                )
+                bg_img,img_height,mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,min_level,max_level)
                 mes += mes_list
-                if len(mypokelist) == 0:
-                    mes += f'您被{diname}打败了，眼前一黑'
-                    # mes_list.append(MessageSegment.text(mes))
-                    await bot.send(mes, at_sender=True)
-                if len(dipokelist) == 0:
-                    mes += f'您打败了{diname}\n'
-                    SCORE = SCORE_DB()
-                    get_score = (int(didianlist[this_map]['need']) + 1) * 500
-                    SCORE.update_score(uid, get_score)
-                    mes += f'您获得了{get_score}金钱'
-                    # mes_list.append(MessageSegment.text(mes))
-                    await bot.send(mes, at_sender=True)
+                img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
+                if img_height/1280 > 1:
+                    bg_img_bg = Image.open(TEXT_PATH / 'duel_bg.jpg')
+                    use_bg_img = math.ceil(img_height/1280)
+                    for img_num in range(0,use_bg_img):
+                        img_bg.paste(bg_img_bg, (0, 1280 * img_num))
+                img_bg.paste(bg_img, (0, 0), bg_img)
+                img_bg = await convert_img(img_bg)
+                await bot.send(img_bg)
+                # if len(mypokelist) == 0:
+                    # mes += f'您被{diname}打败了，眼前一黑'
+                    # # mes_list.append(MessageSegment.text(mes))
+                    # await bot.send(mes, at_sender=True)
+                # if len(dipokelist) == 0:
+                    # mes += f'您打败了{diname}\n'
+                    # SCORE = SCORE_DB()
+                    # get_score = (int(didianlist[this_map]['need']) + 1) * 500
+                    # SCORE.update_score(uid, get_score)
+                    # mes += f'您获得了{get_score}金钱'
+                    # # mes_list.append(MessageSegment.text(mes))
+                    # await bot.send(mes, at_sender=True)
             else:
                 await bot.send('您获得了道具[还没写好]', at_sender=True)
 
