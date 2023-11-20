@@ -131,7 +131,7 @@ def get_teshu_zt(zt_jl,ztname,dishux):
     if ztname == '中毒':
         if '钢' in shuxinglist or '毒' in shuxinglist:
             mianyi = 1
-    if ztname == '灼烧' and '火' in shuxinglist:
+    if ztname == '灼伤' and '火' in shuxinglist:
         mianyi = 1
     if ztname == '冰冻' and '冰' in shuxinglist:
         mianyi = 1
@@ -181,8 +181,8 @@ def get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi):
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -243,8 +243,8 @@ def get_shanghai_pt_yh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi):
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -305,8 +305,8 @@ def get_shanghai_zb(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi):
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -370,8 +370,8 @@ def get_shanghai_pt_bh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,inde
     jineng_sh = myinfo[int(index)]
     shanghai = get_shanghai_num(jineng_sh,myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -432,8 +432,8 @@ def get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi):
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -500,8 +500,8 @@ def get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,xh_b
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -567,8 +567,8 @@ def get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,ztname,
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -648,8 +648,8 @@ def get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,ztna
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -717,8 +717,8 @@ def get_sbshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi):
         weili = weili*2
     shanghai = get_shanghai_num(weili,myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][0] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][0] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -781,8 +781,8 @@ def get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,csmim
         weili = weili*2
     shanghai = get_shanghai_num(weili,myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][0] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][0] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     cishu = int(math.floor(random.uniform(csmim,csmax)))
@@ -885,7 +885,7 @@ def get_gushang(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,shanghai):
 
 #获取状态持续伤害
 def get_zhuangtai_sh(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi):
-    if myzhuangtai[0][0] == '灼烧':
+    if myzhuangtai[0][0] == '灼伤':
         shanghai = int(myinfo[3]/16)
     if myzhuangtai[0][0] == '中毒':
         shanghai = int(myinfo[3]/8)
@@ -1033,8 +1033,8 @@ def up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,sxin
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
@@ -1109,8 +1109,8 @@ def dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,sx
     
     shanghai = get_shanghai_num(jinenginfo[2],myinfo[2],myatk,didef,yaohai_xz,shuxing_xz,benxi_xz,tianqi_xz)
     
-    #灼烧状态我方物理伤害减半
-    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼烧' and jinenginfo[1] == '物理':
+    #灼伤状态我方物理伤害减半
+    if myzhuangtai[0][1] > 0 and myzhuangtai[0][1] == '灼伤' and jinenginfo[1] == '物理':
         shanghai = int(shanghai * 0.5)
     
     if int(shanghai)>=int(diinfo[17]):
