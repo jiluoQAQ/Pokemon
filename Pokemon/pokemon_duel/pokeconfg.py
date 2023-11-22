@@ -597,7 +597,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
             'mm',
         )
         img_height += 50
-        #mesg = mesg + f"回合：{shul}\n"
+        mesg = mesg + f"\n回合：{shul}\n"
         shul = shul + 1
         mysd = get_nowshuxing(myinfo[8], myinfo[13])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1])>0:
@@ -670,6 +670,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
                     exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
                     mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = canshu1['ret']
                     my_mesg = my_mesg + mes
+                    
                 else:
                     if myzhuangtai[0][0] == '混乱' and int(myzhuangtai[0][1]) > 0:
                         mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = get_hunluan_sh(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)
@@ -678,7 +679,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
                         my_mesg = my_mesg + f"\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败"
                 if myinfo[17] == 0 or diinfo[17] == 0:
                     jieshu = 1
-                
+                mesg = mesg + my_mesg
                 bg_img.paste(my_pokemon_img, (20, img_height), my_pokemon_img)
                 my_para = get_text_line(my_mesg,25)
                 my_mes_h = 0
@@ -708,7 +709,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
                         di_mesg = di_mesg + f"\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败"
                 if myinfo[17] == 0 or diinfo[17] == 0:
                     jieshu = 1
-                
+                mesg = mesg + di_mesg
                 bg_img.paste(di_pokemon_img, (600, img_height), di_pokemon_img)
                 di_para = get_text_line(di_mesg,25)
                 di_mes_h = 0
@@ -740,7 +741,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
                         di_mesg = di_mesg + f"\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败"
                 if myinfo[17] == 0 or diinfo[17] == 0:
                     jieshu = 1
-                
+                mesg = mesg + di_mesg
                 bg_img.paste(di_pokemon_img, (600, img_height), di_pokemon_img)
                 di_para = get_text_line(di_mesg,25)
                 di_mes_h = 0
@@ -771,7 +772,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
                         my_mesg = my_mesg + f"\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败"
                 if myinfo[17] == 0 or diinfo[17] == 0:
                     jieshu = 1
-                
+                mesg = mesg + my_mesg
                 bg_img.paste(my_pokemon_img, (20, img_height), my_pokemon_img)
                 my_para = get_text_line(my_mesg,25)
                 my_mes_h = 0
@@ -847,6 +848,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
             else:
                 changdi[0][1] = shengyutianqi
                 changdi_mesg = changdi_mesg + f"{changdi[0][0]}持续中\n"
+        mesg = mesg + changdi_mesg
         if math.ceil((img_height + 120)/1280) > bg_num:
             bg_num += 1
             bg_img = change_bg_img(bg_img, bg_num)
@@ -1010,7 +1012,7 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
             bg_num += 1
             bg_img = change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
-        # mesg += f'第{changci}场\n'
+        mesg += f'第{changci}场\n'
         img_draw = ImageDraw.Draw(bg_img)
         img_draw.text(
             (350, img_height + 10),
@@ -1059,15 +1061,15 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
             dilevel = int(math.floor(random.uniform(minlevel,maxlevel)))
             dipokemon_info = get_pokeon_info_sj(bianhao2,dilevel)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info)
-        # if myinfo[3] == myinfo[17]:
-            # mesg += f'我方派出了精灵\ncccccc\n'
+        if myinfo[3] == myinfo[17]:
+            mesg += f'我方派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
             # mesg.append(MessageSegment.text(mes))
             # img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
             # img = await convert_img(img)
             # mesg.append(MessageSegment.image(img))
             # await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
-            #await bot.send(mes, at_sender=True)
-            #await bot.send(img, at_sender=True)
+            # await bot.send(mes, at_sender=True)
+            # await bot.send(img, at_sender=True)
         img_draw.text(
             (125, img_height),
             '我方派出了',
@@ -1088,8 +1090,8 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
             # img = await convert_img(img)
             # mesg.append(MessageSegment.image(img))
             # await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
-            #await bot.send(mes, at_sender=True)
-            #await bot.send(img, at_sender=True)
+            # await bot.send(mes, at_sender=True)
+            # await bot.send(img, at_sender=True)
         if ys == 1:
             mesg += f'野生精灵出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
             img_draw.text(
@@ -1149,6 +1151,7 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
             # 我方获得经验/努力值奖励
             mes,myinfo = get_win_reward(uid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
             win_mesg += mes
+            mesg += f'\n{mes}'
             win_para = get_text_line(win_mesg,30)
             win_mes_h = 0
             for line in win_para:

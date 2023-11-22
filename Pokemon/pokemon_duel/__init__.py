@@ -28,7 +28,9 @@ sv_pokemon_duel = SV('宝可梦对战', priority=5)
 async def pokemon_help(bot, ev: Event):
     msg='''  
              宝可梦帮助
-1、初始精灵列表(查询可以领取的初始精灵)
+进入游戏请先输入 领取初始精灵[精灵名] 开局，初始精灵有各个版本的御三家，如
+    领取初始精灵小火龙
+指令：
 2、领取初始精灵[精灵名](领取初始精灵[精灵名])
 3、精灵状态[精灵名](查询[精灵名]的属性信息)
 4、我的精灵列表(查询我拥有的等级前20的精灵)
@@ -36,6 +38,9 @@ async def pokemon_help(bot, ev: Event):
 6、放生精灵[精灵名](放生名为[精灵名]的精灵)
 7、学习精灵技能[精灵名] [技能名](让精灵学习技能[非学习机技能])
 8、遗忘精灵技能[精灵名] [技能名](让精灵遗忘技能)
+9、野外探索(在野外地区与野生宝可梦或训练师战斗获取精灵经验)
+10、打工(在城镇地区打工进行打工赚取金币)
+11、前往[地点名](前往[地点名]的地点)
 注:
 同一类型的精灵只能拥有一只(进化型为不同类型)
 后续功能在写了在写了(新建文件夹)
@@ -332,27 +337,63 @@ async def get_my_poke_jineng_button_test(bot, ev: Event):
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinenglist = re.split(',',pokemon_info[14])
-    jineng_use = 0
-    try:
-        async with timeout(60):
-            while jineng_use == 0:
-                resp = await bot.receive_resp(f'请在60秒内选择一个技能使用!',jinenglist,unsuported_platform=True)
-                if resp is not None:
-                    s = resp.text
-                    uid = resp.user_id
-                    if s in jinenglist:
-                        jineng1 = s
-                        await bot.send(f'你选择的是{resp.text}', at_sender=True)
-                        jineng_use = 1
-    except asyncio.TimeoutError:
-        await bot.send('你没有使用技能', at_sender=True)
+    markdown = {}
+    markdown['markdown'] = {}
+    markdown['markdown']['template_id'] = 102072861_1700370536
+    markdown['markdown']['params'] = []
+    markdownlist = {}
+    markdownlist['key'] = 'title'
+    markdownlist['values'] = ['短裤小子 孔梦向您发起了对战']
+    markdown['markdown']['params'].append(markdownlist)
+    markdownlist1 = {}
+    markdownlist1['key'] = 'data1'
+    markdownlist1['values'] = ['第1场\n\n我方派出了精灵\n\n小火龙 Lv.6\n\n敌方派出了精灵\n\n小拉达 Lv.4\n\n回合：1\n\n']
+    markdown['markdown']['params'].append(markdownlist1)
+    markdownlist2 = {}
+    markdownlist2['key'] = 'data2'
+    markdownlist2['values'] = ['请在60秒内选择一个技能使用!']
+    markdown['markdown']['params'].append(markdownlist2)
+    # markdown['msg_id'] = ev.msg_id
+    # markdown['keyboard'] = {}
+    # markdown['keyboard']['content'] = {}
+    # markdown['keyboard']['content']['rows'] = []
+    # button = {}
+    # button['buttons'] = []
+    # for index,item in enumerate(jinenglist):
+        # buttons = {}
+        # buttons['id'] = str(index + 1)
+        # buttons['render_data'] = {}
+        # buttons['render_data']['label'] = item
+        # buttons['render_data']['visited_label'] = item
+        # buttons['action'] = {}
+        # buttons['action']['type'] = 2
+        # buttons['action']['permission'] = {}
+        # buttons['action']['permission']['type'] = 2
+        # buttons['action']['permission']['specify_role_ids'] = ["1","2","3"]
+        # buttons['click_limit'] = 10
+        # buttons['unsupport_tips'] = "您的客户端暂不支持该功能, 请升级后适配..."
+        # buttons['data'] = item
+        # buttons['at_bot_show_channel_list'] = True
+        # button['buttons'].append(buttons)
+    # markdown['keyboard']['content']['rows'].append(button)
+    # markdown['keyboard']['content']['bot_appid'] = ev.bot_self_id
+    # await bot.send(MessageSegment.text(markdown))
+    resp = await bot.receive_resp(markdown,jinenglist,unsuported_platform=False)
+    # resp2 = await bot.receive_resp('请在60秒内选择一个技能使用!',jinenglist,unsuported_platform=False)
+    if resp is not None:
+        s = resp.text
+        uid = resp.user_id
+        if s in jinenglist:
+            jineng1 = s
+            await bot.send(f'你选择的是{resp.text}', at_sender=True)
+            jineng_use = 1
     
 
 @sv_pokemon_duel.on_prefix(['精灵状态'])
 async def get_my_poke_info(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=1:
-        return await bot.send('请输入 我的精灵+宝可梦名称 中间用空格隔开。', at_sender=True)
+        return await bot.send('请输入 精灵状态+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
     uid = ev.user_id
     bianhao = get_poke_bianhao(pokename)
@@ -409,12 +450,11 @@ async def get_chushi_pokemon(bot, ev: Event):
     pokemon_info = add_pokemon(uid,bianhao)
     POKE._add_pokemon_group(uid,bianhao)
     go_didian = '1号道路'
+    name = uid
     if ev.sender:
         sender = ev.sender
         if sender.get('nickname','') != '':
             name = sender['nickname']
-    else:
-        name = uid
     POKE._new_map_info(uid, go_didian, name)
     
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
