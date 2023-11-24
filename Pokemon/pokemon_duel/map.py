@@ -127,9 +127,9 @@ async def update_my_name(bot, ev: Event):
     name = args[0]
     if len(name)>10:
         return await bot.send('昵称长度不能超过10个字符。', at_sender=True)
+    POKE = PokeCounter()
     mapinfo = POKE._get_map_info_nickname(name)
-    if dimapinfo[2] == 0:
-        POKE = PokeCounter()
+    if mapinfo[2] == 0:
         POKE._update_map_name(uid,name)
         await bot.send(f'修改成功，当前训练家名称为 {name}', at_sender=True)
     else:
@@ -455,7 +455,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
             else:
                 await bot.send('您获得了道具[还没写好]', at_sender=True)
 
-@sv_pokemon_map.on_prefix(['训练家对战'])
+@sv_pokemon_map.on_prefix(('训练家对战','训练家挑战','挑战训练家'))
 async def pokemon_pk_auto(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=1:

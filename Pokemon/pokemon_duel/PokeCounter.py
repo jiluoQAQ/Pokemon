@@ -239,6 +239,16 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
             
+    def _add_pokemon_id(self, uid, bianhao, changeid):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE POKEMON_TABLE SET BIANHAO='{changeid}' WHERE UID='{uid}' AND BIANHAO={bianhao}"
+                )
+                  
+        except:
+            raise Exception('更新表发生错误')
+            
     def _get_pokemon_info(self, uid, bianhao):
         try:
             with self._connect() as conn:

@@ -31,6 +31,7 @@ async def pokemon_help(bot, ev: Event):
 进入游戏请先输入 领取初始精灵[精灵名] 开局，初始精灵有各个版本的御三家，如
     领取初始精灵小火龙
 指令：
+1、初始精灵列表(查询可以领取的初始精灵)
 2、领取初始精灵[精灵名](领取初始精灵[精灵名])
 3、精灵状态[精灵名](查询[精灵名]的属性信息)
 4、我的精灵列表(查询我拥有的等级前20的精灵)
@@ -41,6 +42,9 @@ async def pokemon_help(bot, ev: Event):
 9、野外探索(在野外地区与野生宝可梦或训练师战斗获取精灵经验)
 10、打工(在城镇地区打工进行打工赚取金币)
 11、前往[地点名](前往[地点名]的地点)
+12、宝可梦进化[精灵名](让你的宝可梦进化为[精灵名]，需要有前置进化型精灵)
+13、修改训练家名称[昵称](把你的训练家名称改为[昵称]，[昵称]有唯一性，作为对战识别符)
+14、训练家对战[昵称](与昵称为[昵称]的训练家进行对战)
 注:
 同一类型的精灵只能拥有一只(进化型为不同类型)
 后续功能在写了在写了(新建文件夹)
@@ -539,6 +543,8 @@ async def del_pokemon_jineng(bot, ev: Event):
     if str(jinengname) not in str(pokemon_info[14]):
         return await bot.send(f'遗忘失败，您的精灵{POKEMON_LIST[bianhao][0]}未学习{jinengname}。', at_sender=True)
     jinenglist = re.split(',',pokemon_info[14])
+    if len(jinenglist) == 1:
+        return await bot.send(f'遗忘失败，需要保留1个技能用于对战哦。', at_sender=True)
     jinenglist.remove(jinengname)
     jineng = ''
     shul = 0
@@ -564,7 +570,44 @@ async def get_jineng_info(bot, ev: Event):
     except:
         await bot.send('无法找到该技能，请输入正确的技能名称。', at_sender=True)
 
-
-
+@sv_pokemon_duel.on_prefix(['宝可梦进化'])
+async def get_jineng_info(bot, ev: Event):
+    args = ev.text.split()
+    if len(args)!=1:
+        return await bot.send('请输入 宝可梦进化+宝可梦名称。', at_sender=True)
+    pokename = args[0]
+    uid = ev.user_id
+    bianhao = get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    zhongzu = POKEMON_LIST[bianhao]
+    if len(zhongzu) < 9:
+        return await bot.send('暂时没有该宝可梦的进化信息，请等待后续更新。', at_sender=True)
+    if zhongzu[8] == '-':
+        return await bot.send('暂时没有该宝可梦的进化信息。', at_sender=True)
+    kid_poke_id = int(zhongzu[8])
+    pokemon_info = get_pokeon_info(uid,kid_poke_id)
+    if pokemon_info == 0:
+        return await bot.send(f'您还没有{POKEMON_LIST[kid_poke_id][0]}，无法进化。', at_sender=True)
+    if isinstance(int(zhongzu[9]), int):
+        if pokemon_info[0] < int(zhongzu[9]):
+            return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要 Lv.{zhongzu[9]}\n您的{POKEMON_LIST[kid_poke_id][0]}等级为 Lv.{pokemon_info[0]}，无法进化', at_sender=True)
+        else:
+            POKE = PokeCounter()
+            POKE._add_pokemon_id(uid, kid_poke_id, bianhao)
+            my_team = POKE.get_pokemon_group(uid)
+            pokemon_list = my_team.split(',')
+            if str(kid_poke_id) in pokemon_list:
+                team_list = []
+                for pokeid in pokemon_list:
+                    if int(pokeid) == int(kid_poke_id):
+                        pokeid = bianhao
+                    team_list.append(str(pokeid))
+                print(team_list)
+                pokemon_str = ','.join(team_list)
+                POKE._add_pokemon_group(uid,pokemon_str)
+            return await bot.send(f'恭喜！您的宝可梦 {POKEMON_LIST[kid_poke_id][0]} 进化成了 {POKEMON_LIST[bianhao][0]}', at_sender=True)
+    else:
+        return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要道具{zhongzu[9]}，您还没有该道具，无法进化', at_sender=True)
 
 
