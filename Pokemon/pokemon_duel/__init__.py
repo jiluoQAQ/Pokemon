@@ -421,13 +421,13 @@ async def get_my_poke_info(bot, ev: Event):
 @sv_pokemon_duel.on_fullmatch(['初始精灵列表'])
 async def get_chushi_list(bot, ev: Event):
     mes = []
-    mes.append(MessageSegment.text("可输入领取初始精灵+精灵名称领取"))
+    mes = ''
+    mes += "可输入领取初始精灵+精灵名称领取"
     for bianhao in chushi_list:
-        img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
-        img = await convert_img(img)
-        mes.append(MessageSegment.image(img))
-        mes.append(MessageSegment.text(f"{POKEMON_LIST[bianhao][0]}\n属性:{POKEMON_LIST[bianhao][7]}"))
-    await bot.send(MessageSegment.node(mes))
+        #img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
+        #img = await convert_img(img)
+        mes += f"\n{POKEMON_LIST[bianhao][0]} 属性:{POKEMON_LIST[bianhao][7]}"
+    await bot.send(mes)
     
 @sv_pokemon_duel.on_prefix(['领取初始精灵'])
 async def get_chushi_pokemon(bot, ev: Event):

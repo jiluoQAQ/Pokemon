@@ -141,6 +141,18 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
     
+    def _get_map_info_nickname(self,nickname):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT HUIZHANG,MAP_NAME,UID FROM POKEMON_MAP WHERE NICKNAME='{nickname}'").fetchall()
+                if r:
+                    return r[0]
+                else:
+                    return [0,'',0]
+        except:
+            raise Exception('查找表发生错误')
+    
     def _add_map_now(self,uid,map_name):
         try:
             with self._connect() as conn:

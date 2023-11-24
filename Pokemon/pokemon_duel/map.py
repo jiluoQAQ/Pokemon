@@ -125,9 +125,15 @@ async def update_my_name(bot, ev: Event):
         return await bot.send('请输入 修改训练家名称+昵称。', at_sender=True)
     uid = ev.user_id
     name = args[0]
-    POKE = PokeCounter()
-    POKE._update_map_name(uid,name)
-    await bot.send(f'修改成功，当前训练家名称为 {name}', at_sender=True)
+    if len(name)>10:
+        return await bot.send('昵称长度不能超过10个字符。', at_sender=True)
+    mapinfo = POKE._get_map_info_nickname(name)
+    if dimapinfo[2] == 0:
+        POKE = PokeCounter()
+        POKE._update_map_name(uid,name)
+        await bot.send(f'修改成功，当前训练家名称为 {name}', at_sender=True)
+    else:
+        return await bot.send('该昵称已被其他玩家抢注，请选择其他昵称。', at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['打工'])
 async def map_work_test(bot, ev: Event):
@@ -225,7 +231,7 @@ async def map_ts_test(bot, ev: Event):
             else:
                 await bot.send('您获得了道具', at_sender=True)
 
-@sv_pokemon_map.on_fullmatch(['野外探索测试'])
+@sv_pokemon_map.on_fullmatch(['野外探索'])
 async def map_ts_test_noauto_use(bot, ev: Event):
     uid = ev.user_id
     POKE = PokeCounter()
@@ -255,6 +261,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
             if sender.get('nickname','') != '':
                 name = sender['nickname']
     mes = ''
+    name = name[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
     bg_img.paste(vs_img, (300, 12), vs_img)
@@ -448,7 +455,159 @@ async def map_ts_test_noauto_use(bot, ev: Event):
             else:
                 await bot.send('您获得了道具[还没写好]', at_sender=True)
 
-@sv_pokemon_map.on_fullmatch(['野外探索'])
+@sv_pokemon_map.on_prefix(['训练家对战'])
+async def pokemon_pk_auto(bot, ev: Event):
+    args = ev.text.split()
+    if len(args)!=1:
+        return await bot.send('请输入 训练家对战+对战训练家昵称 中间用空格隔开。', at_sender=True)
+    uid = ev.user_id
+    POKE = PokeCounter()
+    mypokelist = POKE._get_pokemon_list(uid)
+    if mypokelist == 0:
+        return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
+    mapinfo = POKE._get_map_now(uid)
+    this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
+    my_team = POKE.get_pokemon_group(uid)
+    if my_team == '':
+        return await bot.send('您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。', at_sender=True)
+    pokemon_team = my_team.split(',')
+    mypokelist = []
+    for bianhao in pokemon_team:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+    
+    mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
+    if name == uid:
+        if ev.sender:
+            sender = ev.sender
+            if sender.get('nickname','') != '':
+                name = sender['nickname']
+    
+    nickname = args[0]
+    dimapinfo = POKE._get_map_info_nickname(nickname)
+    if dimapinfo[2] == 0:
+        return await bot.send('没有找到该训练家，请输入 正确的对战训练家昵称。', at_sender=True)
+    
+    diname = nickname
+    if name == diname:
+        return await bot.send('不能自己打自己哦。', at_sender=True)
+    diuid = dimapinfo[2]
+    dipokelist = POKE._get_pokemon_list(diuid)
+    if mypokelist == 0:
+        return await bot.send(f'{diname}还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
+    di_team = POKE.get_pokemon_group(diuid)
+    if di_team == '':
+        return await bot.send(f'{diname}您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。', at_sender=True)
+    di_pokemon_team = di_team.split(',')
+    dipokelist = []
+    for bianhao in di_pokemon_team:
+        bianhao = int(bianhao)
+        dipokelist.append(bianhao)
+    
+    name = name[:10]
+    diname = diname[:10]
+    # 对战
+    mes = ''
+    bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
+    vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
+    bg_img.paste(vs_img, (300, 12), vs_img)
+    trainers_path = TEXT_PATH / 'trainers'
+    my_image = Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
+    di_image = Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
+    bg_img.paste(my_image, (0, 0), my_image)
+    bg_img.paste(di_image, (580, 0), di_image)
+    img_draw = ImageDraw.Draw(bg_img)
+    img_draw.text(
+        (125, 30),
+        '训练家',
+        black_color,
+        sr_font_24,
+        'lm',
+    )
+    img_draw.text(
+        (125, 65),
+        f'{name}',
+        black_color,
+        sr_font_24,
+        'lm',
+    )
+    img_draw.text(
+        (575, 30),
+        '训练家',
+        black_color,
+        sr_font_24,
+        'rm',
+    )
+    img_draw.text(
+        (575, 65),
+        diname,
+        black_color,
+        sr_font_24,
+        'rm',
+    )
+    bg_img,bg_num,img_height,mes_list,mypokelist,dipokelist = await fight_pk(bot,ev,bg_img,uid,diuid,mypokelist,dipokelist,name,diname)
+    # mes += mes_list
+    if math.ceil((img_height + 120)/1280) > bg_num:
+        bg_num += 1
+        bg_img = change_bg_img(bg_img, bg_num)
+    img_draw = ImageDraw.Draw(bg_img)
+    if len(mypokelist) == 0:
+        # mes += f'您被{diname}打败了，眼前一黑'
+        # mes_list.append(MessageSegment.text(mes))
+        img_draw.text(
+            (575, img_height + 30),
+            f'{diname}打败了{name}',
+            black_color,
+            sr_font_20,
+            'rm',
+        )
+        SCORE = SCORE_DB()
+        get_score = (int(mapinfo[0]) + 1) * 500
+        SCORE.update_score(diuid, get_score)
+        mes += f'您获得了{get_score}金钱'
+        img_draw.text(
+            (575, img_height + 65),
+            f'{diname}获得了{get_score}金钱',
+            black_color,
+            sr_font_20,
+            'rm',
+        )
+        bg_img.paste(di_image, (580, img_height), di_image)
+        img_height += 130
+        # await bot.send(mes, at_sender=True)
+    if len(dipokelist) == 0:
+        # mes += f'您打败了{diname}\n'
+        img_draw.text(
+            (125, img_height + 30),
+            f'{name}打败了{diname}',
+            black_color,
+            sr_font_20,
+            'lm',
+        )
+        SCORE = SCORE_DB()
+        get_score = (int(dimapinfo[0]) + 1) * 500
+        SCORE.update_score(uid, get_score)
+        mes += f'您获得了{get_score}金钱'
+        img_draw.text(
+            (125, img_height + 65),
+            f'{name}获得了{get_score}金钱',
+            black_color,
+            sr_font_20,
+            'lm',
+        )
+        bg_img.paste(my_image, (0, img_height), my_image)
+        # mes_list.append(MessageSegment.text(mes))
+        # await bot.send(mes, at_sender=True)
+        img_height += 130
+    img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
+    img_bg.paste(bg_img, (0, 0))
+    img_bg = await convert_img(img_bg)
+    await bot.send(img_bg)
+
+@sv_pokemon_map.on_fullmatch(['野外探索测试'])
 async def map_ts_test_noauto(bot, ev: Event):
     uid = ev.user_id
     POKE = PokeCounter()

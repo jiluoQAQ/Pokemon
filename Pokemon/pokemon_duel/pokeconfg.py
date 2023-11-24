@@ -1168,6 +1168,172 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
             #await bot.send(mes, at_sender=True)
     return bg_img,bg_num,img_height,mesg,mypokelist,dipokelist
 
+async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname):
+    myzhuangtai = [['无', 0],['无', 0]]
+    dizhuangtai = [['无', 0],['无', 0]]
+    changdi = [['无天气', 99],['', 0]]
+    changci = 1
+    myinfo = []
+    diinfo = []
+    mesg = ''
+    max_my_num = len(mypokelist)
+    max_di_num = len(dipokelist)
+    img_height = 90
+    bg_num = 1
+    while len(mypokelist) > 0 and len(dipokelist) > 0:
+        img_height += 30
+        if math.ceil((img_height + 50)/1280) > bg_num:
+            bg_num += 1
+            bg_img = change_bg_img(bg_img, bg_num)
+            img_draw = ImageDraw.Draw(bg_img)
+        mesg += f'第{changci}场\n'
+        img_draw = ImageDraw.Draw(bg_img)
+        img_draw.text(
+            (350, img_height + 10),
+            f'第{changci}场',
+            black_color,
+            sr_font_28,
+            'mm',
+        )
+        if math.ceil((img_height + 50)/1280) > bg_num:
+            bg_num += 1
+            bg_img = change_bg_img(bg_img, bg_num)
+            img_draw = ImageDraw.Draw(bg_img)
+        ball_new = Image.open(TEXT_PATH / 'ball_new.png').convert('RGBA').resize((20, 20))
+        ball_bad = Image.open(TEXT_PATH / 'ball_bad.png').convert('RGBA').resize((20, 20))
+        for item in range(0, max_my_num):
+            if item < len(mypokelist):
+                ball_img = ball_new
+            else:
+                ball_img = ball_bad
+            ball_x = 125 + (20 + 5) * item
+            ball_y = img_height
+            bg_img.paste(ball_img, (ball_x, ball_y), ball_img)
+        
+        for item in range(1, max_di_num + 1):
+            if item <= len(dipokelist):
+                ball_img = ball_new
+            else:
+                ball_img = ball_bad
+            ball_x = 575 - (20 + 5) * item
+            ball_y = img_height
+            bg_img.paste(ball_img, (ball_x, ball_y), ball_img)
+        img_height += 55
+        
+        if math.ceil((img_height + 120)/1280) > bg_num:
+            bg_num += 1
+            bg_img = change_bg_img(bg_img, bg_num)
+            img_draw = ImageDraw.Draw(bg_img)
+        # mesg.append(MessageSegment.text(mes))
+        changci += 1
+        if len(myinfo) == 0:
+            bianhao1 = random.sample(mypokelist, 1)[0]
+            mypokemon_info = get_pokeon_info(myuid,bianhao1)
+            myinfo = new_pokemon_info(bianhao1, mypokemon_info)
+        if len(diinfo) == 0:
+            bianhao2 = random.sample(dipokelist, 1)[0]
+            dipokemon_info = get_pokeon_info(diuid,bianhao2)
+            diinfo = new_pokemon_info(bianhao2, dipokemon_info)
+        if myinfo[3] == myinfo[17]:
+            mesg += f'{myname}派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
+            # mesg.append(MessageSegment.text(mes))
+            # img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
+            # img = await convert_img(img)
+            # mesg.append(MessageSegment.image(img))
+            # await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+            # await bot.send(mes, at_sender=True)
+            # await bot.send(img, at_sender=True)
+        img_draw.text(
+            (125, img_height),
+            f'{myname}派出了',
+            black_color,
+            sr_font_20,
+            'lm',
+        )
+        img_draw.text(
+            (125, img_height + 40),
+            f'{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}',
+            black_color,
+            sr_font_20,
+            'lm',
+        )
+        # if diinfo[3] == diinfo[17]:
+            # mesg.append(MessageSegment.text(mes))
+            # img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
+            # img = await convert_img(img)
+            # mesg.append(MessageSegment.image(img))
+            # await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+            # await bot.send(mes, at_sender=True)
+            # await bot.send(img, at_sender=True)
+        mesg += f'{diname}派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
+        img_draw.text(
+            (575, img_height),
+            f'{diname}派出了',
+            black_color,
+            sr_font_20,
+            'rm',
+        )
+        img_draw.text(
+            (575, img_height + 40),
+            f'{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}',
+            black_color,
+            sr_font_20,
+            'rm',
+        )
+        img_height += 70
+        bg_img,img_height,bg_num,mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info)
+        img_draw = ImageDraw.Draw(bg_img)
+        mesg += mes
+        if math.ceil((img_height + 100)/1280) > bg_num:
+            bg_num += 1
+            bg_img = change_bg_img(bg_img, bg_num)
+            img_draw = ImageDraw.Draw(bg_img)
+        # mesg.append(MessageSegment.text(mes))
+        if myinfo[17] == 0:
+            myinfo = []
+            myzhuangtai = [['无', 0],['无', 0]]
+            mypokelist.remove(bianhao1)
+            lose_msg = f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            mes,diinfo = get_win_reward(diuid, bianhao2, diinfo, dipokemon_info, bianhao1, mypokemon_info[0])
+            lose_msg += mes
+            mesg += f'\n{mes}'
+            lose_para = get_text_line(lose_msg,30)
+            lose_mes_h = 0
+            for line in lose_para:
+                img_draw.text(
+                    (575, img_height + lose_mes_h),
+                    line,
+                    black_color,
+                    sr_font_18,
+                    'rm',
+                )
+                lose_mes_h += 30
+            img_height = img_height + lose_mes_h
+        if diinfo[17] == 0:
+            diinfo = []
+            dizhuangtai = [['无', 0],['无', 0]]
+            dipokelist.remove(bianhao2)
+            win_mesg = f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
+            # 我方获得经验/努力值奖励
+            mes,myinfo = get_win_reward(myuid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
+            win_mesg += mes
+            mesg += f'\n{mes}'
+            win_para = get_text_line(win_mesg,30)
+            win_mes_h = 0
+            for line in win_para:
+                img_draw.text(
+                    (125, img_height + win_mes_h),
+                    line,
+                    black_color,
+                    sr_font_18,
+                    'lm',
+                )
+                win_mes_h += 30
+            img_height = img_height + win_mes_h
+            # mesg.append(MessageSegment.text(mes))
+            #await bot.send(mes, at_sender=True)
+    return bg_img,bg_num,img_height,mesg,mypokelist,dipokelist
+
 async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
     myzhuangtai = [['无', 0],['无', 0]]
     dizhuangtai = [['无', 0],['无', 0]]

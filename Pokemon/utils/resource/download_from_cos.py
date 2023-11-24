@@ -10,4 +10,4 @@ async def check_use():
             'resource/icon': CHAR_ICON_PATH,
         },
     )
-    return 'sr全部资源下载完成!'
+    return 'pm全部资源下载完成!'
