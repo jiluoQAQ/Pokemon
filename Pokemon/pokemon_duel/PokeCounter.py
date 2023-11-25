@@ -180,6 +180,15 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
     
+    def _update_map_huizhang(self,uid,huizhang):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE POKEMON_MAP SET HUIZHANG={huizhang} WHERE UID='{uid}'"
+                )  
+        except:
+            raise Exception('更新表发生错误')
+    
     def delete_pokemon_map(self, uid):
         with self._connect() as conn:
             conn.execute(

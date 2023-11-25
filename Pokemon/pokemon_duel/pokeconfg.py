@@ -50,7 +50,7 @@ tingzhilist = ['冰冻','睡眠','休息']
 #概率无法出手异常
 chushoulist = ['混乱','麻痹']
 #有回合限制的异常状态
-hh_yichanglist = ['混乱','睡眠','休息']
+hh_yichanglist = ['混乱','睡眠','休息','无敌']
 #强制先手技能
 xianzhi = ['守住','看穿','极巨防壁','拦堵']
 #先手技能
@@ -332,6 +332,32 @@ def now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi):
             return random.sample(jineng_use_list,1)[0]
     else:
         return random.sample(myjinenglist,1)[0]
+
+def get_chenghao(uid):
+    POKE = PokeCounter()
+    mapinfo = POKE._get_map_now(uid)
+    huizhang = int(mapinfo[0])
+    if huizhang == 9:
+        chenghao = '天王训练家'
+        huizhangnum = 8
+        return chenghao,huizhangnum
+    elif huizhang == 10:
+        chenghao = '冠军训练家'
+        huizhangnum = 8
+        return chenghao,huizhangnum
+    else:
+        if huizhang == 0:
+            chenghao = '新手训练家'
+            return chenghao,huizhang
+        elif huizhang < 3:
+            chenghao = '普通训练家'
+            return chenghao,huizhang
+        elif huizhang < 6:
+            chenghao = '精英训练家'
+            return chenghao,huizhang
+        else:
+            chenghao = '资深训练家'
+            return chenghao,huizhang
 
 def get_text_line(content,num):
     content_line = []

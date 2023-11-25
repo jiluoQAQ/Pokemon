@@ -21,6 +21,7 @@ from .pokemon import *
 from .PokeCounter import *
 from .until import *
 from .map import *
+from .fight import *
 
 sv_pokemon_duel = SV('宝可梦对战', priority=5)
 

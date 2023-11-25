@@ -96,6 +96,7 @@ async def map_my_info(bot, ev: Event):
     pokemon_list = my_team.split(',')
     mapinfo = POKE._get_map_now(uid)
     name = mapinfo[2]
+    mychenghao,huizhang = get_chenghao(uid)
     if name == uid:
         if ev.sender:
             sender = ev.sender
@@ -103,8 +104,9 @@ async def map_my_info(bot, ev: Event):
                 name = sender['nickname']
     mes = ''
     mes += f'训练家名称:{name}\n'
+    mes += f'训练家称号:{mychenghao}\n'
     mes += f'拥有金钱:{my_score}\n'
-    mes += f'拥有徽章:{mapinfo[0]}\n'
+    mes += f'拥有徽章:{huizhang}\n'
     if mapinfo[1]:
         this_map = mapinfo[1]
         diquname = diqulist[didianlist[this_map]['fname']]['name']
@@ -254,6 +256,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         return await bot.send(f'您当前处于城镇中没有可探索的区域', at_sender=True)
     
     mapinfo = POKE._get_map_now(uid)
+    mychenghao,huizhang = get_chenghao(uid)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -285,7 +288,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
             img_draw = ImageDraw.Draw(bg_img)
             img_draw.text(
                 (125, 30),
-                '训练家',
+                mychenghao,
                 black_color,
                 sr_font_24,
                 'lm',
@@ -379,7 +382,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 img_draw = ImageDraw.Draw(bg_img)
                 img_draw.text(
                     (125, 30),
-                    '训练家',
+                    mychenghao,
                     black_color,
                     sr_font_24,
                     'lm',
@@ -486,6 +489,7 @@ async def pokemon_pk_auto(bot, ev: Event):
             if sender.get('nickname','') != '':
                 name = sender['nickname']
     
+    mychenghao,myhuizhang = get_chenghao(uid)
     nickname = args[0]
     dimapinfo = POKE._get_map_info_nickname(nickname)
     if dimapinfo[2] == 0:
@@ -495,6 +499,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     if name == diname:
         return await bot.send('不能自己打自己哦。', at_sender=True)
     diuid = dimapinfo[2]
+    dichenghao,dihuizhang = get_chenghao(diuid)
     dipokelist = POKE._get_pokemon_list(diuid)
     if mypokelist == 0:
         return await bot.send(f'{diname}还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -522,7 +527,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     img_draw = ImageDraw.Draw(bg_img)
     img_draw.text(
         (125, 30),
-        '训练家',
+        mychenghao,
         black_color,
         sr_font_24,
         'lm',
@@ -536,7 +541,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     )
     img_draw.text(
         (575, 30),
-        '训练家',
+        dichenghao,
         black_color,
         sr_font_24,
         'rm',
