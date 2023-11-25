@@ -319,7 +319,7 @@ async def pk_vs_tianwang(bot, ev: Event):
             'lm',
         )
         SCORE = SCORE_DB()
-        new_huizhang = int(huizhang) + 1
+        new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
         mes += f'您获得了{get_score}金钱'
@@ -462,7 +462,7 @@ async def pk_vs_guanjun(bot, ev: Event):
             'lm',
         )
         SCORE = SCORE_DB()
-        new_huizhang = int(huizhang) + 1
+        new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
         mes += f'您获得了{get_score}金钱'

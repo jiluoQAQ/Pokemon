@@ -101,11 +101,20 @@ class PokeCounter:
             ).fetchall()
     
     def _add_pokemon_egg(self, uid, bianhao, use_num):
-        eggnum = self.get_pokemon_egg(uid, bianhao) + use_num
+        eggnum = int(self.get_pokemon_egg(uid, bianhao)) + int(use_num)
         try:
             with self._connect() as conn:
                 conn.execute(
                     "INSERT OR REPLACE INTO POKEMON_EGG (UID,BIANHAO,NUM) VALUES (?,?,?)", (uid, bianhao, eggnum)
+                )  
+        except:
+            raise Exception('更新表发生错误')
+    
+    def delete_pokemon_egg_bianhao(self, uid, bianhao):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE POKEMON_EGG SET NUM=0 WHERE UID='{uid}' AND BIANHAO={bianhao}"
                 )  
         except:
             raise Exception('更新表发生错误')
@@ -116,7 +125,19 @@ class PokeCounter:
                 r = conn.execute(
                     f"SELECT NUM FROM POKEMON_EGG WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
                 if r:
-                    return r[0]
+                    return r[0][0]
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def get_pokemon_egg_list(self, uid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT BIANHAO,NUM FROM POKEMON_EGG WHERE UID='{uid}' AND NUM>0 ORDER BY NUM desc LIMIT 30").fetchall()
+                if r:
+                    return r
                 else:
                     return 0
         except:
@@ -204,14 +225,14 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
     
-    def _add_pokemon_info(self, uid, bianhao, pokemon_info):
+    def _add_pokemon_info(self, uid, bianhao, pokemon_info, exp = 0):
         level, gt_hp, gt_atk, gt_def, gt_stk, gt_sdf, gt_spd, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, xingge, jineng = pokemon_info
         #print(pokemon_info)
         try:
             with self._connect() as conn:
                 conn.execute(
                     "INSERT OR REPLACE INTO POKEMON_TABLE (UID,BIANHAO,LEVEL,EXP,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG) \
-                                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (uid, bianhao, level, 0, gt_hp, gt_atk, gt_def, gt_stk, gt_sdf, gt_spd, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, xingge, jineng)
+                                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (uid, bianhao, level, exp, gt_hp, gt_atk, gt_def, gt_stk, gt_sdf, gt_spd, nl_hp, nl_atk, nl_def, nl_stk,nl_sef, nl_spd, xingge, jineng)
                 )
                   
         except:
@@ -305,7 +326,19 @@ class PokeCounter:
                     return 0
         except:
             raise Exception('查找表发生错误')
-            
+    
+    def _get_my_pokemon(self, uid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT BIANHAO FROM POKEMON_TABLE WHERE UID='{uid}' ORDER BY LEVEL desc").fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
     def _delete_poke_info(self, uid):
         with self._connect() as conn:
             conn.execute(f"DELETE FROM POKEMON_TABLE WHERE UID='{uid}'").fetchall()

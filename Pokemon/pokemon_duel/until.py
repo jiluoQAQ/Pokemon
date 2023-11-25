@@ -451,7 +451,7 @@ def get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi):
         mes = mes + '命中要害，'
     mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
     mymaxhp = myinfo[3]
-    down_my_hp = myinfo[3] * 0.1
+    down_my_hp = math.ceil(myinfo[3] * 0.1)
     now_my_hp = max(1, myinfo[17] - down_my_hp)
     last_my_hp = myinfo[17] - now_my_hp
     myinfo[17] = now_my_hp

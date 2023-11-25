@@ -2485,7 +2485,7 @@ JINENG_LIST = {
     '魔法闪耀':['妖精','特殊','80','100','10','向对手发射强光，并给予伤害。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
     '庆祝':['一般','变化','—','—','40','宝可梦为十分开心的你庆祝。',''],
     '牵手':['一般','變化','—','—','40','我方宝可梦之间牵手。能带来非常幸福的心情。',''],
-    '圆瞳':['妖精','变化','—','100','30','用圆瞳凝视对手，从而降低其攻击。必定能够先制攻击。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
+    '圆瞳':['妖精','变化','—','100','30','用圆瞳凝视对手，从而降低其攻击。必定能够先制攻击。',"up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')"],
     '蹭蹭脸颊':['电','物理','20','100','20','将带电的脸颊蹭蹭对手进行攻击。让对手陷入麻痹状态。',"get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','100')"],
     '手下留情':['一般','物理','40','100','40','在攻击的时候手下留情，从而使对手的ＨＰ至少会留下１ＨＰ。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
     '死缠烂打':['虫','特殊','20','100','20','在４～５回合内死缠烂打地进行攻击。在此期间对手将无法逃走。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],

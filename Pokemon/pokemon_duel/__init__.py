@@ -46,6 +46,12 @@ async def pokemon_help(bot, ev: Event):
 12、宝可梦进化[精灵名](让你的宝可梦进化为[精灵名]，需要有前置进化型精灵)
 13、修改训练家名称[昵称](把你的训练家名称改为[昵称]，[昵称]有唯一性，作为对战识别符)
 14、训练家对战[昵称](与昵称为[昵称]的训练家进行对战)
+15、挑战[道馆][天王][四天王冠军](通过战胜[道馆][天王][四天王冠军]获得徽章称号，进一步解锁功能)
+16、查看地图[地区名](查询[地区名]的地点信息，[地区名]可留空，默认所在地区)
+17、我的精灵蛋(查询我的精灵蛋信息)
+18、重置个体值[精灵名](消耗一枚[精灵名]初始形态的精灵蛋对[精灵名]的个体值进行重置)
+19、宝可梦孵化[精灵名](消耗一枚[精灵名]的精灵蛋孵化出一只lv.5的[精灵名])
+20、更新队伍[精灵名](更新手持队伍信息，不同的宝可梦用空格分隔，最多4只)
 注:
 同一类型的精灵只能拥有一只(进化型为不同类型)
 后续功能在写了在写了(新建文件夹)
@@ -497,7 +503,12 @@ async def fangsheng_pokemon(bot, ev: Event):
     if my_pokemon == 1:
         return await bot.send('您就这么一只精灵了，无法放生。', at_sender=True)
     fangshen(uid,bianhao)
-    
+    my_team = POKE.get_pokemon_group(uid)
+    pokemon_list = my_team.split(',')
+    if str(bianhao) in pokemon_list:
+        pokemon_list.remove(str(bianhao))
+        pokemon_str = ','.join(pokemon_list)
+        POKE._add_pokemon_group(uid,pokemon_str)
     await bot.send(f'放生成功，{POKEMON_LIST[bianhao][0]}离你而去了', at_sender=True)
 
 @sv_pokemon_duel.on_prefix(['学习精灵技能'])
@@ -611,4 +622,100 @@ async def get_jineng_info(bot, ev: Event):
     else:
         return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要道具{zhongzu[9]}，您还没有该道具，无法进化', at_sender=True)
 
+@sv_pokemon_duel.on_fullmatch(['我的精灵蛋'])
+async def my_pokemon_egg_list(bot, ev: Event):
+    uid = ev.user_id
+    POKE = PokeCounter()
+    myegglist = POKE.get_pokemon_egg_list(uid)
+    if myegglist == 0:
+        return await bot.send('您还没有精灵蛋', at_sender=True)
+    mes = ''
+    mes += '您的精灵蛋信息为(只显示数量最多的前30种):\n'
+    for pokemoninfo in myegglist:
+        mes += f'{POKEMON_LIST[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]}\n'
+    await bot.send(mes, at_sender=True)
 
+@sv_pokemon_duel.on_prefix(['丢弃精灵蛋'])
+async def my_pokemon_egg_use(bot, ev: Event):
+    args = ev.text.split()
+    if len(args)!=1:
+        return await bot.send('请输入 丢弃精灵蛋+宝可梦名称。', at_sender=True)
+    uid = ev.user_id
+    pokename = args[0]
+    uid = ev.user_id
+    bianhao = get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    POKE = PokeCounter()
+    egg_num = POKE.get_pokemon_egg(uid,bianhao)
+    if egg_num == 0:
+        return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
+    POKE.delete_pokemon_egg_bianhao(uid,bianhao)
+    mes = f'成功！您的{pokename}精灵蛋已经丢弃了'
+    await bot.send(mes, at_sender=True)
+
+@sv_pokemon_duel.on_prefix(('重置个体值','个体值重置'))
+async def my_pokemon_gt_up(bot, ev: Event):
+    args = ev.text.split()
+    if len(args)!=1:
+        return await bot.send('请输入 重置个体值+宝可梦名称。', at_sender=True)
+    pokename = args[0]
+    uid = ev.user_id
+    bianhao = get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    my_pokemon_info = get_pokeon_info(uid,bianhao)
+    if my_pokemon_info == 0:
+        return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
+    HP_o,W_atk_o,W_def_o,M_atk_o,M_def_o,speed_o = get_pokemon_shuxing(bianhao,my_pokemon_info)
+    kidid = get_pokemon_eggid(bianhao)
+    POKE = PokeCounter()
+    egg_num = POKE.get_pokemon_egg(uid,kidid)
+    if egg_num == 0:
+        return await bot.send(f'重置个体值需要消耗1枚同一种类型的精灵蛋哦，您没有{POKEMON_LIST[kidid][0]}的精灵蛋。', at_sender=True)
+    POKE._add_pokemon_egg(uid,kidid,-1)
+    pokemon_info = new_pokemon_gt(uid,bianhao)
+    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
+    mes = f'{pokename}个体值重置成功，重置后属性如下\n'
+    mes += f'HP:{HP_o}/{HP}({my_pokemon_info[1]}/{pokemon_info[1]})\n物攻:{W_atk_o}/{W_atk}({my_pokemon_info[2]}/{pokemon_info[2]})\n物防:{W_def_o}/{W_def}({my_pokemon_info[3]}/{pokemon_info[3]})\n特攻:{M_atk_o}/{M_atk}({my_pokemon_info[4]}/{pokemon_info[4]})\n特防:{M_def_o}/{M_def}({my_pokemon_info[5]}/{pokemon_info[5]})\n速度:{speed_o}/{speed}({my_pokemon_info[6]}/{pokemon_info[6]})'
+    # mes.append(MessageSegment.image(img))
+    await bot.send(mes, at_sender=True)
+
+@sv_pokemon_duel.on_prefix(['宝可梦孵化'])
+async def get_pokemon_form_egg(bot, ev: Event):
+    args = ev.text.split()
+    if len(args)!=1:
+        return await bot.send('请输入 宝可梦孵化+宝可梦名称。', at_sender=True)
+    pokename = args[0]
+    uid = ev.user_id
+    bianhao = get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    POKE = PokeCounter()
+    egg_num = POKE.get_pokemon_egg(uid,bianhao)
+    if egg_num == 0:
+        return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
+    use_flag = 0
+    my_pokemon_list = POKE._get_my_pokemon(uid)
+    for pokemonid in my_pokemon_list:
+        kidid = get_pokemon_eggid(pokemonid[0])
+        if int(kidid) == int(bianhao):
+            use_flag = 1
+            break
+    if use_flag == 1:
+        return await bot.send(f'已经有{pokename}/{pokename}的进化型了，不能同时拥有同一种精灵哦。', at_sender=True)
+    POKE._add_pokemon_egg(uid,bianhao,-1)
+    pokemon_info = add_pokemon(uid,bianhao)
+    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
+    mes = ''
+    mes += f"恭喜！孵化成功了\n"
+    mes += f'{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\nHP:{HP}({pokemon_info[1]})\n物攻:{W_atk}({pokemon_info[2]})\n物防:{W_def}({pokemon_info[3]})\n特攻:{M_atk}({pokemon_info[4]})\n特防:{M_def}({pokemon_info[5]})\n速度:{speed}({pokemon_info[6]})\n'
+    mes += f'可用技能\n{pokemon_info[14]}'
+    my_team = POKE.get_pokemon_group(uid)
+    pokemon_list = my_team.split(',')
+    if len(pokemon_list) < 4:
+        pokemon_list.append(str(bianhao))
+        pokemon_str = ','.join(pokemon_list)
+        POKE._add_pokemon_group(uid,pokemon_str)
+    await bot.send(mes, at_sender=True)
+    

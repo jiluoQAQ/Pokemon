@@ -335,10 +335,6 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 img_height += 130
             if len(dipokelist) == 0:
                 # mes += f'您打败了{pokename}'
-                # zs_num = int(math.floor(random.uniform(0,100)))
-                # if zs_num <= WIN_EGG:
-                    # mes += f'您获得了{pokename}精灵蛋'
-                    # POKE._add_pokemon_egg(uid,pokemonid,1)
                 # mes_list.append(MessageSegment.text(mes))
                 # await bot.send(mes, at_sender=True)
                 img_draw.text(
@@ -348,6 +344,20 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                     sr_font_20,
                     'lm',
                 )
+                zs_num = int(math.floor(random.uniform(0,100)))
+                if zs_num <= WIN_EGG:
+                    eggid = get_pokemon_eggid(pokemonid)
+                    print(pokemonid)
+                    print(eggid)
+                    # mes += f'您获得了{CHARA_NAME[eggid][0]}精灵蛋'
+                    POKE._add_pokemon_egg(uid,eggid,1)
+                    img_draw.text(
+                        (125, img_height + 65),
+                        f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
+                        black_color,
+                        sr_font_20,
+                        'lm',
+                    )
                 bg_img.paste(my_image, (0, img_height), my_image)
                 # mes_list.append(MessageSegment.text(mes))
                 # await bot.send(mes, at_sender=True)
@@ -752,6 +762,28 @@ async def map_info_now(bot, ev: Event):
                 mes.append(MessageSegment.text(f"等级:{pokemon_s_list[item]['level'][0]}-{pokemon_s_list[item]['level'][1]}\n"))
     await bot.send(mes, at_sender=True)
 
+@sv_pokemon_map.on_command(['查看地图'])
+async def show_map_info_now(bot, ev: Event):
+    diquname = ev.text
+    if not diquname:
+        uid = ev.user_id
+        POKE = PokeCounter()
+        mapinfo = POKE._get_map_now(uid)
+        this_map = mapinfo[1]
+        diquname = didianlist[this_map]['fname']
+    else:
+        list_dizhi = list(diqulist.keys())
+        if diquname not in list_dizhi:
+            return await bot.send(f'地图上没有{diquname},请输入正确的地区名称', at_sender=True)
+        if diqulist[diquname]['open'] == 0:
+            return await bot.send(f"当前地区暂未开放请先前往其他地区冒险", at_sender=True)
+    mes = f'{diquname}地点：'
+    for didianname in didianlist:
+        didianinfo = didianlist[didianname]
+        if didianinfo['fname'] == diquname:
+            mes += f"\n{didianname} {didianinfo['type']} 进入需求徽章{didianinfo['need']}"
+    await bot.send(mes, at_sender=True)
+    
 @sv_pokemon_map.on_prefix(['前往'])
 async def pokemom_go_map(bot, ev: Event):
     args = ev.text.split()
@@ -762,7 +794,7 @@ async def pokemom_go_map(bot, ev: Event):
     POKE = PokeCounter()
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
-    my_hz = 0
+    my_hz = mapinfo[0]
     if go_map == this_map:
         return await bot.send(f'您已经处于{this_map}中，无需前往', at_sender=True)
     list_dizhi = list(didianlist.keys())

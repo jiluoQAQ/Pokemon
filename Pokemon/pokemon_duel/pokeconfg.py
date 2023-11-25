@@ -120,6 +120,20 @@ def add_pokemon(uid,bianhao):
     POKE._add_pokemon_info(uid,bianhao,pokemon_info)
     return pokemon_info
 
+#重置宝可梦个体值
+def new_pokemon_gt(uid,bianhao):
+    POKE = PokeCounter()
+    my_pokemon_info = get_pokeon_info(uid,bianhao)
+    pokemon_info = []
+    pokemon_info.append(my_pokemon_info[0])
+    for num in range(1,7):
+        gt_num = int(math.floor(random.uniform(1,32)))
+        pokemon_info.append(gt_num)
+    for num in range(7,15):
+        pokemon_info.append(my_pokemon_info[num])
+    POKE._add_pokemon_info(uid,bianhao,pokemon_info,my_pokemon_info[15])
+    return pokemon_info
+    
 #获取宝可梦，随机个体，随机努力，测试用
 def get_pokeon_info_sj(bianhao,level = 100):
     pokemon_info = []
@@ -134,14 +148,14 @@ def get_pokeon_info_sj(bianhao,level = 100):
     nuli = int(math.floor(random.uniform(0,max_nl)))
     for num in range(1,6):
         MAXNULI = nuli
-        if nuli > 255:
-            MAXNULI = 255
+        if nuli > 252:
+            MAXNULI = 252
         MAXNULI = MAXNULI + 1
         nulinum = int(math.floor(random.uniform(0,MAXNULI)))
         nuli = nuli - nulinum
         pokemon_info.append(nulinum)
     if nuli > 0:
-        if nuli < 255:
+        if nuli < 252:
             pokemon_info.append(nuli)
         else:
             nulinum = int(math.floor(random.uniform(1,256)))
@@ -375,6 +389,21 @@ def change_bg_img(bg_img,bg_num):
     img_bg.paste(bg_img, (0, 0))
     return img_bg
 
+def get_pokemon_eggid(pokemonid):
+    zhongzu = POKEMON_LIST[pokemonid]
+    if len(zhongzu) < 9:
+        return pokemonid
+    find_flag = 0
+    kidid = 0
+    while find_flag == 0:
+        zhongzu = POKEMON_LIST[pokemonid]
+        if zhongzu[8] == '-':
+            kidid = pokemonid
+            find_flag = 1
+        else:
+            pokemonid = int(zhongzu[8])
+    return kidid
+
 def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,jineng1 = None,jineng2 = None):
     shul = 1
     mesg = ''
@@ -553,6 +582,24 @@ def pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,d
             else:
                 dizhuangtai[0][1] = dishengyuyc
         
+        if myzhuangtai[1][0] in hh_yichanglist and int(myzhuangtai[1][1]) > 0 and myinfo[17] > 0:
+            myshengyuyc = int(myzhuangtai[1][1]) - 1
+            if myshengyuyc == 0:
+                mesg = mesg + f"{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n"
+                myzhuangtai[1][0] = '无'
+                myzhuangtai[1][1] = 0
+            else:
+                myzhuangtai[1][1] = myshengyuyc
+                
+        if dizhuangtai[1][0] in hh_yichanglist and int(dizhuangtai[1][1]) > 0 and diinfo[17] > 0:
+            dishengyuyc = int(dizhuangtai[1][1]) - 1
+            if dishengyuyc == 0:
+                mesg = mesg + f"{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n"
+                dizhuangtai[1][0] = '无'
+                dizhuangtai[1][1] = 0
+            else:
+                dizhuangtai[1][1] = dishengyuyc
+        
         if myzhuangtai[0][0] in jiechulist and int(myzhuangtai[0][1]) > 0 and myinfo[17] > 0:
             suiji = int(math.floor(random.uniform(0,100)))
             if suiji <= 20:
@@ -607,9 +654,10 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
             # jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         jinenginfo1 = JINENG_LIST[jineng1]
-        
+        print(jineng1)
         jineng2 = now_use_jineng(diinfo,myinfo,dijinenglist,myjinenglist,changdi)
         jinenginfo2 = JINENG_LIST[jineng2]
+        print(jineng2)
         img_height += 30
         if math.ceil((img_height + 50)/1280) > bg_num:
             bg_num += 1
@@ -851,6 +899,24 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
             else:
                 dizhuangtai[0][1] = dishengyuyc
         
+        if myzhuangtai[1][0] in hh_yichanglist and int(myzhuangtai[1][1]) > 0 and myinfo[17] > 0:
+            myshengyuyc = int(myzhuangtai[1][1]) - 1
+            if myshengyuyc == 0:
+                changdi_mesg = changdi_mesg + f"{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n"
+                myzhuangtai[1][0] = '无'
+                myzhuangtai[1][1] = 0
+            else:
+                myzhuangtai[1][1] = myshengyuyc
+                
+        if dizhuangtai[1][0] in hh_yichanglist and int(dizhuangtai[1][1]) > 0 and diinfo[17] > 0:
+            dishengyuyc = int(dizhuangtai[1][1]) - 1
+            if dishengyuyc == 0:
+                changdi_mesg = changdi_mesg + f"{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n"
+                dizhuangtai[1][0] = '无'
+                dizhuangtai[1][1] = 0
+            else:
+                dizhuangtai[1][1] = dishengyuyc
+        
         if myzhuangtai[0][0] in jiechulist and int(myzhuangtai[0][1]) > 0 and myinfo[17] > 0:
             suiji = int(math.floor(random.uniform(0,100)))
             if suiji <= 20:
@@ -924,7 +990,7 @@ def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
         mes = ''
         return mes,pokemon_info
     nl_index = int(zhongzhuid + 7)
-    change_nl = min(255, nl_num + pokemon_info[nl_index])
+    change_nl = min(252, nl_num + pokemon_info[nl_index])
     if change_nl > pokemon_info[nl_index]:
         change_nl_num = change_nl - pokemon_info[nl_index]
         # print(nl_index)
@@ -977,7 +1043,7 @@ def add_exp(uid,pokemonid,exp):
     if level_flag == 1:
         POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
         # CE._add_exp_chizi(uid, last_exp)
-        msg += f"由于超出等级上限，{last_exp}点经验加入经验池\n"
+        msg += f"超出等级上限，没有获得经验"
         return msg
     else:
         POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
@@ -1079,7 +1145,7 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
         # mesg.append(MessageSegment.text(mes))
         changci += 1
         if len(myinfo) == 0:
-            bianhao1 = random.sample(mypokelist, 1)[0]
+            bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(uid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
         if len(diinfo) == 0:
@@ -1253,11 +1319,11 @@ async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname
         # mesg.append(MessageSegment.text(mes))
         changci += 1
         if len(myinfo) == 0:
-            bianhao1 = random.sample(mypokelist, 1)[0]
+            bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(myuid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
         if len(diinfo) == 0:
-            bianhao2 = random.sample(dipokelist, 1)[0]
+            bianhao2 = dipokelist[0]
             dipokemon_info = get_pokeon_info(diuid,bianhao2)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info)
         if myinfo[3] == myinfo[17]:
@@ -1373,7 +1439,7 @@ async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
         # mesg.append(MessageSegment.text(mes))
         changci += 1
         if len(myinfo) == 0:
-            bianhao1 = random.sample(mypokelist, 1)[0]
+            bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(uid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
         if len(diinfo) == 0:
