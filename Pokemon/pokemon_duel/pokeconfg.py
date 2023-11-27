@@ -940,6 +940,14 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
             else:
                 changdi[0][1] = shengyutianqi
                 changdi_mesg = changdi_mesg + f"{changdi[0][0]}持续中\n"
+        if shul > 11:
+            jieshu = 1
+            if diinfo[17] > myinfo[17]:
+                changdi_mesg = changdi_mesg + f"战斗超时，{diinfo[0]}剩余血量大于{myinfo[0]}\n{diinfo[0]}获得了胜利"
+                myinfo[17] = 0
+            else:
+                changdi_mesg = changdi_mesg + f"战斗超时，{myinfo[0]}剩余血量大于{diinfo[0]}\n{myinfo[0]}获得了胜利"
+                diinfo[17] = 0
         mesg = mesg + changdi_mesg
         if math.ceil((img_height + 120)/1280) > bg_num:
             bg_num += 1
@@ -958,6 +966,7 @@ async def pokemon_fight_s(bg_img,img_height,bg_num,bot,ev,myinfo,diinfo,myzhuang
             changdi_mes_h += 30
         img_height = img_height + changdi_mes_h
         #await bot.send(mesg, at_sender=True)
+        
         if(jieshu == 1):
             fight_flag = 1
     return bg_img,img_height,bg_num,mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi
