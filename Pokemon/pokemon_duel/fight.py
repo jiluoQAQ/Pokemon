@@ -143,13 +143,13 @@ async def pk_vs_daoguan(bot, ev: Event):
         'rm',
     )
     bg_img,bg_num,img_height,mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,min_level,max_level)
-    # mes += mes_list
+    mes += mes_list
     if math.ceil((img_height + 130)/1280) > bg_num:
         bg_num += 1
         bg_img = change_bg_img(bg_img, bg_num)
     img_draw = ImageDraw.Draw(bg_img)
     if len(mypokelist) == 0:
-        # mes += f'您被{diname}打败了，眼前一黑'
+        mes += f'\n您被{diname}打败了，眼前一黑'
         # mes_list.append(MessageSegment.text(mes))
         img_draw.text(
             (575, img_height + 30),
@@ -162,7 +162,7 @@ async def pk_vs_daoguan(bot, ev: Event):
         img_height += 130
         # await bot.send(mes, at_sender=True)
     if len(dipokelist) == 0:
-        # mes += f'您打败了{diname}\n'
+        mes += f'\n您打败了{diname}\n'
         img_draw.text(
             (125, img_height + 30),
             f'您打败了{diname}',
@@ -174,7 +174,7 @@ async def pk_vs_daoguan(bot, ev: Event):
         new_huizhang = int(huizhang) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
-        mes += f'您获得了{get_score}金钱'
+        mes += f'您获得了{get_score}金钱\n您获得了1枚徽章'
         img_draw.text(
             (125, img_height + 65),
             f'您获得了{get_score}金钱',
@@ -291,13 +291,13 @@ async def pk_vs_tianwang(bot, ev: Event):
         'rm',
     )
     bg_img,bg_num,img_height,mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,min_level,max_level)
-    # mes += mes_list
+    mes += mes_list
     if math.ceil((img_height + 130)/1280) > bg_num:
         bg_num += 1
         bg_img = change_bg_img(bg_img, bg_num)
     img_draw = ImageDraw.Draw(bg_img)
     if len(mypokelist) == 0:
-        # mes += f'您被{diname}打败了，眼前一黑'
+        mes += f'\n您被{diname}打败了，眼前一黑'
         # mes_list.append(MessageSegment.text(mes))
         img_draw.text(
             (575, img_height + 30),
@@ -310,7 +310,7 @@ async def pk_vs_tianwang(bot, ev: Event):
         img_height += 130
         # await bot.send(mes, at_sender=True)
     if len(dipokelist) == 0:
-        # mes += f'您打败了{diname}\n'
+        mes += f'\n您打败了{diname}\n'
         img_draw.text(
             (125, img_height + 30),
             f'您打败了{diname}',
@@ -322,7 +322,7 @@ async def pk_vs_tianwang(bot, ev: Event):
         new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
-        mes += f'您获得了{get_score}金钱'
+        mes += f'您获得了{get_score}金钱\n您成为了【天王训练家】'
         img_draw.text(
             (125, img_height + 65),
             f'您获得了{get_score}金钱',
@@ -434,13 +434,13 @@ async def pk_vs_guanjun(bot, ev: Event):
         'rm',
     )
     bg_img,bg_num,img_height,mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,min_level,max_level)
-    # mes += mes_list
+    mes += mes_list
     if math.ceil((img_height + 130)/1280) > bg_num:
         bg_num += 1
         bg_img = change_bg_img(bg_img, bg_num)
     img_draw = ImageDraw.Draw(bg_img)
     if len(mypokelist) == 0:
-        # mes += f'您被{diname}打败了，眼前一黑'
+        mes += f'\n您被{diname}打败了，眼前一黑'
         # mes_list.append(MessageSegment.text(mes))
         img_draw.text(
             (575, img_height + 30),
@@ -453,7 +453,7 @@ async def pk_vs_guanjun(bot, ev: Event):
         img_height += 130
         # await bot.send(mes, at_sender=True)
     if len(dipokelist) == 0:
-        # mes += f'您打败了{diname}\n'
+        mes += f'\n您打败了{diname}\n'
         img_draw.text(
             (125, img_height + 30),
             f'您打败了{diname}',
@@ -465,7 +465,7 @@ async def pk_vs_guanjun(bot, ev: Event):
         new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
-        mes += f'您获得了{get_score}金钱'
+        mes += f'您获得了{get_score}金钱\n您成为了【冠军训练家】'
         img_draw.text(
             (125, img_height + 65),
             f'您获得了{get_score}金钱',

@@ -206,7 +206,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
     # base64_str = 'base64://' + base64.b64encode(output.getvalue()).decode()
     
     mes = f"猜猜我是谁，({ONE_TURN_TIME}s后公布答案)"
-    #await bot.send(mes)
+    await bot.send(mes)
     #print(img_send)
     await bot.send(img)
     try:
@@ -232,8 +232,8 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
                         # msg =  [MessageSegment.text(f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:'),MessageSegment.image(win_mes)]
+                        await bot.send(f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:')
                         await bot.send(win_mes)
-                        await bot.send(f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:', at_sender=True)
                         return
     except asyncio.TimeoutError:
         pass
@@ -241,7 +241,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
         winner_judger.turn_off(ev.group_id)
         return
     winner_judger.turn_off(ev.group_id)
-    await bot.send(f'很遗憾，没有人答对~\n正确答案是：', at_sender=True)
+    await bot.send(f'很遗憾，没有人答对~\n正确答案是：')
     await bot.send(win_mes)
     # msg =  [MessageSegment.text('正确答案是:'),MessageSegment.image(win_mes),MessageSegment.text('')]
     # await bot.send(msg)

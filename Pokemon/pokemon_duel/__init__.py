@@ -320,7 +320,7 @@ async def get_aj_poke_info(bot, ev: Event):
         mes.append(MessageSegment.text(f'{jn_name},'))
     await bot.send(mes, at_sender=True)
 
-@sv_pokemon_duel.on_fullmatch(['我的精灵列表'])
+@sv_pokemon_duel.on_fullmatch(('我的精灵列表','我的宝可梦列表'))
 async def my_pokemon_list(bot, ev: Event):
     uid = ev.user_id
     POKE = PokeCounter()
@@ -348,49 +348,8 @@ async def get_my_poke_jineng_button_test(bot, ev: Event):
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinenglist = re.split(',',pokemon_info[14])
-    markdown = {}
-    markdown['markdown'] = {}
-    markdown['markdown']['template_id'] = 102072861_1700370536
-    markdown['markdown']['params'] = []
-    markdownlist = {}
-    markdownlist['key'] = 'title'
-    markdownlist['values'] = ['短裤小子 孔梦向您发起了对战']
-    markdown['markdown']['params'].append(markdownlist)
-    markdownlist1 = {}
-    markdownlist1['key'] = 'data1'
-    markdownlist1['values'] = ['第1场\n\n我方派出了精灵\n\n小火龙 Lv.6\n\n敌方派出了精灵\n\n小拉达 Lv.4\n\n回合：1\n\n']
-    markdown['markdown']['params'].append(markdownlist1)
-    markdownlist2 = {}
-    markdownlist2['key'] = 'data2'
-    markdownlist2['values'] = ['请在60秒内选择一个技能使用!']
-    markdown['markdown']['params'].append(markdownlist2)
-    # markdown['msg_id'] = ev.msg_id
-    # markdown['keyboard'] = {}
-    # markdown['keyboard']['content'] = {}
-    # markdown['keyboard']['content']['rows'] = []
-    # button = {}
-    # button['buttons'] = []
-    # for index,item in enumerate(jinenglist):
-        # buttons = {}
-        # buttons['id'] = str(index + 1)
-        # buttons['render_data'] = {}
-        # buttons['render_data']['label'] = item
-        # buttons['render_data']['visited_label'] = item
-        # buttons['action'] = {}
-        # buttons['action']['type'] = 2
-        # buttons['action']['permission'] = {}
-        # buttons['action']['permission']['type'] = 2
-        # buttons['action']['permission']['specify_role_ids'] = ["1","2","3"]
-        # buttons['click_limit'] = 10
-        # buttons['unsupport_tips'] = "您的客户端暂不支持该功能, 请升级后适配..."
-        # buttons['data'] = item
-        # buttons['at_bot_show_channel_list'] = True
-        # button['buttons'].append(buttons)
-    # markdown['keyboard']['content']['rows'].append(button)
-    # markdown['keyboard']['content']['bot_appid'] = ev.bot_self_id
-    # await bot.send(MessageSegment.text(markdown))
-    resp = await bot.receive_resp(markdown,jinenglist,unsuported_platform=False)
-    # resp2 = await bot.receive_resp('请在60秒内选择一个技能使用!',jinenglist,unsuported_platform=False)
+    #resp = await bot.receive_resp(markdown,jinenglist,unsuported_platform=False)
+    resp = await bot.receive_resp('请在60秒内选择一个技能使用!',jinenglist,unsuported_platform=False)
     if resp is not None:
         s = resp.text
         uid = resp.user_id
@@ -400,7 +359,7 @@ async def get_my_poke_jineng_button_test(bot, ev: Event):
             jineng_use = 1
     
 
-@sv_pokemon_duel.on_prefix(['精灵状态'])
+@sv_pokemon_duel.on_prefix(('精灵状态','宝可梦状态'))
 async def get_my_poke_info(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=1:
@@ -429,7 +388,7 @@ async def get_my_poke_info(bot, ev: Event):
         mes.append(MessageSegment.text(f'\n下级所需经验{need_exp}'))
     await bot.send(mes, at_sender=True)
     
-@sv_pokemon_duel.on_fullmatch(['初始精灵列表'])
+@sv_pokemon_duel.on_fullmatch(('初始精灵列表','初始宝可梦列表'))
 async def get_chushi_list(bot, ev: Event):
     mes = []
     mes = ''
@@ -440,7 +399,7 @@ async def get_chushi_list(bot, ev: Event):
         mes += f"\n{POKEMON_LIST[bianhao][0]} 属性:{POKEMON_LIST[bianhao][7]}"
     await bot.send(mes)
     
-@sv_pokemon_duel.on_prefix(['领取初始精灵'])
+@sv_pokemon_duel.on_prefix(('领取初始精灵','领取初始宝可梦'))
 async def get_chushi_pokemon(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=1:
@@ -462,6 +421,7 @@ async def get_chushi_pokemon(bot, ev: Event):
     POKE._add_pokemon_group(uid,bianhao)
     go_didian = '1号道路'
     name = uid
+    print(ev.sender)
     if ev.sender:
         sender = ev.sender
         if sender.get('nickname','') != '':
@@ -485,7 +445,7 @@ async def chongkai_pokemon(bot, ev: Event):
     chongkai(uid)
     await bot.send('重开成功，请重新领取初始精灵开局', at_sender=True)
 
-@sv_pokemon_duel.on_prefix(['放生精灵'])
+@sv_pokemon_duel.on_prefix(('放生精灵','放生宝可梦'))
 async def fangsheng_pokemon(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=1:
@@ -511,7 +471,7 @@ async def fangsheng_pokemon(bot, ev: Event):
         POKE._add_pokemon_group(uid,pokemon_str)
     await bot.send(f'放生成功，{POKEMON_LIST[bianhao][0]}离你而去了', at_sender=True)
 
-@sv_pokemon_duel.on_prefix(['学习精灵技能'])
+@sv_pokemon_duel.on_prefix(('学习精灵技能','学习宝可梦技能','学习技能'))
 async def add_pokemon_jineng(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=2:
@@ -538,7 +498,7 @@ async def add_pokemon_jineng(bot, ev: Event):
     POKE._add_pokemon_jineng(uid, bianhao, jineng)
     await bot.send(f'恭喜，您的精灵{POKEMON_LIST[bianhao][0]}学会了技能{jinengname}', at_sender=True)
     
-@sv_pokemon_duel.on_prefix(['遗忘精灵技能'])
+@sv_pokemon_duel.on_prefix(('遗忘精灵技能','遗忘宝可梦技能','遗忘技能'))
 async def del_pokemon_jineng(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=2:
@@ -622,7 +582,7 @@ async def get_jineng_info(bot, ev: Event):
     else:
         return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要道具{zhongzu[9]}，您还没有该道具，无法进化', at_sender=True)
 
-@sv_pokemon_duel.on_fullmatch(['我的精灵蛋'])
+@sv_pokemon_duel.on_fullmatch(('我的精灵蛋','我的宝可梦蛋'))
 async def my_pokemon_egg_list(bot, ev: Event):
     uid = ev.user_id
     POKE = PokeCounter()
@@ -635,7 +595,7 @@ async def my_pokemon_egg_list(bot, ev: Event):
         mes += f'{POKEMON_LIST[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]}\n'
     await bot.send(mes, at_sender=True)
 
-@sv_pokemon_duel.on_prefix(['丢弃精灵蛋'])
+@sv_pokemon_duel.on_prefix(('丢弃精灵蛋','丢弃宝可梦蛋'))
 async def my_pokemon_egg_use(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=1:
