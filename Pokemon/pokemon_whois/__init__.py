@@ -214,7 +214,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
             while True:
                 resp = await bot.receive_mutiply_resp()
                 if resp is not None:
-                    s = resp.text
+                    s = resp.text.strip()
                     gid = resp.group_id
                     uid = resp.user_id
                     cid = roster.get_id(s)
