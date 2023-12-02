@@ -15,6 +15,7 @@ from gsuid_core.segment import MessageSegment
 from gsuid_core.utils.image.convert import convert_img
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 from ..utils.dbbase.ScoreCounter import SCORE_DB
+from gsuid_core.message_models import Button
 import copy
 import json
 from .pokeconfg import *
@@ -82,7 +83,7 @@ async def map_my_group(bot, ev: Event):
     
     mes = f'编组成功，当前队伍\n{name_str}'
     buttons = [
-        Button(f'🏝️野外探索', '野外探索'),
+        Button('🏝️野外探索', '野外探索'),
     ]
     mapinfo = POKE._get_map_now(uid)
     huizhang = mapinfo[0]
@@ -135,9 +136,9 @@ async def map_my_info(bot, ev: Event):
             pokemon_info = get_pokeon_info(uid,bianhao)
             mes += f'\n{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
     buttons = [
-        Button(f'📖精灵状态', '精灵状态'),
-        Button(f'📖我的精灵蛋', '我的精灵蛋'),
-        Button(f'🗺查看地图', '查看地图'),
+        Button('📖精灵状态', '精灵状态'),
+        Button('📖我的精灵蛋', '我的精灵蛋'),
+        Button('🗺查看地图', '查看地图'),
     ]
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
@@ -908,20 +909,20 @@ async def map_info_now(bot, ev: Event):
     this_map = mapinfo[1]
     mes = []
     buttons = []
-    buttons.append(Button(f'前往', '前往', action = 2))
+    buttons.append(Button('前往', '前往', action = 2))
     diquname = diqulist[didianlist[this_map]['fname']]['name']
     mes.append(MessageSegment.text(f'当前所在地为:{diquname}-{this_map}\n'))
     if didianlist[this_map]['type'] == "城镇":
         get_score = (int(didianlist[this_map]['need']) + 1) * 5000
-        buttons.append(Button(f'打工', '打工'))
+        buttons.append(Button('打工', '打工'))
         mes.append(MessageSegment.text(f'当前所在地打工1小时可获得{get_score}金币\n'))
     if didianlist[this_map]['type'] == "野外":
-        buttons.append(Button(f'🏝️野外探索', '野外探索'))
+        buttons.append(Button('🏝️野外探索', '野外探索'))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
         mes.append(MessageSegment.text(f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'))
         mes.append(MessageSegment.text(f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"))
         if didianlist[this_map]['pokemon_s']:
-            buttons.append(Button(f'🏝️野外垂钓', '️野外垂钓'))
+            buttons.append(Button('🏝️野外垂钓', '️野外垂钓'))
             pokemon_s_list = didianlist[this_map]['pokemon_s']
             mes.append(MessageSegment.text(f'当前所在地野外垂钓遭遇的精灵为\n'))
             for item in pokemon_s_list:
@@ -957,7 +958,7 @@ async def show_map_info_now(bot, ev: Event):
         if didianinfo['fname'] == diquname:
             mes += f"\n{didianname} {didianinfo['type']} 进入需求徽章{didianinfo['need']}"
     buttons = [
-        Button(f'前往', f'前往', action = 2),
+        Button('前往', '前往', action = 2),
     ]
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
