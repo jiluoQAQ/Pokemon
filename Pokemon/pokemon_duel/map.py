@@ -80,7 +80,22 @@ async def map_my_group(bot, ev: Event):
     pokemon_str = ','.join(pokemon_list)
     POKE._add_pokemon_group(uid,pokemon_str)
     
-    await bot.send(f'编组成功，当前队伍\n{name_str}', at_sender=True)
+    mes = f'编组成功，当前队伍\n{name_str}'
+    buttons = [
+        Button(f'🏝️野外探索', '野外探索'),
+    ]
+    mapinfo = POKE._get_map_now(uid)
+    huizhang = mapinfo[0]
+    if huizhang < 8:
+        buttons.append(Button(f'挑战道馆', '️挑战道馆'))
+    elif huizhang == 8:
+        buttons.append(Button(f'挑战天王', '挑战天王'))
+    elif huizhang == 9:
+        buttons.append(Button(f'挑战冠军', '挑战四天王冠军'))
+    if ev.bot_id == 'qqgroup':
+        await bot.send(mes, at_sender=True)
+    else:
+        await bot.send_option(mes,buttons)
 
 @sv_pokemon_map.on_fullmatch(['训练家名片'])
 async def map_my_info(bot, ev: Event):
@@ -119,10 +134,15 @@ async def map_my_info(bot, ev: Event):
             bianhao = int(bianhao)
             pokemon_info = get_pokeon_info(uid,bianhao)
             mes += f'\n{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
+    buttons = [
+        Button(f'📖精灵状态', '精灵状态'),
+        Button(f'📖我的精灵蛋', '我的精灵蛋'),
+        Button(f'🗺查看地图', '查看地图'),
+    ]
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
     else:
-        await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
+        await bot.send_option(mes,buttons)
 
 @sv_pokemon_map.on_prefix(('修改训练家名称','修改名称'))
 async def update_my_name(bot, ev: Event):
@@ -274,7 +294,6 @@ async def map_ts_test_noauto_use(bot, ev: Event):
     bg_img.paste(vs_img, (300, 12), vs_img)
     trainers_path = TEXT_PATH / 'trainers'
     if didianlist[this_map]['type'] == "野外":
-        pokelist = list(CHARA_NAME.keys())
         ts_z = TS_FIGHT + TS_POKEMON
         ts_num = int(math.floor(random.uniform(0,ts_z)))
         ts_quality = TS_POKEMON
@@ -471,6 +490,146 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 await bot.send(img_bg)
             else:
                 await bot.send('您获得了道具[还没写好]', at_sender=True)
+
+@sv_pokemon_map.on_fullmatch(['野外垂钓'])
+async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
+    uid = ev.user_id
+    POKE = PokeCounter()
+    mypokelist = POKE._get_pokemon_list(uid)
+    if mypokelist == 0:
+        return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
+    mapinfo = POKE._get_map_now(uid)
+    this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
+    my_team = POKE.get_pokemon_group(uid)
+    if my_team == '':
+        return await bot.send('您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。', at_sender=True)
+    pokemon_team = my_team.split(',')
+    mypokelist = []
+    for bianhao in pokemon_team:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+    if didianlist[this_map]['type'] == "城镇":
+        return await bot.send(f'您当前处于城镇中没有可探索的区域', at_sender=True)
+    
+    mapinfo = POKE._get_map_now(uid)
+    mychenghao,huizhang = get_chenghao(uid)
+    name = mapinfo[2]
+    if name == uid:
+        if ev.sender:
+            sender = ev.sender
+            if sender.get('nickname','') != '':
+                name = sender['nickname']
+    mes = ''
+    name = name[:10]
+    bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
+    vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
+    bg_img.paste(vs_img, (300, 12), vs_img)
+    trainers_path = TEXT_PATH / 'trainers'
+    if didianlist[this_map]['type'] == "野外":
+        # 遇怪
+        if didianlist[this_map]['pokemon_s'] is not None:
+            if huizhang >= 5:
+                chuidiao_key = '5'
+            elif huizhang >= 3:
+                chuidiao_key = '3'
+            elif huizhang >= 1:
+                chuidiao_key = '1'
+            else:
+                return await bot.send('您还没有钓竿，请取得1枚以上徽章后再来尝试', at_sender=True)
+            pokelist = didianlist[this_map]['pokemon_s'][chuidiao_key]['pokemon']
+            dipokelist = random.sample(pokelist, 1)
+            pokename = CHARA_NAME[dipokelist[0]][0]
+            pokemonid = dipokelist[0]
+            mes += f'野生宝可梦{pokename}出现了\n'
+            my_image = Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
+            di_image = Image.open(CHAR_ICON_PATH / f'{pokename}.png').convert('RGBA').resize((120, 120))
+            bg_img.paste(my_image, (0, 0), my_image)
+            bg_img.paste(di_image, (580, 0), di_image)
+            img_draw = ImageDraw.Draw(bg_img)
+            img_draw.text(
+                (125, 30),
+                mychenghao,
+                black_color,
+                sr_font_24,
+                'lm',
+            )
+            img_draw.text(
+                (125, 65),
+                f'{name}',
+                black_color,
+                sr_font_24,
+                'lm',
+            )
+            img_draw.text(
+                (575, 30),
+                '野生宝可梦',
+                black_color,
+                sr_font_24,
+                'rm',
+            )
+            img_draw.text(
+                (575, 65),
+                f'{pokename}',
+                black_color,
+                sr_font_24,
+                'rm',
+            )
+            bg_img,bg_num,img_height,mes_list,mypokelist,dipokelist = await fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,didianlist[this_map]['pokemon_s'][chuidiao_key]['level'][0],didianlist[this_map]['pokemon_s'][chuidiao_key]['level'][1],1)
+            if math.ceil((img_height + 120)/1280) > bg_num:
+                bg_num += 1
+                bg_img = change_bg_img(bg_img, bg_num)
+            img_draw = ImageDraw.Draw(bg_img)
+            mes += mes_list
+            if len(mypokelist) == 0:
+                mes += f'\n您被野生宝可梦{pokename}打败了，眼前一黑'
+                # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
+                img_draw.text(
+                    (575, img_height + 30),
+                    f'您被{pokename}打败了，眼前一黑',
+                    black_color,
+                    sr_font_20,
+                    'rm',
+                )
+                bg_img.paste(di_image, (580, img_height), di_image)
+                img_height += 130
+            if len(dipokelist) == 0:
+                mes += f'\n您打败了{pokename}'
+                # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
+                img_draw.text(
+                    (125, img_height + 30),
+                    f'您打败了{pokename}',
+                    black_color,
+                    sr_font_20,
+                    'lm',
+                )
+                zs_num = int(math.floor(random.uniform(0,100)))
+                if zs_num <= WIN_EGG:
+                    eggid = get_pokemon_eggid(pokemonid)
+                    print(pokemonid)
+                    print(eggid)
+                    mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
+                    POKE._add_pokemon_egg(uid,eggid,1)
+                    img_draw.text(
+                        (125, img_height + 65),
+                        f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
+                        black_color,
+                        sr_font_20,
+                        'lm',
+                    )
+                bg_img.paste(my_image, (0, img_height), my_image)
+                # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
+                img_height += 130
+            img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
+            img_bg.paste(bg_img, (0, 0))
+            img_bg = await convert_img(img_bg)
+            await bot.send(img_bg)
+        else:
+            return await bot.send(f'当前地点无法垂钓', at_sender=True)
 
 @sv_pokemon_map.on_prefix(('训练家对战','训练家挑战','挑战训练家'))
 async def pokemon_pk_auto(bot, ev: Event):
@@ -748,20 +907,21 @@ async def map_info_now(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     mes = []
-    buttonlist = []
-    buttonlist.append('前往')
+    buttons = []
+    buttons.append(Button(f'前往', '前往', action = 2))
     diquname = diqulist[didianlist[this_map]['fname']]['name']
     mes.append(MessageSegment.text(f'当前所在地为:{diquname}-{this_map}\n'))
     if didianlist[this_map]['type'] == "城镇":
         get_score = (int(didianlist[this_map]['need']) + 1) * 5000
-        buttonlist.append('打工')
+        buttons.append(Button(f'打工', '打工'))
         mes.append(MessageSegment.text(f'当前所在地打工1小时可获得{get_score}金币\n'))
     if didianlist[this_map]['type'] == "野外":
-        buttonlist.append('野外探索')
+        buttons.append(Button(f'🏝️野外探索', '野外探索'))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
         mes.append(MessageSegment.text(f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'))
         mes.append(MessageSegment.text(f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"))
         if didianlist[this_map]['pokemon_s']:
+            buttons.append(Button(f'🏝️野外垂钓', '️野外垂钓'))
             pokemon_s_list = didianlist[this_map]['pokemon_s']
             mes.append(MessageSegment.text(f'当前所在地野外垂钓遭遇的精灵为\n'))
             for item in pokemon_s_list:
@@ -772,7 +932,7 @@ async def map_info_now(bot, ev: Event):
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
     else:
-        await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
+        await bot.send_option(mes,buttons)
 
 @sv_pokemon_map.on_command(['查看地图'])
 async def show_map_info_now(bot, ev: Event):
@@ -796,10 +956,13 @@ async def show_map_info_now(bot, ev: Event):
         didianinfo = didianlist[didianname]
         if didianinfo['fname'] == diquname:
             mes += f"\n{didianname} {didianinfo['type']} 进入需求徽章{didianinfo['need']}"
+    buttons = [
+        Button(f'前往', f'前往', action = 2),
+    ]
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
     else:
-        await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
+        await bot.send_option(mes,buttons)
     
 @sv_pokemon_map.on_prefix(['前往'])
 async def pokemom_go_map(bot, ev: Event):
