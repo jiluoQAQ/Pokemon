@@ -412,7 +412,16 @@ async def get_my_poke_info(bot, ev: Event):
     if pokemon_info[0]<100:
         need_exp = get_need_exp(bianhao, pokemon_info[0]) - pokemon_info[15]
         mes.append(MessageSegment.text(f'\n下级所需经验{need_exp}'))
-    buttonlist = ['学习技能','遗忘技能','更新队伍']
+    buttonlist = ['学习技能','遗忘技能']
+    for pokemonid in POKEMON_LIST:
+        if len(POKEMON_LIST[pokemonid]) > 8:
+            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao):
+                if POKEMON_LIST[pokemonid][9].isdigit():
+                    mes.append(MessageSegment.text(f'\nLv.{POKEMON_LIST[pokemonid][9]} 可进化为{POKEMON_LIST[pokemonid][0]}'))
+                else:
+                    mes.append(MessageSegment.text(f'\n使用道具 {POKEMON_LIST[pokemonid][9]} 可进化为{POKEMON_LIST[pokemonid][0]}'))
+                buttonlist.append(f'宝可梦进化{POKEMON_LIST[pokemonid][0]}')
+    # print(buttonlist)
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
     else:
@@ -614,7 +623,7 @@ async def get_jineng_info(bot, ev: Event):
     pokemon_info = get_pokeon_info(uid,kid_poke_id)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[kid_poke_id][0]}，无法进化。', at_sender=True)
-    if isinstance(int(zhongzu[9]), int):
+    if zhongzu[9].isdigit():
         if pokemon_info[0] < int(zhongzu[9]):
             return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要 Lv.{zhongzu[9]}\n您的{POKEMON_LIST[kid_poke_id][0]}等级为 Lv.{pokemon_info[0]}，无法进化', at_sender=True)
         else:
