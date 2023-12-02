@@ -29,8 +29,8 @@ class SCORE_DB:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO POKEMON_SCORE (UID,SCORE,SHENGWANG) VALUES (?,?,?)", (uid, 0, 0)
-                )  
+                    f"INSERT OR REPLACE INTO POKEMON_SCORE (UID,SCORE,SHENGWANG) VALUES ('{uid}',0,0)"
+                ).fetchall()
         except:
             raise Exception('更新表发生错误')
     
@@ -53,7 +53,7 @@ class SCORE_DB:
             with self._connect() as conn:
                 conn.execute(
                     f"UPDATE POKEMON_SCORE SET SCORE = {now_score} WHERE UID='{uid}'"
-                )
+                ).fetchall()
                 
         except:
             raise Exception('更新表发生错误')

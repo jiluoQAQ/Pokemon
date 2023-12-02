@@ -29,8 +29,8 @@ class GAME_DB:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    "INSERT OR REPLACE INTO POKEMON_GAME (UID,TYPE,NUM) VALUES (?,?,?)", (uid, gametype, 0)
-                )  
+                    f"INSERT OR REPLACE INTO POKEMON_GAME (UID,TYPE,NUM) VALUES ('{uid}','{gametype}',0)"
+                ).fetchall()
         except:
             raise Exception('更新表发生错误')
     
