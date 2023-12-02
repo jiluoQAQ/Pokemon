@@ -222,9 +222,9 @@ async def pokemon_whois(bot: Bot, ev: Event):
                     if cid != 9999 and cid == winner_judger.get_correct_chara_id(ev.group_id) and winner_judger.get_winner(ev.group_id) == '':
                         GAME = GAME_DB()
                         win_num = GAME.update_game_num(uid,'whois')
-                        SCORE = SCORE_DB()
                         mesg = ''
                         if daily_whois_limiter.check(uid):
+                            SCORE = SCORE_DB()
                             SCORE.update_score(uid, 1000)
                             daily_whois_limiter.increase(uid)
                             mesg = '获得1000金币\n'

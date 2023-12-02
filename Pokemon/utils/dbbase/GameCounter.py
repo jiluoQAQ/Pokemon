@@ -52,9 +52,8 @@ class GAME_DB:
         try:
             with self._connect() as conn:
                 conn.execute(
-                    f"UPDATE POKEMON_GAME SET NUM = ? WHERE UID='{uid}' AND TYPE=?",
-                    (game_num, gametype),
-                )
+                    f"UPDATE POKEMON_GAME SET NUM = {game_num} WHERE UID='{uid}' AND TYPE='{gametype}'"
+                ).fetchall()
                 return game_num
         except:
             raise Exception('更新表发生错误')

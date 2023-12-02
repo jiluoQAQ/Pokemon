@@ -97,6 +97,7 @@ async def map_my_info(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     name = mapinfo[2]
     mychenghao,huizhang = get_chenghao(uid)
+    buttonlist = ['精灵状态','我的精灵蛋','查看地图']
     if name == uid:
         if ev.sender:
             sender = ev.sender
@@ -118,7 +119,10 @@ async def map_my_info(bot, ev: Event):
             bianhao = int(bianhao)
             pokemon_info = get_pokeon_info(uid,bianhao)
             mes += f'\n{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
-    await bot.send(mes, at_sender=True)
+    if ev.bot_id == 'qqgroup':
+        await bot.send(mes, at_sender=True)
+    else:
+        await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
 
 @sv_pokemon_map.on_prefix(('修改训练家名称','修改名称'))
 async def update_my_name(bot, ev: Event):
@@ -744,11 +748,16 @@ async def map_info_now(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     mes = []
+    buttonlist = []
+    buttonlist.append('前往')
     diquname = diqulist[didianlist[this_map]['fname']]['name']
     mes.append(MessageSegment.text(f'当前所在地为:{diquname}-{this_map}\n'))
     if didianlist[this_map]['type'] == "城镇":
-        mes.append(MessageSegment.text(f'当前所在地打工1小时可获得xxx金币\n'))
+        get_score = (int(didianlist[this_map]['need']) + 1) * 5000
+        buttonlist.append('打工')
+        mes.append(MessageSegment.text(f'当前所在地打工1小时可获得{get_score}金币\n'))
     if didianlist[this_map]['type'] == "野外":
+        buttonlist.append('野外探索')
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
         mes.append(MessageSegment.text(f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'))
         mes.append(MessageSegment.text(f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"))
@@ -760,11 +769,14 @@ async def map_info_now(bot, ev: Event):
                 name_str = get_pokemon_name_list(pokemon_s_list[item]['pokemon'])
                 mes.append(MessageSegment.text(f'{name_str}\n'))
                 mes.append(MessageSegment.text(f"等级:{pokemon_s_list[item]['level'][0]}-{pokemon_s_list[item]['level'][1]}\n"))
-    await bot.send(mes, at_sender=True)
+    if ev.bot_id == 'qqgroup':
+        await bot.send(mes, at_sender=True)
+    else:
+        await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
 
 @sv_pokemon_map.on_command(['查看地图'])
 async def show_map_info_now(bot, ev: Event):
-    diquname = ev.text
+    diquname = ''.join(re.findall('^[a-zA-Z0-9_\u4e00-\u9fa5]+$', ev.text))
     if not diquname:
         uid = ev.user_id
         POKE = PokeCounter()
@@ -777,12 +789,17 @@ async def show_map_info_now(bot, ev: Event):
             return await bot.send(f'地图上没有{diquname},请输入正确的地区名称', at_sender=True)
         if diqulist[diquname]['open'] == 0:
             return await bot.send(f"当前地区暂未开放请先前往其他地区冒险", at_sender=True)
+    buttonlist = []
+    buttonlist.append('前往')
     mes = f'{diquname}地点：'
     for didianname in didianlist:
         didianinfo = didianlist[didianname]
         if didianinfo['fname'] == diquname:
             mes += f"\n{didianname} {didianinfo['type']} 进入需求徽章{didianinfo['need']}"
-    await bot.send(mes, at_sender=True)
+    if ev.bot_id == 'qqgroup':
+        await bot.send(mes, at_sender=True)
+    else:
+        await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
     
 @sv_pokemon_map.on_prefix(['前往'])
 async def pokemom_go_map(bot, ev: Event):
@@ -795,6 +812,8 @@ async def pokemom_go_map(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     my_hz = mapinfo[0]
+    buttonlist = []
+    buttonlist.append('当前地点信息')
     if go_map == this_map:
         return await bot.send(f'您已经处于{this_map}中，无需前往', at_sender=True)
     list_dizhi = list(didianlist.keys())
@@ -803,14 +822,24 @@ async def pokemom_go_map(bot, ev: Event):
     if didianlist[go_map]['fname'] == didianlist[this_map]['fname']:
         if int(my_hz) >= int(didianlist[go_map]['need']):
             POKE._add_map_now(uid, go_map)
-            await bot.send(f'您已到达{go_map},当前地址信息可输入[当前地点信息]查询', at_sender=True)
+            if ev.bot_id == 'qqgroup':
+                mes = f'您已到达{go_map},当前地址信息可输入[当前地点信息]查询'
+                await bot.send(mes, at_sender=True)
+            else:
+                mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
+                await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
         else:
             return await bot.send(f"前往{go_map}所需徽章为{str(didianlist[go_map]['need'])}枚,您的徽章为{str(my_hz)}枚,无法前往", at_sender=True)
     else:
         if int(my_hz) >= 8:
-            await bot.send(f'您已到达{go_map},当前地址信息可输入[当前地点信息]查询', at_sender=True)
+            if ev.bot_id == 'qqgroup':
+                mes = f'您已到达{go_map},当前地址信息可输入[当前地点信息]查询'
+                await bot.send(mes, at_sender=True)
+            else:
+                mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
+                await bot.receive_resp(mes,buttonlist,unsuported_platform=False)
         else:
             return await bot.send(f"跨地区前往需要8枚徽章,您的徽章为{str(my_hz)}枚,无法前往", at_sender=True)
-
+    
 
 
