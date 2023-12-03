@@ -983,10 +983,11 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         try:
             async with timeout(60):
                 while jineng1_use == 0:
-                    resp = await bot.receive_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=False)
+                    resp = await bot.receive_mutiply_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist)
                     if resp is not None:
                         s = resp.text
                         uid = resp.user_id
+                        print(f'{uid}-{myuid}')
                         if uid == myuid:
                             if s in myjinenglist:
                                 jineng1 = s
@@ -996,14 +997,16 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
             jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         jinenginfo1 = JINENG_LIST[jineng1]
         print(jineng1)
+        
         jineng2_use = 0
         try:
             async with timeout(60):
                 while jineng2_use == 0:
-                    resp = await bot.receive_resp(f'{diname}请在60秒内选择一个技能使用!',dijinenglist,unsuported_platform=False)
+                    resp = await bot.receive_mutiply_resp(f'{diname}请在60秒内选择一个技能使用!',dijinenglist)
                     if resp is not None:
                         s = resp.text
                         uid = resp.user_id
+                        print(f'{uid}-{diuid}')
                         if uid == diuid:
                             if s in dijinenglist:
                                 jineng2 = s

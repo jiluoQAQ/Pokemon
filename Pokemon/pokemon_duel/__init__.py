@@ -53,7 +53,7 @@ async def pokemon_help(bot, ev: Event):
 18、重置个体值[精灵名](消耗一枚[精灵名]初始形态的精灵蛋对[精灵名]的个体值进行重置)
 19、宝可梦孵化[精灵名](消耗一枚[精灵名]的精灵蛋孵化出一只lv.5的[精灵名])
 20、更新队伍[精灵名](更新手持队伍信息，不同的宝可梦用空格分隔，最多4只)
-21、无级别对战[昵称/at对方]与其他训练家进行一场无等级限制的对战
+21、无级别对战[昵称/at对方]与其他训练家进行一场无等级限制的手动对战
 注:
 同一类型的精灵只能拥有一只(进化型为不同类型)
 后续功能在写了在写了(新建文件夹)
@@ -672,7 +672,6 @@ async def get_jineng_info(bot, ev: Event):
                     if int(pokeid) == int(kid_poke_id):
                         pokeid = bianhao
                     team_list.append(str(pokeid))
-                print(team_list)
                 pokemon_str = ','.join(team_list)
                 POKE._add_pokemon_group(uid,pokemon_str)
             mes = f'恭喜！您的宝可梦 {POKEMON_LIST[kid_poke_id][0]} 进化成了 {POKEMON_LIST[bianhao][0]}',
@@ -681,10 +680,7 @@ async def get_jineng_info(bot, ev: Event):
                 Button(f'📖遗忘技能', f'遗忘技能 {pokename}', action = 2),
                 Button(f'📖精灵状态', f'精灵状态{pokename}'),
             ]
-            if ev.bot_id == 'qqgroup':
-                await bot.send(mes, at_sender=True)
-            else:
-                await bot.send_option(mes,buttons)
+            await bot.send_option(mes,buttons)
     else:
         return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要道具{zhongzu[9]}，您还没有该道具，无法进化', at_sender=True)
 
