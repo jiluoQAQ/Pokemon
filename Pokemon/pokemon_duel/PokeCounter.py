@@ -158,7 +158,7 @@ class PokeCounter:
                 if r:
                     return r[0]
                 else:
-                    return [0,'']
+                    return [0,'',0]
         except:
             raise Exception('查找表发生错误')
     

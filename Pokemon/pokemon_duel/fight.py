@@ -489,3 +489,85 @@ async def pk_vs_guanjun(bot, ev: Event):
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
     await bot.send(img_bg)
+    
+@sv_pokemon_pk.on_command(('无级别对战','无级别战斗'))
+async def pokemon_pk_wjb(bot, ev: Event):
+    if ev.bot_id == 'qqgroup':
+        return await bot.send('当前平台不支持无级别对战。', at_sender=True)
+    uid = ev.user_id
+    POKE = PokeCounter()
+    mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
+    if name == uid:
+        if ev.sender:
+            sender = ev.sender
+            if sender.get('nickname','') != '':
+                name = sender['nickname']
+    
+    mypokelist = POKE._get_pokemon_list(uid)
+    if mypokelist == 0:
+        return await bot.send(f'{name} 还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
+    if mapinfo[1] == '':
+        return await bot.send(f'{name} 还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
+    my_team = POKE.get_pokemon_group(uid)
+    if my_team == '':
+        return await bot.send(f'{name} 还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。', at_sender=True)
+    
+    if ev.at is not None:
+        diuid = ev.at
+        dimapinfo = POKE._get_map_now(diuid)
+        if dimapinfo[2] == 0:
+            return await bot.send('没有找到该训练家，请输入 正确的对战训练家昵称或at该名训练家。', at_sender=True)
+        diname = dimapinfo[2]
+    else:
+        args = ev.text.split()
+        if len(args)!=1:
+            return await bot.send('请输入 无级别对战+对战训练家昵称/at对战训练家。', at_sender=True)
+        nickname = args[0]
+        dimapinfo = POKE._get_map_info_nickname(nickname)
+        if dimapinfo[2] == 0:
+            return await bot.send('没有找到该训练家，请输入 正确的对战训练家昵称或at该名训练家。', at_sender=True)
+        diuid = dimapinfo[2]
+        diname = nickname
+    
+    dipokelist = POKE._get_pokemon_list(diuid)
+    if dipokelist == 0:
+        return await bot.send(f'{diname} 还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
+    if dimapinfo[1] == '':
+        return await bot.send(f'{diname} 还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
+    di_team = POKE.get_pokemon_group(diuid)
+    if my_team == '':
+        return await bot.send(f'{diname} 还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。', at_sender=True)
+    
+    if name == diname:
+        return await bot.send('不能自己打自己哦。', at_sender=True)
+    
+    pokemon_team = my_team.split(',')
+    mypokelist = []
+    for bianhao in pokemon_team:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+    
+    di_pokemon_team = di_team.split(',')
+    dipokelist = []
+    for bianhao in di_pokemon_team:
+        bianhao = int(bianhao)
+        dipokelist.append(bianhao)
+    
+    mychenghao,myhuizhang = get_chenghao(uid)
+    dichenghao,dihuizhang = get_chenghao(diuid)
+
+    name = name[:10]
+    diname = diname[:10]
+    # 对战
+    mes = f'{mychenghao} {name}向{dichenghao} {diname}发起了挑战'
+    await bot.send(mes)
+    
+    mypokelist,dipokelist = await fight_pk_s(bot,ev,uid,diuid,mypokelist,dipokelist,name,diname)
+
+    if len(mypokelist) == 0:
+        mes = f'{diname}打败了{name}，获得了对战的胜利'
+        
+    if len(dipokelist) == 0:
+        mes = f'{name}打败了{diname}，获得了对战的胜利'
+    await bot.send(mes)
