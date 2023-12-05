@@ -980,13 +980,16 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         myjinenglist = re.split(',',mypokemon_info[14])
         dijinenglist = re.split(',',dipokemon_info[14])
         jineng1_use = 0
+        puthmy = 0
         try:
             async with timeout(60):
                 while jineng1_use == 0:
-                    resp = await bot.receive_mutiply_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist)
-                    if resp is not None:
-                        s = resp.text
-                        uid = resp.user_id
+                    if puthmy == 0:
+                        myresp = await bot.receive_mutiply_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist)
+                        puthmy = 1
+                    if myresp is not None:
+                        s = myresp.text
+                        uid = myresp.user_id
                         print(f'{uid}-{myuid}')
                         if uid == myuid:
                             if s in myjinenglist:
@@ -999,13 +1002,16 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         print(jineng1)
         
         jineng2_use = 0
+        puthdi = 0
         try:
             async with timeout(60):
                 while jineng2_use == 0:
-                    resp = await bot.receive_mutiply_resp(f'{diname}请在60秒内选择一个技能使用!',dijinenglist)
-                    if resp is not None:
-                        s = resp.text
-                        uid = resp.user_id
+                    if puthdi == 0:
+                        diresp = await bot.receive_mutiply_resp(f'{diname}请在60秒内选择一个技能使用!',dijinenglist)
+                        puthdi = 1
+                    if diresp is not None:
+                        s = diresp.text
+                        uid = diresp.user_id
                         print(f'{uid}-{diuid}')
                         if uid == diuid:
                             if s in dijinenglist:
@@ -1113,7 +1119,7 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
                         di_mesg = di_mesg + f"\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败"
                 if myinfo[17] == 0 or diinfo[17] == 0:
                     jieshu = 1
-                mesg = mesg + di_mesg
+                mesg = mesg + '\n' + di_mesg
                 
         else:
             if jieshu == 0:
@@ -1148,7 +1154,7 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
                         my_mesg = my_mesg + f"\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败"
                 if myinfo[17] == 0 or diinfo[17] == 0:
                     jieshu = 1
-                mesg = mesg + my_mesg
+                mesg = mesg + '\n' + my_mesg
                 
         #回合结束天气与状态伤害计算
         changdi_mesg = ''

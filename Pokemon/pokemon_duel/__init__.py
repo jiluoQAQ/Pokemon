@@ -553,7 +553,7 @@ async def fangsheng_pokemon(bot, ev: Event):
 async def add_pokemon_jineng(bot, ev: Event):
     args = ev.text.split()
     if len(args)!=2:
-        return await bot.send(ev, '请输入 学习精灵技能+宝可梦名称+技能名称 中间用空格隔开。', at_sender=True)
+        return await bot.send('请输入 学习精灵技能+宝可梦名称+技能名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
     uid = ev.user_id
     bianhao = get_poke_bianhao(pokename)
@@ -674,7 +674,7 @@ async def get_jineng_info(bot, ev: Event):
                     team_list.append(str(pokeid))
                 pokemon_str = ','.join(team_list)
                 POKE._add_pokemon_group(uid,pokemon_str)
-            mes = f'恭喜！您的宝可梦 {POKEMON_LIST[kid_poke_id][0]} 进化成了 {POKEMON_LIST[bianhao][0]}',
+            mes = f'恭喜！您的宝可梦 {POKEMON_LIST[kid_poke_id][0]} 进化成了 {POKEMON_LIST[bianhao][0]}'
             buttons = [
                 Button(f'📖学习技能', f'学习技能 {pokename}', action = 2),
                 Button(f'📖遗忘技能', f'遗忘技能 {pokename}', action = 2),
