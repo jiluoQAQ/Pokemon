@@ -492,8 +492,8 @@ async def pk_vs_guanjun(bot, ev: Event):
     
 @sv_pokemon_pk.on_command(('无级别对战','无级别战斗'))
 async def pokemon_pk_wjb(bot, ev: Event):
-    if ev.bot_id == 'qqgroup':
-        return await bot.send('当前平台不支持无级别对战。', at_sender=True)
+    # if ev.bot_id == 'qqgroup':
+        # return await bot.send('当前平台不支持无级别对战。', at_sender=True)
     uid = ev.user_id
     POKE = PokeCounter()
     mapinfo = POKE._get_map_now(uid)

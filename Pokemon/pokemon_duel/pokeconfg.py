@@ -29,6 +29,8 @@ from ..utils.fonts.starrail_fonts import (
     sr_font_34,
     sr_font_38,
 )
+
+
 FILE_PATH = os.path.dirname(__file__)
 black_color = (0, 0, 0)
 RESET_HOUR = 0  # 每日使用次数的重置时间，0代表凌晨0点，1代表凌晨1点，以此类推
@@ -984,18 +986,15 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         try:
             async with timeout(60):
                 while jineng1_use == 0:
-                    if puthmy == 0:
-                        myresp = await bot.receive_mutiply_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist)
-                        puthmy = 1
+                    myresp = await bot.receive_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=True)
                     if myresp is not None:
                         s = myresp.text
                         uid = myresp.user_id
                         print(f'{uid}-{myuid}')
-                        if uid == myuid:
-                            if s in myjinenglist:
-                                jineng1 = s
-                                await bot.send(f'{myname}已选择完成')
-                                jineng1_use = 1
+                        if s in myjinenglist:
+                            jineng1 = s
+                            await bot.send(f'{myname}已选择完成')
+                            jineng1_use = 1
         except asyncio.TimeoutError:
             jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         jinenginfo1 = JINENG_LIST[jineng1]
@@ -1006,9 +1005,7 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         try:
             async with timeout(60):
                 while jineng2_use == 0:
-                    if puthdi == 0:
-                        diresp = await bot.receive_mutiply_resp(f'{diname}请在60秒内选择一个技能使用!',dijinenglist)
-                        puthdi = 1
+                    diresp = await bot.receive_resp(f'{diname}请在60秒内选择一个技能使用!',dijinenglist,unsuported_platform=True,is_mutiply=True)
                     if diresp is not None:
                         s = diresp.text
                         uid = diresp.user_id
