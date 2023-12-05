@@ -986,15 +986,16 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         try:
             async with timeout(60):
                 while jineng1_use == 0:
-                    myresp = await bot.receive_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=True)
+                    myresp = await bot.receive_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=True,is_mutiply=True)
                     if myresp is not None:
                         s = myresp.text
                         uid = myresp.user_id
                         print(f'{uid}-{myuid}')
-                        if s in myjinenglist:
-                            jineng1 = s
-                            await bot.send(f'{myname}已选择完成')
-                            jineng1_use = 1
+                        if uid == myuid:
+                            if s in myjinenglist:
+                                jineng1 = s
+                                await bot.send(f'{myname}已选择完成')
+                                jineng1_use = 1
         except asyncio.TimeoutError:
             jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         jinenginfo1 = JINENG_LIST[jineng1]
