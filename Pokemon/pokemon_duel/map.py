@@ -90,11 +90,11 @@ async def map_my_group(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     huizhang = mapinfo[0]
     if int(huizhang) < 8:
-        buttons.append(Button(f'挑战道馆', '️挑战道馆'))
+        buttons.append(Button('挑战道馆', '挑战道馆'))
     elif int(huizhang) == 8:
-        buttons.append(Button(f'挑战天王', '挑战天王'))
+        buttons.append(Button('挑战天王', '挑战天王'))
     elif int(huizhang) == 9:
-        buttons.append(Button(f'挑战冠军', '挑战四天王冠军'))
+        buttons.append(Button('挑战冠军', '挑战四天王冠军'))
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
     else:
