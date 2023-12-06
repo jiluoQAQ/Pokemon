@@ -14,6 +14,7 @@ class PokeCounter:
         self._create_table_map()
         self._create_table_group()
         self._create_table_egg()
+        self._create_table_prop()
     
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -72,6 +73,60 @@ class PokeCounter:
                            PRIMARY KEY(UID, BIANHAO));''')
         except:
             raise Exception('创建表发生错误')
+    
+    def _create_table_prop(self):
+        try:
+            self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_PROP
+                          (UID             TEXT   NOT NULL,
+                           PROP            TEXT   NOT NULL,
+                           NUM             INT    NOT NULL,
+                           PRIMARY KEY(UID, PROP));''')
+        except:
+            raise Exception('创建表发生错误')
+    
+    def get_pokemon_prop_list(self, uid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT PROP,NUM FROM POKEMON_PROP WHERE UID='{uid}' AND NUM>0 ORDER BY NUM").fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def _new_pokemon_prop(self, uid, propname):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    "INSERT OR REPLACE INTO POKEMON_PROP (UID,PROP,NUM) VALUES (?,?,?)", (uid, propname,0)
+                )  
+        except:
+            raise Exception('更新表发生错误')
+    
+    def _get_pokemon_prop(self, uid, propname):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT NUM FROM POKEMON_PROP WHERE UID='{uid}' AND PROP='{propname}'").fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    self._new_pokemon_prop(uid, propname)
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def _add_pokemon_prop(self, uid, propname, num):
+        now_num = self._get_pokemon_prop(uid, propname) + num
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    "INSERT OR REPLACE INTO POKEMON_PROP (UID,PROP,NUM) VALUES (?,?,?)", (uid, propname,now_num)
+                )  
+        except:
+            raise Exception('更新表发生错误')
     
     def _add_pokemon_group(self, uid, pokemon_list):
         try:
@@ -268,7 +323,17 @@ class PokeCounter:
                   
         except:
             raise Exception('更新表发生错误')
-            
+    
+    def _add_pokemon_xingge(self, uid, bianhao, xingge):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE POKEMON_TABLE SET XINGGE='{xingge}' WHERE UID='{uid}' AND BIANHAO={bianhao}"
+                )
+                  
+        except:
+            raise Exception('更新表发生错误')
+    
     def _add_pokemon_id(self, uid, bianhao, changeid):
         try:
             with self._connect() as conn:

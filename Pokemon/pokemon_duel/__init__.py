@@ -23,8 +23,9 @@ from .PokeCounter import *
 from .until import *
 from .map import *
 from .fight import *
+from .prop import *
 
-sv_pokemon_duel = SV('宝可梦对战', priority=5)
+sv_pokemon_duel = SV('宝可梦状态', priority=5)
 
 @sv_pokemon_duel.on_fullmatch(['精灵帮助','宝可梦帮助'])
 async def pokemon_help(bot, ev: Event):
@@ -54,6 +55,7 @@ async def pokemon_help(bot, ev: Event):
 19、宝可梦孵化[精灵名](消耗一枚[精灵名]的精灵蛋孵化出一只lv.5的[精灵名])
 20、更新队伍[精灵名](更新手持队伍信息，不同的宝可梦用空格分隔，最多4只)
 21、无级别对战[昵称/at对方]与其他训练家进行一场无等级限制的手动对战
+22、道具帮助(查看道具系统的使用说明)
 注:
 同一类型的精灵只能拥有一只(进化型为不同类型)
 后续功能在写了在写了(新建文件夹)
@@ -66,6 +68,7 @@ async def pokemon_help(bot, ev: Event):
         Button(f'✅领取初始精灵', '领取初始精灵', action = 2),
         Button(f'🏝️野外探索', '野外探索'),
         Button(f'🗺查看地图', '查看地图'),
+        Button(f'✅道具帮助', '道具帮助'),
         Button(f'✅小游戏帮助', '小游戏帮助'),
     ]
     if ev.bot_id == 'qqgroup':
@@ -656,13 +659,14 @@ async def get_jineng_info(bot, ev: Event):
         return await bot.send('暂时没有该宝可梦的进化信息。', at_sender=True)
     kid_poke_id = int(zhongzu[8])
     pokemon_info = get_pokeon_info(uid,kid_poke_id)
+    POKE = PokeCounter()
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[kid_poke_id][0]}，无法进化。', at_sender=True)
     if zhongzu[9].isdigit():
         if pokemon_info[0] < int(zhongzu[9]):
             return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要 Lv.{zhongzu[9]}\n您的{POKEMON_LIST[kid_poke_id][0]}等级为 Lv.{pokemon_info[0]}，无法进化', at_sender=True)
         else:
-            POKE = PokeCounter()
+            
             POKE._add_pokemon_id(uid, kid_poke_id, bianhao)
             my_team = POKE.get_pokemon_group(uid)
             pokemon_list = my_team.split(',')
@@ -682,7 +686,29 @@ async def get_jineng_info(bot, ev: Event):
             ]
             await bot.send_option(mes,buttons)
     else:
-        return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要道具{zhongzu[9]}，您还没有该道具，无法进化', at_sender=True)
+        mypropnum = POKE._get_pokemon_prop(uid, zhongzu[9])
+        if mypropnum == 0:
+            return await bot.send(f'进化成{POKEMON_LIST[bianhao][0]}需要道具{zhongzu[9]}，您还没有该道具，无法进化', at_sender=True)
+        else:
+            POKE._add_pokemon_id(uid, kid_poke_id, bianhao)
+            my_team = POKE.get_pokemon_group(uid)
+            pokemon_list = my_team.split(',')
+            POKE._add_pokemon_prop(uid, zhongzu[9], -1)
+            if str(kid_poke_id) in pokemon_list:
+                team_list = []
+                for pokeid in pokemon_list:
+                    if int(pokeid) == int(kid_poke_id):
+                        pokeid = bianhao
+                    team_list.append(str(pokeid))
+                pokemon_str = ','.join(team_list)
+                POKE._add_pokemon_group(uid,pokemon_str)
+            mes = f'恭喜！您的宝可梦 {POKEMON_LIST[kid_poke_id][0]} 进化成了 {POKEMON_LIST[bianhao][0]}'
+            buttons = [
+                Button(f'📖学习技能', f'学习技能 {pokename}', action = 2),
+                Button(f'📖遗忘技能', f'遗忘技能 {pokename}', action = 2),
+                Button(f'📖精灵状态', f'精灵状态{pokename}'),
+            ]
+            await bot.send_option(mes,buttons)
 
 @sv_pokemon_duel.on_fullmatch(('我的精灵蛋','我的宝可梦蛋'))
 async def my_pokemon_egg_list(bot, ev: Event):

@@ -36,7 +36,7 @@ from ..utils.fonts.starrail_fonts import (
 )
 
 TS_FIGHT = 20
-TS_PROP = 0
+TS_PROP = 10
 TS_POKEMON = 70
 WIN_EGG = 10
 black_color = (0, 0, 0)
@@ -48,6 +48,8 @@ with Path.open(Excel_path / 'map.json', encoding='utf-8') as f:
     didianlist = map_dict['didianlist']
 
 TEXT_PATH = Path(__file__).parent / 'texture2D'
+
+ts_prop_list = ['体力之羽','肌力之羽','抵抗之羽','智力之羽','精神之羽','瞬发之羽','神奇糖果','榴石果','藻根果','比巴果','哈密果','萄葡果','茄番果']
 
 sv_pokemon_map = SV('宝可梦探索', priority=5)
 
@@ -87,11 +89,11 @@ async def map_my_group(bot, ev: Event):
     ]
     mapinfo = POKE._get_map_now(uid)
     huizhang = mapinfo[0]
-    if huizhang < 8:
+    if int(huizhang) < 8:
         buttons.append(Button(f'挑战道馆', '️挑战道馆'))
-    elif huizhang == 8:
+    elif int(huizhang) == 8:
         buttons.append(Button(f'挑战天王', '挑战天王'))
-    elif huizhang == 9:
+    elif int(huizhang) == 9:
         buttons.append(Button(f'挑战冠军', '挑战四天王冠军'))
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
@@ -389,7 +391,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
             img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
             img_bg.paste(bg_img, (0, 0))
             img_bg = await convert_img(img_bg)
-            await bot.send(img_bg)
+            await bot.send(mes)
             
         else:
             ts_quality += TS_FIGHT
@@ -488,9 +490,11 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
                 img_bg.paste(bg_img, (0, 0))
                 img_bg = await convert_img(img_bg)
-                await bot.send(img_bg)
+                await bot.send(mes)
             else:
-                await bot.send('您获得了道具[还没写好]', at_sender=True)
+                prop_name = random.sample(ts_prop_list, 1)[0]
+                POKE._add_pokemon_prop(uid, propname, 1)
+                await bot.send(f'您获得了道具[{prop_name}]', at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['野外垂钓'])
 async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
@@ -628,7 +632,7 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
             img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
             img_bg.paste(bg_img, (0, 0))
             img_bg = await convert_img(img_bg)
-            await bot.send(img_bg)
+            await bot.send(mes)
         else:
             return await bot.send(f'当前地点无法垂钓', at_sender=True)
 
