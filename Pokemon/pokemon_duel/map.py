@@ -297,7 +297,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
     bg_img.paste(vs_img, (300, 12), vs_img)
     trainers_path = TEXT_PATH / 'trainers'
     if didianlist[this_map]['type'] == "野外":
-        ts_z = TS_FIGHT + TS_POKEMON
+        ts_z = TS_FIGHT + TS_PROP + TS_POKEMON
         ts_num = int(math.floor(random.uniform(0,ts_z)))
         ts_quality = TS_POKEMON
         if ts_num <= ts_quality:
@@ -493,7 +493,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 await bot.send(mes)
             else:
                 prop_name = random.sample(ts_prop_list, 1)[0]
-                POKE._add_pokemon_prop(uid, propname, 1)
+                POKE._add_pokemon_prop(uid, prop_name, 1)
                 await bot.send(f'您获得了道具[{prop_name}]', at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['野外垂钓'])
