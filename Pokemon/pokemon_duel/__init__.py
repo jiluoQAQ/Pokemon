@@ -735,8 +735,9 @@ async def my_pokemon_egg_list(bot, ev: Event):
 @sv_pokemon_duel.on_prefix(('丢弃精灵蛋','丢弃宝可梦蛋'))
 async def my_pokemon_egg_use(bot, ev: Event):
     args = ev.text.split()
-    if len(args)!=1:
-        return await bot.send('请输入 丢弃精灵蛋+宝可梦名称。', at_sender=True)
+    if len(args)<1:
+        return await bot.send('请输入 丢弃精灵蛋+宝可梦名称+丢弃数量。', at_sender=True)
+    
     uid = ev.user_id
     pokename = args[0]
     uid = ev.user_id
@@ -747,8 +748,14 @@ async def my_pokemon_egg_use(bot, ev: Event):
     egg_num = POKE.get_pokemon_egg(uid,bianhao)
     if egg_num == 0:
         return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
-    POKE.delete_pokemon_egg_bianhao(uid,bianhao)
-    mes = f'成功！您的{pokename}精灵蛋已经丢弃了'
+    if len(args) == 2:
+        eggnum = int(args[1])
+        if eggnum > egg_num:
+            eggnum = egg_num
+    else:
+        eggnum = egg_num
+    POKE._add_pokemon_egg(uid,bianhao,0-eggnum)
+    mes = f'成功！您丢弃了{pokename}精灵蛋x{eggnum}'
     buttonlist = ['宝可梦孵化','重置个体值','我的精灵蛋']
     buttons = [
         Button(f'📖宝可梦孵化', '宝可梦孵化', action = 2),

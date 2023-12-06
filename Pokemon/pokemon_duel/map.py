@@ -926,7 +926,7 @@ async def map_info_now(bot, ev: Event):
         mes.append(MessageSegment.text(f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'))
         mes.append(MessageSegment.text(f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"))
         if didianlist[this_map]['pokemon_s']:
-            buttons.append(Button('🏝️野外垂钓', '️野外垂钓'))
+            buttons.append(Button('🏝野外垂钓', '野外垂钓'))
             pokemon_s_list = didianlist[this_map]['pokemon_s']
             mes.append(MessageSegment.text(f'当前所在地野外垂钓遭遇的精灵为\n'))
             for item in pokemon_s_list:

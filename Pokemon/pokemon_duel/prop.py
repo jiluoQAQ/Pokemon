@@ -45,7 +45,7 @@ TEXT_PATH = Path(__file__).parent / 'texture2D'
 
 sv_pokemon_prop = SV('宝可梦道具', priority=5)
 
-@sv_pokemon_prop.on_fullmatch(['小游戏帮助','宝可梦小游戏帮助'])
+@sv_pokemon_prop.on_fullmatch(['道具帮助','宝可梦道具帮助'])
 async def pokemon_help_prop(bot, ev: Event):
     msg='''  
              宝可梦道具帮助
