@@ -985,19 +985,33 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         dijinenglist = re.split(',',dipokemon_info[14])
         jineng1_use = 0
         puthmy = 0
+        runmynum = 0
         try:
             async with timeout(20):
                 while jineng1_use == 0:
-                    myresp = await bot.receive_resp(f'{myname}请在20秒内选择一个技能使用!',myjinenglist,unsuported_platform=True,is_mutiply=True)
-                    if myresp is not None:
-                        s = myresp.text
-                        uid = myresp.user_id
-                        print(f'{uid}-{myuid}')
-                        if str(uid) == str(myuid):
-                            if s in myjinenglist:
-                                jineng1 = s
-                                await bot.send(f'{myname}已选择完成')
-                                jineng1_use = 1
+                    if runmynum == 0:
+                        myresp = await bot.receive_resp(f'{myname}请在20秒内选择一个技能使用!',myjinenglist,unsuported_platform=True,is_mutiply=True)
+                        if myresp is not None:
+                            s = myresp.text
+                            uid = myresp.user_id
+                            print(f'{uid}-{myuid}')
+                            if str(uid) == str(myuid):
+                                if s in myjinenglist:
+                                    jineng1 = s
+                                    await bot.send(f'{myname}已选择完成')
+                                    jineng1_use = 1
+                        runmynum = 1
+                    else:
+                        myresp = await bot.receive_mutiply_resp()
+                        if myresp is not None:
+                            s = myresp.text
+                            uid = myresp.user_id
+                            print(f'{uid}-{myuid}')
+                            if str(uid) == str(myuid):
+                                if s in myjinenglist:
+                                    jineng1 = s
+                                    await bot.send(f'{myname}已选择完成')
+                                    jineng1_use = 1
         except asyncio.TimeoutError:
             jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         jinenginfo1 = JINENG_LIST[jineng1]
@@ -1005,19 +1019,33 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         
         jineng2_use = 0
         puthdi = 0
+        rundinum = 0
         try:
             async with timeout(20):
                 while jineng2_use == 0:
-                    diresp = await bot.receive_resp(f'{diname}请在20秒内选择一个技能使用!',dijinenglist,unsuported_platform=True,is_mutiply=True)
-                    if diresp is not None:
-                        s = diresp.text
-                        uid = diresp.user_id
-                        print(f'{uid}-{diuid}')
-                        if str(uid) == str(diuid):
-                            if s in dijinenglist:
-                                jineng2 = s
-                                await bot.send(f'{diname}已选择完成')
-                                jineng2_use = 1
+                    if rundinum == 0:
+                        diresp = await bot.receive_resp(f'{diname}请在20秒内选择一个技能使用!',dijinenglist,unsuported_platform=True,is_mutiply=True)
+                        rundinum = 1
+                        if diresp is not None:
+                            s = diresp.text
+                            uid = diresp.user_id
+                            print(f'{uid}-{diuid}')
+                            if str(uid) == str(diuid):
+                                if s in dijinenglist:
+                                    jineng2 = s
+                                    await bot.send(f'{diname}已选择完成')
+                                    jineng2_use = 1
+                    else:
+                        diresp = await bot.receive_mutiply_resp()
+                        if diresp is not None:
+                            s = diresp.text
+                            uid = diresp.user_id
+                            print(f'{uid}-{diuid}')
+                            if str(uid) == str(diuid):
+                                if s in dijinenglist:
+                                    jineng2 = s
+                                    await bot.send(f'{diname}已选择完成')
+                                    jineng2_use = 1
         except asyncio.TimeoutError:
             jineng2 = now_use_jineng(diinfo,myinfo,dijinenglist,myjinenglist,changdi)
         jinenginfo2 = JINENG_LIST[jineng2]
