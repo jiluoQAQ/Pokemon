@@ -993,7 +993,7 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
                         s = myresp.text
                         uid = myresp.user_id
                         print(f'{uid}-{myuid}')
-                        if uid == myuid:
+                        if str(uid) == str(myuid):
                             if s in myjinenglist:
                                 jineng1 = s
                                 await bot.send(f'{myname}已选择完成')
@@ -1013,7 +1013,7 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
                         s = diresp.text
                         uid = diresp.user_id
                         print(f'{uid}-{diuid}')
-                        if uid == diuid:
+                        if str(uid) == str(diuid):
                             if s in dijinenglist:
                                 jineng2 = s
                                 await bot.send(f'{diname}已选择完成')
