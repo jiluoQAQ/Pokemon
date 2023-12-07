@@ -317,6 +317,16 @@
 			"pokemon":[16,37,43,52,58,69],
 			"pokemon_s":null
 		},
+		"8号道路":{
+			"id":118,
+			"name":"8号道路",
+			"fname":"关东",
+			"type":"野外",
+			"need":4,
+			"level":[22,27],
+			"pokemon":[16,37,38,39,58,59,63,64,113],
+			"pokemon_s":null
+		},
 		"9号道路":{
 			"id":119,
 			"name":"9号道路",
@@ -445,7 +455,7 @@
 			"fname":"关东",
 			"type":"野外",
 			"need":5,
-			"level":[28,22],
+			"level":[22,28],
 			"pokemon":[19,20,21,84],
 			"pokemon_s":null
 		},
@@ -455,7 +465,7 @@
 			"fname":"关东",
 			"type":"野外",
 			"need":5,
-			"level":[20,28],
+			"level":[22,28],
 			"pokemon":[19,20,21,22,84],
 			"pokemon_s":null
 		},
@@ -791,7 +801,7 @@
 			"fname":"关东",
 			"type":"野外",
 			"need":8,
-			"level":[32,36],
+			"level":[38,47],
 			"pokemon":[42,75,95,111,217,232],
 			"pokemon_s":null
 		},

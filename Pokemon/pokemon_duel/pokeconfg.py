@@ -184,17 +184,19 @@ def get_pokeon_info(uid,bianhao):
     return pokemon_info
 
 #计算宝可梦属性
-def get_pokemon_shuxing(bianhao,pokemon_info):
+def get_pokemon_shuxing(bianhao,pokemon_info,level = 0):
     zhongzu_info = POKEMON_LIST[bianhao]
     xingge_info = XINGGE_LIST[pokemon_info[13]]
+    if level == 0:
+        level = int(pokemon_info[0])
     #print(xingge_info)
     name = zhongzu_info[0]
-    HP = math.ceil((((int(zhongzu_info[1])*2) + int(pokemon_info[1]) + (int(pokemon_info[7])/4)) * int(pokemon_info[0]))/100 + 10 + int(pokemon_info[0]))
-    W_atk = math.ceil(((((int(zhongzu_info[2])*2) + int(pokemon_info[2]) + int((int(pokemon_info[8])/4))) * int(pokemon_info[0]))/100 + 5)*float(xingge_info[0]))
-    W_def = math.ceil(((((int(zhongzu_info[3])*2) + int(pokemon_info[3]) + int((int(pokemon_info[9])/4))) * int(pokemon_info[0]))/100 + 5)*float(xingge_info[1]))
-    M_atk = math.ceil(((((int(zhongzu_info[4])*2) + int(pokemon_info[4]) + int((int(pokemon_info[10])/4))) * int(pokemon_info[0]))/100 + 5)*float(xingge_info[2]))
-    M_def = math.ceil(((((int(zhongzu_info[5])*2) + int(pokemon_info[5]) + int((int(pokemon_info[11])/4))) * int(pokemon_info[0]))/100 + 5)*float(xingge_info[3]))
-    speed = math.ceil(((((int(zhongzu_info[6])*2) + int(pokemon_info[6]) + int((int(pokemon_info[12])/4))) * int(pokemon_info[0]))/100 + 5)*float(xingge_info[4]))
+    HP = math.ceil((((int(zhongzu_info[1])*2) + int(pokemon_info[1]) + (int(pokemon_info[7])/4)) * level)/100 + 10 + level)
+    W_atk = math.ceil(((((int(zhongzu_info[2])*2) + int(pokemon_info[2]) + int((int(pokemon_info[8])/4))) * level)/100 + 5)*float(xingge_info[0]))
+    W_def = math.ceil(((((int(zhongzu_info[3])*2) + int(pokemon_info[3]) + int((int(pokemon_info[9])/4))) * level)/100 + 5)*float(xingge_info[1]))
+    M_atk = math.ceil(((((int(zhongzu_info[4])*2) + int(pokemon_info[4]) + int((int(pokemon_info[10])/4))) * level)/100 + 5)*float(xingge_info[2]))
+    M_def = math.ceil(((((int(zhongzu_info[5])*2) + int(pokemon_info[5]) + int((int(pokemon_info[11])/4))) * level)/100 + 5)*float(xingge_info[3]))
+    speed = math.ceil(((((int(zhongzu_info[6])*2) + int(pokemon_info[6]) + int((int(pokemon_info[12])/4))) * level)/100 + 5)*float(xingge_info[4]))
     return HP,W_atk,W_def,M_atk,M_def,speed
     
 #重开，清除宝可梦列表个人信息
@@ -984,9 +986,9 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         jineng1_use = 0
         puthmy = 0
         try:
-            async with timeout(60):
+            async with timeout(20):
                 while jineng1_use == 0:
-                    myresp = await bot.receive_resp(f'{myname}请在60秒内选择一个技能使用!',myjinenglist,unsuported_platform=True,is_mutiply=True)
+                    myresp = await bot.receive_resp(f'{myname}请在20秒内选择一个技能使用!',myjinenglist,unsuported_platform=True,is_mutiply=True)
                     if myresp is not None:
                         s = myresp.text
                         uid = myresp.user_id
@@ -1004,9 +1006,9 @@ async def pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,
         jineng2_use = 0
         puthdi = 0
         try:
-            async with timeout(60):
+            async with timeout(20):
                 while jineng2_use == 0:
-                    diresp = await bot.receive_resp(f'{diname}请在60秒内选择一个技能使用!',dijinenglist,unsuported_platform=True,is_mutiply=True)
+                    diresp = await bot.receive_resp(f'{diname}请在20秒内选择一个技能使用!',dijinenglist,unsuported_platform=True,is_mutiply=True)
                     if diresp is not None:
                         s = diresp.text
                         uid = diresp.user_id
@@ -1257,13 +1259,16 @@ def get_pokemon_name_list(pokemon_list):
         name_str += CHARA_NAME[pokemonid][0]
     return name_str
 
-def new_pokemon_info(pokemonid, pokemon_info):
+def new_pokemon_info(pokemonid, pokemon_info, level = 0):
     pokemoninfo = []
     pokemoninfo.append(POKEMON_LIST[pokemonid][0])
     pokemoninfo.append(POKEMON_LIST[pokemonid][7])
-    pokemoninfo.append(pokemon_info[0])
+    if level > 0:
+        pokemoninfo.append(level)
+    else:
+        pokemoninfo.append(pokemon_info[0])
     pokemonshux = []
-    pokemonshux = get_pokemon_shuxing(pokemonid,pokemon_info)
+    pokemonshux = get_pokemon_shuxing(pokemonid,pokemon_info,level)
     for shuzhi in pokemonshux:
         pokemoninfo.append(shuzhi)
     for num in range(1,9):
@@ -1336,7 +1341,7 @@ def add_exp(uid,pokemonid,exp):
         POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
         return msg
 
-def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
+def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level, returnlevel = 0):
     mes = ''
     zhongzu = POKEMON_LIST[pokemonid]
     zhongzu_info = []
@@ -1369,7 +1374,7 @@ def get_win_reward(uid, mypokemonid, myinfo, pokemon_info, pokemonid, level):
     mesg,pokemon_info = get_nl_info(uid, mypokemonid, pokemon_info, max_zhongzuid, nl_num)
     if mesg:
         mes += mesg
-    newinfo = new_pokemon_info(mypokemonid, pokemon_info)
+    newinfo = new_pokemon_info(mypokemonid, pokemon_info, returnlevel)
     newinfo[17] = myinfo[17]
     return mes,newinfo
 
@@ -1547,7 +1552,7 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
             #await bot.send(mes, at_sender=True)
     return bg_img,bg_num,img_height,mesg,mypokelist,dipokelist
 
-async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname):
+async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname,level = 0):
     myzhuangtai = [['无', 0],['无', 0]]
     dizhuangtai = [['无', 0],['无', 0]]
     changdi = [['无天气', 99],['', 0]]
@@ -1565,19 +1570,19 @@ async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname):
         if len(myinfo) == 0:
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(myuid,bianhao1)
-            myinfo = new_pokemon_info(bianhao1, mypokemon_info)
+            myinfo = new_pokemon_info(bianhao1, mypokemon_info, level)
         if len(diinfo) == 0:
             bianhao2 = dipokelist[0]
             dipokemon_info = get_pokeon_info(diuid,bianhao2)
-            diinfo = new_pokemon_info(bianhao2, dipokemon_info)
+            diinfo = new_pokemon_info(bianhao2, dipokemon_info, level)
         await bot.send(mes)
         
-        mes = f'{myname}派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}'
+        mes = f'{myname}派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{myinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
         img = await convert_img(img)
         await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
         
-        mes = f'{diname}派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}'
+        mes = f'{diname}派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{diinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
         img = await convert_img(img)
         await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
@@ -1590,7 +1595,7 @@ async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname):
             myzhuangtai = [['无', 0],['无', 0]]
             mypokelist.remove(bianhao1)
             jiesuan_msg = f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
-            mes,diinfo = get_win_reward(diuid, bianhao2, diinfo, dipokemon_info, bianhao1, mypokemon_info[0])
+            mes,diinfo = get_win_reward(diuid, bianhao2, diinfo, dipokemon_info, bianhao1, mypokemon_info[0], level)
             jiesuan_msg += mes
             
         if diinfo[17] == 0:
@@ -1599,7 +1604,7 @@ async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname):
             dipokelist.remove(bianhao2)
             jiesuan_msg = f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             # 我方获得经验/努力值奖励
-            mes,myinfo = get_win_reward(myuid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0])
+            mes,myinfo = get_win_reward(myuid, bianhao1, myinfo, mypokemon_info, bianhao2, dipokemon_info[0], level)
             jiesuan_msg += mes
             
         await bot.send(jiesuan_msg)
