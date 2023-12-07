@@ -247,20 +247,23 @@ async def prop_use(bot, ev: Event):
             await bot.send_option(mes,buttons)
     elif propinfo['use'][0] == '升级':
         if propinfo['use'][1] == 'level':
-            if mypokemon_info[0] == 100:
+            if pokemon_info[0] == 100:
                 return await bot.send(f'使用失败,{POKEMON_LIST[bianhao][0]}的等级已经无法再提升了。', at_sender=True)
             add_level = propinfo['use'][2] * propnum
-            need_level = 100 - mypokemon_info[0]
+            need_level = 100 - pokemon_info[0]
             if add_level <= need_level:
                 use_peop_num = propnum
             else:
                 use_peop_num = math.ceil(propnum - (add_level-need_level)/propinfo['use'][2])
             add_level = use_peop_num * propinfo['use'][2]
-            now_level = mypokemon_info[0] + add_level
+            now_level = pokemon_info[0] + add_level
             POKE._add_pokemon_level(uid, bianhao, now_level, 0)
             mes = f"使用成功！{POKEMON_LIST[bianhao][0]}的等级提升了{add_level}"
             POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
-    
+            buttons = [
+                Button(f'📖精灵状态', f'精灵状态{pokename}'),
+            ]
+            await bot.send_option(mes,buttons)
     
 @sv_pokemon_prop.on_fullmatch(['我的道具'])
 async def prop_my_list(bot, ev: Event):
