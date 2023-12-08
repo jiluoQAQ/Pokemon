@@ -70,6 +70,7 @@ async def map_my_group(bot, ev: Event):
     uid = ev.user_id
     pokemon_list = []
     name_str = ''
+    POKE = PokeCounter()
     for pokemon_name in args:
         bianhao = get_poke_bianhao(pokemon_name)
         if bianhao == 0:
@@ -78,8 +79,8 @@ async def map_my_group(bot, ev: Event):
         if pokemon_info == 0:
             return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
         pokemon_list.append(str(bianhao))
-        name_str += f'{pokemon_name} Lv.{pokemon_info[0]}\n'
-    POKE = PokeCounter()
+        startype = POKE.get_pokemon_star(uid,bianhao)
+        name_str += f' {starlist[startype]}{pokemon_name} Lv.{pokemon_info[0]}\n'
     pokemon_str = ','.join(pokemon_list)
     POKE._add_pokemon_group(uid,pokemon_str)
     
@@ -136,7 +137,8 @@ async def map_my_info(bot, ev: Event):
         for bianhao in pokemon_list:
             bianhao = int(bianhao)
             pokemon_info = get_pokeon_info(uid,bianhao)
-            mes += f'\n{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
+            startype = POKE.get_pokemon_star(uid,bianhao)
+            mes += f'\n{starlist[startype]}{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
     buttons = [
         Button('📖精灵状态', '精灵状态'),
         Button('📖我的精灵蛋', '我的精灵蛋'),

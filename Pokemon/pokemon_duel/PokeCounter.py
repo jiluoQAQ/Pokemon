@@ -15,6 +15,8 @@ class PokeCounter:
         self._create_table_group()
         self._create_table_egg()
         self._create_table_prop()
+        self._create_table_star()
+        self._create_table_starrush()
     
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -83,6 +85,86 @@ class PokeCounter:
                            PRIMARY KEY(UID, PROP));''')
         except:
             raise Exception('创建表发生错误')
+    
+    def _create_table_star(self):
+        try:
+            self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_STAR
+                          (UID             TEXT   NOT NULL,
+                           BIANHAO         INT    NOT NULL,
+                           TYPE            INT    NOT NULL,
+                           PRIMARY KEY(UID, BIANHAO));''')
+        except:
+            raise Exception('创建表发生错误')
+    
+    def _create_table_starrush(self):
+        try:
+            self._connect().execute('''CREATE TABLE IF NOT EXISTS POKEMON_STARRUSH
+                          (UID             TEXT   NOT NULL,
+                           NUM             INT    NOT NULL,
+                           PRIMARY KEY(UID));''')
+        except:
+            raise Exception('创建表发生错误')
+    
+    def update_pokemon_star(self,uid,bianhao,startype=0):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    "INSERT OR REPLACE INTO POKEMON_STAR (UID,BIANHAO,TYPE) VALUES (?,?,?)", (uid, bianhao,startype)
+                )  
+        except:
+            raise Exception('更新表发生错误')
+    
+    def get_pokemon_star(self,uid,bianhao):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT TYPE FROM POKEMON_STAR WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def _delete_poke_star(self, uid):
+        with self._connect() as conn:
+            conn.execute(f"DELETE FROM POKEMON_STAR WHERE UID='{uid}'").fetchall()
+    
+    def _delete_poke_star_bianhao(self, uid, bianhao):
+        with self._connect() as conn:
+            conn.execute(f"DELETE FROM POKEMON_STAR WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
+    
+    def get_pokemon_starrush(self,uid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT TYPE FROM POKEMON_PROP WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    self.update_pokemon_starrush(uid,0)
+                    return 0
+        except:
+            raise Exception('查找表发生错误') 
+    
+    def update_pokemon_starrush(self,uid,num):
+        rushnum = self.get_pokemon_starrush(uid) + num
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    "INSERT OR REPLACE INTO POKEMON_STARRUSH (UID,NUM) VALUES (?,?)", (uid, rushnum)
+                )  
+        except:
+            raise Exception('更新表发生错误')
+    
+    def new_pokemon_starrush(self,uid):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    "INSERT OR REPLACE INTO POKEMON_STARRUSH (UID,NUM) VALUES (?,?)", (uid, 0)
+                )  
+        except:
+            raise Exception('更新表发生错误')
     
     def get_pokemon_prop_list(self, uid):
         try:
@@ -421,7 +503,7 @@ class PokeCounter:
     def _delete_poke_info(self, uid):
         with self._connect() as conn:
             conn.execute(f"DELETE FROM POKEMON_TABLE WHERE UID='{uid}'").fetchall()
-            
+    
     def _delete_poke_bianhao(self, uid, bianhao):
         with self._connect() as conn:
             conn.execute(

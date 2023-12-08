@@ -71,6 +71,12 @@ zhongzu_list = {
     5:['SPD','速度'],
 }
 
+starlist = {
+    0:'',
+    1:'★',
+    2:'■',
+}
+
 daily_work_limiter = DailyAmountLimiter("work", WORK_NUM, RESET_HOUR)
 
 #生成精灵初始技能
@@ -206,12 +212,29 @@ def chongkai(uid):
     POKE.delete_pokemon_egg(uid)
     POKE.delete_pokemon_map(uid)
     POKE.delete_pokemon_group(uid)
+    POKE._delete_poke_star(uid)
 
 #放生
 def fangshen(uid,bianhao):
     POKE = PokeCounter()
     POKE._delete_poke_bianhao(uid,bianhao)
-    
+    POKE._delete_poke_star_bianhao(uid,bianhao)
+
+#闪光
+def get_pokemon_star(uid):
+    POKE = PokeCounter()
+    starflag = POKE.get_pokemon_starrush(uid)
+    star_num = int(math.floor(random.uniform(0,80000)))
+    startype = 0
+    if starflag == 1024 or star_num <= 10:
+        startype = 1
+        star_num2 = int(math.floor(random.uniform(0,80000)))
+        if star_num2 <= 10:
+            startype = 2
+        POKE.new_pokemon_starrush(uid)
+    return startype
+
+
 # 技能使用ai
 def now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi):
     mysd = get_nowshuxing(myinfo[8], myinfo[13])
@@ -1489,13 +1512,15 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(uid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
+            startype = POKE.get_pokemon_star(uid,bianhao1)
+            myinfo[0] = f'{starlist[startype]}{myinfo[0]}'
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
             dilevel = int(math.floor(random.uniform(minlevel,maxlevel)))
             dipokemon_info = get_pokeon_info_sj(bianhao2,dilevel)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info)
         if myinfo[3] == myinfo[17]:
-            mesg += f'我方派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
+            mesg += f'我方派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
             # mesg.append(MessageSegment.text(mes))
             # img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
             # img = await convert_img(img)
@@ -1620,18 +1645,22 @@ async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname,leve
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(myuid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info, level)
+            mystartype = POKE.get_pokemon_star(myuid,bianhao1)
+            myinfo[0] = f'{starlist[mystartype]}{myinfo[0]}'
         if len(diinfo) == 0:
             bianhao2 = dipokelist[0]
             dipokemon_info = get_pokeon_info(diuid,bianhao2)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info, level)
+            distartype = POKE.get_pokemon_star(diuid,bianhao2)
+            diinfo[0] = f'{starlist[distartype]}{diinfo[0]}'
         await bot.send(mes)
         
-        mes = f'{myname}派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{myinfo[2]}'
+        mes = f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{myinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
         img = await convert_img(img)
         await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
         
-        mes = f'{diname}派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{diinfo[2]}'
+        mes = f'{diname}派出了精灵\n{starlist[distartype]}{POKEMON_LIST[bianhao2][0]} Lv.{diinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
         img = await convert_img(img)
         await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
@@ -1721,12 +1750,16 @@ async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(myuid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
+            mystartype = POKE.get_pokemon_star(myuid,bianhao1)
+            myinfo[0] = f'{starlist[mystartype]}{myinfo[0]}'
         if len(diinfo) == 0:
             bianhao2 = dipokelist[0]
             dipokemon_info = get_pokeon_info(diuid,bianhao2)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info)
+            distartype = POKE.get_pokemon_star(diuid,bianhao2)
+            diinfo[0] = f'{starlist[distartype]}{diinfo[0]}'
         if myinfo[3] == myinfo[17]:
-            mesg += f'{myname}派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
+            mesg += f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
             # mesg.append(MessageSegment.text(mes))
             # img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
             # img = await convert_img(img)
@@ -1743,7 +1776,7 @@ async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname
         )
         img_draw.text(
             (125, img_height + 40),
-            f'{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}',
+            f'{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}',
             black_color,
             sr_font_20,
             'lm',
@@ -1756,7 +1789,7 @@ async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname
             # await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
             # await bot.send(mes, at_sender=True)
             # await bot.send(img, at_sender=True)
-        mesg += f'{diname}派出了精灵\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
+        mesg += f'{diname}派出了精灵\n{starlist[distartype]}{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
         img_draw.text(
             (575, img_height),
             f'{diname}派出了',
@@ -1766,7 +1799,7 @@ async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname
         )
         img_draw.text(
             (575, img_height + 40),
-            f'{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}',
+            f'{starlist[distartype]}{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}',
             black_color,
             sr_font_20,
             'rm',
@@ -1843,14 +1876,15 @@ async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(uid,bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
+            startype = POKE.get_pokemon_star(uid,bianhao1)
+            myinfo[0] = f'{starlist[startype]}{myinfo[0]}'
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
             dilevel = int(math.floor(random.uniform(minlevel,maxlevel)))
             dipokemon_info = get_pokeon_info_sj(bianhao2,dilevel)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info)
         if myinfo[3] == myinfo[17]:
-            mesg += f'我方派出了精灵\n{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
-            
+            mesg += f'我方派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
         if ys == 1:
             mesg += f'野生精灵出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
         else:
