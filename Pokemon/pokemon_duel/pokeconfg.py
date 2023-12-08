@@ -1460,6 +1460,7 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
     mesg = ''
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
+    POKE = PokeCounter()
     img_height = 90
     bg_num = 1
     while len(mypokelist) > 0 and len(dipokelist) > 0:
@@ -1633,6 +1634,7 @@ async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname,leve
     changci = 1
     myinfo = []
     diinfo = []
+    POKE = PokeCounter()
     mesg = []
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
@@ -1698,6 +1700,7 @@ async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname
     mesg = ''
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
+    POKE = PokeCounter()
     img_height = 90
     bg_num = 1
     while len(mypokelist) > 0 and len(dipokelist) > 0:
@@ -1865,6 +1868,7 @@ async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
     changci = 1
     myinfo = []
     diinfo = []
+    POKE = PokeCounter()
     mesg = ''
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
