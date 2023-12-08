@@ -919,9 +919,9 @@ async def map_info_now(bot, ev: Event):
     if didianlist[this_map]['type'] == "城镇":
         get_score = (int(didianlist[this_map]['need']) + 1) * 5000
         buttons.append(Button('打工', '打工'))
-        mes.append(MessageSegment.text(f'当前所在地打工1小时可获得{get_score}金币\n'))
+        mes.append(MessageSegment.text(f'当前所在地打工可获得{get_score}金币\n'))
     if didianlist[this_map]['type'] == "野外":
-        buttons.append(Button('🏝️野外探索', '野外探索'))
+        buttons.append(Button('🏝野外探索', '野外探索'))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
         mes.append(MessageSegment.text(f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'))
         mes.append(MessageSegment.text(f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"))
@@ -934,10 +934,7 @@ async def map_info_now(bot, ev: Event):
                 name_str = get_pokemon_name_list(pokemon_s_list[item]['pokemon'])
                 mes.append(MessageSegment.text(f'{name_str}\n'))
                 mes.append(MessageSegment.text(f"等级:{pokemon_s_list[item]['level'][0]}-{pokemon_s_list[item]['level'][1]}\n"))
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes,buttons)
+    await bot.send_option(mes,buttons)
 
 @sv_pokemon_map.on_command(['查看地图'])
 async def show_map_info_now(bot, ev: Event):

@@ -22,6 +22,7 @@ from ..utils.convert import DailyAmountLimiter
 from ..utils.dbbase.ScoreCounter import SCORE_DB
 from ..utils.dbbase.GameCounter import GAME_DB
 from gsuid_core.utils.image.convert import convert_img
+from gsuid_core.message_models import Button
 
 PIC_SIDE_LENGTH = 25 
 LH_SIDE_LENGTH = 75
@@ -245,3 +246,11 @@ async def pokemon_whois(bot: Bot, ev: Event):
     await bot.send(win_mes)
     # msg =  [MessageSegment.text('正确答案是:'),MessageSegment.image(win_mes),MessageSegment.text('')]
     # await bot.send(msg)
+
+@sv_pokemon_whois.on_fullmatch('重置我是谁')
+async def cz_pokemon_whois(bot: Bot, ev: Event):
+    winner_judger.turn_off(ev.group_id)
+    buttons = [
+        Button(f'✅我是谁', '我是谁'),
+    ]
+    await bot.send_option('重置成功，请重新发送我是谁开始新一轮游戏',buttons)

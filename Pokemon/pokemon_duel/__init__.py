@@ -657,9 +657,19 @@ async def get_jineng_info(bot, ev: Event):
         return await bot.send('暂时没有该宝可梦的进化信息，请等待后续更新。', at_sender=True)
     if zhongzu[8] == '-':
         return await bot.send('暂时没有该宝可梦的进化信息。', at_sender=True)
+    use_flag = 0
+    POKE = PokeCounter()
+    my_pokemon_list = POKE._get_my_pokemon(uid)
+    for pokemonid in my_pokemon_list:
+        if int(pokemonid[0]) == int(bianhao):
+            use_flag = 1
+            break
+    if use_flag == 1:
+        return await bot.send(f'已经有{pokename}了，不能同时拥有同一只精灵哦。', at_sender=True)
+    
     kid_poke_id = int(zhongzu[8])
     pokemon_info = get_pokeon_info(uid,kid_poke_id)
-    POKE = PokeCounter()
+    
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[kid_poke_id][0]}，无法进化。', at_sender=True)
     if zhongzu[9].isdigit():
@@ -819,12 +829,11 @@ async def get_pokemon_form_egg(bot, ev: Event):
     use_flag = 0
     my_pokemon_list = POKE._get_my_pokemon(uid)
     for pokemonid in my_pokemon_list:
-        kidid = get_pokemon_eggid(pokemonid[0])
-        if int(kidid) == int(bianhao):
+        if int(pokemonid[0]) == int(bianhao):
             use_flag = 1
             break
     if use_flag == 1:
-        return await bot.send(f'已经有{pokename}/{pokename}的进化型了，不能同时拥有同一种精灵哦。', at_sender=True)
+        return await bot.send(f'已经有{pokename}了，不能同时拥有同一只精灵哦。', at_sender=True)
     POKE._add_pokemon_egg(uid,bianhao,-1)
     pokemon_info = add_pokemon(uid,bianhao)
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
