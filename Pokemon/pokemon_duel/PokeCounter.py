@@ -186,11 +186,25 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
     
-    def get_pokemon_egg_list(self, uid):
+    def get_pokemon_egg_num(self, uid):
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT BIANHAO,NUM FROM POKEMON_EGG WHERE UID='{uid}' AND NUM>0 ORDER BY NUM desc LIMIT 30").fetchall()
+                    f"SELECT COUNT(BIANHAO) AS EGGNUM FROM POKEMON_EGG WHERE UID='{uid}' AND NUM>0").fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def get_pokemon_egg_list(self, uid, page = 0):
+        num = 30
+        startnum = num * page
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT BIANHAO,NUM FROM POKEMON_EGG WHERE UID='{uid}' AND NUM>0 ORDER BY NUM desc,BIANHAO ASC LIMIT {startnum},{num}").fetchall()
                 if r:
                     return r
                 else:

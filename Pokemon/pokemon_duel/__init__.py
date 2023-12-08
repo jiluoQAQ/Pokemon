@@ -720,15 +720,22 @@ async def get_jineng_info(bot, ev: Event):
             ]
             await bot.send_option(mes,buttons)
 
-@sv_pokemon_duel.on_fullmatch(('我的精灵蛋','我的宝可梦蛋'))
+@sv_pokemon_duel.on_command(('我的精灵蛋','我的宝可梦蛋'))
 async def my_pokemon_egg_list(bot, ev: Event):
+    page = ''.join(re.findall('^[a-zA-Z0-9_\u4e00-\u9fa5]+$', ev.text))
+    if not page:
+        page = 0
+    else:
+        page = int(page)
     uid = ev.user_id
     POKE = PokeCounter()
-    myegglist = POKE.get_pokemon_egg_list(uid)
+    myegglist = POKE.get_pokemon_egg_list(uid,page)
     if myegglist == 0:
         return await bot.send('您还没有精灵蛋', at_sender=True)
+    egg_num = POKE.get_pokemon_egg_num(uid)
+    page_num = math.floor(egg_num/30)
     mes = ''
-    mes += '您的精灵蛋信息为(只显示数量最多的前30种):\n'
+    mes += '您的精灵蛋信息为(一页只显示30种按数量和编号排序):\n'
     for pokemoninfo in myegglist:
         mes += f'{POKEMON_LIST[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]}\n'
     buttonlist = ['宝可梦孵化','重置个体值','丢弃精灵蛋']
@@ -737,6 +744,15 @@ async def my_pokemon_egg_list(bot, ev: Event):
         Button(f'📖重置个体值', '重置个体值', action = 2),
         Button(f'📖丢弃精灵蛋', '丢弃精灵蛋', action = 2),
     ]
+    if page >0:
+        uppage = page - 1
+        buttons.append(Button(f'⬅️上一页', f'我的精灵蛋 {uppage}'))
+    if page_num > 0:
+        Button(f'⏺️跳转({page}/{page_num})', '我的精灵蛋', action = 2)
+    if page < page_num:
+        dowmpage = page + 1
+        buttons.append(Button(f'➡️下一页', f'我的精灵蛋 {dowmpage}'))
+    
     if ev.bot_id == 'qqgroup':
         await bot.send(mes, at_sender=True)
     else:
