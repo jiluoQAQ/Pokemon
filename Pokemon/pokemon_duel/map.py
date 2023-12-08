@@ -473,7 +473,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                         'lm',
                     )
                     SCORE = SCORE_DB()
-                    get_score = (int(didianlist[this_map]['need']) + 1) * 500
+                    get_score = (int(didianlist[this_map]['need']) + 1) * 200
                     SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
                     img_draw.text(
