@@ -74,7 +74,7 @@ zhongzu_list = {
 starlist = {
     0:'',
     1:'★',
-    2:'■',
+    2:'✨',
 }
 
 daily_work_limiter = DailyAmountLimiter("work", WORK_NUM, RESET_HOUR)
@@ -104,13 +104,19 @@ def get_level_jineng(level,bianhao):
     return kexuelist
 
 #添加宝可梦，随机生成个体值
-def add_pokemon(uid,bianhao):
+def add_pokemon(uid,bianhao,startype = 0):
     POKE = PokeCounter()
     pokemon_info = []
     level = 5
     pokemon_info.append(level)
+    gtmax = 0
+    if startype > 0:
+        gtmax = random.sample([1,2,3,4,5,6],1)[0]
     for num in range(1,7):
-        gt_num = int(math.floor(random.uniform(1,32)))
+        if gtmax == num:
+            gt_num = 31
+        else:
+            gt_num = int(math.floor(random.uniform(1,32)))
         pokemon_info.append(gt_num)
     for num in range(1,7):
         pokemon_info.append(0)
@@ -129,13 +135,19 @@ def add_pokemon(uid,bianhao):
     return pokemon_info
 
 #重置宝可梦个体值
-def new_pokemon_gt(uid,bianhao):
+def new_pokemon_gt(uid,bianhao,startype = 0):
     POKE = PokeCounter()
     my_pokemon_info = get_pokeon_info(uid,bianhao)
     pokemon_info = []
     pokemon_info.append(my_pokemon_info[0])
+    gtmax = 0
+    if startype > 0:
+        gtmax = random.sample([1,2,3,4,5,6],1)[0]
     for num in range(1,7):
-        gt_num = int(math.floor(random.uniform(1,32)))
+        if gtmax == num:
+            gt_num = 31
+        else:
+            gt_num = int(math.floor(random.uniform(1,32)))
         pokemon_info.append(gt_num)
     for num in range(7,15):
         pokemon_info.append(my_pokemon_info[num])
@@ -224,11 +236,11 @@ def fangshen(uid,bianhao):
 def get_pokemon_star(uid):
     POKE = PokeCounter()
     starflag = POKE.get_pokemon_starrush(uid)
-    star_num = int(math.floor(random.uniform(0,80000)))
+    star_num = int(math.floor(random.uniform(0,40960)))
     startype = 0
     if starflag == 1024 or star_num <= 10:
         startype = 1
-        star_num2 = int(math.floor(random.uniform(0,80000)))
+        star_num2 = int(math.floor(random.uniform(0,160)))
         if star_num2 <= 10:
             startype = 2
         POKE.new_pokemon_starrush(uid)

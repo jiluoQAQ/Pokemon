@@ -138,11 +138,11 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT TYPE FROM POKEMON_PROP WHERE UID='{uid}' AND BIANHAO={bianhao}").fetchall()
+                    f"SELECT NUM FROM POKEMON_STARRUSH WHERE UID='{uid}'").fetchall()
                 if r:
                     return r[0][0]
                 else:
-                    self.update_pokemon_starrush(uid,0)
+                    self.new_pokemon_starrush(uid)
                     return 0
         except:
             raise Exception('查找表发生错误') 

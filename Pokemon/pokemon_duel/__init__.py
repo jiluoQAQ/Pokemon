@@ -486,9 +486,10 @@ async def get_chushi_pokemon(bot, ev: Event):
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
     if bianhao not in chushi_list:
         return await bot.send(f'{POKEMON_LIST[bianhao][0]}不属于初始精灵，无法领取。', at_sender=True)
-    pokemon_info = add_pokemon(uid,bianhao)
-    POKE._add_pokemon_group(uid,bianhao)
     startype = get_pokemon_star(uid)
+    pokemon_info = add_pokemon(uid,bianhao,startype)
+    POKE._add_pokemon_group(uid,bianhao)
+    
     POKE.update_pokemon_star(uid,bianhao,startype)
     go_didian = '1号道路'
     name = uid
@@ -571,6 +572,7 @@ async def add_pokemon_jineng(bot, ev: Event):
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinengname = args[1]
+    POKE = PokeCounter()
     startype = POKE.get_pokemon_star(uid,bianhao)
     if str(jinengname) in str(pokemon_info[14]):
         return await bot.send(f'学习失败，您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}已学会{jinengname}。', at_sender=True)
@@ -581,7 +583,7 @@ async def add_pokemon_jineng(bot, ev: Event):
     if jinengname not in jinengzu:
         return await bot.send(f'学习失败，不存在该技能或该技能无法在当前等级学习(学习机技能请使用技能学习机进行教学)。', at_sender=True)
     jineng = pokemon_info[14] + ',' + jinengname
-    POKE = PokeCounter()
+    
     POKE._add_pokemon_jineng(uid, bianhao, jineng)
     mes = f'恭喜，您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}学会了技能{jinengname}'
     buttonlist = ['学习技能','遗忘技能',f'精灵状态{pokename}']
@@ -609,6 +611,7 @@ async def del_pokemon_jineng(bot, ev: Event):
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinengname = args[1]
+    POKE = PokeCounter()
     startype = POKE.get_pokemon_star(uid,bianhao)
     if str(jinengname) not in str(pokemon_info[14]):
         return await bot.send(f'遗忘失败，您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}未学习{jinengname}。', at_sender=True)
@@ -623,7 +626,7 @@ async def del_pokemon_jineng(bot, ev: Event):
             jineng = jineng + ','
         jineng = jineng + name
         shul = shul + 1
-    POKE = PokeCounter()
+    
     POKE._add_pokemon_jineng(uid, bianhao, jineng)
     mes = f'成功，您的精灵{starlist[startype]}{POKEMON_LIST[bianhao][0]}遗忘了技能{jinengname}'
     buttons = [
@@ -822,13 +825,15 @@ async def my_pokemon_gt_up(bot, ev: Event):
     if egg_num == 0:
         return await bot.send(f'重置个体值需要消耗1枚同一种类型的精灵蛋哦，您没有{POKEMON_LIST[kidid][0]}的精灵蛋。', at_sender=True)
     POKE._add_pokemon_egg(uid,kidid,-1)
-    pokemon_info = new_pokemon_gt(uid,bianhao)
     startype = POKE.get_pokemon_star(uid,bianhao)
     if startype < 2:
         new_star_type = get_pokemon_star(uid)
         if int(startype) == 0:
             if int(new_star_type) == 1:
                 POKE.update_pokemon_star(uid,bianhao,startype)
+                startype = new_star_type
+    pokemon_info = new_pokemon_gt(uid,bianhao,startype)
+    
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
     mes = f'{starlist[startype]}{pokename}个体值重置成功，重置后属性如下\n'
     mes += f'HP:{HP_o}/{HP}({my_pokemon_info[1]}/{pokemon_info[1]})\n物攻:{W_atk_o}/{W_atk}({my_pokemon_info[2]}/{pokemon_info[2]})\n物防:{W_def_o}/{W_def}({my_pokemon_info[3]}/{pokemon_info[3]})\n特攻:{M_atk_o}/{M_atk}({my_pokemon_info[4]}/{pokemon_info[4]})\n特防:{M_def_o}/{M_def}({my_pokemon_info[5]}/{pokemon_info[5]})\n速度:{speed_o}/{speed}({my_pokemon_info[6]}/{pokemon_info[6]})'
