@@ -1,11 +1,7 @@
-import re
 import pytz
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Tuple, Union, Optional, overload
 
-from gsuid_core.bot import Bot
-from gsuid_core.models import Event
 from .dbbase.ScoreCounter import RecordDAO
 
 
@@ -34,7 +30,9 @@ class DailyNumberLimiter:
     def reset(self, key):
         self.count[key] = 0
 
+
 recorddb = RecordDAO()
+
 
 class DailyAmountLimiter(DailyNumberLimiter):
     def __init__(self, types, max_num, reset_hour):

@@ -90,7 +90,12 @@ ignore = [
   "PLR0911",
   "PLW0603",  # Using the global statement
   "TRY002",
-  "TRY003"
+  "TRY003",
+  "ISC001",
+  "Q001",
+  "RUF001",
+  "RUF002",
+  "RUF003"
 ]
 exclude = [
   "gen.py",
@@ -102,3 +107,6 @@ target-version = "py38"
 [tool.ruff.flake8-quotes]
 inline-quotes = "single"
 multiline-quotes = "single"
+
+[tool.ruff.format]
+quote-style = "single"

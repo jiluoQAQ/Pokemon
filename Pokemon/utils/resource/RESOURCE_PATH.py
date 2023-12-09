@@ -1,6 +1,4 @@
 import sys
-from pathlib import Path
-from gsuid_core.utils.download_resource.download_core import download_all_file
 from gsuid_core.data_store import get_res_path
 
 
@@ -21,7 +19,6 @@ def init_dir():
         CHAR_ICON_PATH,
     ]:
         i.mkdir(parents=True, exist_ok=True)
-    
+
 
 init_dir()
-
