@@ -57,7 +57,7 @@ sv_pokemon_pk = SV('宝可梦对战', priority=5)
 @sv_pokemon_pk.on_fullmatch(['挑战道馆'])
 async def pk_vs_daoguan(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -170,7 +170,7 @@ async def pk_vs_daoguan(bot, ev: Event):
             sr_font_20,
             'lm',
         )
-        SCORE = SCORE_DB()
+        
         new_huizhang = int(huizhang) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
@@ -202,7 +202,7 @@ async def pk_vs_daoguan(bot, ev: Event):
 @sv_pokemon_pk.on_fullmatch(['挑战天王'])
 async def pk_vs_tianwang(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -318,7 +318,7 @@ async def pk_vs_tianwang(bot, ev: Event):
             sr_font_20,
             'lm',
         )
-        SCORE = SCORE_DB()
+        
         new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
@@ -350,7 +350,7 @@ async def pk_vs_tianwang(bot, ev: Event):
 @sv_pokemon_pk.on_fullmatch(['挑战四天王冠军'])
 async def pk_vs_guanjun(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -461,7 +461,7 @@ async def pk_vs_guanjun(bot, ev: Event):
             sr_font_20,
             'lm',
         )
-        SCORE = SCORE_DB()
+        
         new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
         SCORE.update_score(uid, get_score)
@@ -495,7 +495,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
     # if ev.bot_id == 'qqgroup':
         # return await bot.send('当前平台不支持无级别对战。', at_sender=True)
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mapinfo = POKE._get_map_now(uid)
     name = mapinfo[2]
     if name == uid:
@@ -577,7 +577,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     # if ev.bot_id == 'qqgroup':
         # return await bot.send('当前平台不支持无级别对战。', at_sender=True)
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mapinfo = POKE._get_map_now(uid)
     name = mapinfo[2]
     if name == uid:

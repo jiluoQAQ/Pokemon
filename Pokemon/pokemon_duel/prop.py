@@ -69,9 +69,9 @@ async def pokemon_help_prop(bot, ev: Event):
 @sv_pokemon_prop.on_fullmatch(['道具商店'])
 async def prop_shop_list(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mychenghao,huizhang = get_chenghao(uid)
-    SCORE = SCORE_DB()
+    
     my_score = SCORE.get_score(uid)
     mes = f'我的金币:{my_score}\n商品列表(商品随得到的徽章增多)\n'
     propinfolist = ''
@@ -125,8 +125,8 @@ async def prop_buy(bot, ev: Event):
     else:
         propnum = 1
     uid = ev.user_id
-    POKE = PokeCounter()
-    SCORE = SCORE_DB()
+    
+    
     mychenghao,huizhang = get_chenghao(uid)
     try:
         propinfo = proplist[propname]
@@ -163,7 +163,7 @@ async def prop_use(bot, ev: Event):
     else:
         propnum = 1
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
@@ -214,7 +214,7 @@ async def prop_use(bot, ev: Event):
             # print(nl_index)
             pokemon_info = list(pokemon_info)
             pokemon_info[nl_index] = change_nl
-            POKE = PokeCounter()
+            
             POKE._add_pokemon_nuli(uid, bianhao, pokemon_info[7], pokemon_info[8], pokemon_info[9], pokemon_info[10], pokemon_info[11], pokemon_info[12])
             mes = f"使用成功！{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值提升了{change_nl_num}点"
             POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
@@ -237,7 +237,7 @@ async def prop_use(bot, ev: Event):
             change_nl_num = pokemon_info[nl_index] - change_nl
             pokemon_info = list(pokemon_info)
             pokemon_info[nl_index] = change_nl
-            POKE = PokeCounter()
+            
             POKE._add_pokemon_nuli(uid, bianhao, pokemon_info[7], pokemon_info[8], pokemon_info[9], pokemon_info[10], pokemon_info[11], pokemon_info[12])
             mes = f"使用成功！{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值降低了{change_nl_num}点"
             POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
@@ -268,7 +268,7 @@ async def prop_use(bot, ev: Event):
 @sv_pokemon_prop.on_fullmatch(['我的道具'])
 async def prop_my_list(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     myproplist = POKE.get_pokemon_prop_list(uid)
     if myproplist == 0:
         return await bot.send(f'您还没有道具哦。', at_sender=True)

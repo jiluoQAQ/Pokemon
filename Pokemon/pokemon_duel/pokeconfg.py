@@ -29,8 +29,8 @@ from ..utils.fonts.starrail_fonts import (
     sr_font_34,
     sr_font_38,
 )
-
-
+POKE = PokeCounter()
+SCORE = SCORE_DB()
 FILE_PATH = os.path.dirname(__file__)
 black_color = (0, 0, 0)
 RESET_HOUR = 0  # 每日使用次数的重置时间，0代表凌晨0点，1代表凌晨1点，以此类推
@@ -105,7 +105,7 @@ def get_level_jineng(level,bianhao):
 
 #添加宝可梦，随机生成个体值
 def add_pokemon(uid,bianhao,startype = 0):
-    POKE = PokeCounter()
+    
     pokemon_info = []
     level = 5
     pokemon_info.append(level)
@@ -136,7 +136,7 @@ def add_pokemon(uid,bianhao,startype = 0):
 
 #重置宝可梦个体值
 def new_pokemon_gt(uid,bianhao,startype = 0):
-    POKE = PokeCounter()
+    
     my_pokemon_info = get_pokeon_info(uid,bianhao)
     pokemon_info = []
     pokemon_info.append(my_pokemon_info[0])
@@ -197,7 +197,7 @@ def get_pokeon_info_sj(bianhao,level = 100):
 
 #获取宝可梦信息
 def get_pokeon_info(uid,bianhao):
-    POKE = PokeCounter()
+    
     pokemon_info = POKE._get_pokemon_info(uid,bianhao)
     return pokemon_info
 
@@ -219,7 +219,7 @@ def get_pokemon_shuxing(bianhao,pokemon_info,level = 0):
     
 #重开，清除宝可梦列表个人信息
 def chongkai(uid):
-    POKE = PokeCounter()
+    
     POKE._delete_poke_info(uid)
     POKE.delete_pokemon_egg(uid)
     POKE.delete_pokemon_map(uid)
@@ -228,20 +228,22 @@ def chongkai(uid):
 
 #放生
 def fangshen(uid,bianhao):
-    POKE = PokeCounter()
+    
     POKE._delete_poke_bianhao(uid,bianhao)
     POKE._delete_poke_star_bianhao(uid,bianhao)
 
 #闪光
 def get_pokemon_star(uid):
-    POKE = PokeCounter()
+    
     POKE.update_pokemon_starrush(uid,1)
     starflag = POKE.get_pokemon_starrush(uid)
     star_num = int(math.floor(random.uniform(0,40960)))
+    print(star_num)
     startype = 0
     if starflag >= 1024 or star_num <= 10:
         startype = 1
         star_num2 = int(math.floor(random.uniform(0,160)))
+        print(star_num2)
         if star_num2 <= 10:
             startype = 2
         POKE.new_pokemon_starrush(uid)
@@ -388,7 +390,7 @@ def now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi):
         return random.sample(myjinenglist,1)[0]
 
 def get_chenghao(uid):
-    POKE = PokeCounter()
+    
     mapinfo = POKE._get_map_now(uid)
     huizhang = int(mapinfo[0])
     if huizhang == 9:
@@ -1373,7 +1375,7 @@ def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
         # print(nl_index)
         pokemon_info = list(pokemon_info)
         pokemon_info[nl_index] = change_nl
-        POKE = PokeCounter()
+        
         POKE._add_pokemon_nuli(uid, pokemonid, pokemon_info[7], pokemon_info[8], pokemon_info[9], pokemon_info[10], pokemon_info[11], pokemon_info[12])
         mes = f'获得了{zhongzu_list[zhongzhuid][1]}努力值{change_nl_num}'
         return mes,pokemon_info
@@ -1395,7 +1397,7 @@ def get_need_exp(pokemonid, level):
     
 #增加角色经验
 def add_exp(uid,pokemonid,exp):
-    POKE = PokeCounter()
+    
     levelinfo = POKE._get_pokemon_level(uid,pokemonid)
     now_level = levelinfo[0]
     need_exp = get_need_exp(pokemonid, now_level)
@@ -1473,7 +1475,7 @@ async def fight_yw_ys_s(bg_img,bot,ev,uid,mypokelist,dipokelist,minlevel,maxleve
     mesg = ''
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
-    POKE = PokeCounter()
+    
     img_height = 90
     bg_num = 1
     while len(mypokelist) > 0 and len(dipokelist) > 0:
@@ -1647,7 +1649,7 @@ async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname,leve
     changci = 1
     myinfo = []
     diinfo = []
-    POKE = PokeCounter()
+    
     mesg = []
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
@@ -1673,12 +1675,20 @@ async def fight_pk_s(bot,ev,myuid,diuid,mypokelist,dipokelist,myname,diname,leve
         mes = f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{myinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
         img = await convert_img(img)
-        await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+        if ev.bot_id == 'qqgroup':
+            await bot.send(mes)
+            await bot.send(img)
+        else:
+            await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
         
         mes = f'{diname}派出了精灵\n{starlist[distartype]}{POKEMON_LIST[bianhao2][0]} Lv.{diinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
         img = await convert_img(img)
-        await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
+        if ev.bot_id == 'qqgroup':
+            await bot.send(mes)
+            await bot.send(img)
+        else:
+            await bot.send([MessageSegment.text(mes),MessageSegment.image(img)])
         
         myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await pokemon_fight_pk(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,diname,myuid,diuid)
         
@@ -1713,7 +1723,7 @@ async def fight_pk(bot,ev,bg_img,myuid,diuid,mypokelist,dipokelist,myname,diname
     mesg = ''
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
-    POKE = PokeCounter()
+    
     img_height = 90
     bg_num = 1
     while len(mypokelist) > 0 and len(dipokelist) > 0:
@@ -1881,7 +1891,7 @@ async def fight_yw_ys(uid,mypokelist,dipokelist,minlevel,maxlevel,ys = 0):
     changci = 1
     myinfo = []
     diinfo = []
-    POKE = PokeCounter()
+    
     mesg = ''
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)

@@ -476,11 +476,13 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
     
-    def _get_pokemon_list(self, uid):
+    def _get_pokemon_list(self, uid,page=0):
+        num = 30
+        startnum = num * page
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT BIANHAO,LEVEL FROM POKEMON_TABLE WHERE UID='{uid}' ORDER BY LEVEL desc LIMIT 20").fetchall()
+                    f"SELECT BIANHAO,LEVEL FROM POKEMON_TABLE WHERE UID='{uid}' ORDER BY LEVEL desc,BIANHAO asc LIMIT {startnum},{num}").fetchall()
                 if r:
                     return r
                 else:

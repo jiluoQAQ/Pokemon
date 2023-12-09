@@ -94,288 +94,41 @@ async def pokemon_help_game(bot, ev: Event):
     else:
         await bot.send_option(msg,buttons)
 
-@sv_pokemon_duel.on_prefix(['训练家战斗测试'])
-async def get_fight_poke_xl(bot, ev: Event):
-    uid = ev.user_id
-    args = ev.text.split()
-    if len(args)<2:
-        await bot.send('请输入 战斗测试+我方宝可梦数量+敌方宝可梦数量 中间用空格隔开。', at_sender=True)
-        return
-    mypokenum = int(args[0])
-    dipokenum = int(args[1])
-    myname = '赤红'
-    diname = '青绿'
-    pokelist = list(CHARA_NAME.keys())
-    mypokelist = random.sample(pokelist, mypokenum)
-    dipokelist = random.sample(pokelist, dipokenum)
-    myzhuangtai = [['无', 0],['无', 0]]
-    dizhuangtai = [['无', 0],['无', 0]]
-    changdi = [['无天气', 99],['', 0]]
-    mes = '战斗开始'
-    changci = 1
-    myinfo = []
-    diinfo = []
-    while len(mypokelist) > 0 and len(dipokelist) > 0:
-        mes = f'第{changci}场\n'
-        changci += 1
-        bianhao1 = random.sample(mypokelist, 1)[0]
-        bianhao2 = random.sample(dipokelist, 1)[0]
-        mypokemon_info = get_pokeon_info_sj(bianhao1)
-        dipokemon_info = get_pokeon_info_sj(bianhao2)
-        if len(myinfo) == 0:
-            myinfo = []
-            myinfo.append(POKEMON_LIST[bianhao1][0])
-            myinfo.append(POKEMON_LIST[bianhao1][7])
-            myinfo.append(mypokemon_info[0])
-            myshux = []
-            myshux = get_pokemon_shuxing(bianhao1,mypokemon_info)
-            for shuzhimy in myshux:
-                myinfo.append(shuzhimy)
-            for num in range(1,9):
-                myinfo.append(0)
-            myinfo.append(myshux[0])
-        if len(diinfo) == 0:
-            diinfo = []
-            #名称
-            diinfo.append(POKEMON_LIST[bianhao2][0])
-            #属性
-            diinfo.append(POKEMON_LIST[bianhao2][7])
-            #等级
-            diinfo.append(dipokemon_info[0])
-            dishux = []
-            dishux = get_pokemon_shuxing(bianhao2,dipokemon_info)
-
-            #属性值HP,ATK,DEF,SP.ATK,SP.DEF,SPD
-            for shuzhidi in dishux:
-                diinfo.append(shuzhidi)
-
-            #状态等级 攻击等级,防御等级,特攻等级,特防等级,速度等级,要害等级,闪避等级,命中等级
-            for num in range(1,9):
-                diinfo.append(0)
-
-            #剩余血量
-            diinfo.append(dishux[0])
-        
-        if myinfo[3] == myinfo[17]:
-            mes = mes + f'{myname}派出了精灵\n{POKEMON_LIST[bianhao1][0]}\nLV:{mypokemon_info[0]}\n属性:{POKEMON_LIST[bianhao1][7]}\n性格:{mypokemon_info[13]}\nHP:{myshux[0]}({mypokemon_info[1]})\n物攻:{myshux[1]}({mypokemon_info[2]})\n物防:{myshux[2]}({mypokemon_info[3]})\n特攻:{myshux[3]}({mypokemon_info[4]})\n特防:{myshux[4]}({mypokemon_info[5]})\n速度:{myshux[5]}({mypokemon_info[6]})\n努力值:{mypokemon_info[7]},{mypokemon_info[8]},{mypokemon_info[9]},{mypokemon_info[10]},{mypokemon_info[11]},{mypokemon_info[12]}\n可用技能\n{mypokemon_info[14]}\n'
-        if diinfo[3] == diinfo[17]:
-            mes = mes + f'{diname}派出了精灵\n{POKEMON_LIST[bianhao2][0]}\nLV:{dipokemon_info[0]}\n属性:{POKEMON_LIST[bianhao2][7]}\n性格:{dipokemon_info[13]}\nHP:{dishux[0]}({dipokemon_info[1]})\n物攻:{dishux[1]}({dipokemon_info[2]})\n物防:{dishux[2]}({dipokemon_info[3]})\n特攻:{dishux[3]}({dipokemon_info[4]})\n特防:{dishux[4]}({dipokemon_info[5]})\n速度:{dishux[5]}({dipokemon_info[6]})\n努力值:{dipokemon_info[7]},{dipokemon_info[8]},{dipokemon_info[9]},{dipokemon_info[10]},{dipokemon_info[11]},{dipokemon_info[12]}\n可用技能\n{dipokemon_info[14]}'
-        await bot.send(mes, at_sender=True)
-        mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info)
-        await bot.send(mesg)
-        if myinfo[17] == 0:
-            myinfo = []
-            myzhuangtai = [['无', 0],['无', 0]]
-            mypokelist.remove(bianhao1)
-        if diinfo[17] == 0:
-            diinfo = []
-            dizhuangtai = [['无', 0],['无', 0]]
-            dipokelist.remove(bianhao2)
-    if len(mypokelist) == 0:
-        await bot.send(f'{myname}战败了')
-    if len(dipokelist) == 0:
-        await bot.send(f'{diname}战败了')
-    
-@sv_pokemon_duel.on_prefix(['战斗测试'])
-async def get_fight_poke_info(bot, ev: Event):
-    args = ev.text.split()
-    if len(args)<2:
-        await bot.send('请输入 战斗测试+我方宝可梦名称+敌方宝可梦名称 中间用空格隔开。', at_sender=True)
-        return
-    mypokename = args[0]
-    dipokename = args[1]
-    bianhao1 = get_poke_bianhao(mypokename)
-    bianhao2 = get_poke_bianhao(dipokename)
-    if bianhao1 == 0:
-        await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-        return
-    if bianhao2 == 0:
-        await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-        return
-    
-    tianqi = '无天气'
-    
-    if len(args)>=7:
-        zhuangtai1 = args[5]
-        zhuangtai2 = args[6]
-    else:
-        zhuangtai1 = "无"
-        zhuangtai2 = "无"
-    uid = ev.user_id
-    mypokemon_info = get_pokeon_info_sj(bianhao1)
-    dipokemon_info = get_pokeon_info_sj(bianhao2)
-    myinfo = []
-    diinfo = []
-    
-    #名称
-    myinfo.append(POKEMON_LIST[bianhao1][0])
-    diinfo.append(POKEMON_LIST[bianhao2][0])
-    #属性
-    myinfo.append(POKEMON_LIST[bianhao1][7])
-    diinfo.append(POKEMON_LIST[bianhao2][7])
-    #等级
-    myinfo.append(mypokemon_info[0])
-    diinfo.append(dipokemon_info[0])
-    
-    myshux = []
-    dishux = []
-    myshux = get_pokemon_shuxing(bianhao1,mypokemon_info)
-    dishux = get_pokemon_shuxing(bianhao2,dipokemon_info)
-    
-    #属性值HP,ATK,DEF,SP.ATK,SP.DEF,SPD
-    for shuzhimy in myshux:
-        myinfo.append(shuzhimy)
-    
-    for shuzhidi in dishux:
-        diinfo.append(shuzhidi)
-    
-    #状态等级 攻击等级,防御等级,特攻等级,特防等级,速度等级,要害等级,闪避等级,命中等级
-    for num in range(1,9):
-        myinfo.append(0)
-        diinfo.append(0)
-    
-    #剩余血量
-    myinfo.append(myshux[0])
-    diinfo.append(dishux[0])
-    
-    
-    mes = f'生成测试精灵成功\n我方\n{POKEMON_LIST[bianhao1][0]}\nLV:{mypokemon_info[0]}\n属性:{POKEMON_LIST[bianhao1][7]}\n性格:{mypokemon_info[13]}\nHP:{myshux[0]}({mypokemon_info[1]})\n物攻:{myshux[1]}({mypokemon_info[2]})\n物防:{myshux[2]}({mypokemon_info[3]})\n特攻:{myshux[3]}({mypokemon_info[4]})\n特防:{myshux[4]}({mypokemon_info[5]})\n速度:{myshux[5]}({mypokemon_info[6]})\n努力值:{mypokemon_info[7]},{mypokemon_info[8]},{mypokemon_info[9]},{mypokemon_info[10]},{mypokemon_info[11]},{mypokemon_info[12]}\n可用技能\n{mypokemon_info[14]}\n'
-    mes = mes + f'敌方\n{POKEMON_LIST[bianhao2][0]}\nLV:{dipokemon_info[0]}\n属性:{POKEMON_LIST[bianhao2][7]}\n性格:{dipokemon_info[13]}\nHP:{dishux[0]}({dipokemon_info[1]})\n物攻:{dishux[1]}({dipokemon_info[2]})\n物防:{dishux[2]}({dipokemon_info[3]})\n特攻:{dishux[3]}({dipokemon_info[4]})\n特防:{dishux[4]}({dipokemon_info[5]})\n速度:{dishux[5]}({dipokemon_info[6]})\n努力值:{dipokemon_info[7]},{dipokemon_info[8]},{dipokemon_info[9]},{dipokemon_info[10]},{dipokemon_info[11]},{dipokemon_info[12]}\n可用技能\n{dipokemon_info[14]}'
-    await bot.send(mes, at_sender=True)
-    mes = ''
-    changdi = [[tianqi, 3],['', 0]]
-    myzhuangtai = [[zhuangtai1, 3],['无', 0]]
-    dizhuangtai = [[zhuangtai2, 3],['无', 0]]
-    
-    mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info)
-    await bot.send(mesg)
-
-@sv_pokemon_duel.on_prefix(['技能伤害测试'])
-async def get_jn_poke_info(bot, ev: Event):
-    args = ev.text.split()
-    if len(args)<3:
-        await bot.send('请输入 技能伤害测试+我方宝可梦名称+敌方宝可梦名称+技能名称 中间用空格隔开。', at_sender=True)
-        return
-    mypokename = args[0]
-    dipokename = args[1]
-    bianhao1 = get_poke_bianhao(mypokename)
-    bianhao2 = get_poke_bianhao(dipokename)
-    if bianhao1 == 0:
-        await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-        return
-    if bianhao2 == 0:
-        await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-        return
-    jineng1 = args[2]
-    jineng2 = args[3]
-    
-    tianqi = args[4]
-    
-    if len(args)>=7:
-        zhuangtai1 = args[5]
-        zhuangtai2 = args[6]
-    else:
-        zhuangtai1 = "无"
-        zhuangtai2 = "无"
-    
-    uid = ev.user_id
-    jinenginfo1 = JINENG_LIST[jineng1]
-    if jinenginfo1[6] == '':
-        await bot.send(f'{jineng1}的技能效果在写了在写了(新建文件夹)。', at_sender=True)
-        return
-    jinenginfo2 = JINENG_LIST[jineng2]
-    if jinenginfo2[6] == '':
-        await bot.send(f'{jineng2}的技能效果在写了在写了(新建文件夹)。', at_sender=True)
-        return
-    mypokemon_info = get_pokeon_info_sj(bianhao1)
-    dipokemon_info = get_pokeon_info_sj(bianhao2)
-    myinfo = []
-    diinfo = []
-    
-    #名称
-    myinfo.append(POKEMON_LIST[bianhao1][0])
-    diinfo.append(POKEMON_LIST[bianhao2][0])
-    #属性
-    myinfo.append(POKEMON_LIST[bianhao1][7])
-    diinfo.append(POKEMON_LIST[bianhao2][7])
-    #等级
-    myinfo.append(mypokemon_info[0])
-    diinfo.append(dipokemon_info[0])
-    
-    myshux = []
-    dishux = []
-    myshux = get_pokemon_shuxing(bianhao1,mypokemon_info)
-    dishux = get_pokemon_shuxing(bianhao2,dipokemon_info)
-    
-    #属性值HP,ATK,DEF,SP.ATK,SP.DEF,SPD
-    for shuzhimy in myshux:
-        myinfo.append(shuzhimy)
-    
-    for shuzhidi in dishux:
-        diinfo.append(shuzhidi)
-    
-    #状态等级 攻击等级,防御等级,特攻等级,特防等级,速度等级,要害等级,闪避等级,命中等级
-    for num in range(1,9):
-        myinfo.append(0)
-        diinfo.append(0)
-    
-    #剩余血量
-    myinfo.append(myshux[0])
-    diinfo.append(dishux[0])
-    
-    mes = f'生成测试精灵成功\n我方\n{POKEMON_LIST[bianhao1][0]}\nLV:{mypokemon_info[0]}\n属性:{POKEMON_LIST[bianhao1][7]}\n性格:{mypokemon_info[13]}\nHP:{myshux[0]}({mypokemon_info[1]})\n物攻:{myshux[1]}({mypokemon_info[2]})\n物防:{myshux[2]}({mypokemon_info[3]})\n特攻:{myshux[3]}({mypokemon_info[4]})\n特防:{myshux[4]}({mypokemon_info[5]})\n速度:{myshux[5]}({mypokemon_info[6]})\n努力值:{mypokemon_info[7]},{mypokemon_info[8]},{mypokemon_info[9]},{mypokemon_info[10]},{mypokemon_info[11]},{mypokemon_info[12]}\n可用技能\n{mypokemon_info[14]}'
-    mes = mes + f'敌方\n{POKEMON_LIST[bianhao2][0]}\nLV:{dipokemon_info[0]}\n属性:{POKEMON_LIST[bianhao2][7]}\n性格:{dipokemon_info[13]}\nHP:{dishux[0]}({dipokemon_info[1]})\n物攻:{dishux[1]}({dipokemon_info[2]})\n物防:{dishux[2]}({dipokemon_info[3]})\n特攻:{dishux[3]}({dipokemon_info[4]})\n特防:{dishux[4]}({dipokemon_info[5]})\n速度:{dishux[5]}({dipokemon_info[6]})\n努力值:{dipokemon_info[7]},{dipokemon_info[8]},{dipokemon_info[9]},{dipokemon_info[10]},{dipokemon_info[11]},{dipokemon_info[12]}\n可用技能\n{dipokemon_info[14]}'
-    await bot.send(mes, at_sender=True)
-    mes = ''
-    changdi = [[tianqi, 3],['', 0]]
-    myzhuangtai = [[zhuangtai1, 3],['无', 0]]
-    dizhuangtai = [[zhuangtai2, 3],['无', 0]]
-    
-    mesg,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = pokemon_fight(myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,jineng1,jineng2)
-    await bot.send(mesg)
-
-@sv_pokemon_duel.on_prefix(['属性测试'])
-async def get_aj_poke_info(bot, ev: Event):
-    args = ev.text
-    pokename = args
-    uid = ev.user_id
-    bianhao = get_poke_bianhao(pokename)
-    if bianhao == 0:
-        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = get_pokeon_info_sj(bianhao)
-    HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
-    img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
-    img = await convert_img(img)
-    mes = []
-    mes.append(MessageSegment.image(img))
-    mes.append(MessageSegment.text(f'{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\n属性值[种族值](个体值)\nHP:{HP}[{POKEMON_LIST[bianhao][1]}]({pokemon_info[1]})\n物攻:{W_atk}[{POKEMON_LIST[bianhao][2]}]({pokemon_info[2]})\n物防:{W_def}[{POKEMON_LIST[bianhao][3]}]({pokemon_info[3]})\n特攻:{M_atk}[{POKEMON_LIST[bianhao][4]}]({pokemon_info[4]})\n特防:{M_def}[{POKEMON_LIST[bianhao][5]}]({pokemon_info[5]})\n速度:{speed}[{POKEMON_LIST[bianhao][6]}]({pokemon_info[6]})\n努力值:{pokemon_info[7]},{pokemon_info[8]},{pokemon_info[9]},{pokemon_info[10]},{pokemon_info[11]},{pokemon_info[12]}\n'))
-    mes.append(MessageSegment.text(f'可用技能\n{pokemon_info[14]}'))
-    jinenglist = get_level_jineng(pokemon_info[0],bianhao)
-    mes.append(MessageSegment.text('\n当前等级可学习的技能为：\n'))
-    for jn_name in jinenglist:
-        mes.append(MessageSegment.text(f'{jn_name},'))
-    await bot.send(mes, at_sender=True)
-
-@sv_pokemon_duel.on_fullmatch(('我的精灵列表','我的宝可梦列表'))
+@sv_pokemon_duel.on_command(('我的精灵列表','我的宝可梦列表'))
 async def my_pokemon_list(bot, ev: Event):
+    page = ''.join(re.findall('^[a-zA-Z0-9_\u4e00-\u9fa5]+$', ev.text))
+    if not page:
+        page = 0
+    else:
+        page = int(page)
     uid = ev.user_id
-    POKE = PokeCounter()
-    mypokelist = POKE._get_pokemon_list(uid)
-    if mypokelist == 0:
+    
+    pokemon_num = POKE._get_pokemon_num(uid)
+    if pokemon_num == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。', at_sender=True)
-    mes = []
-    mes.append(MessageSegment.text('您的精灵信息为(只显示等级最高的前20只):'))
+    
+    page_num = math.floor(pokemon_num/30)
+    mypokelist = POKE._get_pokemon_list(uid,page)
+    mes = ''
+    mes += '您的精灵信息为(按等级与编号排序一页30只):'
     for pokemoninfo in mypokelist:
         startype = POKE.get_pokemon_star(uid,pokemoninfo[0])
         mes += f'\n {starlist[startype]}{POKEMON_LIST[pokemoninfo[0]][0]}({pokemoninfo[1]})'
+    if page_num > 0:
+        mes += f'第({page}/{page_num})页'
     buttons = [
         Button(f'📖精灵状态', '精灵状态', action = 2),
         Button(f'🔄更新队伍', '更新队伍', action = 2),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes,buttons)
+    if page >0:
+        uppage = page - 1
+        buttons.append(Button(f'⬅️上一页', f'我的精灵列表 {uppage}'))
+    if page_num > 0:
+        Button(f'⏺️跳转({page}/{page_num})', '我的精灵列表', action = 2)
+    if page < page_num:
+        dowmpage = page + 1
+        buttons.append(Button(f'➡️下一页', f'我的精灵列表 {dowmpage}'))
+    await bot.send_option(mes,buttons)
 
 @sv_pokemon_duel.on_prefix(['技能测试'])
 async def get_my_poke_jineng_button_test(bot, ev: Event):
@@ -420,7 +173,7 @@ async def get_my_poke_info(bot, ev: Event):
     img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
     img = await convert_img(img)
     mes = []
-    POKE = PokeCounter()
+    
     startype = POKE.get_pokemon_star(uid,bianhao)
     # mes.append(MessageSegment.image(img))
     mes.append(MessageSegment.text(f'{starlist[startype]}{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\n属性值[种族值](个体值)\nHP:{HP}[{POKEMON_LIST[bianhao][1]}]({pokemon_info[1]})\n物攻:{W_atk}[{POKEMON_LIST[bianhao][2]}]({pokemon_info[2]})\n物防:{W_def}[{POKEMON_LIST[bianhao][3]}]({pokemon_info[3]})\n特攻:{M_atk}[{POKEMON_LIST[bianhao][4]}]({pokemon_info[4]})\n特防:{M_def}[{POKEMON_LIST[bianhao][5]}]({pokemon_info[5]})\n速度:{speed}[{POKEMON_LIST[bianhao][6]}]({pokemon_info[6]})\n努力值:{pokemon_info[7]},{pokemon_info[8]},{pokemon_info[9]},{pokemon_info[10]},{pokemon_info[11]},{pokemon_info[12]}\n'))
@@ -476,7 +229,7 @@ async def get_chushi_pokemon(bot, ev: Event):
     pokename = args[0]
     uid = ev.user_id
     
-    POKE = PokeCounter()
+    
     my_pokemon = POKE._get_pokemon_num(uid)
     if my_pokemon > 0:
         return await bot.send('您已经有精灵了，无法领取初始精灵。', at_sender=True)
@@ -544,7 +297,7 @@ async def fangsheng_pokemon(bot, ev: Event):
     pokemon_info = get_pokeon_info(uid,bianhao)
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
-    POKE = PokeCounter()
+    
     my_pokemon = POKE._get_pokemon_num(uid)
     if my_pokemon == 1:
         return await bot.send('您就这么一只精灵了，无法放生。', at_sender=True)
@@ -572,7 +325,7 @@ async def add_pokemon_jineng(bot, ev: Event):
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinengname = args[1]
-    POKE = PokeCounter()
+    
     startype = POKE.get_pokemon_star(uid,bianhao)
     if str(jinengname) in str(pokemon_info[14]):
         return await bot.send(f'学习失败，您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}已学会{jinengname}。', at_sender=True)
@@ -611,7 +364,7 @@ async def del_pokemon_jineng(bot, ev: Event):
     if pokemon_info == 0:
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     jinengname = args[1]
-    POKE = PokeCounter()
+    
     startype = POKE.get_pokemon_star(uid,bianhao)
     if str(jinengname) not in str(pokemon_info[14]):
         return await bot.send(f'遗忘失败，您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}未学习{jinengname}。', at_sender=True)
@@ -668,7 +421,7 @@ async def get_jineng_info(bot, ev: Event):
     if zhongzu[8] == '-':
         return await bot.send('暂时没有该宝可梦的进化信息。', at_sender=True)
     use_flag = 0
-    POKE = PokeCounter()
+    
     my_pokemon_list = POKE._get_my_pokemon(uid)
     for pokemonid in my_pokemon_list:
         if int(pokemonid[0]) == int(bianhao):
@@ -740,7 +493,7 @@ async def my_pokemon_egg_list(bot, ev: Event):
     else:
         page = int(page)
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     myegglist = POKE.get_pokemon_egg_list(uid,page)
     if myegglist == 0:
         return await bot.send('您还没有精灵蛋', at_sender=True)
@@ -750,7 +503,8 @@ async def my_pokemon_egg_list(bot, ev: Event):
     mes += '您的精灵蛋信息为(一页只显示30种按数量和编号排序):\n'
     for pokemoninfo in myegglist:
         mes += f'{POKEMON_LIST[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]}\n'
-    buttonlist = ['宝可梦孵化','重置个体值','丢弃精灵蛋']
+    if page_num > 0:
+        mes += f'第({page}/{page_num})页'
     buttons = [
         Button(f'📖宝可梦孵化', '宝可梦孵化', action = 2),
         Button(f'📖重置个体值', '重置个体值', action = 2),
@@ -782,7 +536,7 @@ async def my_pokemon_egg_use(bot, ev: Event):
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    POKE = PokeCounter()
+    
     egg_num = POKE.get_pokemon_egg(uid,bianhao)
     if egg_num == 0:
         return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
@@ -820,7 +574,7 @@ async def my_pokemon_gt_up(bot, ev: Event):
         return await bot.send(f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True)
     HP_o,W_atk_o,W_def_o,M_atk_o,M_def_o,speed_o = get_pokemon_shuxing(bianhao,my_pokemon_info)
     kidid = get_pokemon_eggid(bianhao)
-    POKE = PokeCounter()
+    
     egg_num = POKE.get_pokemon_egg(uid,kidid)
     if egg_num == 0:
         return await bot.send(f'重置个体值需要消耗1枚同一种类型的精灵蛋哦，您没有{POKEMON_LIST[kidid][0]}的精灵蛋。', at_sender=True)
@@ -856,7 +610,7 @@ async def get_pokemon_form_egg(bot, ev: Event):
     bianhao = get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    POKE = PokeCounter()
+    
     egg_num = POKE.get_pokemon_egg(uid,bianhao)
     if egg_num == 0:
         return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)

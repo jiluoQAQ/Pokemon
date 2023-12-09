@@ -56,7 +56,7 @@ sv_pokemon_map = SV('宝可梦探索', priority=5)
 @sv_pokemon_map.on_fullmatch(['我的金钱'])
 async def map_my_score(bot, ev: Event):
     uid = ev.user_id
-    SCORE = SCORE_DB()
+    
     my_score = SCORE.get_score(uid)
     await bot.send(f'您的金钱为{my_score}', at_sender=True)
 
@@ -70,7 +70,7 @@ async def map_my_group(bot, ev: Event):
     uid = ev.user_id
     pokemon_list = []
     name_str = ''
-    POKE = PokeCounter()
+    
     for pokemon_name in args:
         bianhao = get_poke_bianhao(pokemon_name)
         if bianhao == 0:
@@ -105,8 +105,8 @@ async def map_my_group(bot, ev: Event):
 async def map_my_info(bot, ev: Event):
     print(ev)
     uid = ev.user_id
-    POKE = PokeCounter()
-    SCORE = SCORE_DB()
+    
+    
     my_score = SCORE.get_score(uid)
     my_pokemon = POKE._get_pokemon_num(uid)
     if my_pokemon == 0:
@@ -158,7 +158,7 @@ async def update_my_name(bot, ev: Event):
     name = args[0]
     if len(name)>10:
         return await bot.send('昵称长度不能超过10个字符。', at_sender=True)
-    POKE = PokeCounter()
+    
     mapinfo = POKE._get_map_info_nickname(name)
     if mapinfo[2] == 0:
         POKE._update_map_name(uid,name)
@@ -169,7 +169,7 @@ async def update_my_name(bot, ev: Event):
 @sv_pokemon_map.on_fullmatch(['打工'])
 async def map_work_test(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。', at_sender=True)
@@ -181,7 +181,7 @@ async def map_work_test(bot, ev: Event):
         return await bot.send('野外区域无法打工，请返回城镇哦', at_sender=True)
     
     if didianlist[this_map]['type'] == "城镇":
-        SCORE = SCORE_DB()
+        
         get_score = (int(didianlist[this_map]['need']) + 1) * 5000
         SCORE.update_score(uid, get_score)
         daily_work_limiter.increase(uid)
@@ -192,7 +192,7 @@ async def map_work_test(bot, ev: Event):
 @sv_pokemon_map.on_fullmatch(['野外探索T'])
 async def map_ts_test_noauto_use_T(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -401,7 +401,7 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
                         sr_font_20,
                         'lm',
                     )
-                    SCORE = SCORE_DB()
+                    
                     get_score = (int(didianlist[this_map]['need']) + 1) * 200
                     SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
@@ -428,7 +428,7 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
 @sv_pokemon_map.on_fullmatch(['野外垂钓T'])
 async def map_ts_test_noauto_use_chuidiao_T(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -568,7 +568,7 @@ async def map_ts_test_noauto_use_chuidiao_T(bot, ev: Event):
 @sv_pokemon_map.on_fullmatch(['野外探索'])
 async def map_ts_test_noauto_use(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -640,7 +640,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                     mes += f'\n您被{diname}打败了，眼前一黑'
                 if len(dipokelist) == 0:
                     mes += f'\n您打败了{diname}\n'
-                    SCORE = SCORE_DB()
+                    
                     get_score = (int(didianlist[this_map]['need']) + 1) * 200
                     SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
@@ -653,7 +653,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
 @sv_pokemon_map.on_fullmatch(['野外垂钓'])
 async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -714,7 +714,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     if len(args)!=1:
         return await bot.send('请输入 训练家对战+对战训练家昵称 中间用空格隔开。', at_sender=True)
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send('您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询', at_sender=True)
@@ -819,7 +819,7 @@ async def pokemon_pk_auto(bot, ev: Event):
             sr_font_20,
             'rm',
         )
-        # SCORE = SCORE_DB()
+        # 
         # get_score = (int(mapinfo[0]) + 1) * 500
         # SCORE.update_score(diuid, get_score)
         # mes += f'{diname}获得了{get_score}金钱'
@@ -842,7 +842,7 @@ async def pokemon_pk_auto(bot, ev: Event):
             sr_font_20,
             'lm',
         )
-        # SCORE = SCORE_DB()
+        # 
         # get_score = (int(dimapinfo[0]) + 1) * 500
         # SCORE.update_score(uid, get_score)
         # mes += f'您获得了{get_score}金钱'
@@ -869,7 +869,7 @@ async def pokemom_new_map(bot, ev: Event):
         return await bot.send('请输入 选择初始地区+地点名称。', at_sender=True)
     go_map = args[0]
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     my_hz = 0
@@ -895,7 +895,7 @@ async def pokemom_new_map(bot, ev: Event):
 async def map_info_now(bot, ev: Event):
     gid = ev.group_id
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     mes = []
@@ -928,7 +928,7 @@ async def show_map_info_now(bot, ev: Event):
     diquname = ''.join(re.findall('^[a-zA-Z0-9_\u4e00-\u9fa5]+$', ev.text))
     if not diquname:
         uid = ev.user_id
-        POKE = PokeCounter()
+        
         mapinfo = POKE._get_map_now(uid)
         this_map = mapinfo[1]
         diquname = didianlist[this_map]['fname']
@@ -960,7 +960,7 @@ async def pokemom_go_map(bot, ev: Event):
         return await bot.send('请输入 前往+地点名称。', at_sender=True)
     go_map = args[0]
     uid = ev.user_id
-    POKE = PokeCounter()
+    
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     my_hz = mapinfo[0]
