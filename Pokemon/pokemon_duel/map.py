@@ -586,15 +586,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         mypokelist.append(bianhao)
     if didianlist[this_map]['type'] == "城镇":
         return await bot.send(f'您当前处于城镇中没有可探索的区域', at_sender=True)
-    
-    mapinfo = POKE._get_map_now(uid)
-    mychenghao,huizhang = get_chenghao(uid)
-    name = mapinfo[2]
-    if name == uid:
-        if ev.sender:
-            sender = ev.sender
-            if sender.get('nickname','') != '':
-                name = sender['nickname']
+
     mes = ''
     
     if didianlist[this_map]['type'] == "野外":

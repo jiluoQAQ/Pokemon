@@ -235,10 +235,11 @@ def fangshen(uid,bianhao):
 #闪光
 def get_pokemon_star(uid):
     POKE = PokeCounter()
+    POKE.update_pokemon_starrush(uid,1)
     starflag = POKE.get_pokemon_starrush(uid)
     star_num = int(math.floor(random.uniform(0,40960)))
     startype = 0
-    if starflag == 1024 or star_num <= 10:
+    if starflag >= 1024 or star_num <= 10:
         startype = 1
         star_num2 = int(math.floor(random.uniform(0,160)))
         if star_num2 <= 10:

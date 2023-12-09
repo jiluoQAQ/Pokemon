@@ -373,7 +373,7 @@ async def my_pokemon_list(bot, ev: Event):
         Button(f'🔄更新队伍', '更新队伍', action = 2),
     ]
     if ev.bot_id == 'qqgroup':
-        await bot.send(msg, at_sender=True)
+        await bot.send(mes, at_sender=True)
     else:
         await bot.send_option(mes,buttons)
 
@@ -826,12 +826,10 @@ async def my_pokemon_gt_up(bot, ev: Event):
         return await bot.send(f'重置个体值需要消耗1枚同一种类型的精灵蛋哦，您没有{POKEMON_LIST[kidid][0]}的精灵蛋。', at_sender=True)
     POKE._add_pokemon_egg(uid,kidid,-1)
     startype = POKE.get_pokemon_star(uid,bianhao)
-    if startype < 2:
-        new_star_type = get_pokemon_star(uid)
-        if int(startype) == 0:
-            if int(new_star_type) == 1:
-                POKE.update_pokemon_star(uid,bianhao,startype)
-                startype = new_star_type
+    new_star_type = get_pokemon_star(uid)
+    if new_star_type > startype:
+        startype = new_star_type
+        POKE.update_pokemon_star(uid,bianhao,startype)
     pokemon_info = new_pokemon_gt(uid,bianhao,startype)
     
     HP,W_atk,W_def,M_atk,M_def,speed = get_pokemon_shuxing(bianhao,pokemon_info)
