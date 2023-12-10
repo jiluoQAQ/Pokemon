@@ -15,6 +15,8 @@ class PokeCounter:
         self._create_table_prop()
         self._create_table_star()
         self._create_table_starrush()
+        self._create_table_map_refresh()
+        self._create_table_refresh_send()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -116,7 +118,95 @@ class PokeCounter:
             )
         except:
             raise Exception('创建表发生错误')
-
+    
+    def _create_table_map_refresh(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS MAP_REFRESH
+                          (DIQU             TEXT   NOT NULL,
+                           DIDIAN           TEXT   NOT NULL,
+                           POKEMON          TEXT   NOT NULL,
+                           PRIMARY KEY(DIQU));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    def _create_table_refresh_send(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS REFRESH_SEND
+                          (GROUPID          TEXT   NOT NULL,
+                           BOTID            TEXT   NOT NULL,
+                           PRIMARY KEY(GROUPID));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    def update_refresh_send(self,groupid,botid):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    'INSERT OR REPLACE INTO REFRESH_SEND (GROUPID,BOTID) VALUES (?,?)',
+                    (groupid, botid),
+                )
+        except:
+            raise Exception('更新表发生错误')
+    
+    def get_refresh_send_list(self):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT GROUPID,BOTID FROM REFRESH_SEND"
+                ).fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def delete_refresh_send(self,groupid):
+        with self._connect() as conn:
+            conn.execute(
+                f"DELETE FROM REFRESH_SEND WHERE GROUPID='{groupid}'"
+            ).fetchall()
+    
+    def update_map_refresh(self,diqu,didian,pokemon):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    'INSERT OR REPLACE INTO MAP_REFRESH (DIQU,DIDIAN,POKEMON) VALUES (?,?,?)',
+                    (diqu, didian, pokemon),
+                )
+        except:
+            raise Exception('更新表发生错误')
+    
+    def get_map_refresh(self,diqu,didian):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT POKEMON FROM MAP_REFRESH WHERE DIQU='{diqu}' AND DIDIAN='{didian}'"
+                ).fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def get_map_refresh_list(self):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT DIQU,DIDIAN,POKEMON FROM MAP_REFRESH"
+                ).fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
     def update_pokemon_star(self, uid, bianhao, startype=0):
         try:
             with self._connect() as conn:

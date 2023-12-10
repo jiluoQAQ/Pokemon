@@ -5,9 +5,12 @@ from PIL import Image, ImageDraw
 from gsuid_core.sv import SV
 from gsuid_core.models import Event
 from gsuid_core.segment import MessageSegment
+from gsuid_core.gss import gss
 from gsuid_core.utils.image.convert import convert_img
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 from gsuid_core.message_models import Button
+from gsuid_core.aps import scheduler
+from datetime import datetime
 import json
 from .pokeconfg import *
 from .pokemon import *
@@ -25,6 +28,7 @@ TS_FIGHT = 20
 TS_PROP = 10
 TS_POKEMON = 70
 WIN_EGG = 10
+DALIANG_POKE = 30
 QUN_POKE = 10
 black_color = (0, 0, 0)
 
@@ -53,7 +57,18 @@ ts_prop_list = [
 ]
 
 sv_pokemon_map = SV('宝可梦探索', priority=5)
-
+sv_pm_config = SV('宝可梦管理', pm=0)
+@sv_pokemon_map.on_fullmatch(['大量出现信息'])
+async def get_day_pokemon_refresh(bot, ev: Event):
+    refresh_list = POKE.get_map_refresh_list()
+    mes = "当前大量出现信息"
+    for refresh in refresh_list:
+        mes += f'\n{POKEMON_LIST[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
+    mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
+    buttons = [
+        Button('前往', '前往', action=2),
+    ]
+    await bot.send_option(mes, buttons)
 
 @sv_pokemon_map.on_fullmatch(['我的金钱'])
 async def map_my_score(bot, ev: Event):
@@ -732,7 +747,16 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         ts_quality = TS_POKEMON
         if ts_num <= ts_quality:
             # 遇怪
-            pokelist = didianlist[this_map]['pokemon']
+            daliang_pokemon = POKE.get_map_refresh(didianlist[this_map]['fname'],this_map)
+            if int(daliang_pokemon) > 0:
+                daling_num = int(math.floor(random.uniform(0, 100)))
+                if daling_num <= DALIANG_POKE:
+                    pokelist = []
+                    pokelist.append(int(daliang_pokemon))
+                else:
+                    pokelist = didianlist[this_map]['pokemon']
+            else:
+                pokelist = didianlist[this_map]['pokemon']
             dipokelist = random.sample(pokelist, 1)
             pokename = CHARA_NAME[dipokelist[0]][0]
             pokemonid = dipokelist[0]
@@ -1230,8 +1254,9 @@ async def pokemom_go_map(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     my_hz = mapinfo[0]
-    buttonlist = []
-    buttonlist.append('当前地点信息')
+    buttons = [
+        Button('当前地点信息', '当前地点信息'),
+    ]
     if go_map == this_map:
         return await bot.send(
             f'您已经处于{this_map}中，无需前往', at_sender=True
@@ -1249,9 +1274,7 @@ async def pokemom_go_map(bot, ev: Event):
                 await bot.send(mes, at_sender=True)
             else:
                 mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
-                await bot.receive_resp(
-                    mes, buttonlist, unsuported_platform=False
-                )
+                await bot.send_option(mes, buttons)
         else:
             return await bot.send(
                 f"前往{go_map}所需徽章为{didianlist[go_map]['need']!s}枚,您的徽章为{my_hz!s}枚,无法前往",
@@ -1264,11 +1287,143 @@ async def pokemom_go_map(bot, ev: Event):
                 await bot.send(mes, at_sender=True)
             else:
                 mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
-                await bot.receive_resp(
-                    mes, buttonlist, unsuported_platform=False
-                )
+                await bot.send_option(mes, buttons)
         else:
             return await bot.send(
                 f'跨地区前往需要8枚徽章,您的徽章为{my_hz!s}枚,无法前往',
                 at_sender=True,
             )
+
+@sv_pm_config.on_fullmatch(['刷新每日大量出现'])
+async def new_pokemom_show(bot, ev: Event):
+    didianlistkey = {}
+    for diqu in diqulist:
+        if diqulist[diqu]['open'] == 1:
+            didianlistkey[diqu] = []
+    for didian in didianlist:
+        if didianlist[didian]['type'] == '野外':
+            didianlistkey[didianlist[didian]['fname']].append(didian)
+    mes = '野生宝可梦大量出现了'
+    for diqu in diqulist:
+        if diqulist[diqu]['open'] == 1:
+            didianname = random.sample(didianlistkey[diqu], 1)[0]
+            sj_num = int(math.floor(random.uniform(0, 100)))
+            if sj_num <= 15:
+                zx_max = 300
+            elif sj_num <= 35:
+                zx_max = 400
+            elif sj_num <= 65:
+                zx_max = 500
+            elif sj_num <= 95:
+                zx_max = 550
+            else:
+                zx_max = 999
+            chara_id_list = list(POKEMON_LIST.keys())
+            find_flag = 0
+            while find_flag == 0:
+                random.shuffle(chara_id_list)
+                pokeminid = chara_id_list[0]
+                if pokeminid not in jinyonglist:
+                    pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
+                    if pokemon_zz <= zx_max:
+                        POKE.update_map_refresh(diqu,didianname,pokeminid)
+                        mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                        find_flag = 1
+    buttons = [
+        Button('前往', '前往', action=2),
+    ]
+    await bot.send_option(mes, buttons)
+
+@sv_pokemon_map.on_fullmatch(['标记消息推送'])
+async def new_refresh_send_group(bot, ev: Event):
+    groupid = ev.group_id
+    botid = ev.bot_id
+    if botid == 'qqgroup':
+        await bot.send('暂不支持群消息推送',at_sender=True)
+    else:
+        POKE.update_refresh_send(groupid,botid)
+        await bot.send('消息推送房间/群标记成功',at_sender=True)
+    
+@sv_pokemon_map.on_fullmatch(['清除消息推送'])
+async def del_refresh_send_group(bot, ev: Event):
+    groupid = ev.group_id
+    botid = ev.bot_id
+    POKE.delete_refresh_send(groupid)
+    await bot.send('消息推送房间/群清除成功',at_sender=True)
+
+@sv_pokemon_map.on_fullmatch(['大量出现信息推送'])
+async def get_day_pokemon_refresh_send(bot, ev: Event):
+    refresh_list = POKE.get_map_refresh_list()
+    mes = "野生宝可梦大量出现了"
+    for refresh in refresh_list:
+        mes += f'\n{POKEMON_LIST[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
+    mes += '\n可以输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
+    refresh_send_list = POKE.get_refresh_send_list()
+    for refresh in refresh_send_list:
+        try:
+            for bot_id in gss.active_bot:
+                await gss.active_bot[bot_id].target_send(
+                    mes,
+                    'group',
+                    refresh[0],
+                    refresh[1],
+                    '',
+                    '',
+                )
+        except Exception as e:
+            logger.warning(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
+    
+
+# 每日零点执行每日大量出现精灵刷新
+@scheduler.scheduled_job('cron', hour ='*')
+async def refresh_pokemon_day():
+    now = datetime.now(pytz.timezone('Asia/Shanghai'))
+    if not now.hour in [0,8,16]:
+        return
+    didianlistkey = {}
+    for diqu in diqulist:
+        if diqulist[diqu]['open'] == 1:
+            didianlistkey[diqu] = []
+    for didian in didianlist:
+        if didianlist[didian]['type'] == '野外':
+            didianlistkey[didianlist[didian]['fname']].append(didian)
+    mes = '野生宝可梦大量出现了'
+    for diqu in diqulist:
+        if diqulist[diqu]['open'] == 1:
+            didianname = random.sample(didianlistkey[diqu], 1)[0]
+            sj_num = int(math.floor(random.uniform(0, 100)))
+            if sj_num <= 15:
+                zx_max = 300
+            elif sj_num <= 35:
+                zx_max = 400
+            elif sj_num <= 65:
+                zx_max = 500
+            elif sj_num <= 95:
+                zx_max = 550
+            else:
+                zx_max = 999
+            chara_id_list = list(POKEMON_LIST.keys())
+            find_flag = 0
+            while find_flag == 0:
+                random.shuffle(chara_id_list)
+                pokeminid = chara_id_list[0]
+                if pokeminid not in jinyonglist:
+                    pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
+                    if pokemon_zz <= zx_max:
+                        POKE.update_map_refresh(diqu,didianname,pokeminid)
+                        mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                        find_flag = 1
+    refresh_send_list = POKE.get_refresh_send_list()
+    for refresh in refresh_send_list:
+        try:
+            for bot_id in gss.active_bot:
+                await gss.active_bot[bot_id].target_send(
+                    mes,
+                    'group',
+                    refresh[0],
+                    refresh[1],
+                    '',
+                    '',
+                )
+        except Exception as e:
+            logger.warning(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
