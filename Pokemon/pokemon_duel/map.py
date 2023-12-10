@@ -15,6 +15,7 @@ from .PokeCounter import *
 from .until import *
 from pathlib import Path
 from .nameconfig import First_Name, Last_Name, Call_Name
+from ..utils.dbbase.ScoreCounter import SCORE_DB
 from ..utils.fonts.starrail_fonts import (
     sr_font_20,
     sr_font_24,
@@ -24,6 +25,7 @@ TS_FIGHT = 20
 TS_PROP = 10
 TS_POKEMON = 70
 WIN_EGG = 10
+QUN_POKE = 10
 black_color = (0, 0, 0)
 
 Excel_path = Path(__file__).parent
@@ -734,7 +736,15 @@ async def map_ts_test_noauto_use(bot, ev: Event):
             dipokelist = random.sample(pokelist, 1)
             pokename = CHARA_NAME[dipokelist[0]][0]
             pokemonid = dipokelist[0]
-            mes += f'野生宝可梦{pokename}出现了\n'
+            qun_num = int(math.floor(random.uniform(0, 100)))
+            if qun_num <= QUN_POKE:
+                pokemon_num = int(math.floor(random.uniform(3, 6)))
+                for item in range(0,pokemon_num):
+                    dipokelist.append(pokemonid)
+                mes += f'野生宝可梦{pokename}群出现了\n'
+            else:
+                pokemon_num = 1
+                mes += f'野生宝可梦{pokename}出现了\n'
 
             mes_list, mypokelist, dipokelist = await fight_yw_ys(
                 uid,
@@ -750,12 +760,19 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 mes += f'\n您被野生宝可梦{pokename}打败了，眼前一黑'
 
             if len(dipokelist) == 0:
-                mes += f'\n您打败了{pokename}'
-                zs_num = int(math.floor(random.uniform(0, 100)))
-                if zs_num <= WIN_EGG:
+                if pokemon_num > 1:
+                    mes += f'\n您打败了{pokename}群'
+                else:
+                    mes += f'\n您打败了{pokename}'
+                egg_num = 0
+                for item in range(0,pokemon_num):
+                    zs_num = int(math.floor(random.uniform(0, 100)))
+                    if zs_num <= WIN_EGG:
+                        egg_num += 1
+                if egg_num > 0:
                     eggid = get_pokemon_eggid(pokemonid)
-                    mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
-                    POKE._add_pokemon_egg(uid, eggid, 1)
+                    mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x{egg_num}'
+                    POKE._add_pokemon_egg(uid, eggid, egg_num)
             await bot.send(mes)
 
         else:
@@ -1115,6 +1132,10 @@ async def map_info_now(bot, ev: Event):
 
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send(
+            '您还没有开局，请输入 领取初始精灵+初始宝可梦名称。', at_sender=True
+        )
     mes = []
     buttons = []
     buttons.append(Button('前往', '前往', action=2))
@@ -1167,6 +1188,10 @@ async def show_map_info_now(bot, ev: Event):
 
         mapinfo = POKE._get_map_now(uid)
         this_map = mapinfo[1]
+        if this_map == '':
+            return await bot.send(
+                '您还没有开局，请输入 领取初始精灵+初始宝可梦名称。', at_sender=True
+            )
         diquname = didianlist[this_map]['fname']
     else:
         list_dizhi = list(diqulist.keys())

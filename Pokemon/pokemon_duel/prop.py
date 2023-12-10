@@ -8,7 +8,7 @@ from .pokemon import *
 from .PokeCounter import *
 from .until import *
 from pathlib import Path
-
+from ..utils.dbbase.ScoreCounter import SCORE_DB
 
 Excel_path = Path(__file__).parent
 with Path.open(Excel_path / 'prop.json', encoding='utf-8') as f:

@@ -13,6 +13,7 @@ from pathlib import Path
 from gsuid_core.utils.image.convert import convert_img
 from gsuid_core.segment import MessageSegment
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
+from ..utils.dbbase.ScoreCounter import SCORE_DB
 from ..utils.convert import DailyAmountLimiter
 from ..utils.fonts.starrail_fonts import (
     sr_font_18,
@@ -797,7 +798,7 @@ async def pokemon_fight(
                         myzhuangtai,
                         changdi,
                     ) = canshu2['ret']
-                    di_mesg = di_mesg + mes
+                    di_mesg = '\n' + di_mesg + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -813,7 +814,7 @@ async def pokemon_fight(
                         ) = get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
-                        di_mesg = di_mesg + '\n' + mes
+                        di_mesg = '\n' + di_mesg + '\n' + mes
                     else:
                         di_mesg = (
                             di_mesg
@@ -890,7 +891,7 @@ async def pokemon_fight(
                         dizhuangtai,
                         changdi,
                     ) = canshu1['ret']
-                    my_mesg = my_mesg + mes
+                    my_mesg = '\n' + my_mesg + mes
                 else:
                     if (
                         myzhuangtai[0][0] == '混乱'
@@ -906,7 +907,7 @@ async def pokemon_fight(
                         ) = get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
-                        my_mesg = my_mesg + '\n' + mes
+                        my_mesg = '\n' + my_mesg + '\n' + mes
                     else:
                         my_mesg = (
                             my_mesg

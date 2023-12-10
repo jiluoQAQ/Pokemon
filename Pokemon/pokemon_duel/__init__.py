@@ -7,6 +7,7 @@ from gsuid_core.segment import MessageSegment
 from gsuid_core.utils.image.convert import convert_img
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 from gsuid_core.message_models import Button
+from ..utils.dbbase.ScoreCounter import SCORE_DB
 from .pokeconfg import *
 from .pokemon import *
 from .PokeCounter import *
@@ -111,7 +112,7 @@ async def my_pokemon_list(bot, ev: Event):
         startype = POKE.get_pokemon_star(uid, pokemoninfo[0])
         mes += f'\n {starlist[startype]}{POKEMON_LIST[pokemoninfo[0]][0]}({pokemoninfo[1]})'
     if page_num > 0:
-        mes += f'第({page}/{page_num})页'
+        mes += f'第({page + 1}/{page_num + 1})页'
     buttons = [
         Button('📖精灵状态', '精灵状态', action=2),
         Button('🔄更新队伍', '更新队伍', action=2),
@@ -611,7 +612,7 @@ async def my_pokemon_egg_list(bot, ev: Event):
         uppage = page - 1
         buttons.append(Button('⬅️上一页', f'我的精灵蛋 {uppage}'))
     if page_num > 0:
-        Button(f'⏺️跳转({page}/{page_num})', '我的精灵蛋', action=2)
+        Button(f'⏺️跳转({page + 1}/{page_num + 1})', '我的精灵蛋', action=2)
     if page < page_num:
         dowmpage = page + 1
         buttons.append(Button('➡️下一页', f'我的精灵蛋 {dowmpage}'))
