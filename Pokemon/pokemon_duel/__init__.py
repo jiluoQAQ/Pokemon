@@ -123,7 +123,7 @@ async def my_pokemon_list(bot, ev: Event):
         uppage = page - 1
         buttons.append(Button('⬅️上一页', f'我的精灵列表 {uppage}'))
     if page_num > 0:
-        Button(f'⏺️跳转({page}/{page_num})', '我的精灵列表', action=2)
+        Button(f'⏺️跳转({page+1}/{page_num+1})', '我的精灵列表', action=2)
     if page < page_num:
         dowmpage = page + 1
         buttons.append(Button('➡️下一页', f'我的精灵列表 {dowmpage}'))
@@ -604,7 +604,7 @@ async def my_pokemon_egg_list(bot, ev: Event):
     for pokemoninfo in myegglist:
         mes += f'{POKEMON_LIST[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]}\n'
     if page_num > 0:
-        mes += f'第({page}/{page_num})页'
+        mes += f'第({page+1}/{page_num+1})页'
     buttons = [
         Button('📖宝可梦孵化', '宝可梦孵化', action=2),
         Button('📖重置个体值', '重置个体值', action=2),

@@ -4,6 +4,7 @@ import math
 from PIL import Image, ImageDraw
 from gsuid_core.sv import SV
 from gsuid_core.models import Event
+import pytz
 from gsuid_core.segment import MessageSegment
 from gsuid_core.gss import gss
 from gsuid_core.utils.image.convert import convert_img
@@ -1378,7 +1379,7 @@ async def get_day_pokemon_refresh_send(bot, ev: Event):
 @scheduler.scheduled_job('cron', hour ='*')
 async def refresh_pokemon_day():
     now = datetime.now(pytz.timezone('Asia/Shanghai'))
-    if not now.hour in [0,8,16]:
+    if now.hour not in [0,8,16]:
         return
     didianlistkey = {}
     for diqu in diqulist:
