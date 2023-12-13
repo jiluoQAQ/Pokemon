@@ -224,7 +224,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 ORDER BY PROPNAME ASC,SCORE ASC LIMIT {startnum},{num}"
                 ).fetchall()
                 if r:
                     num = conn.execute(
@@ -242,7 +242,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND UID='{uid}' ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND UID='{uid}' ORDER BY PROPNAME ASC,SCORE ASC LIMIT {startnum},{num}"
                 ).fetchall()
                 if r:
                     num = conn.execute(
@@ -260,7 +260,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}' ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}' ORDER BY PROPNAME ASC,SCORE ASC LIMIT {startnum},{num}"
                 ).fetchall()
                 if r:
                     num = conn.execute(
@@ -278,7 +278,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}' AND PROPNAME='{propname}' ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}' AND PROPNAME='{propname}' ORDER BY PROPNAME ASC,SCORE ASC LIMIT {startnum},{num}"
                 ).fetchall()
                 if r:
                     num = conn.execute(
@@ -287,6 +287,19 @@ class PokeCounter:
                     return num[0][0],r
                 else:
                     return 0,0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def get_exchange_list_time(self, findtime):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,UID FROM PROP_EXCHANGE WHERE UPTIME<{findtime}"
+                ).fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
         except:
             raise Exception('查找表发生错误')
     

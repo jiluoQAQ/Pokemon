@@ -3,12 +3,15 @@ from gsuid_core.sv import SV
 from gsuid_core.models import Event
 from gsuid_core.message_models import Button
 import json
+import pytz
 import time
 from .pokeconfg import *
 from .pokemon import *
 from .PokeCounter import *
 from .until import *
 from pathlib import Path
+from gsuid_core.gss import gss
+from gsuid_core.logger import logger
 from ..utils.dbbase.ScoreCounter import SCORE_DB
 
 Excel_path = Path(__file__).parent
@@ -596,10 +599,26 @@ async def show_exchange_list_my(bot, ev: Event):
         buttons.append(Button('下一页',f'{downbutton}', action=2))
     await bot.send_option(mes, buttons)
 
-
-
-
-
+# 每日0点执行交易所7天无销售商品自动下架
+@scheduler.scheduled_job('cron', hour ='*')
+async def down_exchange_day():
+    now = datetime.now(pytz.timezone('Asia/Shanghai'))
+    if now.hour not in [0]:
+        return
+    findtime = math.ceil(time.time()) - 259200
+    exchange_list = await POKE.get_exchange_list_time(findtime)
+    if exchange_list == 0:
+        logger.info('今日无超时寄售商品，无需下架')
+        return
+    down_num = 0
+    for exchange_info in exchange_list:
+        if exchange_info[1] == '道具':
+            await POKE._add_pokemon_prop(exchange_info[4], exchange_info[2], int(exchange_info[3]))
+        if exchange_info[1] == '精灵蛋':
+            await POKE._add_pokemon_egg(exchange_info[4], int(exchange_info[2]), int(exchange_info[3]))
+        await POKE.delete_exchange(exchange_info[0])
+        down_num += 1
+    logger.info(f'今日已执行{down_num}件交易所超期商品下架')
 
 
 
