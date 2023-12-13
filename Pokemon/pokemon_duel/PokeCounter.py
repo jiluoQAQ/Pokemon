@@ -17,6 +17,7 @@ class PokeCounter:
         self._create_table_starrush()
         self._create_table_map_refresh()
         self._create_table_refresh_send()
+        self._create_table_exchange()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -142,7 +143,154 @@ class PokeCounter:
         except:
             raise Exception('创建表发生错误')
     
-    def update_refresh_send(self,groupid,botid):
+    def _create_table_exchange(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS PROP_EXCHANGE
+                          (EXCHANGEID       TEXT   NOT NULL,
+                           PROPTYPE         TEXT   NOT NULL,
+                           PROPNAME         TEXT   NOT NULL,
+                           NUM              TEXT   NOT NULL,
+                           UID              TEXT   NOT NULL,
+                           SCORE            INT    NOT NULL,
+                           UPTIME           INT    NOT NULL,
+                           PRIMARY KEY(EXCHANGEID));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    async def new_exchange(self,exchangeid,proptype,propname,num,uid,score,uptime):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    'INSERT OR REPLACE INTO PROP_EXCHANGE (EXCHANGEID,PROPTYPE,PROPNAME,NUM,UID,SCORE,UPTIME) VALUES (?,?,?,?,?,?,?)',
+                    (exchangeid,proptype,propname,num,uid,score,uptime),
+                )
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def update_exchange(self,exchangeid,num):
+        now_num = await self._get_exchange_num(exchangeid) + num
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE PROP_EXCHANGE SET NUM={now_num} WHERE EXCHANGEID='{exchangeid}'"
+                )
+
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def _get_exchange_num(self,exchangeid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT NUM FROM PROP_EXCHANGE WHERE EXCHANGEID='{exchangeid}'"
+                ).fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def _get_exchange_info(self,exchangeid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT PROPTYPE,PROPNAME,NUM,UID,SCORE FROM PROP_EXCHANGE WHERE EXCHANGEID='{exchangeid}'"
+                ).fetchall()
+                if r:
+                    return r[0]
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def delete_exchange(self,exchangeid):
+        with self._connect() as conn:
+            conn.execute(
+                f"DELETE FROM PROP_EXCHANGE WHERE EXCHANGEID='{exchangeid}'"
+            ).fetchall()
+    
+    async def delete_exchange_uid(self,uid):
+        with self._connect() as conn:
+            conn.execute(
+                f"DELETE FROM PROP_EXCHANGE WHERE UID='{uid}'"
+            ).fetchall()
+    
+    async def get_exchange_list(self, page=0):
+        num = 30
+        startnum = num * page
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                ).fetchall()
+                if r:
+                    num = conn.execute(
+                        f"SELECT COUNT(EXCHANGEID) AS EXCHANGENUM FROM PROP_EXCHANGE WHERE NUM>0"
+                    ).fetchall()
+                    return num[0][0],r
+                else:
+                    return 0,0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def get_exchange_list_my(self, uid, page=0):
+        num = 30
+        startnum = num * page
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND UID='{uid}' ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                ).fetchall()
+                if r:
+                    num = conn.execute(
+                        f"SELECT COUNT(EXCHANGEID) AS EXCHANGENUM FROM PROP_EXCHANGE WHERE NUM>0 AND UID='{uid}'"
+                    ).fetchall()
+                    return num[0][0],r
+                else:
+                    return 0,0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def get_exchange_list_sx_type(self, proptype, page=0):
+        num = 30
+        startnum = num * page
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}' ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                ).fetchall()
+                if r:
+                    num = conn.execute(
+                        f"SELECT COUNT(EXCHANGEID) AS EXCHANGENUM FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}'"
+                    ).fetchall()
+                    return num[0][0],r
+                else:
+                    return 0,0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def get_exchange_list_sx_name(self, proptype, propname, page=0):
+        num = 30
+        startnum = num * page
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT EXCHANGEID,PROPTYPE,PROPNAME,NUM,SCORE FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}' AND PROPNAME='{propname}' ORDER BY UPTIME desc,SCORE ASC LIMIT {startnum},{num}"
+                ).fetchall()
+                if r:
+                    num = conn.execute(
+                        f"SELECT COUNT(EXCHANGEID) AS EXCHANGENUM FROM PROP_EXCHANGE WHERE NUM>0 AND PROPTYPE='{proptype}' AND PROPNAME='{propname}'"
+                    ).fetchall()
+                    return num[0][0],r
+                else:
+                    return 0,0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def update_refresh_send(self,groupid,botid):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -152,7 +300,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
     
-    def get_refresh_send_list(self):
+    async def get_refresh_send_list(self):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -165,13 +313,13 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
     
-    def delete_refresh_send(self,groupid):
+    async def delete_refresh_send(self,groupid):
         with self._connect() as conn:
             conn.execute(
                 f"DELETE FROM REFRESH_SEND WHERE GROUPID='{groupid}'"
             ).fetchall()
     
-    def update_map_refresh(self,diqu,didian,pokemon):
+    async def update_map_refresh(self,diqu,didian,pokemon):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -181,7 +329,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
     
-    def get_map_refresh(self,diqu,didian):
+    async def get_map_refresh(self,diqu,didian):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -194,7 +342,7 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
     
-    def get_map_refresh_list(self):
+    async def get_map_refresh_list(self):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -207,7 +355,7 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
     
-    def update_pokemon_star(self, uid, bianhao, startype=0):
+    async def update_pokemon_star(self, uid, bianhao, startype=0):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -217,7 +365,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def get_pokemon_star(self, uid, bianhao):
+    async def get_pokemon_star(self, uid, bianhao):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -230,19 +378,19 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
 
-    def _delete_poke_star(self, uid):
+    async def _delete_poke_star(self, uid):
         with self._connect() as conn:
             conn.execute(
                 f"DELETE FROM POKEMON_STAR WHERE UID='{uid}'"
             ).fetchall()
 
-    def _delete_poke_star_bianhao(self, uid, bianhao):
+    async def _delete_poke_star_bianhao(self, uid, bianhao):
         with self._connect() as conn:
             conn.execute(
                 f"DELETE FROM POKEMON_STAR WHERE UID='{uid}' AND BIANHAO={bianhao}"
             ).fetchall()
 
-    def get_pokemon_starrush(self, uid):
+    async def get_pokemon_starrush(self, uid):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -251,13 +399,13 @@ class PokeCounter:
                 if r:
                     return r[0][0]
                 else:
-                    self.new_pokemon_starrush(uid)
+                    await self.new_pokemon_starrush(uid)
                     return 0
         except:
             raise Exception('查找表发生错误')
 
-    def update_pokemon_starrush(self, uid, num):
-        rushnum = self.get_pokemon_starrush(uid) + num
+    async def update_pokemon_starrush(self, uid, num):
+        rushnum = await self.get_pokemon_starrush(uid) + num
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -267,7 +415,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def new_pokemon_starrush(self, uid):
+    async def new_pokemon_starrush(self, uid):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -277,7 +425,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def get_pokemon_prop_list(self, uid):
+    async def get_pokemon_prop_list(self, uid):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -290,7 +438,7 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
 
-    def _new_pokemon_prop(self, uid, propname):
+    async def _new_pokemon_prop(self, uid, propname):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -300,7 +448,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def _get_pokemon_prop(self, uid, propname):
+    async def _get_pokemon_prop(self, uid, propname):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -309,13 +457,13 @@ class PokeCounter:
                 if r:
                     return r[0][0]
                 else:
-                    self._new_pokemon_prop(uid, propname)
+                    await self._new_pokemon_prop(uid, propname)
                     return 0
         except:
             raise Exception('查找表发生错误')
 
-    def _add_pokemon_prop(self, uid, propname, num):
-        now_num = self._get_pokemon_prop(uid, propname) + num
+    async def _add_pokemon_prop(self, uid, propname, num):
+        now_num = await self._get_pokemon_prop(uid, propname) + int(num)
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -325,7 +473,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def _add_pokemon_group(self, uid, pokemon_list):
+    async def _add_pokemon_group(self, uid, pokemon_list):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -335,7 +483,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def get_pokemon_group(self, uid):
+    async def get_pokemon_group(self, uid):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -348,14 +496,14 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
 
-    def delete_pokemon_group(self, uid):
+    async def delete_pokemon_group(self, uid):
         with self._connect() as conn:
             conn.execute(
                 f"DELETE FROM POKEMON_TEAM WHERE UID='{uid}'"
             ).fetchall()
 
-    def _add_pokemon_egg(self, uid, bianhao, use_num):
-        eggnum = int(self.get_pokemon_egg(uid, bianhao)) + int(use_num)
+    async def _add_pokemon_egg(self, uid, bianhao, use_num):
+        eggnum = int(await self.get_pokemon_egg(uid, bianhao)) + int(use_num)
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -365,7 +513,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def delete_pokemon_egg_bianhao(self, uid, bianhao):
+    async def delete_pokemon_egg_bianhao(self, uid, bianhao):
         try:
             with self._connect() as conn:
                 conn.execute(
@@ -374,7 +522,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def get_pokemon_egg(self, uid, bianhao):
+    async def get_pokemon_egg(self, uid, bianhao):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -387,7 +535,7 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
 
-    def get_pokemon_egg_num(self, uid):
+    async def get_pokemon_egg_num(self, uid):
         try:
             with self._connect() as conn:
                 r = conn.execute(
@@ -400,7 +548,7 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
 
-    def get_pokemon_egg_list(self, uid, page=0):
+    async def get_pokemon_egg_list(self, uid, page=0):
         num = 30
         startnum = num * page
         try:
@@ -415,7 +563,7 @@ class PokeCounter:
         except:
             raise Exception('查找表发生错误')
 
-    def delete_pokemon_egg(self, uid):
+    async def delete_pokemon_egg(self, uid):
         with self._connect() as conn:
             conn.execute(
                 f"DELETE FROM POKEMON_EGG WHERE UID='{uid}'"

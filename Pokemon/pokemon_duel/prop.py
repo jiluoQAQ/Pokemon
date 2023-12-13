@@ -3,6 +3,7 @@ from gsuid_core.sv import SV
 from gsuid_core.models import Event
 from gsuid_core.message_models import Button
 import json
+import time
 from .pokeconfg import *
 from .pokemon import *
 from .PokeCounter import *
@@ -30,10 +31,17 @@ async def pokemon_help_prop(bot, ev: Event):
 3、购买道具[道具名][数量](购买道具,数量默认为1)
 4、使用道具[道具名][精灵名][数量](对宝可梦使用道具,数量默认为1)
 5、我的道具(查看我的道具列表)
+6、查看交易所([类型][名称])(查看交易所寄售的商品，类型名称可为空)
+7、交易所上架[类型][名称][数量][单价](上架物品到交易所，例：交易所上架 精灵蛋 皮丘 5 8888)
+8、交易所购买[商品ID][数量](交易所购买商品，数量默认为1)
+9、我的寄售(查看我寄售在交易所的商品)
+注：
+交易所寄售的商品出售成功会收取10%的手续费
  """
     buttons = [
         Button('✅道具商店', '道具商店'),
         Button('✅我的道具', '我的道具'),
+        Button('💰查看交易所', '查看交易所'),
         Button('✅购买道具', '购买道具', action=2),
         Button('✅道具信息', '道具信息', action=2),
         Button('✅使用道具', '使用道具', action=2),
@@ -128,7 +136,7 @@ async def prop_buy(bot, ev: Event):
                 at_sender=True,
             )
         SCORE.update_score(uid, 0 - use_score)
-        POKE._add_pokemon_prop(uid, propname, propnum)
+        await POKE._add_pokemon_prop(uid, propname, propnum)
         mes = f'恭喜！您花费了{use_score}金币成功购买了{propnum}件{propname}'
         if propinfo['type'] == '消耗品':
             buttons = [
@@ -180,7 +188,7 @@ async def prop_use(bot, ev: Event):
         )
     if propinfo['use'][0] == '性格':
         propnum = 1
-    mypropnum = POKE._get_pokemon_prop(uid, propname)
+    mypropnum = await POKE._get_pokemon_prop(uid, propname)
     if mypropnum == 0:
         return await bot.send(f'您还没有{propname}哦。', at_sender=True)
     if mypropnum < propnum:
@@ -194,7 +202,7 @@ async def prop_use(bot, ev: Event):
                 at_sender=True,
             )
         POKE._add_pokemon_xingge(uid, bianhao, propinfo['use'][1])
-        POKE._add_pokemon_prop(uid, propname, -1)
+        await POKE._add_pokemon_prop(uid, propname, -1)
         mes = f"使用成功！您的{POKEMON_LIST[bianhao][0]}的性格变成了{propinfo['use'][1]}。"
         buttons = [
             Button('📖精灵状态', f'精灵状态{pokename}'),
@@ -247,7 +255,7 @@ async def prop_use(bot, ev: Event):
                 pokemon_info[12],
             )
             mes = f"使用成功！{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值提升了{change_nl_num}点"
-            POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
+            await POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
             buttons = [
                 Button('📖精灵状态', f'精灵状态{pokename}'),
             ]
@@ -284,7 +292,7 @@ async def prop_use(bot, ev: Event):
                 pokemon_info[12],
             )
             mes = f"使用成功！{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值降低了{change_nl_num}点"
-            POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
+            await POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
             buttons = [
                 Button('📖精灵状态', f'精灵状态{pokename}'),
             ]
@@ -310,7 +318,7 @@ async def prop_use(bot, ev: Event):
             mes = (
                 f'使用成功！{POKEMON_LIST[bianhao][0]}的等级提升了{add_level}'
             )
-            POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
+            await POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
             buttons = [
                 Button('📖精灵状态', f'精灵状态{pokename}'),
             ]
@@ -321,7 +329,7 @@ async def prop_use(bot, ev: Event):
 async def prop_my_list(bot, ev: Event):
     uid = ev.user_id
 
-    myproplist = POKE.get_pokemon_prop_list(uid)
+    myproplist = await POKE.get_pokemon_prop_list(uid)
     if myproplist == 0:
         return await bot.send('您还没有道具哦。', at_sender=True)
     mes = ''
@@ -332,3 +340,271 @@ async def prop_my_list(bot, ev: Event):
         Button('✅使用道具', '使用道具', action=2),
     ]
     await bot.send_option(mes, buttons)
+
+@sv_pokemon_prop.on_prefix(['交易所上架'])
+async def exchange_up_prop(bot, ev: Event):
+    #交易所上架 道具 奇异甜食 5 500
+    uid = ev.user_id
+    args = ev.text.split()
+    if len(args) != 4:
+        return await bot.send('请输入 交易所上架[类型][名称][数量][单价] 中间用空格分隔。\n如 交易所上架 精灵蛋 皮丘 5 8888', at_sender=True)
+    proptype = args[0]
+    if proptype not in ['道具','精灵蛋','宝可梦蛋','蛋']:
+        return await bot.send('请输入正确的类型 道具/精灵蛋。', at_sender=True)
+    propname = args[1]
+    propnum = int(args[2])
+    if propnum < 1:
+        return await bot.send('上架商品的数量需大于1。', at_sender=True)
+    score = int(args[3])
+    if score < 10:
+        return await bot.send('上架商品的价格需大于10。', at_sender=True)
+    string = "0123456789"
+    random_list = random.sample(list(string), 8)
+    exchangeid = ''.join(random_list)
+    if proptype == '道具':
+        propkeylist = proplist.keys()
+        if propname not in propkeylist:
+            return await bot.send('无法找到该道具，请输入正确的道具名称。', at_sender=True)
+        mypropnum = await POKE._get_pokemon_prop(uid, propname)
+        if mypropnum == 0:
+            return await bot.send(f'您还没有{propname}哦。', at_sender=True)
+        if mypropnum < propnum:
+            return await bot.send(f'您的{propname}数量小于{propnum}，上架失败。', at_sender=True)
+        now_time = math.ceil(time.time())
+        await POKE.new_exchange(exchangeid,proptype,propname,propnum,uid,score,now_time)
+        await POKE._add_pokemon_prop(uid, propname, 0 - propnum)
+        mes = f'您以单价{score}的价格成功上架了{propname}x{propnum}。'
+    if proptype == '精灵蛋' or proptype == '宝可梦蛋' or proptype == '蛋':
+        proptype = '精灵蛋'
+        bianhao = get_poke_bianhao(propname)
+        if bianhao == 0:
+            return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+        egg_num = await POKE.get_pokemon_egg(uid, bianhao)
+        if egg_num == 0:
+            return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
+        if egg_num < propnum:
+            return await bot.send(f'您的{pokename}精灵蛋数量小于{propnum}，上架失败。', at_sender=True)
+        now_time = math.ceil(time.time())
+        await POKE.new_exchange(exchangeid,'精灵蛋',bianhao,propnum,uid,score,now_time)
+        await POKE._add_pokemon_egg(uid, bianhao, 0 - propnum)
+        mes = f'您以单价{score}的价格成功上架了{propname}精灵蛋x{propnum}。'
+    buttons = [
+        Button('💰寄售商品','交易所上架', action=2),
+        Button('💰购买商品','交易所购买', action=2),
+        Button('💰我的寄售','我的寄售'),
+        Button('💰查看交易所', '查看交易所'),
+        Button('💰交易所筛选', '查看交易所', action=2),
+    ]
+    await bot.send_option(mes, buttons)
+
+@sv_pokemon_prop.on_prefix(['交易所下架'])
+async def exchange_down_prop(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) != 1:
+        return await bot.send('请输入 交易所下架[商品ID]', at_sender=True)
+    exchangeid = args[0]
+    uid = ev.user_id
+    exchange_info = await POKE._get_exchange_info(exchangeid)
+    if exchange_info == 0:
+        return await bot.send('请输入正确的商品ID或该商品已售出', at_sender=True)
+    if exchange_info[3] != uid:
+        return await bot.send('您不是该商品的上架人，无法执行下架操作', at_sender=True)
+    if exchange_info[0] == '道具':
+        await POKE._add_pokemon_prop(uid, exchange_info[1], int(exchange_info[2]))
+        mes = f'您下架了{exchange_info[1]}{exchange_info[0]}x{exchange_info[2]}。'
+    if exchange_info[0] == '精灵蛋':
+        await POKE._add_pokemon_egg(uid, int(exchange_info[1]), int(exchange_info[2]))
+        mes = f'您下架了{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}x{exchange_info[2]}。'
+    await POKE.delete_exchange(exchangeid)
+    buttons = [
+        Button('💰寄售商品','交易所上架', action=2),
+        Button('💰购买商品','交易所购买', action=2),
+        Button('💰我的寄售','我的寄售'),
+        Button('💰查看交易所', '查看交易所'),
+        Button('💰交易所筛选', '查看交易所', action=2),
+    ]
+    await bot.send_option(mes, buttons)
+
+@sv_pokemon_prop.on_command(['查看交易所'])
+async def show_exchange_list(bot, ev: Event):
+    args = ev.text.split()
+    upbutton = ''
+    downbutton = ''
+    if len(args) > 0:
+        if args[0].isdigit():
+            page = int(args[0]) - 1
+            exchangenum,exchange_list = await POKE.get_exchange_list(page)
+            page_num = math.floor(exchangenum / 30)
+            if page > 0:
+                upbutton = f'查看交易所{page}'
+            if page_num > page + 1:
+                downbutton = f'查看交易所{page+2}'
+        else:
+            proptype = args[0]
+            if proptype not in ['道具','精灵蛋']:
+                return await bot.send('请输入正确的类型 道具/精灵蛋。', at_sender=True)
+            if len(args) == 1:
+                page = 0
+                exchangenum,exchange_list = await POKE.get_exchange_list_sx_type(proptype,page)
+                page_num = math.floor(exchangenum / 30)
+                if page > 0:
+                    upbutton = f'查看交易所{proptype} {page}'
+                if page_num > page + 1:
+                    downbutton = f'查看交易所{proptype} {page+2}'
+            else:
+                if args[1].isdigit():
+                    page = int(args[1]) - 1
+                    exchangenum,exchange_list = await POKE.get_exchange_list_sx_type(proptype,page)
+                    page_num = math.floor(exchangenum / 30)
+                    if page > 0:
+                        upbutton = f'查看交易所{proptype} {page}'
+                    if page_num > page + 1:
+                        downbutton = f'查看交易所{proptype} {page+2}'
+                else:
+                    propname = args[1]
+                    if proptype == '精灵蛋':
+                        exchangename = get_poke_bianhao(propname)
+                    else:
+                        exchangename = propname
+                    page = 0
+                    if len(args) == 2:
+                        exchangenum,exchange_list = await POKE.get_exchange_list_sx_name(proptype,exchangename,page)
+                        page_num = math.floor(exchangenum / 30)
+                        if page > 0:
+                            upbutton = f'查看交易所{proptype} {propname} {page}'
+                        if page_num > page + 1:
+                            downbutton = f'查看交易所{proptype} {propname} {page+2}'
+                    if len(args) == 3:
+                        page = int(args[2]) - 1
+                        exchangenum,exchange_list = await POKE.get_exchange_list_sx_name(proptype,exchangename,page)
+                        page_num = math.floor(exchangenum / 30)
+                        if page > 0:
+                            upbutton = f'查看交易所{proptype} {propname} {page}'
+                        if page_num > page + 1:
+                            downbutton = f'查看交易所{proptype} {propname} {page+2}'
+    else:
+        page = 0
+        exchangenum,exchange_list = await POKE.get_exchange_list(page)
+        page_num = math.floor(exchangenum / 30)
+        if page > 0:
+            upbutton = f'查看交易所{page}'
+        if page_num > page + 1:
+            downbutton = f'查看交易所{page+2}'
+    if exchangenum == 0:
+        return await bot.send('当前交易所没有寄售中的商品', at_sender=True)
+    mes = '当前寄售中的商品为\n商品ID 类型 名称 数量 单价'
+    for exchangeinfo in exchange_list:
+        mes += f'\n{exchangeinfo[0]} {exchangeinfo[1]}'
+        propname = exchangeinfo[2]
+        if exchangeinfo[1] == '精灵蛋':
+            propname = POKEMON_LIST[int(exchangeinfo[2])][0]
+        mes += f' {propname} {exchangeinfo[3]} {exchangeinfo[4]}'
+    buttons = [
+        Button('💰我的寄售','我的寄售'),
+        Button('💰寄售商品','交易所上架', action=2),
+        Button('💰购买商品','交易所购买', action=2),
+    ]
+    if upbutton != '':
+        buttons.append(Button('上一页',f'{upbutton}', action=2))
+    if downbutton != '':
+        buttons.append(Button('下一页',f'{downbutton}', action=2))
+    await bot.send_option(mes, buttons)
+
+@sv_pokemon_prop.on_command(['交易所购买'])
+async def exchange_buy_prop(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) < 1:
+        return await bot.send('请输入 交易所购买[商品ID][数量] 用空格分隔，数量默认为1', at_sender=True)
+    exchangeid = args[0]
+    uid = ev.user_id
+    exchange_info = await POKE._get_exchange_info(exchangeid)
+    if exchange_info == 0:
+        return await bot.send('请输入正确的商品ID或该商品已售出', at_sender=True)
+    if len(args) == 2:
+        buy_num = int(args[1])
+    else:
+        buy_num = 1
+    if buy_num > int(exchange_info[2]):
+        return await bot.send(f'寄售中物品数量不足{buy_num}，请重新输入数量', at_sender=True)
+    need_score = buy_num * int(exchange_info[4])
+    my_score = SCORE.get_score(uid)
+    if need_score > my_score:
+        if exchange_info[0] == '精灵蛋':
+            return await bot.send(f'购买{buy_num}件{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}需要金币{need_score}，您的金币不足', at_sender=True)
+        if exchange_info[0] == '道具':
+            return await bot.send(f'购买{buy_num}件{exchange_info[1]}需要金币{need_score}，您的金币不足', at_sender=True)
+    if buy_num == int(exchange_info[2]):
+        await POKE.delete_exchange(exchangeid)
+    else:
+        await POKE.update_exchange(exchangeid, 0 - buy_num)
+    if exchange_info[0] == '道具':
+        await POKE._add_pokemon_prop(uid, exchange_info[1], buy_num)
+        mes = f'您花费了{need_score}金币，成功购买了{exchange_info[1]}{exchange_info[0]}x{exchange_info[2]}。'
+    if exchange_info[0] == '精灵蛋':
+        await POKE._add_pokemon_egg(uid, int(exchange_info[1]), buy_num)
+        mes = f'您花费了{need_score}金币，成功购买了{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}x{exchange_info[2]}。'
+    SCORE.update_score(uid, 0 - need_score)
+    get_score = math.ceil(need_score * 0.9)
+    SCORE.update_score(exchange_info[3], get_score)
+    buttons = [
+        Button('💰寄售商品','交易所上架', action=2),
+        Button('💰购买商品','交易所购买', action=2),
+        Button('💰我的寄售','我的寄售'),
+        Button('💰查看交易所', '查看交易所'),
+        Button('💰交易所筛选', '查看交易所', action=2),
+    ]
+    await bot.send_option(mes, buttons)
+
+@sv_pokemon_prop.on_command(['我的寄售'])
+async def show_exchange_list_my(bot, ev: Event):
+    args = ev.text.split()
+    upbutton = ''
+    downbutton = ''
+    uid = ev.user_id
+    if len(args) > 0:
+        page = int(args[0]) - 1
+        exchangenum,exchange_list = await POKE.get_exchange_list_my(uid,page)
+        page_num = math.floor(exchangenum / 30)
+        if page > 0:
+            upbutton = f'我的寄售{page}'
+        if page_num > page + 1:
+            downbutton = f'我的寄售{page+2}'
+    else:
+        page = 0
+        exchangenum,exchange_list = await POKE.get_exchange_list_my(uid,page)
+        page_num = math.floor(exchangenum / 30)
+        if page > 0:
+            upbutton = f'我的寄售{page}'
+        if page_num > page + 1:
+            downbutton = f'我的寄售{page+2}'
+    if exchangenum == 0:
+        return await bot.send('您没有寄售中的商品', at_sender=True)
+    mes = '您当前寄售中的商品为\n商品ID 类型 名称 数量 单价'
+    for exchangeinfo in exchange_list:
+        mes += f'\n{exchangeinfo[0]} {exchangeinfo[1]}'
+        propname = exchangeinfo[2]
+        if exchangeinfo[1] == '精灵蛋':
+            propname = POKEMON_LIST[int(exchangeinfo[2])][0]
+        mes += f' {propname} {exchangeinfo[3]} {exchangeinfo[4]}'
+    buttons = [
+        Button('💰寄售商品','交易所上架', action=2),
+        Button('💰购买商品','交易所购买', action=2),
+    ]
+    if upbutton != '':
+        buttons.append(Button('上一页',f'{upbutton}', action=2))
+    if downbutton != '':
+        buttons.append(Button('下一页',f'{downbutton}', action=2))
+    await bot.send_option(mes, buttons)
+
+
+
+
+
+
+
+
+
+
+
+
+

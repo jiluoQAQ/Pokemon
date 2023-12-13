@@ -1,6 +1,7 @@
 import re
 import random
 import math
+import time
 from PIL import Image, ImageDraw
 from gsuid_core.sv import SV
 from gsuid_core.models import Event
@@ -28,10 +29,23 @@ from ..utils.fonts.starrail_fonts import (
 TS_FIGHT = 20
 TS_PROP = 10
 TS_POKEMON = 70
-WIN_EGG = 10
+WIN_EGG = 18
 DALIANG_POKE = 30
-QUN_POKE = 10
+QUN_POKE = 15
+TS_CD = 2
 black_color = (0, 0, 0)
+
+class SEND_TIME:
+    def __init__(self):
+        self.uese_time = {}
+
+    def record_user_time(self, uid, times):
+        self.uese_time[uid] = times
+
+    def get_user_time(self, uid):
+        return self.uese_time[uid] if self.uese_time.get(uid) is not None else 0
+
+time_send = SEND_TIME()
 
 Excel_path = Path(__file__).parent
 with Path.open(Excel_path / 'map.json', encoding='utf-8') as f:
@@ -61,7 +75,7 @@ sv_pokemon_map = SV('宝可梦探索', priority=5)
 sv_pm_config = SV('宝可梦管理', pm=0)
 @sv_pokemon_map.on_fullmatch(['大量出现信息'])
 async def get_day_pokemon_refresh(bot, ev: Event):
-    refresh_list = POKE.get_map_refresh_list()
+    refresh_list = await POKE.get_map_refresh_list()
     mes = "当前大量出现信息"
     for refresh in refresh_list:
         mes += f'\n{POKEMON_LIST[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
@@ -102,12 +116,12 @@ async def map_my_group(bot, ev: Event):
                 f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
             )
         pokemon_list.append(str(bianhao))
-        startype = POKE.get_pokemon_star(uid, bianhao)
+        startype = await POKE.get_pokemon_star(uid, bianhao)
         name_str += (
             f' {starlist[startype]}{pokemon_name} Lv.{pokemon_info[0]}\n'
         )
     pokemon_str = ','.join(pokemon_list)
-    POKE._add_pokemon_group(uid, pokemon_str)
+    await POKE._add_pokemon_group(uid, pokemon_str)
 
     mes = f'编组成功，当前队伍\n{name_str}'
     buttons = [
@@ -138,7 +152,7 @@ async def map_my_info(bot, ev: Event):
         return await bot.send(
             '您还没有领取初始精灵成为训练家哦', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     pokemon_list = my_team.split(',')
     mapinfo = POKE._get_map_now(uid)
     name = mapinfo[2]
@@ -164,7 +178,7 @@ async def map_my_info(bot, ev: Event):
         for bianhao in pokemon_list:
             bianhao = int(bianhao)
             pokemon_info = get_pokeon_info(uid, bianhao)
-            startype = POKE.get_pokemon_star(uid, bianhao)
+            startype = await POKE.get_pokemon_star(uid, bianhao)
             mes += f'\n{starlist[startype]}{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
     buttons = [
         Button('📖精灵状态', '精灵状态'),
@@ -226,6 +240,7 @@ async def map_work_test(bot, ev: Event):
 
 @sv_pokemon_map.on_fullmatch(['野外探索T'])
 async def map_ts_test_noauto_use_T(bot, ev: Event):
+    
     uid = ev.user_id
 
     mypokelist = POKE._get_pokemon_list(uid)
@@ -240,7 +255,7 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -375,7 +390,7 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
                     print(pokemonid)
                     print(eggid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
-                    POKE._add_pokemon_egg(uid, eggid, 1)
+                    await POKE._add_pokemon_egg(uid, eggid, 1)
                     img_draw.text(
                         (125, img_height + 65),
                         f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
@@ -524,7 +539,7 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
                 await bot.send(img_bg)
             else:
                 prop_name = random.sample(ts_prop_list, 1)[0]
-                POKE._add_pokemon_prop(uid, prop_name, 1)
+                await POKE._add_pokemon_prop(uid, prop_name, 1)
                 await bot.send(f'您获得了道具[{prop_name}]', at_sender=True)
 
 
@@ -544,7 +559,7 @@ async def map_ts_test_noauto_use_chuidiao_T(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -688,7 +703,7 @@ async def map_ts_test_noauto_use_chuidiao_T(bot, ev: Event):
                     print(pokemonid)
                     print(eggid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
-                    POKE._add_pokemon_egg(uid, eggid, 1)
+                    await POKE._add_pokemon_egg(uid, eggid, 1)
                     img_draw.text(
                         (125, img_height + 65),
                         f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
@@ -711,7 +726,13 @@ async def map_ts_test_noauto_use_chuidiao_T(bot, ev: Event):
 @sv_pokemon_map.on_fullmatch(['野外探索'])
 async def map_ts_test_noauto_use(bot, ev: Event):
     uid = ev.user_id
-
+    last_send_time = time_send.get_user_time(uid)
+    now_time = time.time()
+    now_time = math.ceil(now_time)
+    send_flag = 0
+    if now_time - last_send_time <= TS_CD:
+        return
+    time_send.record_user_time(uid,now_time)
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
@@ -724,7 +745,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -748,7 +769,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         ts_quality = TS_POKEMON
         if ts_num <= ts_quality:
             # 遇怪
-            daliang_pokemon = POKE.get_map_refresh(didianlist[this_map]['fname'],this_map)
+            daliang_pokemon = await POKE.get_map_refresh(didianlist[this_map]['fname'],this_map)
             if int(daliang_pokemon) > 0:
                 daling_num = int(math.floor(random.uniform(0, 100)))
                 if daling_num <= DALIANG_POKE:
@@ -797,7 +818,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 if egg_num > 0:
                     eggid = get_pokemon_eggid(pokemonid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x{egg_num}'
-                    POKE._add_pokemon_egg(uid, eggid, egg_num)
+                    await POKE._add_pokemon_egg(uid, eggid, egg_num)
             await bot.send(mes)
 
         else:
@@ -841,14 +862,20 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 await bot.send(mes)
             else:
                 prop_name = random.sample(ts_prop_list, 1)[0]
-                POKE._add_pokemon_prop(uid, prop_name, 1)
+                await POKE._add_pokemon_prop(uid, prop_name, 1)
                 await bot.send(f'您获得了道具[{prop_name}]', at_sender=True)
 
 
 @sv_pokemon_map.on_fullmatch(['野外垂钓'])
 async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
     uid = ev.user_id
-
+    last_send_time = time_send.get_user_time(uid)
+    now_time = time.time()
+    now_time = math.ceil(now_time)
+    send_flag = 0
+    if now_time - last_send_time <= TS_CD:
+        return
+    time_send.record_user_time(uid,now_time)
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
@@ -861,7 +888,7 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -919,7 +946,7 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
                 if zs_num <= WIN_EGG:
                     eggid = get_pokemon_eggid(pokemonid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
-                    POKE._add_pokemon_egg(uid, eggid, 1)
+                    await POKE._add_pokemon_egg(uid, eggid, 1)
             await bot.send(mes)
         else:
             return await bot.send('当前地点无法垂钓', at_sender=True)
@@ -946,7 +973,7 @@ async def pokemon_pk_auto(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -985,7 +1012,7 @@ async def pokemon_pk_auto(bot, ev: Event):
             f'{diname}还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    di_team = POKE.get_pokemon_group(diuid)
+    di_team = await POKE.get_pokemon_group(diuid)
     if di_team == '':
         return await bot.send(
             f'{diname}您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -1011,6 +1038,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     di_image = (
         Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
     )
+    mes += f"{mychenghao} {name} 向 {dichenghao} {diname} 发起了对战\n"
     bg_img.paste(my_image, (0, 0), my_image)
     bg_img.paste(di_image, (580, 0), di_image)
     img_draw = ImageDraw.Draw(bg_img)
@@ -1108,7 +1136,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    await bot.send(mes)
 
 
 @sv_pokemon_map.on_prefix(['选择初始地区'])
@@ -1327,7 +1355,7 @@ async def new_pokemom_show(bot, ev: Event):
                 if pokeminid not in jinyonglist:
                     pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
                     if pokemon_zz <= zx_max:
-                        POKE.update_map_refresh(diqu,didianname,pokeminid)
+                        await POKE.update_map_refresh(diqu,didianname,pokeminid)
                         mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
                         find_flag = 1
     buttons = [
@@ -1342,24 +1370,24 @@ async def new_refresh_send_group(bot, ev: Event):
     if botid == 'qqgroup':
         await bot.send('暂不支持群消息推送',at_sender=True)
     else:
-        POKE.update_refresh_send(groupid,botid)
+        await POKE.update_refresh_send(groupid,botid)
         await bot.send('消息推送房间/群标记成功',at_sender=True)
     
 @sv_pokemon_map.on_fullmatch(['清除消息推送'])
 async def del_refresh_send_group(bot, ev: Event):
     groupid = ev.group_id
     botid = ev.bot_id
-    POKE.delete_refresh_send(groupid)
+    await POKE.delete_refresh_send(groupid)
     await bot.send('消息推送房间/群清除成功',at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['大量出现信息推送'])
 async def get_day_pokemon_refresh_send(bot, ev: Event):
-    refresh_list = POKE.get_map_refresh_list()
+    refresh_list = await POKE.get_map_refresh_list()
     mes = "野生宝可梦大量出现了"
     for refresh in refresh_list:
         mes += f'\n{POKEMON_LIST[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
     mes += '\n可以输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
-    refresh_send_list = POKE.get_refresh_send_list()
+    refresh_send_list = await POKE.get_refresh_send_list()
     for refresh in refresh_send_list:
         try:
             for bot_id in gss.active_bot:
@@ -1375,11 +1403,11 @@ async def get_day_pokemon_refresh_send(bot, ev: Event):
             logger.warning(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
     
 
-# 每日零点执行每日大量出现精灵刷新
+# 每日定点执行每日大量出现精灵刷新
 @scheduler.scheduled_job('cron', hour ='*')
 async def refresh_pokemon_day():
     now = datetime.now(pytz.timezone('Asia/Shanghai'))
-    if now.hour not in [0,8,16]:
+    if now.hour not in [4,12,20]:
         return
     didianlistkey = {}
     for diqu in diqulist:
@@ -1411,10 +1439,10 @@ async def refresh_pokemon_day():
                 if pokeminid not in jinyonglist:
                     pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
                     if pokemon_zz <= zx_max:
-                        POKE.update_map_refresh(diqu,didianname,pokeminid)
+                        await POKE.update_map_refresh(diqu,didianname,pokeminid)
                         mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
                         find_flag = 1
-    refresh_send_list = POKE.get_refresh_send_list()
+    refresh_send_list = await POKE.get_refresh_send_list()
     for refresh in refresh_send_list:
         try:
             for bot_id in gss.active_bot:

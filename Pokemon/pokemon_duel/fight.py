@@ -53,7 +53,7 @@ async def pk_vs_daoguan(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -229,7 +229,7 @@ async def pk_vs_tianwang(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -408,7 +408,7 @@ async def pk_vs_guanjun(bot, ev: Event):
         return await bot.send(
             '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -588,7 +588,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
             f'{name} 还选择初始地区，请输入 选择初始地区+地区名称。',
             at_sender=True,
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             f'{name} 还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -632,7 +632,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
             f'{diname} 还选择初始地区，请输入 选择初始地区+地区名称。',
             at_sender=True,
         )
-    di_team = POKE.get_pokemon_group(diuid)
+    di_team = await POKE.get_pokemon_group(diuid)
     if my_team == '':
         return await bot.send(
             f'{diname} 还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -700,7 +700,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
             f'{name} 还选择初始地区，请输入 选择初始地区+地区名称。',
             at_sender=True,
         )
-    my_team = POKE.get_pokemon_group(uid)
+    my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
             f'{name} 还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
@@ -744,7 +744,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
             f'{diname} 还选择初始地区，请输入 选择初始地区+地区名称。',
             at_sender=True,
         )
-    di_team = POKE.get_pokemon_group(diuid)
+    di_team = await POKE.get_pokemon_group(diuid)
     if my_team == '':
         return await bot.send(
             f'{diname} 还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',

@@ -207,11 +207,11 @@ def new_pokemon_gt(uid, bianhao, startype=0):
     my_pokemon_info = get_pokeon_info(uid, bianhao)
     pokemon_info = []
     pokemon_info.append(my_pokemon_info[0])
-    gtmax = 0
+    gtmax = []
     if startype > 0:
-        gtmax = random.sample([1, 2, 3, 4, 5, 6], 1)[0]
+        gtmax = random.sample([1, 2, 3, 4, 5, 6], startype)
     for num in range(1, 7):
-        if gtmax == num:
+        if num in gtmax:
             gt_num = 31
         else:
             gt_num = int(math.floor(random.uniform(1, 32)))
@@ -370,24 +370,24 @@ def get_pokemon_shuxing(bianhao, pokemon_info, level=0):
 
 
 # 重开，清除宝可梦列表个人信息
-def chongkai(uid):
+async def chongkai(uid):
     POKE._delete_poke_info(uid)
-    POKE.delete_pokemon_egg(uid)
+    await POKE.delete_pokemon_egg(uid)
     POKE.delete_pokemon_map(uid)
-    POKE.delete_pokemon_group(uid)
-    POKE._delete_poke_star(uid)
+    await POKE.delete_pokemon_group(uid)
+    await POKE._delete_poke_star(uid)
 
 
 # 放生
-def fangshen(uid, bianhao):
+async def fangshen(uid, bianhao):
     POKE._delete_poke_bianhao(uid, bianhao)
-    POKE._delete_poke_star_bianhao(uid, bianhao)
+    await POKE._delete_poke_star_bianhao(uid, bianhao)
 
 
 # 闪光
-def get_pokemon_star(uid):
-    POKE.update_pokemon_starrush(uid, 1)
-    starflag = POKE.get_pokemon_starrush(uid)
+async def get_pokemon_star(uid):
+    await POKE.update_pokemon_starrush(uid, 1)
+    starflag = await POKE.get_pokemon_starrush(uid)
     star_num = int(math.floor(random.uniform(0, 40960)))
     print(star_num)
     startype = 0
@@ -1725,28 +1725,28 @@ async def pokemon_fight_pk(
                         myresp = await bot.receive_resp(
                             f'{myname}请在20秒内选择一个技能使用!',
                             myjinenglist,
-                            unsuported_platform=True,
-                            is_mutiply=True,
+                            unsuported_platform=True
                         )
                         if myresp is not None:
-                            s = myresp.text
-                            uid = myresp.user_id
-                            print(f'{uid}-{myuid}')
-                            if str(uid) == str(myuid):
-                                if s in myjinenglist:
-                                    jineng1 = s
+                            mys = myresp.text
+                            uidmy = myresp.user_id
+                            print(f'{uidmy}-{myuid}')
+                            if str(uidmy) == str(myuid):
+                                print(mys)
+                                if mys in myjinenglist:
+                                    jineng1 = mys
                                     await bot.send(f'{myname}已选择完成')
                                     jineng1_use = 1
                         runmynum = 1
                     else:
                         myresp = await bot.receive_mutiply_resp()
                         if myresp is not None:
-                            s = myresp.text
-                            uid = myresp.user_id
-                            print(f'{uid}-{myuid}')
-                            if str(uid) == str(myuid):
-                                if s in myjinenglist:
-                                    jineng1 = s
+                            mys = myresp.text
+                            uidmy = myresp.user_id
+                            print(f'{uidmy}-{myuid}')
+                            if str(uidmy) == str(myuid):
+                                if mys in myjinenglist:
+                                    jineng1 = mys
                                     await bot.send(f'{myname}已选择完成')
                                     jineng1_use = 1
         except asyncio.TimeoutError:
@@ -1771,23 +1771,23 @@ async def pokemon_fight_pk(
                         )
                         rundinum = 1
                         if diresp is not None:
-                            s = diresp.text
-                            uid = diresp.user_id
-                            print(f'{uid}-{diuid}')
-                            if str(uid) == str(diuid):
-                                if s in dijinenglist:
-                                    jineng2 = s
+                            dis = diresp.text
+                            uiddi = diresp.user_id
+                            print(f'{uiddi}-{diuid}')
+                            if str(uiddi) == str(diuid):
+                                if dis in dijinenglist:
+                                    jineng2 = dis
                                     await bot.send(f'{diname}已选择完成')
                                     jineng2_use = 1
                     else:
                         diresp = await bot.receive_mutiply_resp()
                         if diresp is not None:
-                            s = diresp.text
-                            uid = diresp.user_id
-                            print(f'{uid}-{diuid}')
-                            if str(uid) == str(diuid):
-                                if s in dijinenglist:
-                                    jineng2 = s
+                            dis = diresp.text
+                            uiddi = diresp.user_id
+                            print(f'{uiddi}-{diuid}')
+                            if str(uiddi) == str(diuid):
+                                if dis in dijinenglist:
+                                    jineng2 = dis
                                     await bot.send(f'{diname}已选择完成')
                                     jineng2_use = 1
         except asyncio.TimeoutError:
@@ -2456,7 +2456,7 @@ async def fight_yw_ys_s(
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(uid, bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
-            startype = POKE.get_pokemon_star(uid, bianhao1)
+            startype = await POKE.get_pokemon_star(uid, bianhao1)
             myinfo[0] = f'{starlist[startype]}{myinfo[0]}'
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
@@ -2627,13 +2627,12 @@ async def fight_pk_s(
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(myuid, bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info, level)
-            mystartype = POKE.get_pokemon_star(myuid, bianhao1)
-            myinfo[0] = f'{starlist[mystartype]}{myinfo[0]}'
+            mystartype = await POKE.get_pokemon_star(myuid, bianhao1)
         if len(diinfo) == 0:
             bianhao2 = dipokelist[0]
             dipokemon_info = get_pokeon_info(diuid, bianhao2)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info, level)
-            distartype = POKE.get_pokemon_star(diuid, bianhao2)
+            distartype = await POKE.get_pokemon_star(diuid, bianhao2)
             diinfo[0] = f'{starlist[distartype]}{diinfo[0]}'
         await bot.send(mes)
 
@@ -2796,14 +2795,12 @@ async def fight_pk(
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(myuid, bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
-            mystartype = POKE.get_pokemon_star(myuid, bianhao1)
-            myinfo[0] = f'{starlist[mystartype]}{myinfo[0]}'
+            mystartype = await POKE.get_pokemon_star(myuid, bianhao1)
         if len(diinfo) == 0:
             bianhao2 = dipokelist[0]
             dipokemon_info = get_pokeon_info(diuid, bianhao2)
             diinfo = new_pokemon_info(bianhao2, dipokemon_info)
-            distartype = POKE.get_pokemon_star(diuid, bianhao2)
-            diinfo[0] = f'{starlist[distartype]}{diinfo[0]}'
+            distartype = await POKE.get_pokemon_star(diuid, bianhao2)
         if myinfo[3] == myinfo[17]:
             mesg += f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
             # mesg.append(MessageSegment.text(mes))
@@ -2958,13 +2955,13 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
     while len(mypokelist) > 0 and len(dipokelist) > 0:
-        mesg += f'第{changci}场\n'
+        mesg += f'\n第{changci}场\n'
         changci += 1
         if len(myinfo) == 0:
             bianhao1 = mypokelist[0]
             mypokemon_info = get_pokeon_info(uid, bianhao1)
             myinfo = new_pokemon_info(bianhao1, mypokemon_info)
-            startype = POKE.get_pokemon_star(uid, bianhao1)
+            startype = await POKE.get_pokemon_star(uid, bianhao1)
             myinfo[0] = f'{starlist[startype]}{myinfo[0]}'
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
@@ -3016,5 +3013,5 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
                 bianhao2,
                 dipokemon_info[0],
             )
-            mesg += f'\n{mes}'
+            mesg += f'\n{mes}\n'
     return mesg, mypokelist, dipokelist
