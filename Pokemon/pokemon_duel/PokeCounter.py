@@ -170,7 +170,8 @@ class PokeCounter:
             raise Exception('更新表发生错误')
     
     async def update_exchange(self,exchangeid,num):
-        now_num = await self._get_exchange_num(exchangeid) + num
+        exchange_num = await self._get_exchange_num(exchangeid)
+        now_num = int(exchange_num) + num
         try:
             with self._connect() as conn:
                 conn.execute(

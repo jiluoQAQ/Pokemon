@@ -12,6 +12,7 @@ from .until import *
 from pathlib import Path
 from gsuid_core.gss import gss
 from gsuid_core.logger import logger
+from gsuid_core.aps import scheduler
 from ..utils.dbbase.ScoreCounter import SCORE_DB
 
 Excel_path = Path(__file__).parent
@@ -542,10 +543,10 @@ async def exchange_buy_prop(bot, ev: Event):
         await POKE.update_exchange(exchangeid, 0 - buy_num)
     if exchange_info[0] == '道具':
         await POKE._add_pokemon_prop(uid, exchange_info[1], buy_num)
-        mes = f'您花费了{need_score}金币，成功购买了{exchange_info[1]}{exchange_info[0]}x{exchange_info[2]}。'
+        mes = f'您花费了{need_score}金币，成功购买了{exchange_info[1]}{exchange_info[0]}x{buy_num}。'
     if exchange_info[0] == '精灵蛋':
         await POKE._add_pokemon_egg(uid, int(exchange_info[1]), buy_num)
-        mes = f'您花费了{need_score}金币，成功购买了{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}x{exchange_info[2]}。'
+        mes = f'您花费了{need_score}金币，成功购买了{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}x{buy_num}。'
     SCORE.update_score(uid, 0 - need_score)
     get_score = math.ceil(need_score * 0.9)
     SCORE.update_score(exchange_info[3], get_score)
