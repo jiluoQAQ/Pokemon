@@ -10,6 +10,7 @@ from .pokemon import *
 from .PokeCounter import *
 from .until import *
 from pathlib import Path
+from datetime import datetime
 from gsuid_core.gss import gss
 from gsuid_core.logger import logger
 from gsuid_core.aps import scheduler
@@ -41,6 +42,10 @@ async def pokemon_help_prop(bot, ev: Event):
 9、我的寄售(查看我寄售在交易所的商品)
 注：
 交易所寄售的商品出售成功会收取10%的手续费
+PS
+商店重磅推出随机精灵蛋业务，只要花费10万即可[购买随机精灵蛋]
+上到神兽精灵蛋，下到御三家精灵蛋，应有尽有
+每人每天限购50颗随机精灵蛋，先到先得哦~
  """
     buttons = [
         Button('✅道具商店', '道具商店'),
@@ -49,6 +54,7 @@ async def pokemon_help_prop(bot, ev: Event):
         Button('✅购买道具', '购买道具', action=2),
         Button('✅道具信息', '道具信息', action=2),
         Button('✅使用道具', '使用道具', action=2),
+        Button('购买随机精灵蛋', '购买随机精灵蛋'),
     ]
     await bot.send_option(msg, buttons)
 
@@ -82,7 +88,7 @@ async def prop_shop_list(bot, ev: Event):
     await bot.send_option(mes, buttons)
 
 
-@sv_pokemon_prop.on_prefix(['道具信息'])
+@sv_pokemon_prop.on_command(['道具信息'])
 async def prop_info(bot, ev: Event):
     args = ev.text.split()
     if len(args) != 1:
@@ -107,8 +113,53 @@ async def prop_info(bot, ev: Event):
             '无法找到该道具，请输入正确的道具名称。', at_sender=True
         )
 
-
-@sv_pokemon_prop.on_prefix(['购买道具'])
+@sv_pokemon_prop.on_fullmatch(['购买随机精灵蛋'])
+async def buy_random_egg(bot, ev: Event):
+    uid = ev.user_id
+    if not daily_random_egg.check(uid):
+        return await bot.send(
+            '今天的购买次数已经超过上限了哦，明天再来吧。', at_sender=True
+        )
+    my_score = SCORE.get_score(uid)
+    if my_score < 100000:
+        return await bot.send('随机精灵蛋需要金币100000,您的金币不足',at_sender=True)
+    
+    sj_num = int(math.floor(random.uniform(0, 100)))
+    if sj_num <= 15:
+        zx_max = 300
+    elif sj_num <= 45:
+        zx_max = 400
+    elif sj_num <= 75:
+        zx_max = 500
+    elif sj_num <= 95:
+        zx_max = 550
+    else:
+        zx_max = 999
+    chara_id_list = list(POKEMON_LIST.keys())
+    find_flag = 0
+    jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289]
+    while find_flag == 0:
+        random.shuffle(chara_id_list)
+        pokemonid = chara_id_list[0]
+        if pokemonid not in jinyonglist_random_egg:
+            pokemon_zz = int(POKEMON_LIST[pokemonid][1]) + int(POKEMON_LIST[pokemonid][2]) + int(POKEMON_LIST[pokemonid][3]) + int(POKEMON_LIST[pokemonid][4]) + int(POKEMON_LIST[pokemonid][5]) + int(POKEMON_LIST[pokemonid][6])
+            if pokemon_zz <= zx_max:
+                find_flag = 1
+                daily_random_egg.increase(uid)
+                eggid = await get_pokemon_eggid(pokemonid)
+                SCORE.update_score(uid, -100000)
+                await POKE._add_pokemon_egg(uid, eggid, 1)
+    mes = f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋'
+    await bot.send(mes,at_sender=True)
+    buttons = [
+        Button('✅再开一个', '购买随机精灵蛋'),
+        Button('📖宝可梦孵化', f'宝可梦孵化{CHARA_NAME[eggid][0]}'),
+        Button('📖我的精灵蛋', '我的精灵蛋'),
+    ]
+    await bot.send_option('还要继续吗？客官', buttons)
+    
+    
+@sv_pokemon_prop.on_command(['购买道具'])
 async def prop_buy(bot, ev: Event):
     args = ev.text.split()
     if len(args) < 1:
@@ -155,7 +206,7 @@ async def prop_buy(bot, ev: Event):
         )
 
 
-@sv_pokemon_prop.on_prefix(['使用道具'])
+@sv_pokemon_prop.on_command(['使用道具'])
 async def prop_use(bot, ev: Event):
     args = ev.text.split()
     if len(args) < 2:
@@ -171,10 +222,10 @@ async def prop_use(bot, ev: Event):
         propnum = 1
     uid = ev.user_id
 
-    bianhao = get_poke_bianhao(pokename)
+    bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = get_pokeon_info(uid, bianhao)
+    pokemon_info = await get_pokeon_info(uid, bianhao)
     if pokemon_info == 0:
         return await bot.send(
             f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
@@ -345,7 +396,7 @@ async def prop_my_list(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
-@sv_pokemon_prop.on_prefix(['交易所上架'])
+@sv_pokemon_prop.on_command(['交易所上架'])
 async def exchange_up_prop(bot, ev: Event):
     #交易所上架 道具 奇异甜食 5 500
     uid = ev.user_id
@@ -380,7 +431,7 @@ async def exchange_up_prop(bot, ev: Event):
         mes = f'您以单价{score}的价格成功上架了{propname}x{propnum}。'
     if proptype == '精灵蛋' or proptype == '宝可梦蛋' or proptype == '蛋':
         proptype = '精灵蛋'
-        bianhao = get_poke_bianhao(propname)
+        bianhao = await get_poke_bianhao(propname)
         if bianhao == 0:
             return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
         egg_num = await POKE.get_pokemon_egg(uid, bianhao)
@@ -401,7 +452,7 @@ async def exchange_up_prop(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
-@sv_pokemon_prop.on_prefix(['交易所下架'])
+@sv_pokemon_prop.on_command(['交易所下架'])
 async def exchange_down_prop(bot, ev: Event):
     args = ev.text.split()
     if len(args) != 1:
@@ -438,7 +489,7 @@ async def show_exchange_list(bot, ev: Event):
         if args[0].isdigit():
             page = int(args[0]) - 1
             exchangenum,exchange_list = await POKE.get_exchange_list(page)
-            page_num = math.floor(exchangenum / 30)
+            page_num = math.floor(exchangenum / 30) + 1
             if page > 0:
                 upbutton = f'查看交易所{page}'
             if page_num > page + 1:
@@ -450,7 +501,7 @@ async def show_exchange_list(bot, ev: Event):
             if len(args) == 1:
                 page = 0
                 exchangenum,exchange_list = await POKE.get_exchange_list_sx_type(proptype,page)
-                page_num = math.floor(exchangenum / 30)
+                page_num = math.floor(exchangenum / 30) + 1
                 if page > 0:
                     upbutton = f'查看交易所{proptype} {page}'
                 if page_num > page + 1:
@@ -459,7 +510,7 @@ async def show_exchange_list(bot, ev: Event):
                 if args[1].isdigit():
                     page = int(args[1]) - 1
                     exchangenum,exchange_list = await POKE.get_exchange_list_sx_type(proptype,page)
-                    page_num = math.floor(exchangenum / 30)
+                    page_num = math.floor(exchangenum / 30) + 1
                     if page > 0:
                         upbutton = f'查看交易所{proptype} {page}'
                     if page_num > page + 1:
@@ -467,13 +518,13 @@ async def show_exchange_list(bot, ev: Event):
                 else:
                     propname = args[1]
                     if proptype == '精灵蛋':
-                        exchangename = get_poke_bianhao(propname)
+                        exchangename = await get_poke_bianhao(propname)
                     else:
                         exchangename = propname
                     page = 0
                     if len(args) == 2:
                         exchangenum,exchange_list = await POKE.get_exchange_list_sx_name(proptype,exchangename,page)
-                        page_num = math.floor(exchangenum / 30)
+                        page_num = math.floor(exchangenum / 30) + 1
                         if page > 0:
                             upbutton = f'查看交易所{proptype} {propname} {page}'
                         if page_num > page + 1:
@@ -481,7 +532,7 @@ async def show_exchange_list(bot, ev: Event):
                     if len(args) == 3:
                         page = int(args[2]) - 1
                         exchangenum,exchange_list = await POKE.get_exchange_list_sx_name(proptype,exchangename,page)
-                        page_num = math.floor(exchangenum / 30)
+                        page_num = math.floor(exchangenum / 30) + 1
                         if page > 0:
                             upbutton = f'查看交易所{proptype} {propname} {page}'
                         if page_num > page + 1:
@@ -489,7 +540,7 @@ async def show_exchange_list(bot, ev: Event):
     else:
         page = 0
         exchangenum,exchange_list = await POKE.get_exchange_list(page)
-        page_num = math.floor(exchangenum / 30)
+        page_num = math.floor(exchangenum / 30) + 1
         if page > 0:
             upbutton = f'查看交易所{page}'
         if page_num > page + 1:
@@ -503,6 +554,8 @@ async def show_exchange_list(bot, ev: Event):
         if exchangeinfo[1] == '精灵蛋':
             propname = POKEMON_LIST[int(exchangeinfo[2])][0]
         mes += f' {propname} {exchangeinfo[3]} {exchangeinfo[4]}'
+    if page_num > 1:
+        mes += f'\n第({page + 1}/{page_num})页'
     buttons = [
         Button('💰我的寄售','我的寄售'),
         Button('💰寄售商品','交易所上架', action=2),
@@ -568,7 +621,7 @@ async def show_exchange_list_my(bot, ev: Event):
     if len(args) > 0:
         page = int(args[0]) - 1
         exchangenum,exchange_list = await POKE.get_exchange_list_my(uid,page)
-        page_num = math.floor(exchangenum / 30)
+        page_num = math.floor(exchangenum / 30) + 1
         if page > 0:
             upbutton = f'我的寄售{page}'
         if page_num > page + 1:
@@ -576,7 +629,7 @@ async def show_exchange_list_my(bot, ev: Event):
     else:
         page = 0
         exchangenum,exchange_list = await POKE.get_exchange_list_my(uid,page)
-        page_num = math.floor(exchangenum / 30)
+        page_num = math.floor(exchangenum / 30) + 1
         if page > 0:
             upbutton = f'我的寄售{page}'
         if page_num > page + 1:
@@ -590,6 +643,8 @@ async def show_exchange_list_my(bot, ev: Event):
         if exchangeinfo[1] == '精灵蛋':
             propname = POKEMON_LIST[int(exchangeinfo[2])][0]
         mes += f' {propname} {exchangeinfo[3]} {exchangeinfo[4]}'
+    if page_num > 1:
+        mes += f'\n第({page + 1}/{page_num})页'
     buttons = [
         Button('💰寄售商品','交易所上架', action=2),
         Button('💰购买商品','交易所购买', action=2),

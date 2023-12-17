@@ -105,7 +105,7 @@ async def pk_vs_daoguan(bot, ev: Event):
     max_level = daoguaninfo['level'][1]
     # pokenum = 3
     dipokelist = copy.deepcopy(daoguaninfo['pokemonlist'])
-    mes += f'{diname}向您发起了对战\n'
+    mes += f'您向{diname}发起了道馆对战\n'
 
     my_image = (
         Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
@@ -210,7 +210,7 @@ async def pk_vs_daoguan(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    await bot.send(mes)
 
 
 @sv_pokemon_pk.on_fullmatch(['挑战天王'])
@@ -284,7 +284,7 @@ async def pk_vs_tianwang(bot, ev: Event):
     max_level = tianwanginfo['level'][1]
     # pokenum = 3
     dipokelist = copy.deepcopy(tianwanginfo['pokemonlist'])
-    mes += f'{diname}向您发起了对战\n'
+    mes += f'您向{diname}发起了天王挑战\n'
 
     my_image = (
         Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
@@ -389,7 +389,7 @@ async def pk_vs_tianwang(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    await bot.send(mes)
 
 
 @sv_pokemon_pk.on_fullmatch(['挑战四天王冠军'])
@@ -455,7 +455,7 @@ async def pk_vs_guanjun(bot, ev: Event):
     max_level = guanjuninfo['level'][1]
     # pokenum = 3
     dipokelist = copy.deepcopy(guanjuninfo['pokemonlist'])
-    mes += f'{diname}向您发起了对战\n'
+    mes += f'您向{diname}发起了冠军挑战\n'
 
     my_image = (
         Image.open(trainers_path / '0.png').convert('RGBA').resize((120, 120))
@@ -560,7 +560,7 @@ async def pk_vs_guanjun(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    await bot.send(mes)
 
 
 @sv_pokemon_pk.on_command(('无级别对战', '无级别战斗', '无级别挑战'))
@@ -641,7 +641,43 @@ async def pokemon_pk_wjb(bot, ev: Event):
 
     if name == diname:
         return await bot.send('不能自己打自己哦。', at_sender=True)
-
+    
+    
+    xuanzeflag = 0
+    rundinum = 0
+    xuanzelist = ['接受对战','拒绝对战']
+    try:
+        async with timeout(30):
+            while xuanzeflag == 0:
+                if rundinum == 0:
+                    resp = await bot.receive_resp(
+                        f'{name}向{diname}发起了无级别对战的邀请，请在30秒内选择接受/拒绝!',
+                        xuanzelist,
+                        unsuported_platform=True,
+                        is_mutiply=True,
+                    )
+                    rundinum = 1
+                    if resp is not None:
+                        dis = resp.text
+                        uiddi = resp.user_id
+                        if str(uiddi) == str(diuid):
+                            if dis in xuanzelist:
+                                xuanze = dis
+                                xuanzeflag = 1
+                else:
+                    resp = await bot.receive_mutiply_resp()
+                    if resp is not None:
+                        dis = resp.text
+                        uiddi = resp.user_id
+                        if str(uiddi) == str(diuid):
+                            if dis in xuanzelist:
+                                xuanze = dis
+                                xuanzeflag = 1
+    except asyncio.TimeoutError:
+        xuanze = '拒绝对战'
+    if xuanze == '拒绝对战':
+        return await bot.send(f'{diname} 拒绝了您的无级别对战申请。',at_sender=True)
+    await bot.send(f'{diname} 接受了您的无级别对战申请，即将开始对战。',at_sender=True)
     pokemon_team = my_team.split(',')
     mypokelist = []
     for bianhao in pokemon_team:
@@ -753,7 +789,43 @@ async def pokemon_pk_xzdj(bot, ev: Event):
 
     if name == diname:
         return await bot.send('不能自己打自己哦。', at_sender=True)
-
+    
+    xuanzeflag = 0
+    rundinum = 0
+    xuanzelist = ['接受对战','拒绝对战']
+    try:
+        async with timeout(30):
+            while xuanzeflag == 0:
+                if rundinum == 0:
+                    resp = await bot.receive_resp(
+                        f'{name}向{diname}发起了限制级对战的邀请，请在30秒内选择接受/拒绝!',
+                        xuanzelist,
+                        unsuported_platform=True,
+                        is_mutiply=True,
+                    )
+                    rundinum = 1
+                    if resp is not None:
+                        dis = resp.text
+                        uiddi = resp.user_id
+                        if str(uiddi) == str(diuid):
+                            if dis in xuanzelist:
+                                xuanze = dis
+                                xuanzeflag = 1
+                else:
+                    resp = await bot.receive_mutiply_resp()
+                    if resp is not None:
+                        dis = resp.text
+                        uiddi = resp.user_id
+                        if str(uiddi) == str(diuid):
+                            if dis in xuanzelist:
+                                xuanze = dis
+                                xuanzeflag = 1
+    except asyncio.TimeoutError:
+        xuanze = '拒绝对战'
+    if xuanze == '拒绝对战':
+        return await bot.send(f'{diname} 拒绝了您的限制级对战申请。',at_sender=True)
+    await bot.send(f'{diname} 接受了您的限制级对战申请，即将开始对战。',at_sender=True)
+    
     pokemon_team = my_team.split(',')
     mypokelist = []
     for bianhao in pokemon_team:

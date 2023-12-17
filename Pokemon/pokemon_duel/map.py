@@ -107,10 +107,10 @@ async def map_my_group(bot, ev: Event):
     name_str = ''
 
     for pokemon_name in args:
-        bianhao = get_poke_bianhao(pokemon_name)
+        bianhao = await get_poke_bianhao(pokemon_name)
         if bianhao == 0:
             return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-        pokemon_info = get_pokeon_info(uid, bianhao)
+        pokemon_info = await get_pokeon_info(uid, bianhao)
         if pokemon_info == 0:
             return await bot.send(
                 f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
@@ -177,7 +177,7 @@ async def map_my_info(bot, ev: Event):
     if my_team:
         for bianhao in pokemon_list:
             bianhao = int(bianhao)
-            pokemon_info = get_pokeon_info(uid, bianhao)
+            pokemon_info = await get_pokeon_info(uid, bianhao)
             startype = await POKE.get_pokemon_star(uid, bianhao)
             mes += f'\n{starlist[startype]}{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
     buttons = [
@@ -386,7 +386,7 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
                 )
                 zs_num = int(math.floor(random.uniform(0, 100)))
                 if zs_num <= WIN_EGG:
-                    eggid = get_pokemon_eggid(pokemonid)
+                    eggid = await get_pokemon_eggid(pokemonid)
                     print(pokemonid)
                     print(eggid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
@@ -699,7 +699,7 @@ async def map_ts_test_noauto_use_chuidiao_T(bot, ev: Event):
                 )
                 zs_num = int(math.floor(random.uniform(0, 100)))
                 if zs_num <= WIN_EGG:
-                    eggid = get_pokemon_eggid(pokemonid)
+                    eggid = await get_pokemon_eggid(pokemonid)
                     print(pokemonid)
                     print(eggid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
@@ -816,7 +816,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                     if zs_num <= WIN_EGG:
                         egg_num += 1
                 if egg_num > 0:
-                    eggid = get_pokemon_eggid(pokemonid)
+                    eggid = await get_pokemon_eggid(pokemonid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x{egg_num}'
                     await POKE._add_pokemon_egg(uid, eggid, egg_num)
             await bot.send(mes)
@@ -856,7 +856,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 if len(dipokelist) == 0:
                     mes += f'\n您打败了{diname}\n'
 
-                    get_score = (int(didianlist[this_map]['need']) + 1) * 200
+                    get_score = (int(didianlist[this_map]['need']) + 1) * 300
                     SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
                 await bot.send(mes)
@@ -944,7 +944,7 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
 
                 zs_num = int(math.floor(random.uniform(0, 100)))
                 if zs_num <= WIN_EGG:
-                    eggid = get_pokemon_eggid(pokemonid)
+                    eggid = await get_pokemon_eggid(pokemonid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
                     await POKE._add_pokemon_egg(uid, eggid, 1)
             await bot.send(mes)
@@ -960,7 +960,13 @@ async def pokemon_pk_auto(bot, ev: Event):
             '请输入 训练家对战+对战训练家昵称 中间用空格隔开。', at_sender=True
         )
     uid = ev.user_id
-
+    last_send_time = time_send.get_user_time(uid)
+    now_time = time.time()
+    now_time = math.ceil(now_time)
+    send_flag = 0
+    if now_time - last_send_time <= TS_CD:
+        return
+    time_send.record_user_time(uid,now_time)
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
@@ -1189,47 +1195,31 @@ async def map_info_now(bot, ev: Event):
         return await bot.send(
             '您还没有开局，请输入 领取初始精灵+初始宝可梦名称。', at_sender=True
         )
-    mes = []
+    mes = ''
     buttons = []
     buttons.append(Button('前往', '前往', action=2))
     diquname = diqulist[didianlist[this_map]['fname']]['name']
-    mes.append(MessageSegment.text(f'当前所在地为:{diquname}-{this_map}\n'))
+    mes += f'当前所在地为:{diquname}-{this_map}\n'
     if didianlist[this_map]['type'] == '城镇':
         get_score = (int(didianlist[this_map]['need']) + 1) * 5000
         buttons.append(Button('打工', '打工'))
-        mes.append(
-            MessageSegment.text(f'当前所在地打工可获得{get_score}金币\n')
-        )
+        mes += f'当前所在地打工可获得{get_score}金币\n'
     if didianlist[this_map]['type'] == '野外':
         buttons.append(Button('🏝野外探索', '野外探索'))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
-        mes.append(
-            MessageSegment.text(
-                f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'
-            )
-        )
-        mes.append(
-            MessageSegment.text(
-                f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"
-            )
-        )
+        mes += f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'
+        mes += f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"
         if didianlist[this_map]['pokemon_s']:
             buttons.append(Button('🏝野外垂钓', '野外垂钓'))
             pokemon_s_list = didianlist[this_map]['pokemon_s']
-            mes.append(MessageSegment.text('当前所在地野外垂钓遭遇的精灵为\n'))
+            mes += '当前所在地野外垂钓遭遇的精灵为\n'
             for item in pokemon_s_list:
-                mes.append(
-                    MessageSegment.text(f'拥有徽章数大于{item!s}枚时\n')
-                )
+                mes += f'拥有徽章数大于{item!s}枚时\n'
                 name_str = get_pokemon_name_list(
                     pokemon_s_list[item]['pokemon']
                 )
-                mes.append(MessageSegment.text(f'{name_str}\n'))
-                mes.append(
-                    MessageSegment.text(
-                        f"等级:{pokemon_s_list[item]['level'][0]}-{pokemon_s_list[item]['level'][1]}\n"
-                    )
-                )
+                mes += f'{name_str}\n'
+                mes += f"等级:{pokemon_s_list[item]['level'][0]}-{pokemon_s_list[item]['level'][1]}\n"
     await bot.send_option(mes, buttons)
 
 
