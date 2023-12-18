@@ -647,7 +647,7 @@ async def get_pokemon_eggid(pokemonid):
 async def get_chushou_flag(zhuangtai):
     chushou = 1
     if zhuangtai[0][0] in tingzhilist and int(zhuangtai[0][1]) > 0:
-        mychushou = 0
+        chushou = 0
     if zhuangtai[0][0] in chushoulist and int(zhuangtai[0][1]) > 0:
         if zhuangtai[0][0] == '麻痹':
             shuzhi = 25
@@ -1150,12 +1150,12 @@ async def pokemon_fight_s(
             myinfo, diinfo, myjinenglist, dijinenglist, changdi
         )
         jinenginfo1 = JINENG_LIST[jineng1]
-        print(jineng1)
+        #print(jineng1)
         jineng2 = now_use_jineng(
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
-        print(jineng2)
+        #print(jineng2)
         img_height += 30
         if math.ceil((img_height + 50) / 1280) > bg_num:
             bg_num += 1
@@ -2246,7 +2246,7 @@ def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
         return mes, pokemon_info
 
 
-def get_need_exp(pokemonid, level):
+async def get_need_exp(pokemonid, level):
     zhongzu = POKEMON_LIST[pokemonid]
     zhongzu_info = []
     for item in [1, 2, 3, 4, 5, 6]:
@@ -2260,10 +2260,10 @@ def get_need_exp(pokemonid, level):
 
 
 # 增加角色经验
-def add_exp(uid, pokemonid, exp):
+async def add_exp(uid, pokemonid, exp):
     levelinfo = POKE._get_pokemon_level(uid, pokemonid)
     now_level = levelinfo[0]
-    need_exp = get_need_exp(pokemonid, now_level)
+    need_exp = await get_need_exp(pokemonid, now_level)
     now_exp = levelinfo[1] + exp
     level_flag = 0
     if now_level >= 100:
@@ -2273,7 +2273,7 @@ def add_exp(uid, pokemonid, exp):
     while now_exp >= need_exp:
         now_level = now_level + 1
         now_exp = now_exp - need_exp
-        need_exp = get_need_exp(pokemonid, now_level)
+        need_exp = await get_need_exp(pokemonid, now_level)
         if now_level >= 100:
             level_flag = 1
             last_exp = now_exp * 0.1
@@ -2314,7 +2314,7 @@ async def get_win_reward(
         level_xz = max((0 - level) / 2, level_xz)
     get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.5)
     mes = ''
-    mesg = add_exp(uid, mypokemonid, get_exp)
+    mesg = await add_exp(uid, mypokemonid, get_exp)
     mes += mesg
     # 获得努力值
     nl_num = 0

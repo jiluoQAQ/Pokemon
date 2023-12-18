@@ -15,6 +15,7 @@ from .until import *
 from .map import *
 from .fight import *
 from .prop import *
+from .draw_image import draw_pokemon_info
 
 sv_pokemon_duel = SV('宝可梦状态', priority=5)
 
@@ -52,7 +53,8 @@ async def pokemon_help(bot, ev: Event):
 20、更新队伍[精灵名](更新手持队伍信息，不同的宝可梦用空格分隔，最多4只)
 21、无级别对战[昵称/at对方]与其他训练家进行一场无等级限制的手动对战
 22、大量出现信息(查询当前随机出现的大量宝可梦消息)
-23、道具帮助(查看道具系统/交易所的使用说明)
+23、宝可梦重生[精灵名](让等级到100级的精灵重生为精灵蛋)
+24、道具帮助(查看道具系统/交易所的使用说明)
 注:
 同一类型的精灵只能拥有一只(进化型为不同类型)
 后续功能在写了在写了(新建文件夹)
@@ -214,7 +216,7 @@ async def show_poke_info(bot, ev: Event):
     await bot.send_option(mes, buttons)
 
 @sv_pokemon_duel.on_command(('精灵状态', '宝可梦状态'))
-async def get_my_poke_info(bot, ev: Event):
+async def get_my_poke_info_t(bot, ev: Event):
     args = ev.text.split()
     if len(args) != 1:
         return await bot.send(
@@ -230,57 +232,19 @@ async def get_my_poke_info(bot, ev: Event):
         return await bot.send(
             f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
         )
-    HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
-        bianhao, pokemon_info
-    )
-    img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
-    img = await convert_img(img)
-    mes = []
-
-    startype = await POKE.get_pokemon_star(uid, bianhao)
-    mes.append(MessageSegment.image(img))
-    mes.append(
-        MessageSegment.text(
-            f'{starlist[startype]}{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\n属性值[种族值](个体值)\nHP:{HP}[{POKEMON_LIST[bianhao][1]}]({pokemon_info[1]})\n物攻:{W_atk}[{POKEMON_LIST[bianhao][2]}]({pokemon_info[2]})\n物防:{W_def}[{POKEMON_LIST[bianhao][3]}]({pokemon_info[3]})\n特攻:{M_atk}[{POKEMON_LIST[bianhao][4]}]({pokemon_info[4]})\n特防:{M_def}[{POKEMON_LIST[bianhao][5]}]({pokemon_info[5]})\n速度:{speed}[{POKEMON_LIST[bianhao][6]}]({pokemon_info[6]})\n努力值:{pokemon_info[7]},{pokemon_info[8]},{pokemon_info[9]},{pokemon_info[10]},{pokemon_info[11]},{pokemon_info[12]}\n'
-        )
-    )
-    mes.append(MessageSegment.text(f'可用技能\n{pokemon_info[14]}'))
-    jinenglist = get_level_jineng(pokemon_info[0], bianhao)
-    mes.append(MessageSegment.text('\n当前等级可学习的技能为：\n'))
-    for jn_name in jinenglist:
-        mes.append(MessageSegment.text(f'{jn_name},'))
-    if pokemon_info[0] < 100:
-        need_exp = get_need_exp(bianhao, pokemon_info[0]) - pokemon_info[15]
-        mes.append(MessageSegment.text(f'\n下级所需经验{need_exp}'))
-    buttonlist = ['学习技能', '遗忘技能']
+    im,jinhualist = await draw_pokemon_info(pokemon_info,bianhao)
     buttons = [
         Button('📖学习技能', f'学习技能 {pokename}', action=2),
         Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
     ]
-    for pokemonid in POKEMON_LIST:
-        if len(POKEMON_LIST[pokemonid]) > 8:
-            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao):
-                if POKEMON_LIST[pokemonid][9].isdigit():
-                    mes.append(
-                        MessageSegment.text(
-                            f'\nLv.{POKEMON_LIST[pokemonid][9]} 可进化为{POKEMON_LIST[pokemonid][0]}'
-                        )
-                    )
-                else:
-                    mes.append(
-                        MessageSegment.text(
-                            f'\n使用道具 {POKEMON_LIST[pokemonid][9]} 可进化为{POKEMON_LIST[pokemonid][0]}'
-                        )
-                    )
-                buttons.append(
-                    Button(
-                        f'⏫宝可梦进化{POKEMON_LIST[pokemonid][0]}',
-                        f'宝可梦进化{POKEMON_LIST[pokemonid][0]}',
-                    )
-                )
-    # print(buttonlist)
-    await bot.send_option(mes, buttons)
-
+    for jinhuainfo in jinhualist:
+        buttons.append(
+            Button(
+                f'⏫宝可梦进化{jinhuainfo[1]}',
+                f'宝可梦进化{jinhuainfo[1]}',
+            )
+        )
+    await bot.send_option(im, buttons)
 
 @sv_pokemon_duel.on_fullmatch(('初始精灵列表', '初始宝可梦列表'))
 async def get_chushi_list(bot, ev: Event):
@@ -773,6 +737,95 @@ async def my_pokemon_gt_up(bot, ev: Event):
         await bot.send_option(mes, buttons)
 
 
+@sv_pokemon_duel.on_command(['宝可梦重生'])
+async def get_pokemon_form_chongsheng(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) != 1:
+        return await bot.send('请输入 宝可梦重生+宝可梦名称。', at_sender=True)
+    pokename = args[0]
+    uid = ev.user_id
+    bianhao = await get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+
+    my_pokemon_info = await get_pokeon_info(uid, bianhao)
+    if my_pokemon_info == 0:
+        return await bot.send(
+            f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
+        )
+    if my_pokemon_info[0]<100:
+        return await bot.send(f'您的{pokename}等级不足100，无法重生。', at_sender=True)
+    
+    my_pokemon = POKE._get_pokemon_num(uid)
+    if my_pokemon == 1:
+        return await bot.send('您就这么一只精灵了，无法重生。', at_sender=True)
+    
+    eggid = await get_pokemon_eggid(bianhao)
+    await POKE._add_pokemon_egg(uid, eggid, 1)
+    await fangshen(uid, bianhao)
+    mes = f'{pokename}重生成功，您获得了{POKEMON_LIST[eggid][0]}精灵蛋x1'
+    buttons = [
+        Button('📖宝可梦孵化', f'宝可梦孵化{POKEMON_LIST[eggid][0]}'),
+    ]
+    if ev.bot_id == 'qqgroup':
+        await bot.send(mes, at_sender=True)
+    else:
+        await bot.send_option(mes, buttons)
+
+@sv_pokemon_duel.on_command(['赠送物品'])
+async def give_prop_pokemon_egg(bot, ev: Event):
+    args = ev.text.split()
+    uid = ev.user_id
+    if len(args) < 2:
+        return await bot.send('请输入 赠送物品[道具/精灵蛋][名称][数量]。', at_sender=True)
+    if ev.at is not None:
+        suid = ev.at
+        smapinfo = POKE._get_map_now(suid)
+        if smapinfo[2] == 0:
+            return await bot.send(
+                '没有找到该训练家，请at需要赠送的对象/该人员未成为训练家。',
+                at_sender=True,
+            )
+        sname = smapinfo[2]
+    proptype = args[0]
+    if proptype not in ['道具','精灵蛋','宝可梦蛋','蛋']:
+        return await bot.send('请输入正确的类型 道具/精灵蛋。', at_sender=True)
+    propname = args[1]
+    if len(args) == 3:
+        propnum = int(args[2])
+    else:
+        propnum = 1
+    if propnum < 1:
+        return await bot.send('赠送物品的数量需大于1。', at_sender=True)
+    if proptype == '道具':
+        propkeylist = proplist.keys()
+        if propname not in propkeylist:
+            return await bot.send('无法找到该道具，请输入正确的道具名称。', at_sender=True)
+        mypropnum = await POKE._get_pokemon_prop(uid, propname)
+        if mypropnum == 0:
+            return await bot.send(f'您还没有{propname}哦。', at_sender=True)
+        if mypropnum < propnum:
+            return await bot.send(f'您的{propname}数量小于{propnum}，赠送失败。', at_sender=True)
+        await POKE._add_pokemon_prop(uid, propname, 0 - propnum)
+        await POKE._add_pokemon_prop(suid, propname, propnum)
+        mes = f'您赠送给了{sname} 道具{propname}x{propnum}。'
+    if proptype == '精灵蛋' or proptype == '宝可梦蛋' or proptype == '蛋':
+        proptype = '精灵蛋'
+        bianhao = await get_poke_bianhao(propname)
+        if bianhao == 0:
+            return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+        egg_num = await POKE.get_pokemon_egg(uid, bianhao)
+        if egg_num == 0:
+            return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
+        if egg_num < propnum:
+            return await bot.send(f'您的{pokename}精灵蛋数量小于{propnum}，赠送失败。', at_sender=True)
+        
+        await POKE._add_pokemon_egg(uid, bianhao, 0 - propnum)
+        await POKE._add_pokemon_egg(suid, bianhao, propnum)
+        mes = f'您赠送给了{sname} {propname}精灵蛋x{propnum}。'
+    await bot.send(mes)
+    
+    
 @sv_pokemon_duel.on_prefix(['宝可梦孵化'])
 async def get_pokemon_form_egg(bot, ev: Event):
     args = ev.text.split()
