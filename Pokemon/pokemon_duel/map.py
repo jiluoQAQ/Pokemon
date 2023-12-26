@@ -1353,6 +1353,49 @@ async def new_pokemom_show(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
+@sv_pm_config.on_command(['发放奖励'])
+async def give_prop_pokemon_info(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) < 2:
+        return await bot.send('请输入 发放奖励[道具/精灵蛋][名称][数量]。', at_sender=True)
+    if ev.at is not None:
+        suid = ev.at
+        smapinfo = POKE._get_map_now(suid)
+        if smapinfo[2] == 0:
+            return await bot.send(
+                '没有找到该训练家，请at需要发放奖励的对象/该人员未成为训练家。',
+                at_sender=True,
+            )
+        sname = smapinfo[2]
+    proptype = args[0]
+    if proptype not in ['金币','金钱','道具','精灵蛋','宝可梦蛋','蛋']:
+        return await bot.send('请输入正确的类型 道具/精灵蛋。', at_sender=True)
+    propname = args[1]
+    if len(args) == 3:
+        propnum = int(args[2])
+    else:
+        propnum = 1
+    if propnum < 1:
+        return await bot.send('赠送物品的数量需大于1。', at_sender=True)
+    if proptype == '金币' or proptype == '金钱':
+        propnum = int(args[1])
+        SCORE.update_score(suid, propnum)
+        mes = f'奖励发放成功！{sname} 获得了金币x{propnum}。'
+    if proptype == '道具':
+        propkeylist = proplist.keys()
+        if propname not in propkeylist:
+            return await bot.send('无法找到该道具，请输入正确的道具名称。', at_sender=True)
+        await POKE._add_pokemon_prop(suid, propname, propnum)
+        mes = f'奖励发放成功！{sname} 获得了道具{propname}x{propnum}。'
+    if proptype == '精灵蛋' or proptype == '宝可梦蛋' or proptype == '蛋':
+        proptype = '精灵蛋'
+        bianhao = await get_poke_bianhao(propname)
+        if bianhao == 0:
+            return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+        await POKE._add_pokemon_egg(suid, bianhao, propnum)
+        mes = f'奖励发放成功！{sname} 获得了 {propname}精灵蛋x{propnum}。'
+    await bot.send(mes)
+
 @sv_pokemon_map.on_fullmatch(['标记消息推送'])
 async def new_refresh_send_group(bot, ev: Event):
     groupid = ev.group_id

@@ -3,6 +3,7 @@ import os
 import random
 import math
 import textwrap
+import json
 from PIL import Image, ImageDraw
 import copy
 from async_timeout import timeout
@@ -31,6 +32,10 @@ WORK_NUM = 2
 random_egg_buy = 50
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 
+Excel_path = Path(__file__).parent
+with Path.open(Excel_path / 'prop.json', encoding='utf-8') as f:
+    prop_dict = json.load(f)
+    proplist = prop_dict['proplist']
 
 async def get_poke_bianhao(name):
     for bianhao in CHARA_NAME:
@@ -70,30 +75,31 @@ youxian = [
 ]
 # 性格列表
 list_xingge = [
-    '实干',
-    '孤僻',
-    '勇敢',
+    '勤奋',
+    '怕寂寞',
     '固执',
-    '调皮',
+    '顽皮',
+    '勇敢',
     '大胆',
     '坦率',
-    '悠闲',
     '淘气',
-    '无虑',
-    '胆小',
-    '急躁',
-    '认真',
-    '天真',
-    '保守',
-    '稳重',
-    '冷静',
+    '乐天',
+    '悠闲',
+    '内敛',
+    '慢吞吞',
     '害羞',
     '马虎',
-    '沉着',
+    '冷静',
+    '温和',
     '温顺',
-    '狂妄',
     '慎重',
     '浮躁',
+    '自大',
+    '胆小',
+    '急躁',
+    '爽朗',
+    '天真',
+    '认真',
 ]
 # 初始精灵列表
 chushi_list = [
@@ -177,11 +183,11 @@ def add_pokemon(uid, bianhao, startype=0):
     pokemon_info = []
     level = 5
     pokemon_info.append(level)
-    gtmax = 0
+    gtmax = []
     if startype > 0:
-        gtmax = random.sample([1, 2, 3, 4, 5, 6], 1)[0]
+        gtmax = random.sample([1, 2, 3, 4, 5, 6], startype)
     for num in range(1, 7):
-        if gtmax == num:
+        if num in gtmax:
             gt_num = 31
         else:
             gt_num = int(math.floor(random.uniform(1, 32)))
@@ -2221,6 +2227,8 @@ def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
     if nl_z >= 510:
         mes = ''
         return mes, pokemon_info
+    change_z = 510 - nl_z
+    nl_num = min(nl_num,change_z)
     nl_index = int(zhongzhuid + 7)
     change_nl = min(252, nl_num + pokemon_info[nl_index])
     if change_nl > pokemon_info[nl_index]:

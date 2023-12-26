@@ -287,6 +287,8 @@ async def prop_use(bot, ev: Event):
                 )
             add_num = propnum * propinfo['use'][2]
             need_num = 252 - pokemon_info[nl_index]
+            need_z = 510 - nl_z
+            need_num = min(need_num,need_z)
             if add_num < need_num:
                 use_peop_num = propnum
             else:

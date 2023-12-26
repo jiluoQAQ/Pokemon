@@ -52,11 +52,12 @@ JINENG_LEIXING = {
     '特殊':(0,-762),
     '变化':(0,-802),
 }
-async def draw_pokemon_info(pokemon_info,bianhao):
-    bg_height = 900
+async def draw_pokemon_info(uid,pokemon_info,bianhao):
+    bg_height = 770
     jinenglist = get_level_jineng(pokemon_info[0], bianhao)
     jineng_num = len(jinenglist)
-    bg_height += math.ceil(jineng_num / 4) * 45
+    if jineng_num > 0:
+        bg_height += math.ceil(jineng_num / 4) * 45 + 130
     jinhualist = []
     for pokemonid in POKEMON_LIST:
         if len(POKEMON_LIST[pokemonid]) > 8:
@@ -70,17 +71,30 @@ async def draw_pokemon_info(pokemon_info,bianhao):
     bg_center = Image.open(TEXT_PATH / 'bg_center.jpg').resize((900, bg_height))
     img.paste(bg_center, (0, 62))
     img.paste(info_bottom_img, (0, bg_height + 62))
-    
+    startype = await POKE.get_pokemon_star(uid, bianhao)
+    starlist_draw = {
+        0: '',
+        1: '★',
+        2: '◆',
+    }
     img.paste(info_title_img, (0, 41), info_title_img)
     img_draw = ImageDraw.Draw(img)
     #画名称标题
     img_draw.text(
         (285, 121),
-        f'{POKEMON_LIST[bianhao][0]}',
+        f'{starlist_draw[startype]}{POKEMON_LIST[bianhao][0]}',
         info_text_color,
         sr_font_40,
         'mm',
     )
+    if startype > 0:
+        img_draw.text(
+            (350, 190),
+            f'{starlist_draw[startype]}',
+            (255,255,0),
+            sr_font_40,
+            'mm',
+        )
     img_draw.text(
         (516, 132),
         '属性',
@@ -211,30 +225,32 @@ async def draw_pokemon_info(pokemon_info,bianhao):
             'mm',
         )
         img.paste(jineng_temp,(187 * shul + 82, 710),jineng_temp)
-    img.paste(skill_title,(77, 770),skill_title)
-    img_draw.text(
-        (274, 807),
-        '回忆技能',
-        info_text_color,
-        sr_font_40,
-        'mm',
-    )
-    for shul,jineng in enumerate(jinenglist):
-        jn_y = math.floor(shul/4)
-        jn_x = shul - (4 * jn_y)
-        jineng_img = Image.new('RGBA', (180, 38), SHUX_LIST_DRAW[JINENG_LIST[jineng][0]][0])
-        jineng_img.paste(sx_image, JINENG_LEIXING[JINENG_LIST[jineng][1]], sx_image)
-        jineng_temp = Image.new('RGBA', (180, 38))
-        jineng_temp.paste(jineng_img, (0, 0), jineng_bar_mask)
-        jineng_draw = ImageDraw.Draw(jineng_temp)
-        jineng_draw.text(
-            (100, 19),
-            f'{jineng}',
-            (255,255,255),
-            sr_font_28,
+    jn_y = 0
+    if len(jinenglist) > 0:
+        img.paste(skill_title,(77, 770),skill_title)
+        img_draw.text(
+            (274, 807),
+            '回忆技能',
+            info_text_color,
+            sr_font_40,
             'mm',
         )
-        img.paste(jineng_temp,(187 * jn_x + 82, jn_y * 45 + 860),jineng_temp)
+        for shul,jineng in enumerate(jinenglist):
+            jn_y = math.floor(shul/4)
+            jn_x = shul - (4 * jn_y)
+            jineng_img = Image.new('RGBA', (180, 38), SHUX_LIST_DRAW[JINENG_LIST[jineng][0]][0])
+            jineng_img.paste(sx_image, JINENG_LEIXING[JINENG_LIST[jineng][1]], sx_image)
+            jineng_temp = Image.new('RGBA', (180, 38))
+            jineng_temp.paste(jineng_img, (0, 0), jineng_bar_mask)
+            jineng_draw = ImageDraw.Draw(jineng_temp)
+            jineng_draw.text(
+                (100, 19),
+                f'{jineng}',
+                (255,255,255),
+                sr_font_28,
+                'mm',
+            )
+            img.paste(jineng_temp,(187 * jn_x + 82, jn_y * 45 + 860),jineng_temp)
     if len(jinhualist) > 0:
         start_y = (jn_y + 1) * 45 + 880
         img.paste(up_title,(77, start_y),up_title)

@@ -619,7 +619,7 @@ def get_shanghai_pt_xh(
     if yaohai_xz > 1:
         mes = mes + '命中要害，'
     mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
-    hx_num = shanghai * int(xh_bl)
+    hx_num = math.ceil(shanghai * float(xh_bl))
     now_my_hp = min(myinfo[3], myinfo[17] + hx_num)
     last_my_hp = now_my_hp - myinfo[17]
     myinfo[17] = now_my_hp
@@ -1151,7 +1151,7 @@ def get_tianqi_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
 
 def up_my_hp(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, bh_bl):
     jinenginfo = JINENG_LIST[jineng]
-    hx_num = myinfo[3] * int(bh_bl)
+    hx_num = math.ceil(myinfo[3] * float(bh_bl))
     now_my_hp = min(myinfo[3], myinfo[17] + hx_num)
     last_my_hp = now_my_hp - myinfo[17]
     myinfo[17] = now_my_hp

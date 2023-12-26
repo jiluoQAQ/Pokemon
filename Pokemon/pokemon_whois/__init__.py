@@ -209,6 +209,9 @@ async def pokemon_whois(bot: Bot, ev: Event):
     await bot.send(mes)
     # print(img_send)
     await bot.send(img)
+    buttons = [
+        Button('✅查看图鉴', f'精灵图鉴{name}'),
+    ]
     try:
         async with timeout(ONE_TURN_TIME):
             while True:
@@ -237,8 +240,9 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
                         # msg =  [MessageSegment.text(f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:'),MessageSegment.image(win_mes)]
-                        await bot.send(
-                            f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                        await bot.send_option(
+                            f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}',
+                            buttons
                         )
                         await bot.send(win_mes)
                         return
@@ -248,7 +252,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
         winner_judger.turn_off(ev.group_id)
         return
     winner_judger.turn_off(ev.group_id)
-    await bot.send(f'很遗憾，没有人答对~\n正确答案是:{name}')
+    await bot.send_option(f'很遗憾，没有人答对~\n正确答案是:{name}',buttons)
     await bot.send(win_mes)
     # msg =  [MessageSegment.text('正确答案是:'),MessageSegment.image(win_mes),MessageSegment.text('')]
     # await bot.send(msg)

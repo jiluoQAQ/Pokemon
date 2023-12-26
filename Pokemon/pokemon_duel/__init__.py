@@ -48,7 +48,7 @@ async def pokemon_help(bot, ev: Event):
 15、挑战[道馆][天王][四天王冠军](通过战胜[道馆][天王][四天王冠军]获得徽章称号，进一步解锁功能)
 16、查看地图[地区名](查询[地区名]的地点信息，[地区名]可留空，默认所在地区)
 17、我的精灵蛋(查询我的精灵蛋信息)
-18、重置个体值[精灵名](消耗一枚[精灵名]初始形态的精灵蛋对[精灵名]的个体值进行重置)
+18、重置个体值[精灵名](消耗一枚[精灵名]初始形态的精灵蛋对[精灵名]的个体值进行重置,后面跟数量可以进行多次重置)
 19、宝可梦孵化[精灵名](消耗一枚[精灵名]的精灵蛋孵化出一只lv.5的[精灵名])
 20、更新队伍[精灵名](更新手持队伍信息，不同的宝可梦用空格分隔，最多4只)
 21、无级别对战[昵称/at对方]与其他训练家进行一场无等级限制的手动对战
@@ -208,7 +208,7 @@ async def show_poke_info(bot, ev: Event):
                     )
                 buttons.append(
                     Button(
-                        f'📖精灵图鉴{POKEMON_LIST[pokemonid][0]}',
+                        f'📖图鉴{POKEMON_LIST[pokemonid][0]}',
                         f'精灵图鉴{POKEMON_LIST[pokemonid][0]}',
                     )
                 )
@@ -232,15 +232,15 @@ async def get_my_poke_info_t(bot, ev: Event):
         return await bot.send(
             f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
         )
-    im,jinhualist = await draw_pokemon_info(pokemon_info,bianhao)
+    im,jinhualist = await draw_pokemon_info(uid,pokemon_info,bianhao)
     buttons = [
-        Button('📖学习技能', f'学习技能 {pokename}', action=2),
-        Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
+        Button('📖学技能', f'学习技能{pokename}', action=2),
+        Button('📖遗忘技能', f'遗忘技能{pokename}', action=2),
     ]
     for jinhuainfo in jinhualist:
         buttons.append(
             Button(
-                f'⏫宝可梦进化{jinhuainfo[1]}',
+                f'⏫进化{jinhuainfo[1]}',
                 f'宝可梦进化{jinhuainfo[1]}',
             )
         )
@@ -683,10 +683,10 @@ async def my_pokemon_egg_use(bot, ev: Event):
         await bot.send_option(mes, buttons)
 
 
-@sv_pokemon_duel.on_prefix(('重置个体值', '个体值重置'))
+@sv_pokemon_duel.on_command(('重置个体值', '个体值重置'))
 async def my_pokemon_gt_up(bot, ev: Event):
     args = ev.text.split()
-    if len(args) != 1:
+    if len(args) < 1:
         return await bot.send('请输入 重置个体值+宝可梦名称。', at_sender=True)
     pokename = args[0]
     uid = ev.user_id
@@ -698,35 +698,109 @@ async def my_pokemon_gt_up(bot, ev: Event):
         return await bot.send(
             f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
         )
-    HP_o, W_atk_o, W_def_o, M_atk_o, M_def_o, speed_o = await get_pokemon_shuxing(
-        bianhao, my_pokemon_info
-    )
+    if len(args) == 2:
+        rest_num = int(args[1])
+    else:
+        rest_num = 1
+    
     kidid = await get_pokemon_eggid(bianhao)
-
     egg_num = await POKE.get_pokemon_egg(uid, kidid)
     if egg_num == 0:
         return await bot.send(
             f'重置个体值需要消耗1枚同一种类型的精灵蛋哦，您没有{POKEMON_LIST[kidid][0]}的精灵蛋。',
             at_sender=True,
         )
-    await POKE._add_pokemon_egg(uid, kidid, -1)
-    startype = await POKE.get_pokemon_star(uid, bianhao)
-    new_star_type = await get_pokemon_star(uid)
-    if new_star_type > startype:
-        startype = new_star_type
-        await POKE.update_pokemon_star(uid, bianhao, startype)
-    pokemon_info = await new_pokemon_gt(uid, bianhao, startype)
-
-    HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
-        bianhao, pokemon_info
+    HP_o, W_atk_o, W_def_o, M_atk_o, M_def_o, speed_o = await get_pokemon_shuxing(
+        bianhao, my_pokemon_info
     )
-    mes = f'{starlist[startype]}{pokename}个体值重置成功，重置后属性如下\n'
-    if new_star_type > 0:
-        mes += '您的宝可梦形态好像发生了改变\n'
-    mes += f'HP:{HP_o}→{HP}({my_pokemon_info[1]}→{pokemon_info[1]})\n物攻:{W_atk_o}→{W_atk}({my_pokemon_info[2]}→{pokemon_info[2]})\n物防:{W_def_o}→{W_def}({my_pokemon_info[3]}→{pokemon_info[3]})\n特攻:{M_atk_o}→{M_atk}({my_pokemon_info[4]}→{pokemon_info[4]})\n特防:{M_def_o}→{M_def}({my_pokemon_info[5]}→{pokemon_info[5]})\n速度:{speed_o}→{speed}({my_pokemon_info[6]}→{pokemon_info[6]})'
-    starflag = await POKE.get_pokemon_starrush(uid)
-    mes += f'\n({starflag}/1024)'
-    # mes.append(MessageSegment.image(img))
+    if egg_num < rest_num:
+        return await bot.send(
+            f'重置{rest_num}次个体值需要消耗{rest_num}枚同一种类型的精灵蛋哦，您的{POKEMON_LIST[kidid][0]}精灵蛋不足。',
+            at_sender=True,
+        )
+    if rest_num == 1:
+        await POKE._add_pokemon_egg(uid, kidid, -1)
+        startype = await POKE.get_pokemon_star(uid, bianhao)
+        new_star_type = await get_pokemon_star(uid)
+        if new_star_type > startype:
+            startype = new_star_type
+            await POKE.update_pokemon_star(uid, bianhao, startype)
+        pokemon_info = await new_pokemon_gt(uid, bianhao, startype)
+
+        HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
+            bianhao, pokemon_info
+        )
+        change_mes = ''
+        if new_star_type > 0:
+            change_mes = '您的宝可梦形态好像发生了改变\n'
+        mes = f'{change_mes}{starlist[startype]}{pokename}个体值重置成功，重置后属性如下\n'
+        
+        mes += f'HP:{HP_o}→{HP}({my_pokemon_info[1]}→{pokemon_info[1]})\n物攻:{W_atk_o}→{W_atk}({my_pokemon_info[2]}→{pokemon_info[2]})\n物防:{W_def_o}→{W_def}({my_pokemon_info[3]}→{pokemon_info[3]})\n特攻:{M_atk_o}→{M_atk}({my_pokemon_info[4]}→{pokemon_info[4]})\n特防:{M_def_o}→{M_def}({my_pokemon_info[5]}→{pokemon_info[5]})\n速度:{speed_o}→{speed}({my_pokemon_info[6]}→{pokemon_info[6]})'
+        starflag = await POKE.get_pokemon_starrush(uid)
+        mes += f'\n({starflag}/1024)'
+        # mes.append(MessageSegment.image(img))
+        
+    else:
+        startype = await POKE.get_pokemon_star(uid, bianhao)
+        starflag = await POKE.get_pokemon_starrush(uid)
+        jishu = 0
+        rest_flag = 0
+        while rest_num > 0 and rest_flag == 0:
+            starflag += 1
+            jishu += 1
+            rest_num = rest_num - 1
+            star_num = int(math.floor(random.uniform(0, 40960)))
+            new_star_type = 0
+            if starflag >= 1024 or star_num <= 10:
+                new_star_type = 1
+                star_num2 = int(math.floor(random.uniform(0, 160)))
+                print(star_num2)
+                if star_num2 <= 10:
+                    new_star_type = 2
+            if starflag == 1023:
+                rest_flag = 1
+            if new_star_type > 0:
+                starflag = 0
+                rest_flag = 2
+            if new_star_type > startype:
+                startype = new_star_type
+                await POKE.update_pokemon_star(uid, bianhao, startype)
+            pokemon_info = []
+            pokemon_info.append(my_pokemon_info[0])
+            gtmax = []
+            if startype > 0:
+                gtmax = random.sample([1, 2, 3, 4, 5, 6], startype)
+            gt_max_sl = 0
+            for num in range(1, 7):
+                if num in gtmax:
+                    gt_num = 31
+                else:
+                    gt_num = int(math.floor(random.uniform(1, 32)))
+                pokemon_info.append(gt_num)
+                if gt_num == 31:
+                    gt_max_sl += 1
+            if gt_max_sl >= 3:
+                rest_flag = 3
+            for num in range(7, 15):
+                pokemon_info.append(my_pokemon_info[num])
+        await POKE.update_pokemon_starrush(uid, jishu)
+        if rest_flag == 0:
+            mes = f'个体值{jishu}次重置完成，重置后属性如下'
+        if rest_flag == 1:
+            mes = f'个体值{jishu}次重置成功，还差一次就出闪光啦，重置后属性如下'
+        if rest_flag == 2:
+            mes = f'个体值{jishu}次重置成功，您的精灵形象发生了改变，重置后属性如下'
+            await POKE.new_pokemon_starrush(uid)
+        if rest_flag == 3:
+            mes = f'个体值{jishu}次重置成功，您的精灵拥有了很高的潜力，重置后属性如下'
+        await POKE._add_pokemon_egg(uid, kidid, 0 - jishu)
+        POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
+        HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
+            bianhao, pokemon_info
+        )
+        mes += f'\n{starlist[startype]}{pokename}\n'
+        mes += f'HP:{HP_o}→{HP}({my_pokemon_info[1]}→{pokemon_info[1]})\n物攻:{W_atk_o}→{W_atk}({my_pokemon_info[2]}→{pokemon_info[2]})\n物防:{W_def_o}→{W_def}({my_pokemon_info[3]}→{pokemon_info[3]})\n特攻:{M_atk_o}→{M_atk}({my_pokemon_info[4]}→{pokemon_info[4]})\n特防:{M_def_o}→{M_def}({my_pokemon_info[5]}→{pokemon_info[5]})\n速度:{speed_o}→{speed}({my_pokemon_info[6]}→{pokemon_info[6]})'
+        mes += f'\n({starflag}/1024)'
     buttons = [
         Button('📖精灵状态', f'精灵状态{pokename}'),
         Button('📖重置个体值', f'重置个体值{pokename}'),
@@ -735,7 +809,6 @@ async def my_pokemon_gt_up(bot, ev: Event):
         await bot.send(mes, at_sender=True)
     else:
         await bot.send_option(mes, buttons)
-
 
 @sv_pokemon_duel.on_command(['宝可梦重生'])
 async def get_pokemon_form_chongsheng(bot, ev: Event):
