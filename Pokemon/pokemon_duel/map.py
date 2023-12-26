@@ -30,6 +30,7 @@ TS_FIGHT = 20
 TS_PROP = 10
 TS_POKEMON = 70
 WIN_EGG = 18
+WIN_PROP = 15
 DALIANG_POKE = 30
 QUN_POKE = 15
 TS_CD = 2
@@ -819,8 +820,18 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                     eggid = await get_pokemon_eggid(pokemonid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x{egg_num}'
                     await POKE._add_pokemon_egg(uid, eggid, egg_num)
+                pp_num = int(math.floor(random.uniform(0, 100)))
+                if pp_num <= WIN_PROP:
+                    ppname = ''
+                    while ppname == '':
+                        xuexi_list = POKEMON_XUEXI[pokemonid]
+                        jineng_name = random.sample(xuexi_list, 1)[0]
+                        if JINENG_LIST[jineng_name][6] != '':
+                            ppname = jineng_name
+                    await POKE._add_pokemon_technical(uid,ppname,1)
+                    mes += f'\n您获得了招式学习机[{ppname}]x1'
             await bot.send(mes)
-
+            
         else:
             ts_quality += TS_FIGHT
             if ts_num <= ts_quality:
@@ -947,6 +958,16 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
                     eggid = await get_pokemon_eggid(pokemonid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
                     await POKE._add_pokemon_egg(uid, eggid, 1)
+                pp_num = int(math.floor(random.uniform(0, 100)))
+                if pp_num <= WIN_PROP:
+                    ppname = ''
+                    while ppname == '':
+                        xuexi_list = POKEMON_XUEXI[pokemonid]
+                        jineng_name = random.sample(xuexi_list, 1)[0]
+                        if JINENG_LIST[jineng_name][6] != '':
+                            ppname = jineng_name
+                    await POKE._add_pokemon_technical(uid,ppname,1)
+                    mes += f'\n您获得了招式学习机[{ppname}]x1'
             await bot.send(mes)
         else:
             return await bot.send('当前地点无法垂钓', at_sender=True)

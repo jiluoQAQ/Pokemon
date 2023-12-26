@@ -399,6 +399,37 @@ async def prop_my_list(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
+@sv_pokemon_prop.on_command(['我的学习机','我的技能机','我的招式学习机'])
+async def technical_my_list(bot, ev: Event):
+    page = ''.join(re.findall('^[a-zA-Z0-9_\u4e00-\u9fa5]+$', ev.text))
+    if not page:
+        page = 0
+    else:
+        page = int(page) - 1
+    uid = ev.user_id
+
+    technicalnum,technicallist = await POKE.get_pokemon_technical_list(uid)
+    if technicalnum == 0:
+        return await bot.send('您还没有招式学习机哦。', at_sender=True)
+    page_num = math.floor(technicalnum / 30) + 1
+    mes = '您的招式学习机为(按数量排序一页30个):'
+    for propinfo in technicallist:
+        mes += f'\n{propinfo[0]} 数量 {propinfo[1]}'
+    if page_num > 1:
+        mes += f'\n第({page}/{page_num})页'
+    buttons = [
+        Button('📖技能信息', '精灵技能信息', action=2),
+    ]
+    if page > 1:
+        uppage = page - 1
+        buttons.append(Button('⬅️上一页', f'我的学习机{uppage}'))
+    if page_num > 1:
+        Button(f'⏺️跳转({page}/{page_num})', '我的学习机', action=2)
+    if page < page_num:
+        dowmpage = page + 1
+        buttons.append(Button('➡️下一页', f'我的学习机{dowmpage}'))
+    await bot.send_option(mes, buttons)
+
 @sv_pokemon_prop.on_command(['交易所上架'])
 async def exchange_up_prop(bot, ev: Event):
     #交易所上架 道具 奇异甜食 5 500

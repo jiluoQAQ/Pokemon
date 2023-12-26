@@ -413,11 +413,21 @@ async def add_pokemon_jineng(bot, ev: Event):
             at_sender=True,
         )
     jinengzu = get_level_jineng(pokemon_info[0], bianhao)
-    if jinengname not in jinengzu:
+    xuexizu = JINENG_LIST[bianhao]
+    if jinengname not in jinengzu and jinengname not in xuexizu:
         return await bot.send(
-            '学习失败，不存在该技能或该技能无法在当前等级学习(学习机技能请使用技能学习机进行教学)。',
+            f'学习失败，当前等级学习无法学习该技能或{pokename}无法通过学习机学会该技能。',
             at_sender=True,
         )
+    if jinengname not in jinengzu and jinengname in xuexizu:
+        xuexiji_num = await POKE._get_pokemon_technical(uid, jinengname)
+        if xuexiji_num == 0:
+            return await bot.send(
+                f'学习失败，您的[{jinengname}]技能机数量不足。',
+                at_sender=True,
+            )
+        await POKE._add_pokemon_technical(uid,jinengname,-1)
+        
     jineng = pokemon_info[14] + ',' + jinengname
 
     POKE._add_pokemon_jineng(uid, bianhao, jineng)
@@ -488,7 +498,7 @@ async def del_pokemon_jineng(bot, ev: Event):
 
 
 @sv_pokemon_duel.on_prefix(['精灵技能信息'])
-async def get_jineng_info(bot, ev: Event):
+async def get_jineng_info_text(bot, ev: Event):
     args = ev.text.split()
     if len(args) != 1:
         return await bot.send(

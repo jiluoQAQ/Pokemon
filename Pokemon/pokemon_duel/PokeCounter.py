@@ -18,6 +18,7 @@ class PokeCounter:
         self._create_table_map_refresh()
         self._create_table_refresh_send()
         self._create_table_exchange()
+        self._create_table_technical()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -158,6 +159,71 @@ class PokeCounter:
             )
         except:
             raise Exception('创建表发生错误')
+    
+    def _create_table_technical(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS PROP_TECHNICAL
+                          (UID             TEXT   NOT NULL,
+                           PROP            TEXT   NOT NULL,
+                           NUM             INT    NOT NULL,
+                           PRIMARY KEY(UID, PROP));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    async def get_pokemon_technical_list(self, uid, page=0):
+        num = 30
+        startnum = num * page
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT PROP,NUM FROM PROP_TECHNICAL WHERE UID='{uid}' AND NUM>0 ORDER BY NUM LIMIT {startnum},{num}"
+                ).fetchall()
+                if r:
+                    num = conn.execute(
+                        f"SELECT COUNT(PROP) AS PROPNUM FROM PROP_TECHNICAL WHERE UID='{uid}' AND NUM>0"
+                    ).fetchall()
+                    return num[0][0],r
+                else:
+                    return 0,0
+        except:
+            raise Exception('查找表发生错误')
+
+    async def _new_pokemon_technical(self, uid, propname):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    'INSERT OR REPLACE INTO PROP_TECHNICAL (UID,PROP,NUM) VALUES (?,?,?)',
+                    (uid, propname, 0),
+                )
+        except:
+            raise Exception('更新表发生错误')
+
+    async def _get_pokemon_technical(self, uid, propname):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT NUM FROM PROP_TECHNICAL WHERE UID='{uid}' AND PROP='{propname}'"
+                ).fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    await self._new_pokemon_technical(uid, propname)
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+
+    async def _add_pokemon_technical(self, uid, propname, num):
+        now_num = await self._get_pokemon_technical(uid, propname) + int(num)
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    'INSERT OR REPLACE INTO PROP_TECHNICAL (UID,PROP,NUM) VALUES (?,?,?)',
+                    (uid, propname, now_num),
+                )
+        except:
+            raise Exception('更新表发生错误')
     
     async def new_exchange(self,exchangeid,proptype,propname,num,uid,score,uptime):
         try:
