@@ -1,21 +1,22 @@
-import asyncio
-from os import path
-from PIL import Image
 import random
+import asyncio
+import importlib
+from os import path
+
 import pygtrie
 from gsuid_core.sv import SV
 from gsuid_core.bot import Bot
-from gsuid_core.models import Event
-from PIL import Image, ImageFont, ImageDraw
-from . import poke_data
-import importlib
 from async_timeout import timeout
-from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
-from ..utils.convert import DailyAmountLimiter
-from ..utils.dbbase.ScoreCounter import SCORE_DB
-from ..utils.dbbase.GameCounter import GAME_DB
-from gsuid_core.utils.image.convert import convert_img
+from gsuid_core.models import Event
+from PIL import Image, ImageDraw, ImageFont
 from gsuid_core.message_models import Button
+from gsuid_core.utils.image.convert import convert_img
+
+from . import poke_data
+from ..utils.convert import DailyAmountLimiter
+from ..utils.dbbase.GameCounter import GAME_DB
+from ..utils.dbbase.ScoreCounter import SCORE_DB
+from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 
 PIC_SIDE_LENGTH = 25
 LH_SIDE_LENGTH = 75
@@ -239,10 +240,17 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         winner_judger.record_winner(ev.group_id, ev.user_id)
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
-                        # msg =  [MessageSegment.text(f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:'),MessageSegment.image(win_mes)]
+                        '''
+                        msg = [
+                            MessageSegment.text(
+                                f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:'
+                            ),
+                            MessageSegment.image(win_mes),
+                        ]
+                        '''
                         await bot.send_option(
                             f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}',
-                            buttons
+                            buttons,
                         )
                         await bot.send(win_mes)
                         return
@@ -252,10 +260,16 @@ async def pokemon_whois(bot: Bot, ev: Event):
         winner_judger.turn_off(ev.group_id)
         return
     winner_judger.turn_off(ev.group_id)
-    await bot.send_option(f'很遗憾，没有人答对~\n正确答案是:{name}',buttons)
+    await bot.send_option(f'很遗憾，没有人答对~\n正确答案是:{name}', buttons)
     await bot.send(win_mes)
-    # msg =  [MessageSegment.text('正确答案是:'),MessageSegment.image(win_mes),MessageSegment.text('')]
-    # await bot.send(msg)
+    '''
+    msg = [
+        MessageSegment.text('正确答案是:'),
+        MessageSegment.image(win_mes),
+        MessageSegment.text(''),
+    ]
+    await bot.send(msg)
+    '''
 
 
 @sv_pokemon_whois.on_fullmatch('重置我是谁')

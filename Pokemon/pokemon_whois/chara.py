@@ -1,9 +1,9 @@
+import math
 import importlib
 
 import pygtrie
-from fuzzywuzzy import process
 from PIL import Image
-import math
+from fuzzywuzzy import process
 
 from . import poke_data
 

@@ -1,6 +1,7 @@
-import pytz
 from collections import defaultdict
 from datetime import datetime, timedelta
+
+import pytz
 
 from .dbbase.ScoreCounter import RecordDAO
 
