@@ -409,12 +409,13 @@ async def add_pokemon_jineng(bot, ev: Event):
             at_sender=True,
         )
     jinengzu = get_level_jineng(pokemon_info[0], bianhao)
-    xuexizu = JINENG_LIST[bianhao]
+    xuexizu = POKEMON_XUEXI[bianhao]
     if jinengname not in jinengzu and jinengname not in xuexizu:
         return await bot.send(
             f'学习失败，当前等级学习无法学习该技能或{pokename}无法通过学习机学会该技能。',
             at_sender=True,
         )
+    mes_xh = ''
     if jinengname not in jinengzu and jinengname in xuexizu:
         xuexiji_num = await POKE._get_pokemon_technical(uid, jinengname)
         if xuexiji_num == 0:
@@ -422,12 +423,13 @@ async def add_pokemon_jineng(bot, ev: Event):
                 f'学习失败，您的[{jinengname}]技能机数量不足。',
                 at_sender=True,
             )
-        await POKE._add_pokemon_technical(uid, jinengname, -1)
+        await POKE._add_pokemon_technical(uid,jinengname,-1)
+        mes_xh = f'您消耗了招式学习机[{jinengname}]x1，使'
 
     jineng = pokemon_info[14] + ',' + jinengname
 
     POKE._add_pokemon_jineng(uid, bianhao, jineng)
-    mes = f'恭喜，您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}学会了技能{jinengname}'
+    mes = f'恭喜，{mes_xh}您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}学会了技能{jinengname}'
     buttonlist = ['学习技能', '遗忘技能', f'精灵状态{pokename}']
     buttons = [
         Button('📖学习技能', f'学习技能 {pokename}', action=2),

@@ -36,11 +36,12 @@ async def pokemon_help_prop(bot, ev: Event):
 3、购买道具[道具名][数量](购买道具,数量默认为1)
 4、使用道具[道具名][精灵名][数量](对宝可梦使用道具,数量默认为1)
 5、我的道具(查看我的道具列表)
-6、查看交易所([类型][名称])(查看交易所寄售的商品，类型名称可为空)
-7、交易所上架[类型][名称][数量][单价](上架物品到交易所，例：交易所上架 精灵蛋 皮丘 5 8888)
-8、交易所购买[商品ID][数量](交易所购买商品，数量默认为1)
-9、我的寄售(查看我寄售在交易所的商品)
-10、赠送物品[类型][名称][数量][@xxx](给予xxx对象物品道具/精灵蛋，数量默认为1)
+6、我的学习机(查看我的招式学习机列表)
+7、查看交易所([类型][名称])(查看交易所寄售的商品，类型名称可为空)
+8、交易所上架[类型][名称][数量][单价](上架物品到交易所，例：交易所上架 精灵蛋 皮丘 5 8888)
+9、交易所购买[商品ID][数量](交易所购买商品，数量默认为1)
+10、我的寄售(查看我寄售在交易所的商品)
+11、赠送物品[类型][名称][数量][@xxx](给予xxx对象物品道具/精灵蛋，数量默认为1)
 注：
 交易所寄售的商品出售成功会收取10%的手续费
 PS
@@ -408,10 +409,11 @@ async def technical_my_list(bot, ev: Event):
         page = int(page) - 1
     uid = ev.user_id
 
-    technicalnum,technicallist = await POKE.get_pokemon_technical_list(uid)
+    technicalnum,technicallist = await POKE.get_pokemon_technical_list(uid,page)
     if technicalnum == 0:
         return await bot.send('您还没有招式学习机哦。', at_sender=True)
     page_num = math.floor(technicalnum / 30) + 1
+    page = page + 1
     mes = '您的招式学习机为(按数量排序一页30个):'
     for propinfo in technicallist:
         mes += f'\n{propinfo[0]} 数量 {propinfo[1]}'
