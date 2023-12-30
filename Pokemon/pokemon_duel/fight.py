@@ -1,21 +1,19 @@
-import random
-import copy
-import math
-from PIL import Image, ImageDraw
-from gsuid_core.sv import SV
-from gsuid_core.models import Event
-from gsuid_core.utils.image.convert import convert_img
 import copy
 import json
-from .pokeconfg import *
-from .pokemon import *
-from .PokeCounter import *
-from .until import *
+import math
+import random
 from pathlib import Path
-from ..utils.fonts.starrail_fonts import (
-    sr_font_20,
-    sr_font_24,
-)
+
+from gsuid_core.sv import SV
+from PIL import Image, ImageDraw
+from gsuid_core.models import Event
+from gsuid_core.utils.image.convert import convert_img
+
+from .until import *
+from .pokemon import *
+from .pokeconfg import *
+from .PokeCounter import *
+from ..utils.fonts.starrail_fonts import sr_font_20, sr_font_24
 
 TS_FIGHT = 20
 TS_PROP = 0
@@ -50,9 +48,7 @@ async def pk_vs_daoguan(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
-        return await bot.send(
-            '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
-        )
+        return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
     my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
@@ -69,9 +65,7 @@ async def pk_vs_daoguan(bot, ev: Event):
     mychenghao, huizhang = get_chenghao(uid)
     if int(mapinfo[0]) > 7:
         if int(mapinfo[0]) == 8:
-            return await bot.send(
-                '您已通过8个道馆的挑战，可以去[挑战天王]了 ', at_sender=True
-            )
+            return await bot.send('您已通过8个道馆的挑战，可以去[挑战天王]了 ', at_sender=True)
         if int(mapinfo[0]) == 9:
             return await bot.send(
                 f'您已经是【{mychenghao}】了，可以去[挑战四天王冠军]了，就不要拿小的开玩笑了',
@@ -226,9 +220,7 @@ async def pk_vs_tianwang(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
-        return await bot.send(
-            '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
-        )
+        return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
     my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
@@ -244,9 +236,7 @@ async def pk_vs_tianwang(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     mychenghao, huizhang = get_chenghao(uid)
     if int(mapinfo[0]) < 8:
-        return await bot.send(
-            '请先挑战完8个道馆再向天王发起挑战哦', at_sender=True
-        )
+        return await bot.send('请先挑战完8个道馆再向天王发起挑战哦', at_sender=True)
     if int(mapinfo[0]) > 8:
         if int(mapinfo[0]) == 9:
             return await bot.send(
@@ -405,9 +395,7 @@ async def pk_vs_guanjun(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
-        return await bot.send(
-            '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
-        )
+        return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
     my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(
@@ -423,13 +411,9 @@ async def pk_vs_guanjun(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     mychenghao, huizhang = get_chenghao(uid)
     if int(mapinfo[0]) < 9:
-        return await bot.send(
-            '请先成为【天王训练家】再向冠军发起挑战哦', at_sender=True
-        )
+        return await bot.send('请先成为【天王训练家】再向冠军发起挑战哦', at_sender=True)
     if int(mapinfo[0]) > 9:
-        return await bot.send(
-            f'您已经是【{mychenghao}】，就不要拿同事刷经验了', at_sender=True
-        )
+        return await bot.send(f'您已经是【{mychenghao}】，就不要拿同事刷经验了', at_sender=True)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -641,11 +625,10 @@ async def pokemon_pk_wjb(bot, ev: Event):
 
     if name == diname:
         return await bot.send('不能自己打自己哦。', at_sender=True)
-    
-    
+
     xuanzeflag = 0
     rundinum = 0
-    xuanzelist = ['接受对战','拒绝对战']
+    xuanzelist = ['接受对战', '拒绝对战']
     try:
         async with timeout(30):
             while xuanzeflag == 0:
@@ -676,8 +659,8 @@ async def pokemon_pk_wjb(bot, ev: Event):
     except asyncio.TimeoutError:
         xuanze = '拒绝对战'
     if xuanze == '拒绝对战':
-        return await bot.send(f'{diname} 拒绝了您的无级别对战申请。',at_sender=True)
-    await bot.send(f'{diname} 接受了您的无级别对战申请，即将开始对战。',at_sender=True)
+        return await bot.send(f'{diname} 拒绝了您的无级别对战申请。', at_sender=True)
+    await bot.send(f'{diname} 接受了您的无级别对战申请，即将开始对战。', at_sender=True)
     pokemon_team = my_team.split(',')
     mypokelist = []
     for bianhao in pokemon_team:
@@ -789,10 +772,10 @@ async def pokemon_pk_xzdj(bot, ev: Event):
 
     if name == diname:
         return await bot.send('不能自己打自己哦。', at_sender=True)
-    
+
     xuanzeflag = 0
     rundinum = 0
-    xuanzelist = ['接受对战','拒绝对战']
+    xuanzelist = ['接受对战', '拒绝对战']
     try:
         async with timeout(30):
             while xuanzeflag == 0:
@@ -823,9 +806,9 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     except asyncio.TimeoutError:
         xuanze = '拒绝对战'
     if xuanze == '拒绝对战':
-        return await bot.send(f'{diname} 拒绝了您的限制级对战申请。',at_sender=True)
-    await bot.send(f'{diname} 接受了您的限制级对战申请，即将开始对战。',at_sender=True)
-    
+        return await bot.send(f'{diname} 拒绝了您的限制级对战申请。', at_sender=True)
+    await bot.send(f'{diname} 接受了您的限制级对战申请，即将开始对战。', at_sender=True)
+
     pokemon_team = my_team.split(',')
     mypokelist = []
     for bianhao in pokemon_team:

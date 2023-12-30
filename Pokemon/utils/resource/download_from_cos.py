@@ -1,4 +1,5 @@
 from gsuid_core.utils.download_resource.download_core import download_all_file
+
 from .RESOURCE_PATH import CHAR_ICON_PATH
 
 
