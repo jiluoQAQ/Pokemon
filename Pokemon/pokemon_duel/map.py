@@ -1273,7 +1273,10 @@ async def show_map_info_now(bot, ev: Event):
     for didianname in didianlist:
         didianinfo = didianlist[didianname]
         if didianinfo['fname'] == diquname:
-            mes += f"\n{didianname} {didianinfo['type']} 进入需求徽章{didianinfo['need']}"
+            if didianinfo['type'] == '城镇':
+                mes += f"\n{didianname} {didianinfo['type']} 需求徽章{didianinfo['need']}"
+            else:
+                mes += f"\n{didianname} Lv.{didianinfo['level'][0]}~{didianinfo['level'][1]} 需求徽章{didianinfo['need']}"
     buttons = [
         Button('前往', '前往', action=2),
     ]
@@ -1416,6 +1419,45 @@ async def give_prop_pokemon_info(bot, ev: Event):
             return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
         await POKE._add_pokemon_egg(suid, bianhao, propnum)
         mes = f'奖励发放成功！{sname} 获得了 {propname}精灵蛋x{propnum}。'
+    await bot.send(mes)
+
+@sv_pm_config.on_command(['全体发放奖励'])
+async def give_prop_pokemon_info_all(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) < 2:
+        return await bot.send('请输入 全体发放奖励[道具/精灵蛋/金币][名称][数量]。', at_sender=True)
+    proptype = args[0]
+    if proptype not in ['金币','金钱','道具','精灵蛋','宝可梦蛋','蛋']:
+        return await bot.send('请输入正确的类型 道具/精灵蛋/金币。', at_sender=True)
+    propname = args[1]
+    if len(args) == 3:
+        propnum = int(args[2])
+    else:
+        propnum = 1
+    if propnum < 1:
+        return await bot.send('赠送物品的数量需大于1。', at_sender=True)
+    game_user_list = await POKE.get_game_user_list()
+    game_user_num = len(game_user_list)
+    if proptype == '金币' or proptype == '金钱':
+        propnum = int(args[1])
+        for uid in game_user_list:
+            SCORE.update_score(uid[0], propnum)
+        mes = f'奖励发放成功！总计{game_user_num}名玩家(徽章1枚及以上)，获得了金币x{propnum}。'
+    if proptype == '道具':
+        propkeylist = proplist.keys()
+        if propname not in propkeylist:
+            return await bot.send('无法找到该道具，请输入正确的道具名称。', at_sender=True)
+        for uid in game_user_list:
+            await POKE._add_pokemon_prop(uid[0], propname, propnum)
+        mes = f'奖励发放成功！总计{game_user_num}名玩家(徽章1枚及以上)，获得了道具{propname}x{propnum}。'
+    if proptype == '精灵蛋' or proptype == '宝可梦蛋' or proptype == '蛋':
+        proptype = '精灵蛋'
+        bianhao = await get_poke_bianhao(propname)
+        if bianhao == 0:
+            return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+        for uid in game_user_list:
+            await POKE._add_pokemon_egg(uid[0], bianhao, propnum)
+        mes = f'奖励发放成功！总计{game_user_num}名玩家(徽章1枚及以上)，获得了 {propname}精灵蛋x{propnum}。'
     await bot.send(mes)
 
 @sv_pokemon_map.on_fullmatch(['标记消息推送'])

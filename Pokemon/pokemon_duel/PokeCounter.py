@@ -172,6 +172,19 @@ class PokeCounter:
         except:
             raise Exception('创建表发生错误')
     
+    async def get_game_user_list(self):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT UID FROM POKEMON_MAP WHERE HUIZHANG>0"
+                ).fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
     async def get_pokemon_technical_list(self, uid, page=0):
         num = 30
         startnum = num * page

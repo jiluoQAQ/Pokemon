@@ -58,6 +58,7 @@ chushoulist = ['混乱', '麻痹']
 hh_yichanglist = ['混乱', '睡眠', '休息', '无敌']
 # 强制先手技能
 xianzhi = ['守住', '看穿', '极巨防壁', '拦堵']
+lianxu_shibai = ['守住', '看穿']
 # 先手技能
 youxian = [
     '电光一闪',
@@ -678,11 +679,13 @@ async def pokemon_fight(
     shul = 1
     fight_flag = 0
     mesg = ''
+    last_jineng1 = ''
+    last_jineng2 = ''
     while fight_flag == 0:
         jieshu = 0
         myjinenglist = re.split(',', mypokemon_info[14])
         dijinenglist = re.split(',', dipokemon_info[14])
-
+        
         jineng1 = now_use_jineng(
             myinfo, diinfo, myjinenglist, dijinenglist, changdi
         )
@@ -734,26 +737,28 @@ async def pokemon_fight(
             if jieshu == 0:
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
-                    # 我方攻击
-                    canshu1 = {
-                        'jineng': jineng1,
-                        'myinfo': myinfo,
-                        'diinfo': diinfo,
-                        'myzhuangtai': myzhuangtai,
-                        'dizhuangtai': dizhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                    (
-                        mes,
-                        myinfo,
-                        diinfo,
-                        myzhuangtai,
-                        dizhuangtai,
-                        changdi,
-                    ) = canshu1['ret']
-                    my_mesg = my_mesg + mes
-
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        canshu1 = {
+                            'jineng': jineng1,
+                            'myinfo': myinfo,
+                            'diinfo': diinfo,
+                            'myzhuangtai': myzhuangtai,
+                            'dizhuangtai': dizhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = canshu1['ret']
+                        my_mesg = my_mesg + mes
                 else:
                     if (
                         myzhuangtai[0][0] == '混乱'
@@ -782,25 +787,28 @@ async def pokemon_fight(
             if jieshu == 0:
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
-                    # 敌方攻击
-                    canshu2 = {
-                        'jineng': jineng2,
-                        'myinfo': diinfo,
-                        'diinfo': myinfo,
-                        'myzhuangtai': dizhuangtai,
-                        'dizhuangtai': myzhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                    (
-                        mes,
-                        diinfo,
-                        myinfo,
-                        dizhuangtai,
-                        myzhuangtai,
-                        changdi,
-                    ) = canshu2['ret']
-                    di_mesg = '\n' + di_mesg + mes
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        canshu2 = {
+                            'jineng': jineng2,
+                            'myinfo': diinfo,
+                            'diinfo': myinfo,
+                            'myzhuangtai': dizhuangtai,
+                            'dizhuangtai': myzhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = canshu2['ret']
+                        di_mesg = '\n' + di_mesg + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -830,25 +838,28 @@ async def pokemon_fight(
             if jieshu == 0:
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
-                    # 敌方攻击
-                    canshu2 = {
-                        'jineng': jineng2,
-                        'myinfo': diinfo,
-                        'diinfo': myinfo,
-                        'myzhuangtai': dizhuangtai,
-                        'dizhuangtai': myzhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                    (
-                        mes,
-                        diinfo,
-                        myinfo,
-                        dizhuangtai,
-                        myzhuangtai,
-                        changdi,
-                    ) = canshu2['ret']
-                    di_mesg = di_mesg + mes
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        canshu2 = {
+                            'jineng': jineng2,
+                            'myinfo': diinfo,
+                            'diinfo': myinfo,
+                            'myzhuangtai': dizhuangtai,
+                            'dizhuangtai': myzhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = canshu2['ret']
+                        di_mesg = di_mesg + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -877,25 +888,28 @@ async def pokemon_fight(
             if jieshu == 0:
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
-                    # 我方攻击
-                    canshu1 = {
-                        'jineng': jineng1,
-                        'myinfo': myinfo,
-                        'diinfo': diinfo,
-                        'myzhuangtai': myzhuangtai,
-                        'dizhuangtai': dizhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                    (
-                        mes,
-                        myinfo,
-                        diinfo,
-                        myzhuangtai,
-                        dizhuangtai,
-                        changdi,
-                    ) = canshu1['ret']
-                    my_mesg = '\n' + my_mesg + mes
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        canshu1 = {
+                            'jineng': jineng1,
+                            'myinfo': myinfo,
+                            'diinfo': diinfo,
+                            'myzhuangtai': myzhuangtai,
+                            'dizhuangtai': dizhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = canshu1['ret']
+                        my_mesg = '\n' + my_mesg + mes
                 else:
                     if (
                         myzhuangtai[0][0] == '混乱'
@@ -1098,7 +1112,8 @@ async def pokemon_fight(
                 )
                 diinfo[17] = 0
         mesg = mesg + changdi_mesg
-
+        last_jineng1 = jineng1
+        last_jineng2 = jineng2
         if jieshu == 1:
             fight_flag = 1
     return mesg, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -1134,6 +1149,8 @@ async def pokemon_fight_s(
         .resize((80, 80))
     )
     img_draw = ImageDraw.Draw(bg_img)
+    last_jineng1 = ''
+    last_jineng2 = ''
     while fight_flag == 0:
         jieshu = 0
         myjinenglist = re.split(',', mypokemon_info[14])
@@ -1152,6 +1169,7 @@ async def pokemon_fight_s(
         # jineng_use = 1
         # except asyncio.TimeoutError:
         # jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
+        
         jineng1 = now_use_jineng(
             myinfo, diinfo, myjinenglist, dijinenglist, changdi
         )
@@ -1219,25 +1237,28 @@ async def pokemon_fight_s(
             if jieshu == 0:
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
-                    # 我方攻击
-                    canshu1 = {
-                        'jineng': jineng1,
-                        'myinfo': myinfo,
-                        'diinfo': diinfo,
-                        'myzhuangtai': myzhuangtai,
-                        'dizhuangtai': dizhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                    (
-                        mes,
-                        myinfo,
-                        diinfo,
-                        myzhuangtai,
-                        dizhuangtai,
-                        changdi,
-                    ) = canshu1['ret']
-                    my_mesg = my_mesg + mes
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        canshu1 = {
+                            'jineng': jineng1,
+                            'myinfo': myinfo,
+                            'diinfo': diinfo,
+                            'myzhuangtai': myzhuangtai,
+                            'dizhuangtai': dizhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = canshu1['ret']
+                        my_mesg = my_mesg + mes
 
                 else:
                     if (
@@ -1280,25 +1301,28 @@ async def pokemon_fight_s(
             if jieshu == 0:
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
-                    # 敌方攻击
-                    canshu2 = {
-                        'jineng': jineng2,
-                        'myinfo': diinfo,
-                        'diinfo': myinfo,
-                        'myzhuangtai': dizhuangtai,
-                        'dizhuangtai': myzhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                    (
-                        mes,
-                        diinfo,
-                        myinfo,
-                        dizhuangtai,
-                        myzhuangtai,
-                        changdi,
-                    ) = canshu2['ret']
-                    di_mesg = di_mesg + mes
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        canshu2 = {
+                            'jineng': jineng2,
+                            'myinfo': diinfo,
+                            'diinfo': myinfo,
+                            'myzhuangtai': dizhuangtai,
+                            'dizhuangtai': myzhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = canshu2['ret']
+                        di_mesg = di_mesg + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -1342,25 +1366,28 @@ async def pokemon_fight_s(
             if jieshu == 0:
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
-                    # 敌方攻击
-                    canshu2 = {
-                        'jineng': jineng2,
-                        'myinfo': diinfo,
-                        'diinfo': myinfo,
-                        'myzhuangtai': dizhuangtai,
-                        'dizhuangtai': myzhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                    (
-                        mes,
-                        diinfo,
-                        myinfo,
-                        dizhuangtai,
-                        myzhuangtai,
-                        changdi,
-                    ) = canshu2['ret']
-                    di_mesg = di_mesg + mes
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        canshu2 = {
+                            'jineng': jineng2,
+                            'myinfo': diinfo,
+                            'diinfo': myinfo,
+                            'myzhuangtai': dizhuangtai,
+                            'dizhuangtai': myzhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = canshu2['ret']
+                        di_mesg = di_mesg + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -1403,25 +1430,28 @@ async def pokemon_fight_s(
             if jieshu == 0:
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
-                    # 我方攻击
-                    canshu1 = {
-                        'jineng': jineng1,
-                        'myinfo': myinfo,
-                        'diinfo': diinfo,
-                        'myzhuangtai': myzhuangtai,
-                        'dizhuangtai': dizhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                    (
-                        mes,
-                        myinfo,
-                        diinfo,
-                        myzhuangtai,
-                        dizhuangtai,
-                        changdi,
-                    ) = canshu1['ret']
-                    my_mesg = my_mesg + mes
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        canshu1 = {
+                            'jineng': jineng1,
+                            'myinfo': myinfo,
+                            'diinfo': diinfo,
+                            'myzhuangtai': myzhuangtai,
+                            'dizhuangtai': dizhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = canshu1['ret']
+                        my_mesg = my_mesg + mes
                 else:
                     if (
                         myzhuangtai[0][0] == '混乱'
@@ -1654,7 +1684,8 @@ async def pokemon_fight_s(
             changdi_mes_h += 30
         img_height = img_height + changdi_mes_h
         # await bot.send(mesg, at_sender=True)
-
+        last_jineng1 = jineng1
+        last_jineng2 = jineng2
         if jieshu == 1:
             fight_flag = 1
     return (
@@ -1687,6 +1718,8 @@ async def pokemon_fight_pk(
 ):
     shul = 1
     fight_flag = 0
+    last_jineng1 = ''
+    last_jineng2 = ''
     while fight_flag == 0:
         mesg = ''
         jieshu = 0
@@ -1816,25 +1849,28 @@ async def pokemon_fight_pk(
             if jieshu == 0:
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
-                    # 我方攻击
-                    canshu1 = {
-                        'jineng': jineng1,
-                        'myinfo': myinfo,
-                        'diinfo': diinfo,
-                        'myzhuangtai': myzhuangtai,
-                        'dizhuangtai': dizhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                    (
-                        mes,
-                        myinfo,
-                        diinfo,
-                        myzhuangtai,
-                        dizhuangtai,
-                        changdi,
-                    ) = canshu1['ret']
-                    my_mesg = my_mesg + mes
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        canshu1 = {
+                            'jineng': jineng1,
+                            'myinfo': myinfo,
+                            'diinfo': diinfo,
+                            'myzhuangtai': myzhuangtai,
+                            'dizhuangtai': dizhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = canshu1['ret']
+                        my_mesg = my_mesg + mes
 
                 else:
                     if (
@@ -1864,25 +1900,28 @@ async def pokemon_fight_pk(
             if jieshu == 0:
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
-                    # 敌方攻击
-                    canshu2 = {
-                        'jineng': jineng2,
-                        'myinfo': diinfo,
-                        'diinfo': myinfo,
-                        'myzhuangtai': dizhuangtai,
-                        'dizhuangtai': myzhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                    (
-                        mes,
-                        diinfo,
-                        myinfo,
-                        dizhuangtai,
-                        myzhuangtai,
-                        changdi,
-                    ) = canshu2['ret']
-                    di_mesg = di_mesg + mes
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        canshu2 = {
+                            'jineng': jineng2,
+                            'myinfo': diinfo,
+                            'diinfo': myinfo,
+                            'myzhuangtai': dizhuangtai,
+                            'dizhuangtai': myzhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = canshu2['ret']
+                        di_mesg = di_mesg + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -1912,25 +1951,28 @@ async def pokemon_fight_pk(
             if jieshu == 0:
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
-                    # 敌方攻击
-                    canshu2 = {
-                        'jineng': jineng2,
-                        'myinfo': diinfo,
-                        'diinfo': myinfo,
-                        'myzhuangtai': dizhuangtai,
-                        'dizhuangtai': myzhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                    (
-                        mes,
-                        diinfo,
-                        myinfo,
-                        dizhuangtai,
-                        myzhuangtai,
-                        changdi,
-                    ) = canshu2['ret']
-                    di_mesg = di_mesg + mes
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        canshu2 = {
+                            'jineng': jineng2,
+                            'myinfo': diinfo,
+                            'diinfo': myinfo,
+                            'myzhuangtai': dizhuangtai,
+                            'dizhuangtai': myzhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = canshu2['ret']
+                        di_mesg = di_mesg + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -1959,25 +2001,28 @@ async def pokemon_fight_pk(
             if jieshu == 0:
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
-                    # 我方攻击
-                    canshu1 = {
-                        'jineng': jineng1,
-                        'myinfo': myinfo,
-                        'diinfo': diinfo,
-                        'myzhuangtai': myzhuangtai,
-                        'dizhuangtai': dizhuangtai,
-                        'changdi': changdi,
-                    }
-                    exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                    (
-                        mes,
-                        myinfo,
-                        diinfo,
-                        myzhuangtai,
-                        dizhuangtai,
-                        changdi,
-                    ) = canshu1['ret']
-                    my_mesg = my_mesg + mes
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        canshu1 = {
+                            'jineng': jineng1,
+                            'myinfo': myinfo,
+                            'diinfo': diinfo,
+                            'myzhuangtai': myzhuangtai,
+                            'dizhuangtai': dizhuangtai,
+                            'changdi': changdi,
+                        }
+                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = canshu1['ret']
+                        my_mesg = my_mesg + mes
                 else:
                     if (
                         myzhuangtai[0][0] == '混乱'
@@ -2182,7 +2227,8 @@ async def pokemon_fight_pk(
         mesg = mesg + changdi_mesg
 
         await bot.send(mesg)
-
+        last_jineng1 = jineng1
+        last_jineng2 = jineng2
         if jieshu == 1:
             fight_flag = 1
     return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi

@@ -856,7 +856,7 @@ async def give_prop_pokemon_egg(bot, ev: Event):
     args = ev.text.split()
     uid = ev.user_id
     if len(args) < 2:
-        return await bot.send('请输入 赠送物品[道具/精灵蛋][名称][数量]。', at_sender=True)
+        return await bot.send('请输入 赠送物品[道具/精灵蛋/金币/学习机][名称][数量]。', at_sender=True)
     if ev.at is not None:
         suid = ev.at
         smapinfo = POKE._get_map_now(suid)
@@ -867,8 +867,8 @@ async def give_prop_pokemon_egg(bot, ev: Event):
             )
         sname = smapinfo[2]
     proptype = args[0]
-    if proptype not in ['道具', '精灵蛋', '宝可梦蛋', '蛋']:
-        return await bot.send('请输入正确的类型 道具/精灵蛋。', at_sender=True)
+    if proptype not in ['金币','金钱','道具', '精灵蛋', '宝可梦蛋', '蛋', '学习机']:
+        return await bot.send('请输入正确的类型 道具/精灵蛋/金币/学习机。', at_sender=True)
     propname = args[1]
     if len(args) == 3:
         propnum = int(args[2])
@@ -876,6 +876,11 @@ async def give_prop_pokemon_egg(bot, ev: Event):
         propnum = 1
     if propnum < 1:
         return await bot.send('赠送物品的数量需大于1。', at_sender=True)
+    if proptype == '金币' or proptype == '金钱':
+        propnum = int(args[1])
+        SCORE.update_score(uid, 0 - propnum)
+        SCORE.update_score(suid, propnum)
+        mes = f'您赠送给了{sname} 金币x{propnum}。'
     if proptype == '道具':
         propkeylist = proplist.keys()
         if propname not in propkeylist:
@@ -890,6 +895,20 @@ async def give_prop_pokemon_egg(bot, ev: Event):
         await POKE._add_pokemon_prop(uid, propname, 0 - propnum)
         await POKE._add_pokemon_prop(suid, propname, propnum)
         mes = f'您赠送给了{sname} 道具{propname}x{propnum}。'
+    if proptype == '学习机':
+        jinenglist = JINENG_LIST.keys()
+        if propname not in jinenglist:
+            return await bot.send('无法找到该技能，请输入正确的技能学习机名称。', at_sender=True)
+        xuexiji_num = await POKE._get_pokemon_technical(uid, propname)
+        if xuexiji_num == 0:
+            return await bot.send(f'您还没有{propname}学习机哦。', at_sender=True)
+        if xuexiji_num < propnum:
+            return await bot.send(
+                f'您的{propname}学习机数量小于{propnum}，赠送失败。', at_sender=True
+            )
+        await POKE._add_pokemon_technical(uid,propname,0 - propnum)
+        await POKE._add_pokemon_technical(suid,propname,propnum)
+        mes = f'您赠送给了{sname} 学习机{propname}x{propnum}。'
     if proptype == '精灵蛋' or proptype == '宝可梦蛋' or proptype == '蛋':
         proptype = '精灵蛋'
         bianhao = await get_poke_bianhao(propname)
