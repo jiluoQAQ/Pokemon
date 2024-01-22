@@ -297,8 +297,10 @@ async def get_chushi_pokemon(bot, ev: Event):
         go_didian = '1号道路'
     elif bianhao in [152,155,158]:
         go_didian = '29号道路'
+    elif bianhao in [252,255,258]:
+        go_didian = '101号道路'
     else:
-        csdidianlist = ['1号道路', '29号道路']
+        csdidianlist = ['1号道路', '29号道路', '101号道路']
         go_didian = random.sample(csdidianlist, 1)[0]
     name = uid
     if ev.sender:
