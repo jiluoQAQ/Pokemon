@@ -1322,6 +1322,7 @@ async def pokemom_go_map(bot, ev: Event):
             )
     else:
         if int(my_hz) >= 8:
+            POKE._add_map_now(uid, go_map)
             if ev.bot_id == 'qqgroup':
                 mes = f'您已到达{go_map},当前地址信息可输入[当前地点信息]查询'
                 await bot.send(mes, at_sender=True)
