@@ -293,7 +293,13 @@ async def get_chushi_pokemon(bot, ev: Event):
     await POKE._add_pokemon_group(uid, bianhao)
 
     await POKE.update_pokemon_star(uid, bianhao, startype)
-    go_didian = '1号道路'
+    if bianhao in [1,4,7]:
+        go_didian = '1号道路'
+    elif bianhao in [152,155,158]:
+        go_didian = '29号道路'
+    else:
+        csdidianlist = ['1号道路', '29号道路']
+        go_didian = random.sample(csdidianlist, 1)[0]
     name = uid
     if ev.sender:
         sender = ev.sender
