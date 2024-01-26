@@ -116,11 +116,12 @@ async def map_my_group(bot, ev: Event):
             return await bot.send(
                 f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
             )
-        pokemon_list.append(str(bianhao))
-        startype = await POKE.get_pokemon_star(uid, bianhao)
-        name_str += (
-            f' {starlist[startype]}{pokemon_name} Lv.{pokemon_info[0]}\n'
-        )
+        if str(bianhao) not in pokemon_list:
+            pokemon_list.append(str(bianhao))
+            startype = await POKE.get_pokemon_star(uid, bianhao)
+            name_str += (
+                f' {starlist[startype]}{pokemon_name} Lv.{pokemon_info[0]}\n'
+            )
     pokemon_str = ','.join(pokemon_list)
     await POKE._add_pokemon_group(uid, pokemon_str)
 

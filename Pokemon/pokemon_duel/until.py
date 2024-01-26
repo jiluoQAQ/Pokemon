@@ -82,6 +82,8 @@ def update_shux_info(info, sxname, uplevel, uptype):
 
 
 def get_mingzhong(jineng_mz, my_mngzhong, di_shanbi, changdi):
+    if jineng_mz == '-':
+        return 1
     jineng_b = (255 * int(jineng_mz)) / 100
     mingzhong_lv = int(my_mngzhong) - int(di_shanbi)
     if mingzhong_lv > 0:

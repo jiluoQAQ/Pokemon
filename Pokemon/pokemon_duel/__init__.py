@@ -15,7 +15,7 @@ from .until import *
 from .pokemon import *
 from .pokeconfg import *
 from .PokeCounter import *
-from .draw_image import draw_pokemon_info
+from .draw_image import draw_pokemon_info, draw_pokemon_info_tj
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 
 sv_pokemon_duel = SV('宝可梦状态', priority=5)
@@ -178,42 +178,17 @@ async def show_poke_info(bot, ev: Event):
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
-    img = await convert_img(img)
-    mes = []
-
-    startype = await POKE.get_pokemon_star(uid, bianhao)
-    mes.append(MessageSegment.image(img))
-    mes.append(
-        MessageSegment.text(
-            f'{POKEMON_LIST[bianhao][0]}\n属性:{POKEMON_LIST[bianhao][7]}\n种族值\nHP:{POKEMON_LIST[bianhao][1]}\n物攻:{POKEMON_LIST[bianhao][2]}\n物防:{POKEMON_LIST[bianhao][3]}\n特攻:{POKEMON_LIST[bianhao][4]}\n特防:{POKEMON_LIST[bianhao][5]}\n速度:{POKEMON_LIST[bianhao][6]}\n'
-        )
-    )
-    mes.append(MessageSegment.text(f"描述\n{POKEMON_CONTENT[bianhao][0]}"))
+    im, jinhualist = await draw_pokemon_info_tj(bianhao)
+    
     buttons = []
-    for pokemonid in POKEMON_LIST:
-        if len(POKEMON_LIST[pokemonid]) > 8:
-            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao):
-                if POKEMON_LIST[pokemonid][9].isdigit():
-                    mes.append(
-                        MessageSegment.text(
-                            f'\nLv.{POKEMON_LIST[pokemonid][9]} 可进化为{POKEMON_LIST[pokemonid][0]}'
-                        )
-                    )
-                else:
-                    mes.append(
-                        MessageSegment.text(
-                            f'\n使用道具 {POKEMON_LIST[pokemonid][9]} 可进化为{POKEMON_LIST[pokemonid][0]}'
-                        )
-                    )
-                buttons.append(
-                    Button(
-                        f'📖图鉴{POKEMON_LIST[pokemonid][0]}',
-                        f'精灵图鉴{POKEMON_LIST[pokemonid][0]}',
-                    )
-                )
-    # print(buttonlist)
-    await bot.send_option(mes, buttons)
+    for jinhuainfo in jinhualist:
+        buttons.append(
+            Button(
+                f'📖图鉴{jinhuainfo[1]}',
+                f'精灵图鉴{jinhuainfo[1]}',
+            )
+        )
+    await bot.send_option(im, buttons)
 
 
 @sv_pokemon_duel.on_command(('精灵状态', '宝可梦状态'))
@@ -233,6 +208,7 @@ async def get_my_poke_info_t(bot, ev: Event):
         )
     im, jinhualist = await draw_pokemon_info(uid, pokemon_info, bianhao)
     buttons = [
+        Button('📖查图鉴', f'精灵图鉴{pokename}'),
         Button('📖学技能', f'学习技能{pokename}', action=2),
         Button('📖遗忘技能', f'遗忘技能{pokename}', action=2),
     ]
@@ -880,6 +856,11 @@ async def give_prop_pokemon_egg(bot, ev: Event):
         return await bot.send('赠送物品的数量需大于1。', at_sender=True)
     if proptype == '金币' or proptype == '金钱':
         propnum = int(args[1])
+        if propnum < 1:
+            return await bot.send('赠送金币的数量需大于1。', at_sender=True)
+        my_score = SCORE.get_score(uid)
+        if my_score < propnum:
+            return await bot.send('您的金币不足',at_sender=True)
         SCORE.update_score(uid, 0 - propnum)
         SCORE.update_score(suid, propnum)
         mes = f'您赠送给了{sname} 金币x{propnum}。'

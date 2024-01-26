@@ -321,3 +321,232 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
             )
     res = await convert_img(img)
     return res, jinhualist
+
+async def draw_pokemon_info_tj(bianhao):
+    bg_height = 600
+    jinenglist = POKEMON_XUEXI[bianhao]
+    jineng_num = len(jinenglist)
+    if jineng_num > 0:
+        bg_height += math.ceil(jineng_num / 4) * 45 + 100
+    jinhualist = []
+    for pokemonid in POKEMON_LIST:
+        if len(POKEMON_LIST[pokemonid]) > 8:
+            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao):
+                jinhualist.append(
+                    [POKEMON_LIST[pokemonid][9], POKEMON_LIST[pokemonid][0]]
+                )
+    if len(jinhualist) > 0:
+        bg_height += len(jinhualist) * 150 + 50
+    miaoshu = POKEMON_CONTENT[bianhao][0]
+    miaoshu_para = get_text_line(miaoshu, 25)
+    miaoshu_height = len(miaoshu_para) * 40
+    bg_height += miaoshu_height
+    bg_height = max(bg_height, 1376)
+    img = Image.new('RGBA', (900, bg_height + 124))
+    img.paste(info_top_img, (0, 0))
+    bg_center = Image.open(TEXT_PATH / 'bg_center.jpg').resize(
+        (900, bg_height)
+    )
+    img.paste(bg_center, (0, 62))
+    img.paste(info_bottom_img, (0, bg_height + 62))
+    img.paste(info_title_img, (0, 41), info_title_img)
+    img_draw = ImageDraw.Draw(img)
+    # 画名称标题
+    img_draw.text(
+        (285, 121),
+        f'{POKEMON_LIST[bianhao][0]}',
+        info_text_color,
+        sr_font_40,
+        'mm',
+    )
+    img_draw.text(
+        (516, 132),
+        '种族',
+        info_text_color,
+        sr_font_32,
+        'mm',
+    )
+    img_draw.text(
+        (630, 132),
+        '最小值',
+        info_text_color,
+        sr_font_32,
+        'mm',
+    )
+    img_draw.text(
+        (750, 132),
+        '最大值',
+        info_text_color,
+        sr_font_32,
+        'mm',
+    )
+    # 画形象
+    pokemon_img = (
+        Image.open(CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png')
+        .convert('RGBA')
+        .resize((300, 300))
+    )
+    img.paste(pokemon_img, (70, 168), pokemon_img)
+
+    # 画属性
+    img.paste(poro_bar, (454, 170), poro_bar)
+    img.paste(poro_bar, (454, 225), poro_bar)
+    img.paste(poro_bar, (454, 280), poro_bar)
+    img.paste(poro_bar, (454, 335), poro_bar)
+    img.paste(poro_bar, (454, 390), poro_bar)
+    img.paste(poro_bar, (454, 445), poro_bar)
+    img_draw.text((413, 193), 'HP', (53, 77, 105), sr_font_28, 'mm')
+    for shul, shux in enumerate(SHUX_LIST_XX):
+        sx_color = (53, 77, 105)
+        img_draw.text((413, 55 * shul + 248), shux, sx_color, sr_font_28, 'mm')
+    # 种族
+    zhongzu_info = POKEMON_LIST[bianhao]
+    img_draw.text((516, 193), f'{zhongzu_info[1]}', (0, 0, 0), sr_font_28, 'mm')
+    img_draw.text((516, 248), f'{zhongzu_info[2]}', (0, 0, 0), sr_font_28, 'mm')
+    img_draw.text((516, 303), f'{zhongzu_info[3]}', (0, 0, 0), sr_font_28, 'mm')
+    img_draw.text((516, 358), f'{zhongzu_info[4]}', (0, 0, 0), sr_font_28, 'mm')
+    img_draw.text((516, 413), f'{zhongzu_info[5]}', (0, 0, 0), sr_font_28, 'mm')
+    img_draw.text((516, 468), f'{zhongzu_info[6]}', (0, 0, 0), sr_font_28, 'mm')
+    # 最小属性
+    MIN_HP = math.ceil((int(zhongzu_info[1]) * 2) + 10 + 100)
+    img_draw.text(
+        (630, 193), f'{MIN_HP}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MIN_atk = math.ceil(((int(zhongzu_info[2]) * 2) + 5) * 0.9)
+    img_draw.text(
+        (630, 248), f'{MIN_atk}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MIN_def = math.ceil(((int(zhongzu_info[3]) * 2) + 5) * 0.9)
+    img_draw.text(
+        (630, 303), f'{MIN_def}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MIN_spatk = math.ceil(((int(zhongzu_info[4]) * 2) + 5) * 0.9)
+    img_draw.text(
+        (630, 358), f'{MIN_spatk}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MIN_spdef = math.ceil(((int(zhongzu_info[5]) * 2) + 5) * 0.9)
+    img_draw.text(
+        (630, 413), f'{MIN_spdef}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MIN_spd = math.ceil(((int(zhongzu_info[6]) * 2) + 5) * 0.9)
+    img_draw.text(
+        (630, 468), f'{MIN_spd}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    # 最大属性
+    MAX_HP = math.ceil(((int(zhongzu_info[1]) * 2) + 94) + 110)
+    img_draw.text(
+        (750, 193), f'{MAX_HP}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MAX_atk = math.ceil(((int(zhongzu_info[2]) * 2) + 99) * 1.1)
+    img_draw.text(
+        (750, 248), f'{MAX_atk}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MAX_def = math.ceil(((int(zhongzu_info[3]) * 2) + 99) * 1.1)
+    img_draw.text(
+        (750, 303), f'{MAX_def}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MAX_spatk = math.ceil(((int(zhongzu_info[4]) * 2) + 99) * 1.1)
+    img_draw.text(
+        (750, 358), f'{MAX_spatk}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MAX_spdef = math.ceil(((int(zhongzu_info[5]) * 2) + 99) * 1.1)
+    img_draw.text(
+        (750, 413), f'{MAX_spdef}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    MAX_spd = math.ceil(((int(zhongzu_info[6]) * 2) + 99) * 1.1)
+    img_draw.text(
+        (750, 468), f'{MAX_spd}', (0, 0, 0), sr_font_28, 'mm'
+    )
+    # 画属性类型
+    shuxinglist = re.split(',', POKEMON_LIST[bianhao][7])
+    for shul, shuxing in enumerate(shuxinglist):
+        shuxing_img = Image.new('RGBA', (142, 38), SHUX_LIST_DRAW[shuxing][0])
+        shuxing_img.paste(sx_image, SHUX_LIST_DRAW[shuxing][1], sx_image)
+        shuxing_temp = Image.new('RGBA', (142, 38))
+        shuxing_temp.paste(shuxing_img, (0, 0), mask_bar)
+        shuxing_draw = ImageDraw.Draw(shuxing_temp)
+        shuxing_draw.text(
+            (91, 19),
+            f'{shuxing}',
+            (255, 255, 255),
+            sr_font_28,
+            'mm',
+        )
+        img.paste(shuxing_temp, (150 * shul + 82, 520), shuxing_temp)
+    
+    miaoshu_h = 0
+    for line in miaoshu_para:
+        img_draw.text(
+            (91, 600 + miaoshu_h),
+            line,
+            black_color,
+            sr_font_28,
+            'lm',
+        )
+        miaoshu_h += 40
+    start_height = 600 + miaoshu_h + 10
+    img.paste(skill_title, (77, start_height), skill_title)
+    img_draw.text(
+        (274, start_height + 37),
+        '学习机技能',
+        info_text_color,
+        sr_font_40,
+        'mm',
+    )
+    jineng_bar_mask = mask_bar.copy()
+    jineng_bar_mask = jineng_bar_mask.resize((180, 38))
+    jn_y = 0
+    for shul, jineng in enumerate(jinenglist):
+        jn_y = math.floor(shul / 4)
+        jn_x = shul - (4 * jn_y)
+        jineng_img = Image.new(
+            'RGBA', (180, 38), SHUX_LIST_DRAW[JINENG_LIST[jineng][0]][0]
+        )
+        jineng_img.paste(
+            sx_image, JINENG_LEIXING[JINENG_LIST[jineng][1]], sx_image
+        )
+        jineng_temp = Image.new('RGBA', (180, 38))
+        jineng_temp.paste(jineng_img, (0, 0), jineng_bar_mask)
+        jineng_draw = ImageDraw.Draw(jineng_temp)
+        jineng_draw.text(
+            (100, 19),
+            f'{jineng}',
+            (255, 255, 255),
+            sr_font_28,
+            'mm',
+        )
+        img.paste(
+            jineng_temp, (187 * jn_x + 82, jn_y * 45 + start_height + 90), jineng_temp
+        )
+    if len(jinhualist) > 0:
+        start_y = (jn_y + 1) * 45 + start_height + 110
+        img.paste(up_title, (77, start_y), up_title)
+        img_draw.text(
+            (274, start_y + 37),
+            '进化信息',
+            info_text_color,
+            sr_font_40,
+            'mm',
+        )
+        for shul, jinhuainfo in enumerate(jinhualist):
+            pokemon_jinhua = (
+                Image.open(CHAR_ICON_PATH / f'{jinhuainfo[1]}.png')
+                .convert('RGBA')
+                .resize((140, 140))
+            )
+            img.paste(
+                pokemon_jinhua, (82, shul * 150 + start_y + 90), pokemon_jinhua
+            )
+            if jinhuainfo[0].isdigit():
+                jinhua_xuqiu = f'Lv.{jinhuainfo[0]} 可进化为 {jinhuainfo[1]}'
+            else:
+                jinhua_xuqiu = f'使用道具 {jinhuainfo[0]} 可进化为 {jinhuainfo[1]}'
+            img_draw.text(
+                (280, shul * 150 + start_y + 160),
+                f'{jinhua_xuqiu}',
+                (0, 0, 0),
+                sr_font_32,
+                'lm',
+            )
+    res = await convert_img(img)
+    return res, jinhualist
