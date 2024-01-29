@@ -21,6 +21,7 @@ from .until import *
 from pathlib import Path
 from .nameconfig import First_Name, Last_Name, Call_Name
 from ..utils.dbbase.ScoreCounter import SCORE_DB
+from .draw_image import draw_pokemon_info
 from ..utils.fonts.starrail_fonts import (
     sr_font_20,
     sr_font_24,
@@ -1247,8 +1248,8 @@ async def map_info_now(bot, ev: Event):
 
 @sv_pokemon_map.on_command(['查看地图'])
 async def show_map_info_now(bot, ev: Event):
-    diquname = ''.join(re.findall('^[a-zA-Z0-9_\u4e00-\u9fa5]+$', ev.text))
-    if not diquname:
+    args = ev.text.split()
+    if len(args) < 1:
         uid = ev.user_id
 
         mapinfo = POKE._get_map_now(uid)
@@ -1259,6 +1260,7 @@ async def show_map_info_now(bot, ev: Event):
             )
         diquname = didianlist[this_map]['fname']
     else:
+        diquname = args[0]
         list_dizhi = list(diqulist.keys())
         if diquname not in list_dizhi:
             return await bot.send(
@@ -1461,6 +1463,26 @@ async def give_prop_pokemon_info_all(bot, ev: Event):
         mes = f'奖励发放成功！总计{game_user_num}名玩家(徽章1枚及以上)，获得了 {propname}精灵蛋x{propnum}。'
     await bot.send(mes)
 
+@sv_pm_config.on_command(('查看状态', '状态查看'))
+async def get_my_poke_info_sv(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) != 1:
+        return await bot.send('请输入 精灵状态+宝可梦名称 中间用空格隔开。', at_sender=True)
+    pokename = args[0]
+    uid = ev.user_id
+    if ev.at is not None:
+        uid = ev.at
+    bianhao = await get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    pokemon_info = await get_pokeon_info(uid, bianhao)
+    if pokemon_info == 0:
+        return await bot.send(
+            f'当前用户还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
+        )
+    im, jinhualist = await draw_pokemon_info(uid, pokemon_info, bianhao)
+    await bot.send(im)
+
 @sv_pokemon_map.on_fullmatch(['标记消息推送'])
 async def new_refresh_send_group(bot, ev: Event):
     groupid = ev.group_id
@@ -1515,6 +1537,7 @@ async def refresh_pokemon_day():
         if didianlist[didian]['type'] == '野外':
             didianlistkey[didianlist[didian]['fname']].append(didian)
     mes = '野生宝可梦大量出现了'
+    chara_id_list = list(POKEMON_LIST.keys())
     for diqu in diqulist:
         if diqulist[diqu]['open'] == 1:
             didianname = random.sample(didianlistkey[diqu], 1)[0]
@@ -1529,7 +1552,6 @@ async def refresh_pokemon_day():
                 zx_max = 550
             else:
                 zx_max = 999
-            chara_id_list = list(POKEMON_LIST.keys())
             find_flag = 0
             while find_flag == 0:
                 random.shuffle(chara_id_list)

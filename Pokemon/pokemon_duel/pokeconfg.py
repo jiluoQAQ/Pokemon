@@ -9,6 +9,7 @@ import copy
 from async_timeout import timeout
 from .pokemon import *
 from .PokeCounter import *
+from gsuid_core.message_models import Button
 from .until import *
 from pathlib import Path
 from gsuid_core.utils.image.convert import convert_img
@@ -1715,6 +1716,8 @@ async def pokemon_fight_pk(
     diname,
     myuid,
     diuid,
+    jineng_use1,
+    jineng_use2,
 ):
     shul = 1
     fight_flag = 0
@@ -1725,6 +1728,35 @@ async def pokemon_fight_pk(
         jieshu = 0
         myjinenglist = re.split(',', mypokemon_info[14])
         dijinenglist = re.split(',', dipokemon_info[14])
+        myjinengbuttons = []
+        dijinengbuttons = []
+        for myjn in myjinenglist:
+            jn_use_num_my = jineng_use1.count(myjn)
+            print(f'{myjn}:{jn_use_num_my}-')
+            jineng_info1 = JINENG_LIST[myjn]
+            myjn_but = f'{myjn}({int(jineng_info1[4])-int(jn_use_num_my)}/{int(jineng_info1[4])})'
+            myjn_name = myjn
+            if int(jn_use_num_my) >= int(jineng_info1[4]):
+                myjinenglist.remove(myjn)
+                myjn_name = ''
+            myjinengbuttons.append(Button(myjn_but, myjn_name))
+        for dijn in dijinenglist:
+            jn_use_num_di = jineng_use2.count(dijn)
+            jineng_info2 = JINENG_LIST[dijn]
+            dijn_but = f'{dijn}({int(jineng_info2[4])-int(jn_use_num_di)}/{int(jineng_info2[4])})'
+            dijn_name = dijn
+            if int(jn_use_num_di) >= int(jineng_info2[4]):
+                dijinenglist.remove(dijn)
+                dijn_name = ''
+            dijinengbuttons.append(Button(dijn_but, dijn_name))
+        if len(myjinenglist) == 0:
+            myjinenglist.append('挣扎')
+            myjinengbuttons = [Button('挣扎', '挣扎')]
+        if len(dijinenglist) == 0:
+            dijinenglist.append('挣扎')
+            dijinengbuttons = [Button('挣扎', '挣扎')]
+        print(str(myjinengbuttons))
+        print(str(dijinengbuttons))
         jineng1_use = 0
         puthmy = 0
         runmynum = 0
@@ -1734,7 +1766,7 @@ async def pokemon_fight_pk(
                     if runmynum == 0:
                         myresp = await bot.receive_resp(
                             f'{myname}请在20秒内选择一个技能使用!',
-                            myjinenglist,
+                            myjinengbuttons,
                             unsuported_platform=True
                         )
                         if myresp is not None:
@@ -1765,7 +1797,7 @@ async def pokemon_fight_pk(
             )
         jinenginfo1 = JINENG_LIST[jineng1]
         print(jineng1)
-
+        jineng_use1.append(jineng1)
         jineng2_use = 0
         puthdi = 0
         rundinum = 0
@@ -1775,7 +1807,7 @@ async def pokemon_fight_pk(
                     if rundinum == 0:
                         diresp = await bot.receive_resp(
                             f'{diname}请在20秒内选择一个技能使用!',
-                            dijinenglist,
+                            dijinengbuttons,
                             unsuported_platform=True,
                             is_mutiply=True,
                         )
@@ -1806,7 +1838,7 @@ async def pokemon_fight_pk(
             )
         jinenginfo2 = JINENG_LIST[jineng2]
         print(jineng2)
-
+        jineng_use2.append(jineng2)
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
         mysd = get_nowshuxing(myinfo[8], myinfo[13])
@@ -2148,7 +2180,7 @@ async def pokemon_fight_pk(
             if myshengyuyc == 0:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n'
+                    + f'{myinfo[0]}的{myzhuangtai[1][0]}状态解除了\n'
                 )
                 myzhuangtai[1][0] = '无'
                 myzhuangtai[1][1] = 0
@@ -2164,7 +2196,7 @@ async def pokemon_fight_pk(
             if dishengyuyc == 0:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n'
+                    + f'{diinfo[0]}的{dizhuangtai[1][0]}状态解除了\n'
                 )
                 dizhuangtai[1][0] = '无'
                 dizhuangtai[1][1] = 0
@@ -2210,7 +2242,7 @@ async def pokemon_fight_pk(
             else:
                 changdi[0][1] = shengyutianqi
                 changdi_mesg = changdi_mesg + f'{changdi[0][0]}持续中\n'
-        if shul > 11:
+        if shul > 15:
             jieshu = 1
             if diinfo[17] > myinfo[17]:
                 changdi_mesg = (
@@ -2231,7 +2263,7 @@ async def pokemon_fight_pk(
         last_jineng2 = jineng2
         if jieshu == 1:
             fight_flag = 1
-    return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+    return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use1, jineng_use2
 
 
 def get_pokemon_name_list(pokemon_list):
@@ -2621,7 +2653,8 @@ async def fight_pk_s(
     changci = 1
     myinfo = []
     diinfo = []
-
+    jineng_use1 = []
+    jineng_use2 = []
     mesg = []
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
@@ -2636,12 +2669,14 @@ async def fight_pk_s(
             myinfo = await new_pokemon_info(bianhao1, mypokemon_info, level)
             mystartype = await POKE.get_pokemon_star(myuid, bianhao1)
             myinfo[0] = f'{starlist[mystartype]}{myinfo[0]}'
+            jineng_use1 = []
         if len(diinfo) == 0:
             bianhao2 = dipokelist[0]
             dipokemon_info = await get_pokeon_info(diuid, bianhao2)
             diinfo = await new_pokemon_info(bianhao2, dipokemon_info, level)
             distartype = await POKE.get_pokemon_star(diuid, bianhao2)
             diinfo[0] = f'{starlist[distartype]}{diinfo[0]}'
+            jineng_use2 = []
         await bot.send(mes)
 
         mes = f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{myinfo[2]}'
@@ -2672,6 +2707,8 @@ async def fight_pk_s(
             myzhuangtai,
             dizhuangtai,
             changdi,
+            jineng_use1,
+            jineng_use2,
         ) = await pokemon_fight_pk(
             bot,
             ev,
@@ -2686,6 +2723,8 @@ async def fight_pk_s(
             diname,
             myuid,
             diuid,
+            jineng_use1,
+            jineng_use2,
         )
 
         # mesg.append(MessageSegment.text(mes))
@@ -2724,10 +2763,12 @@ async def fight_pk_s(
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
             mypokelist.remove(bianhao1)
+            jineng_use1 = []
         if diinfo[17] == 0:
             diinfo = []
             dizhuangtai = [['无', 0], ['无', 0]]
             dipokelist.remove(bianhao2)
+            jineng_use2 = []
         await bot.send(jiesuan_msg)
     return mypokelist, dipokelist
 

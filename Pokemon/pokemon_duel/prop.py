@@ -115,47 +115,56 @@ async def prop_info(bot, ev: Event):
             '无法找到该道具，请输入正确的道具名称。', at_sender=True
         )
 
-@sv_pokemon_prop.on_fullmatch(['购买随机精灵蛋'])
+@sv_pokemon_prop.on_command(['购买随机精灵蛋'])
 async def buy_random_egg(bot, ev: Event):
+    args = ev.text.split()
+    if len(args)<1:
+        num = 1
+    else:
+        num = int(args[0])
     uid = ev.user_id
     if not daily_random_egg.check(uid):
         return await bot.send(
             '今天的购买次数已经超过上限了哦，明天再来吧。', at_sender=True
         )
+    need_score = num * 100000
     my_score = SCORE.get_score(uid)
-    if my_score < 100000:
-        return await bot.send('随机精灵蛋需要金币100000,您的金币不足',at_sender=True)
-    
-    sj_num = int(math.floor(random.uniform(0, 100)))
-    if sj_num <= 15:
-        zx_max = 300
-    elif sj_num <= 45:
-        zx_max = 400
-    elif sj_num <= 75:
-        zx_max = 500
-    elif sj_num <= 95:
-        zx_max = 550
-    else:
-        zx_max = 999
+    if my_score < need_score:
+        return await bot.send(f'随机精灵蛋需要金币{need_score},您的金币不足',at_sender=True)
+    mes = ''
     chara_id_list = list(POKEMON_LIST.keys())
-    find_flag = 0
-    jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289]
-    while find_flag == 0:
-        random.shuffle(chara_id_list)
-        pokemonid = chara_id_list[0]
-        if pokemonid not in jinyonglist_random_egg:
-            pokemon_zz = int(POKEMON_LIST[pokemonid][1]) + int(POKEMON_LIST[pokemonid][2]) + int(POKEMON_LIST[pokemonid][3]) + int(POKEMON_LIST[pokemonid][4]) + int(POKEMON_LIST[pokemonid][5]) + int(POKEMON_LIST[pokemonid][6])
-            if pokemon_zz <= zx_max:
-                find_flag = 1
-                daily_random_egg.increase(uid)
-                eggid = await get_pokemon_eggid(pokemonid)
-                SCORE.update_score(uid, -100000)
-                await POKE._add_pokemon_egg(uid, eggid, 1)
-    mes = f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋'
+    for i in range(0,num):
+        if not daily_random_egg.check(uid):
+            break
+        sj_num = int(math.floor(random.uniform(0, 100)))
+        if sj_num <= 15:
+            zx_max = 300
+        elif sj_num <= 45:
+            zx_max = 400
+        elif sj_num <= 75:
+            zx_max = 500
+        elif sj_num <= 95:
+            zx_max = 550
+        else:
+            zx_max = 999
+        find_flag = 0
+        jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289]
+        while find_flag == 0:
+            random.shuffle(chara_id_list)
+            pokemonid = chara_id_list[0]
+            if pokemonid not in jinyonglist_random_egg:
+                pokemon_zz = int(POKEMON_LIST[pokemonid][1]) + int(POKEMON_LIST[pokemonid][2]) + int(POKEMON_LIST[pokemonid][3]) + int(POKEMON_LIST[pokemonid][4]) + int(POKEMON_LIST[pokemonid][5]) + int(POKEMON_LIST[pokemonid][6])
+                if pokemon_zz <= zx_max:
+                    find_flag = 1
+                    daily_random_egg.increase(uid)
+                    eggid = await get_pokemon_eggid(pokemonid)
+                    SCORE.update_score(uid, -100000)
+                    await POKE._add_pokemon_egg(uid, eggid, 1)
+        mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
     await bot.send(mes,at_sender=True)
     buttons = [
         Button('✅再开一个', '购买随机精灵蛋'),
-        Button('📖宝可梦孵化', f'宝可梦孵化{CHARA_NAME[eggid][0]}'),
+        Button('📖宝可梦孵化', '宝可梦孵化', action=2),
         Button('📖我的精灵蛋', '我的精灵蛋'),
     ]
     await bot.send_option('还要继续吗？客官', buttons)

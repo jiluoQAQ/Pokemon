@@ -10,6 +10,7 @@ from gsuid_core.utils.image.convert import convert_img
 
 from .map import *
 from .prop import *
+from .race import *
 from .fight import *
 from .until import *
 from .pokemon import *
@@ -667,6 +668,7 @@ async def my_pokemon_gt_up(bot, ev: Event):
         return await bot.send('请输入 重置个体值+宝可梦名称。', at_sender=True)
     pokename = args[0]
     uid = ev.user_id
+    mapinfo = POKE._get_map_now(uid)
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
@@ -675,11 +677,15 @@ async def my_pokemon_gt_up(bot, ev: Event):
         return await bot.send(
             f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
         )
-    if len(args) == 2:
+    if len(args) > 1:
         rest_num = int(args[1])
     else:
         rest_num = 1
-
+    
+    if len(args) == 3:
+        gt_max_num = int(args[2])
+    else:
+        gt_max_num = 3
     kidid = await get_pokemon_eggid(bianhao)
     egg_num = await POKE.get_pokemon_egg(uid, kidid)
     if egg_num == 0:
@@ -712,10 +718,10 @@ async def my_pokemon_gt_up(bot, ev: Event):
         HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
             bianhao, pokemon_info
         )
-        change_mes = ''
+        change_mes = f''
         if new_star_type > 0:
-            change_mes = '您的宝可梦形态好像发生了改变\n'
-        mes = f'{change_mes}{starlist[startype]}{pokename}个体值重置成功，重置后属性如下\n'
+            change_mes = f'您的宝可梦形态好像发生了改变\n'
+        mes = f'[{mapinfo[2]}]{change_mes}{starlist[startype]}{pokename}个体值重置成功，重置后属性如下\n'
 
         mes += f'HP:{HP_o}→{HP}({my_pokemon_info[1]}→{pokemon_info[1]})\n物攻:{W_atk_o}→{W_atk}({my_pokemon_info[2]}→{pokemon_info[2]})\n物防:{W_def_o}→{W_def}({my_pokemon_info[3]}→{pokemon_info[3]})\n特攻:{M_atk_o}→{M_atk}({my_pokemon_info[4]}→{pokemon_info[4]})\n特防:{M_def_o}→{M_def}({my_pokemon_info[5]}→{pokemon_info[5]})\n速度:{speed_o}→{speed}({my_pokemon_info[6]}→{pokemon_info[6]})'
         starflag = await POKE.get_pokemon_starrush(uid)
@@ -761,20 +767,20 @@ async def my_pokemon_gt_up(bot, ev: Event):
                 pokemon_info.append(gt_num)
                 if gt_num == 31:
                     gt_max_sl += 1
-            if gt_max_sl >= 3:
+            if gt_max_sl >= gt_max_num:
                 rest_flag = 3
             for num in range(7, 15):
                 pokemon_info.append(my_pokemon_info[num])
         await POKE.update_pokemon_starrush(uid, jishu)
         if rest_flag == 0:
-            mes = f'个体值{jishu}次重置完成，重置后属性如下'
+            mes = f'[{mapinfo[2]}]您的个体值{jishu}次重置完成，重置后属性如下'
         if rest_flag == 1:
-            mes = f'个体值{jishu}次重置成功，还差一次就出闪光啦，重置后属性如下'
+            mes = f'[{mapinfo[2]}]您的个体值{jishu}次重置成功，还差一次就出闪光啦，重置后属性如下'
         if rest_flag == 2:
-            mes = f'个体值{jishu}次重置成功，您的精灵形象发生了改变，重置后属性如下'
+            mes = f'[{mapinfo[2]}]您的个体值{jishu}次重置成功，您的精灵形象发生了改变，重置后属性如下'
             await POKE.new_pokemon_starrush(uid)
         if rest_flag == 3:
-            mes = f'个体值{jishu}次重置成功，您的精灵拥有了很高的潜力，重置后属性如下'
+            mes = f'[{mapinfo[2]}]您的个体值{jishu}次重置成功，您的精灵拥有了很高的潜力，重置后属性如下'
         await POKE._add_pokemon_egg(uid, kidid, 0 - jishu)
         POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
         HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
@@ -844,6 +850,8 @@ async def give_prop_pokemon_egg(bot, ev: Event):
                 at_sender=True,
             )
         sname = smapinfo[2]
+    else:
+        return await bot.send('请at需要赠送的训练家。',at_sender=True,)
     proptype = args[0]
     if proptype not in ['金币','金钱','道具', '精灵蛋', '宝可梦蛋', '蛋', '学习机']:
         return await bot.send('请输入正确的类型 道具/精灵蛋/金币/学习机。', at_sender=True)
@@ -899,10 +907,10 @@ async def give_prop_pokemon_egg(bot, ev: Event):
             return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
         egg_num = await POKE.get_pokemon_egg(uid, bianhao)
         if egg_num == 0:
-            return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
+            return await bot.send(f'您还没有{propname}的精灵蛋哦。', at_sender=True)
         if egg_num < propnum:
             return await bot.send(
-                f'您的{pokename}精灵蛋数量小于{propnum}，赠送失败。', at_sender=True
+                f'您的{propname}精灵蛋数量小于{propnum}，赠送失败。', at_sender=True
             )
 
         await POKE._add_pokemon_egg(uid, bianhao, 0 - propnum)

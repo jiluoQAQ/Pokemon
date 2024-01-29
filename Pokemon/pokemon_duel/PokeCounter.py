@@ -614,7 +614,16 @@ class PokeCounter:
                 )
         except:
             raise Exception('更新表发生错误')
-
+    
+    async def update_pokemon_egg_bianhao(self, uid, bianhao, egg_num):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE POKEMON_EGG SET NUM={egg_num} WHERE UID='{uid}' AND BIANHAO={bianhao}"
+                )
+        except:
+            raise Exception('更新表发生错误')
+    
     async def get_pokemon_egg(self, uid, bianhao):
         try:
             with self._connect() as conn:
@@ -855,7 +864,33 @@ class PokeCounter:
                     return 0
         except:
             raise Exception('查找表发生错误')
-
+    
+    def _get_pokemon_info_list(self, bianhao):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT UID,(GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) AS GT_Z FROM POKEMON_TABLE WHERE BIANHAO={bianhao} ORDER BY (GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) DESC LIMIT 0,50"
+                ).fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    def _get_pokemon_info_list_pm(self, uid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT BIANHAO,(GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) AS GT_Z FROM POKEMON_TABLE WHERE UID={uid} ORDER BY (GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) DESC LIMIT 0,50"
+                ).fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
     def _get_pokemon_level(self, uid, bianhao):
         try:
             with self._connect() as conn:
