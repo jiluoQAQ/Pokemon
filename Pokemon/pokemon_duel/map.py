@@ -184,7 +184,7 @@ async def map_my_info(bot, ev: Event):
             startype = await POKE.get_pokemon_star(uid, bianhao)
             mes += f'\n{starlist[startype]}{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
     buttons = [
-        Button('📖精灵状态', '精灵状态'),
+        Button('📖精灵状态', '精灵状态', action=2),
         Button('📖我的精灵蛋', '我的精灵蛋'),
         Button('🗺查看地图', '查看地图'),
     ]

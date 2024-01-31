@@ -14,7 +14,7 @@ from .until import *
 from pathlib import Path
 from gsuid_core.utils.image.convert import convert_img
 from gsuid_core.segment import MessageSegment
-from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
+from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH, CHAR_ICON_S_PATH
 from ..utils.dbbase.ScoreCounter import SCORE_DB
 from ..utils.convert import DailyAmountLimiter
 from ..utils.fonts.starrail_fonts import (
@@ -2681,6 +2681,8 @@ async def fight_pk_s(
 
         mes = f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{myinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
+        if mystartype > 0:
+            img = CHAR_ICON_S_PATH / f'{POKEMON_LIST[bianhao1][0]}_s.png'
         img = await convert_img(img)
         if ev.bot_id == 'qqgroup':
             await bot.send(mes)
@@ -2692,6 +2694,8 @@ async def fight_pk_s(
 
         mes = f'{diname}派出了精灵\n{starlist[distartype]}{POKEMON_LIST[bianhao2][0]} Lv.{diinfo[2]}'
         img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
+        if distartype > 0:
+            img = CHAR_ICON_S_PATH / f'{POKEMON_LIST[bianhao2][0]}_s.png'
         img = await convert_img(img)
         if ev.bot_id == 'qqgroup':
             await bot.send(mes)

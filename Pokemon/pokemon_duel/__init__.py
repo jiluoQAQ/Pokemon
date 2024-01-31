@@ -213,6 +213,11 @@ async def get_my_poke_info_t(bot, ev: Event):
         Button('📖学技能', f'学习技能{pokename}', action=2),
         Button('📖遗忘技能', f'遗忘技能{pokename}', action=2),
     ]
+    if pokename == '伊布':
+        buttons = [
+            Button('📖学技能', f'学习技能{pokename}', action=2),
+            Button('📖遗忘技能', f'遗忘技能{pokename}', action=2),
+        ]
     for jinhuainfo in jinhualist:
         buttons.append(
             Button(

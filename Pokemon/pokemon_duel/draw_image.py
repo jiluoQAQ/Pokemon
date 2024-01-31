@@ -7,7 +7,7 @@ from gsuid_core.utils.image.convert import convert_img
 
 from .pokemon import *
 from .pokeconfg import *
-from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
+from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH, CHAR_ICON_S_PATH
 from ..utils.fonts.starrail_fonts import sr_font_28, sr_font_32, sr_font_40
 
 TEXT_PATH = Path(__file__).parent / 'texture2D'
@@ -119,8 +119,11 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
         'mm',
     )
     # 画形象
+    icon_src = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
+    if startype > 0:
+        icon_src = CHAR_ICON_S_PATH / f'{POKEMON_LIST[bianhao][0]}_s.png'
     pokemon_img = (
-        Image.open(CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png')
+        Image.open(icon_src)
         .convert('RGBA')
         .resize((300, 300))
     )
@@ -300,8 +303,11 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
             'mm',
         )
         for shul, jinhuainfo in enumerate(jinhualist):
+            jinhua_icon = CHAR_ICON_PATH / f'{jinhuainfo[1]}.png'
+            if startype > 0:
+                jinhua_icon = CHAR_ICON_S_PATH / f'{jinhuainfo[1]}_s.png'
             pokemon_jinhua = (
-                Image.open(CHAR_ICON_PATH / f'{jinhuainfo[1]}.png')
+                Image.open(jinhua_icon)
                 .convert('RGBA')
                 .resize((140, 140))
             )

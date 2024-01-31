@@ -9,6 +9,7 @@ PLAYER_PATH = MAIN_PATH / 'players'
 RESOURCE_PATH = MAIN_PATH / 'resource'
 
 CHAR_ICON_PATH = RESOURCE_PATH / 'icon'
+CHAR_ICON_S_PATH = RESOURCE_PATH / 'staricon'
 
 
 def init_dir():
