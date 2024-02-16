@@ -1356,6 +1356,9 @@ async def new_pokemom_show(bot, ev: Event):
         if didianlist[didian]['type'] == '野外':
             didianlistkey[didianlist[didian]['fname']].append(didian)
     mes = '野生宝可梦大量出现了'
+    chara_id_list = list(POKEMON_LIST.keys())
+    for jinyongid in jinyonglist:
+        chara_id_list.remove(jinyongid)
     for diqu in diqulist:
         if diqulist[diqu]['open'] == 1:
             didianname = random.sample(didianlistkey[diqu], 1)[0]
@@ -1370,17 +1373,16 @@ async def new_pokemom_show(bot, ev: Event):
                 zx_max = 550
             else:
                 zx_max = 999
-            chara_id_list = list(POKEMON_LIST.keys())
+            
             find_flag = 0
             while find_flag == 0:
                 random.shuffle(chara_id_list)
                 pokeminid = chara_id_list[0]
-                if pokeminid not in jinyonglist:
-                    pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
-                    if pokemon_zz <= zx_max:
-                        await POKE.update_map_refresh(diqu,didianname,pokeminid)
-                        mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
-                        find_flag = 1
+                pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
+                if pokemon_zz <= zx_max:
+                    await POKE.update_map_refresh(diqu,didianname,pokeminid)
+                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                    find_flag = 1
     buttons = [
         Button('前往', '前往', action=2),
     ]
@@ -1543,6 +1545,8 @@ async def refresh_pokemon_day():
             didianlistkey[didianlist[didian]['fname']].append(didian)
     mes = '野生宝可梦大量出现了'
     chara_id_list = list(POKEMON_LIST.keys())
+    for jinyongid in jinyonglist:
+        chara_id_list.remove(jinyongid)
     for diqu in diqulist:
         if diqulist[diqu]['open'] == 1:
             didianname = random.sample(didianlistkey[diqu], 1)[0]
@@ -1558,15 +1562,15 @@ async def refresh_pokemon_day():
             else:
                 zx_max = 999
             find_flag = 0
+            
             while find_flag == 0:
                 random.shuffle(chara_id_list)
                 pokeminid = chara_id_list[0]
-                if pokeminid not in jinyonglist:
-                    pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
-                    if pokemon_zz <= zx_max:
-                        await POKE.update_map_refresh(diqu,didianname,pokeminid)
-                        mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
-                        find_flag = 1
+                pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
+                if pokemon_zz <= zx_max:
+                    await POKE.update_map_refresh(diqu,didianname,pokeminid)
+                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                    find_flag = 1
     refresh_send_list = await POKE.get_refresh_send_list()
     for refresh in refresh_send_list:
         try:

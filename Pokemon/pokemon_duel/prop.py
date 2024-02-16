@@ -133,6 +133,9 @@ async def buy_random_egg(bot, ev: Event):
         return await bot.send(f'随机精灵蛋需要金币{need_score},您的金币不足',at_sender=True)
     mes = ''
     chara_id_list = list(POKEMON_LIST.keys())
+    jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289,6461,6462,8881,8981,8982]
+    for jinyongid in jinyonglist_random_egg:
+        chara_id_list.remove(jinyongid)
     for i in range(0,num):
         if not daily_random_egg.check(uid):
             break
@@ -148,18 +151,17 @@ async def buy_random_egg(bot, ev: Event):
         else:
             zx_max = 999
         find_flag = 0
-        jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289,6461,6462,8881,8981,8982]
+        
         while find_flag == 0:
             random.shuffle(chara_id_list)
             pokemonid = chara_id_list[0]
-            if pokemonid not in jinyonglist_random_egg:
-                pokemon_zz = int(POKEMON_LIST[pokemonid][1]) + int(POKEMON_LIST[pokemonid][2]) + int(POKEMON_LIST[pokemonid][3]) + int(POKEMON_LIST[pokemonid][4]) + int(POKEMON_LIST[pokemonid][5]) + int(POKEMON_LIST[pokemonid][6])
-                if pokemon_zz <= zx_max:
-                    find_flag = 1
-                    daily_random_egg.increase(uid)
-                    eggid = await get_pokemon_eggid(pokemonid)
-                    SCORE.update_score(uid, -100000)
-                    await POKE._add_pokemon_egg(uid, eggid, 1)
+            pokemon_zz = int(POKEMON_LIST[pokemonid][1]) + int(POKEMON_LIST[pokemonid][2]) + int(POKEMON_LIST[pokemonid][3]) + int(POKEMON_LIST[pokemonid][4]) + int(POKEMON_LIST[pokemonid][5]) + int(POKEMON_LIST[pokemonid][6])
+            if pokemon_zz <= zx_max:
+                find_flag = 1
+                daily_random_egg.increase(uid)
+                eggid = await get_pokemon_eggid(pokemonid)
+                SCORE.update_score(uid, -100000)
+                await POKE._add_pokemon_egg(uid, eggid, 1)
         mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
     await bot.send(mes,at_sender=True)
     buttons = [
