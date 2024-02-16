@@ -825,12 +825,16 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                 pp_num = int(math.floor(random.uniform(0, 100)))
                 if pp_num <= WIN_PROP:
                     ppname = ''
-                    while ppname == '':
-                        xuexi_list = POKEMON_XUEXI[pokemonid]
-                        if len(xuexi_list) > 0:
+                    xuexi_list = POKEMON_XUEXI[pokemonid]
+                    if len(xuexi_list) > 0:
+                        while ppname == '':
                             jineng_name = random.sample(xuexi_list, 1)[0]
                             if JINENG_LIST[jineng_name][6] != '':
                                 ppname = jineng_name
+                            else:
+                                xuexi_list.remove(jineng_name)
+                            if len(xuexi_list) == 0:
+                                return
                     await POKE._add_pokemon_technical(uid,ppname,1)
                     mes += f'\n您获得了招式学习机[{ppname}]x1'
             await bot.send(mes)
