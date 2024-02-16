@@ -1022,7 +1022,18 @@ def add_wudi(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
 
 
 def get_hunluan_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
-    shanghai = 40
+    myatk = get_nowshuxing(myinfo[4], myinfo[9])
+    mydef = get_nowshuxing(myinfo[5], myinfo[10])
+    shanghai = get_shanghai_num(
+        40,
+        '一般',
+        myatk,
+        mydef,
+        1,
+        1,
+        1,
+        1,
+    )
     if int(shanghai) >= int(myinfo[17]):
         lasthp = 0
     else:

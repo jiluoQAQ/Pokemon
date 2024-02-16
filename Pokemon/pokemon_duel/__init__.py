@@ -492,6 +492,10 @@ async def get_jineng_info_text(bot, ev: Event):
     try:
         jinenginfo = JINENG_LIST[jineng]
         mes = f'名称：{jineng}\n属性：{jinenginfo[0]}\n类型：{jinenginfo[1]}\n威力：{jinenginfo[2]}\n命中：{jinenginfo[3]}\nPP值：{jinenginfo[4]}\n描述：{jinenginfo[5]}'
+        if jinenginfo[6] == '':
+            mes += '\n技能未添加'
+        else:
+            mes += '\n技能已添加'
         await bot.send(mes)
     except:
         await bot.send('无法找到该技能，请输入正确的技能名称。', at_sender=True)

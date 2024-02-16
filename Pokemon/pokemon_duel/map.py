@@ -102,8 +102,8 @@ async def map_my_group(bot, ev: Event):
         return await bot.send(
             '请输入 更新队伍+宝可梦名称(中间用空格分隔)。', at_sender=True
         )
-    if len(args) > 4:
-        return await bot.send('一个队伍最多只能有4只宝可梦。', at_sender=True)
+    if len(args) > 6:
+        return await bot.send('一个队伍最多只能有6只宝可梦。', at_sender=True)
     uid = ev.user_id
     pokemon_list = []
     name_str = ''
@@ -827,9 +827,10 @@ async def map_ts_test_noauto_use(bot, ev: Event):
                     ppname = ''
                     while ppname == '':
                         xuexi_list = POKEMON_XUEXI[pokemonid]
-                        jineng_name = random.sample(xuexi_list, 1)[0]
-                        if JINENG_LIST[jineng_name][6] != '':
-                            ppname = jineng_name
+                        if len(xuexi_list) > 0:
+                            jineng_name = random.sample(xuexi_list, 1)[0]
+                            if JINENG_LIST[jineng_name][6] != '':
+                                ppname = jineng_name
                     await POKE._add_pokemon_technical(uid,ppname,1)
                     mes += f'\n您获得了招式学习机[{ppname}]x1'
             await bot.send(mes)
