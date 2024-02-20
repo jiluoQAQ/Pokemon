@@ -767,6 +767,8 @@ async def my_pokemon_gt_up(bot, ev: Event):
             gtmax = []
             if startype > 0:
                 gtmax = random.sample([1, 2, 3, 4, 5, 6], startype)
+            if bianhao in jinyonglist:
+                gtmax = random.sample([1, 2, 3, 4, 5, 6], 3)
             gt_max_sl = 0
             for num in range(1, 7):
                 if num in gtmax:

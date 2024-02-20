@@ -110,6 +110,8 @@ async def new_pokemon_gt(uid, bianhao, startype=0):
     gtmax = []
     if startype > 0:
         gtmax = random.sample([1, 2, 3, 4, 5, 6], startype)
+    if bianhao in jinyonglist:
+        gtmax = random.sample([1, 2, 3, 4, 5, 6], 3)
     for num in range(1, 7):
         if num in gtmax:
             gt_num = 31
