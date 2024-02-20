@@ -8,7 +8,7 @@ from gsuid_core.sv import SV
 from PIL import Image, ImageDraw
 from gsuid_core.models import Event
 from gsuid_core.utils.image.convert import convert_img
-
+from .pmconfig import *
 from .until import *
 from .pokemon import *
 from .pokeconfg import *

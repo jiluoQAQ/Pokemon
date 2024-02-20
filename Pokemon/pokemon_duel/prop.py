@@ -6,6 +6,7 @@ import json
 import pytz
 import time
 from .pokeconfg import *
+from .pmconfig import *
 from .pokemon import *
 from .PokeCounter import *
 from .until import *

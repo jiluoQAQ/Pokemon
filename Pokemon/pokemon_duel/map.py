@@ -14,6 +14,7 @@ from gsuid_core.message_models import Button
 from gsuid_core.aps import scheduler
 from datetime import datetime
 import json
+from .pmconfig import *
 from .pokeconfg import *
 from .pokemon import *
 from .PokeCounter import *
@@ -27,14 +28,6 @@ from ..utils.fonts.starrail_fonts import (
     sr_font_24,
 )
 
-TS_FIGHT = 20
-TS_PROP = 10
-TS_POKEMON = 70
-WIN_EGG = 18
-WIN_PROP = 15
-DALIANG_POKE = 30
-QUN_POKE = 15
-TS_CD = 2
 black_color = (0, 0, 0)
 
 class SEND_TIME:
@@ -241,11 +234,24 @@ async def map_work_test(bot, ev: Event):
         await bot.send(mes, at_sender=True)
 
 
-@sv_pokemon_map.on_fullmatch(['野外探索T'])
-async def map_ts_test_noauto_use_T(bot, ev: Event):
-    
+@sv_pokemon_map.on_fullmatch(['野外探索'])
+async def map_ts_test_noauto_use(bot, ev: Event):
     uid = ev.user_id
+    last_send_time = time_send.get_user_time(uid)
+    now_time = time.time()
+    now_time = math.ceil(now_time)
+    send_flag = 0
+    if now_time - last_send_time <= TS_CD:
+        return
+    else:
+        time_send.record_user_time(uid,now_time)
+    if TS_PIC == 1:
+        await get_ts_info_pic(bot, ev)
+    else:
+        await get_ts_info_wenzi(bot, ev)
 
+async def get_ts_info_pic(bot, ev: Event):
+    uid = ev.user_id
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
@@ -375,7 +381,7 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
                     'rm',
                 )
                 bg_img.paste(di_image, (580, img_height), di_image)
-                img_height += 130
+                img_height += 160
             if len(dipokelist) == 0:
                 mes += f'\n您打败了{pokename}'
                 # mes_list.append(MessageSegment.text(mes))
@@ -390,13 +396,35 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
                 zs_num = int(math.floor(random.uniform(0, 100)))
                 if zs_num <= WIN_EGG:
                     eggid = await get_pokemon_eggid(pokemonid)
-                    print(pokemonid)
-                    print(eggid)
+                    # print(pokemonid)
+                    # print(eggid)
                     mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
                     await POKE._add_pokemon_egg(uid, eggid, 1)
                     img_draw.text(
                         (125, img_height + 65),
                         f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
+                        black_color,
+                        sr_font_20,
+                        'lm',
+                    )
+                pp_num = int(math.floor(random.uniform(0, 100)))
+                if pp_num <= WIN_PROP:
+                    ppname = ''
+                    xuexi_list = POKEMON_XUEXI[pokemonid]
+                    if len(xuexi_list) > 0:
+                        while ppname == '':
+                            jineng_name = random.sample(xuexi_list, 1)[0]
+                            if JINENG_LIST[jineng_name][6] != '':
+                                ppname = jineng_name
+                            else:
+                                xuexi_list.remove(jineng_name)
+                            if len(xuexi_list) == 0:
+                                return
+                    await POKE._add_pokemon_technical(uid,ppname,1)
+                    mes += f'\n您获得了招式学习机[{ppname}]x1'
+                    img_draw.text(
+                        (125, img_height + 95),
+                        f'您获得了招式学习机[{ppname}]x1',
                         black_color,
                         sr_font_20,
                         'lm',
@@ -546,196 +574,8 @@ async def map_ts_test_noauto_use_T(bot, ev: Event):
                 await bot.send(f'您获得了道具[{prop_name}]', at_sender=True)
 
 
-@sv_pokemon_map.on_fullmatch(['野外垂钓T'])
-async def map_ts_test_noauto_use_chuidiao_T(bot, ev: Event):
+async def get_ts_info_wenzi(bot, ev: Event):
     uid = ev.user_id
-
-    mypokelist = POKE._get_pokemon_list(uid)
-    if mypokelist == 0:
-        return await bot.send(
-            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
-            at_sender=True,
-        )
-    mapinfo = POKE._get_map_now(uid)
-    this_map = mapinfo[1]
-    if this_map == '':
-        return await bot.send(
-            '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
-        )
-    my_team = await POKE.get_pokemon_group(uid)
-    if my_team == '':
-        return await bot.send(
-            '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
-            at_sender=True,
-        )
-    pokemon_team = my_team.split(',')
-    mypokelist = []
-    for bianhao in pokemon_team:
-        bianhao = int(bianhao)
-        mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
-        return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
-        )
-
-    mapinfo = POKE._get_map_now(uid)
-    mychenghao, huizhang = get_chenghao(uid)
-    name = mapinfo[2]
-    if name == uid:
-        if ev.sender:
-            sender = ev.sender
-            if sender.get('nickname', '') != '':
-                name = sender['nickname']
-    mes = ''
-    name = name[:10]
-    bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
-    vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
-    bg_img.paste(vs_img, (300, 12), vs_img)
-    trainers_path = TEXT_PATH / 'trainers'
-    if didianlist[this_map]['type'] == '野外':
-        # 遇怪
-        if didianlist[this_map]['pokemon_s'] is not None:
-            if huizhang >= 5:
-                chuidiao_key = '5'
-            elif huizhang >= 3:
-                chuidiao_key = '3'
-            elif huizhang >= 1:
-                chuidiao_key = '1'
-            else:
-                return await bot.send(
-                    '您还没有钓竿，请取得1枚以上徽章后再来尝试', at_sender=True
-                )
-            pokelist = didianlist[this_map]['pokemon_s'][chuidiao_key][
-                'pokemon'
-            ]
-            dipokelist = random.sample(pokelist, 1)
-            pokename = CHARA_NAME[dipokelist[0]][0]
-            pokemonid = dipokelist[0]
-            mes += f'野生宝可梦{pokename}出现了\n'
-            my_image = (
-                Image.open(trainers_path / '0.png')
-                .convert('RGBA')
-                .resize((120, 120))
-            )
-            di_image = (
-                Image.open(CHAR_ICON_PATH / f'{pokename}.png')
-                .convert('RGBA')
-                .resize((120, 120))
-            )
-            bg_img.paste(my_image, (0, 0), my_image)
-            bg_img.paste(di_image, (580, 0), di_image)
-            img_draw = ImageDraw.Draw(bg_img)
-            img_draw.text(
-                (125, 30),
-                mychenghao,
-                black_color,
-                sr_font_24,
-                'lm',
-            )
-            img_draw.text(
-                (125, 65),
-                f'{name}',
-                black_color,
-                sr_font_24,
-                'lm',
-            )
-            img_draw.text(
-                (575, 30),
-                '野生宝可梦',
-                black_color,
-                sr_font_24,
-                'rm',
-            )
-            img_draw.text(
-                (575, 65),
-                f'{pokename}',
-                black_color,
-                sr_font_24,
-                'rm',
-            )
-            (
-                bg_img,
-                bg_num,
-                img_height,
-                mes_list,
-                mypokelist,
-                dipokelist,
-            ) = await fight_yw_ys_s(
-                bg_img,
-                bot,
-                ev,
-                uid,
-                mypokelist,
-                dipokelist,
-                didianlist[this_map]['pokemon_s'][chuidiao_key]['level'][0],
-                didianlist[this_map]['pokemon_s'][chuidiao_key]['level'][1],
-                1,
-            )
-            if math.ceil((img_height + 120) / 1280) > bg_num:
-                bg_num += 1
-                bg_img = change_bg_img(bg_img, bg_num)
-            img_draw = ImageDraw.Draw(bg_img)
-            mes += mes_list
-            if len(mypokelist) == 0:
-                mes += f'\n您被野生宝可梦{pokename}打败了，眼前一黑'
-                # mes_list.append(MessageSegment.text(mes))
-                # await bot.send(mes, at_sender=True)
-                img_draw.text(
-                    (575, img_height + 30),
-                    f'您被{pokename}打败了，眼前一黑',
-                    black_color,
-                    sr_font_20,
-                    'rm',
-                )
-                bg_img.paste(di_image, (580, img_height), di_image)
-                img_height += 130
-            if len(dipokelist) == 0:
-                mes += f'\n您打败了{pokename}'
-                # mes_list.append(MessageSegment.text(mes))
-                # await bot.send(mes, at_sender=True)
-                img_draw.text(
-                    (125, img_height + 30),
-                    f'您打败了{pokename}',
-                    black_color,
-                    sr_font_20,
-                    'lm',
-                )
-                zs_num = int(math.floor(random.uniform(0, 100)))
-                if zs_num <= WIN_EGG:
-                    eggid = await get_pokemon_eggid(pokemonid)
-                    print(pokemonid)
-                    print(eggid)
-                    mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
-                    await POKE._add_pokemon_egg(uid, eggid, 1)
-                    img_draw.text(
-                        (125, img_height + 65),
-                        f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
-                        black_color,
-                        sr_font_20,
-                        'lm',
-                    )
-                bg_img.paste(my_image, (0, img_height), my_image)
-                # mes_list.append(MessageSegment.text(mes))
-                # await bot.send(mes, at_sender=True)
-                img_height += 130
-            img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
-            img_bg.paste(bg_img, (0, 0))
-            img_bg = await convert_img(img_bg)
-            await bot.send(img_bg)
-        else:
-            return await bot.send('当前地点无法垂钓', at_sender=True)
-
-
-@sv_pokemon_map.on_fullmatch(['野外探索'])
-async def map_ts_test_noauto_use(bot, ev: Event):
-    uid = ev.user_id
-    last_send_time = time_send.get_user_time(uid)
-    now_time = time.time()
-    now_time = math.ceil(now_time)
-    send_flag = 0
-    if now_time - last_send_time <= TS_CD:
-        return
-    time_send.record_user_time(uid,now_time)
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
@@ -894,6 +734,213 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
     if now_time - last_send_time <= TS_CD:
         return
     time_send.record_user_time(uid,now_time)
+    if TS_PIC == 1:
+        await get_cd_info_pic(bot, ev)
+    else:
+        await get_cd_info_wenzi(bot, ev)
+    
+async def get_cd_info_pic(bot, ev: Event):
+    uid = ev.user_id
+
+    mypokelist = POKE._get_pokemon_list(uid)
+    if mypokelist == 0:
+        return await bot.send(
+            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
+            at_sender=True,
+        )
+    mapinfo = POKE._get_map_now(uid)
+    this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send(
+            '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
+        )
+    my_team = await POKE.get_pokemon_group(uid)
+    if my_team == '':
+        return await bot.send(
+            '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
+            at_sender=True,
+        )
+    pokemon_team = my_team.split(',')
+    mypokelist = []
+    for bianhao in pokemon_team:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+    if didianlist[this_map]['type'] == '城镇':
+        return await bot.send(
+            '您当前处于城镇中没有可探索的区域', at_sender=True
+        )
+
+    mapinfo = POKE._get_map_now(uid)
+    mychenghao, huizhang = get_chenghao(uid)
+    name = mapinfo[2]
+    if name == uid:
+        if ev.sender:
+            sender = ev.sender
+            if sender.get('nickname', '') != '':
+                name = sender['nickname']
+    mes = ''
+    name = name[:10]
+    bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
+    vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
+    bg_img.paste(vs_img, (300, 12), vs_img)
+    trainers_path = TEXT_PATH / 'trainers'
+    if didianlist[this_map]['type'] == '野外':
+        # 遇怪
+        if didianlist[this_map]['pokemon_s'] is not None:
+            if huizhang >= 5:
+                chuidiao_key = '5'
+            elif huizhang >= 3:
+                chuidiao_key = '3'
+            elif huizhang >= 1:
+                chuidiao_key = '1'
+            else:
+                return await bot.send(
+                    '您还没有钓竿，请取得1枚以上徽章后再来尝试', at_sender=True
+                )
+            pokelist = didianlist[this_map]['pokemon_s'][chuidiao_key][
+                'pokemon'
+            ]
+            dipokelist = random.sample(pokelist, 1)
+            pokename = CHARA_NAME[dipokelist[0]][0]
+            pokemonid = dipokelist[0]
+            mes += f'野生宝可梦{pokename}出现了\n'
+            my_image = (
+                Image.open(trainers_path / '0.png')
+                .convert('RGBA')
+                .resize((120, 120))
+            )
+            di_image = (
+                Image.open(CHAR_ICON_PATH / f'{pokename}.png')
+                .convert('RGBA')
+                .resize((120, 120))
+            )
+            bg_img.paste(my_image, (0, 0), my_image)
+            bg_img.paste(di_image, (580, 0), di_image)
+            img_draw = ImageDraw.Draw(bg_img)
+            img_draw.text(
+                (125, 30),
+                mychenghao,
+                black_color,
+                sr_font_24,
+                'lm',
+            )
+            img_draw.text(
+                (125, 65),
+                f'{name}',
+                black_color,
+                sr_font_24,
+                'lm',
+            )
+            img_draw.text(
+                (575, 30),
+                '野生宝可梦',
+                black_color,
+                sr_font_24,
+                'rm',
+            )
+            img_draw.text(
+                (575, 65),
+                f'{pokename}',
+                black_color,
+                sr_font_24,
+                'rm',
+            )
+            (
+                bg_img,
+                bg_num,
+                img_height,
+                mes_list,
+                mypokelist,
+                dipokelist,
+            ) = await fight_yw_ys_s(
+                bg_img,
+                bot,
+                ev,
+                uid,
+                mypokelist,
+                dipokelist,
+                didianlist[this_map]['pokemon_s'][chuidiao_key]['level'][0],
+                didianlist[this_map]['pokemon_s'][chuidiao_key]['level'][1],
+                1,
+            )
+            if math.ceil((img_height + 120) / 1280) > bg_num:
+                bg_num += 1
+                bg_img = change_bg_img(bg_img, bg_num)
+            img_draw = ImageDraw.Draw(bg_img)
+            mes += mes_list
+            if len(mypokelist) == 0:
+                mes += f'\n您被野生宝可梦{pokename}打败了，眼前一黑'
+                # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
+                img_draw.text(
+                    (575, img_height + 30),
+                    f'您被{pokename}打败了，眼前一黑',
+                    black_color,
+                    sr_font_20,
+                    'rm',
+                )
+                bg_img.paste(di_image, (580, img_height), di_image)
+                img_height += 160
+            if len(dipokelist) == 0:
+                mes += f'\n您打败了{pokename}'
+                # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
+                img_draw.text(
+                    (125, img_height + 30),
+                    f'您打败了{pokename}',
+                    black_color,
+                    sr_font_20,
+                    'lm',
+                )
+                zs_num = int(math.floor(random.uniform(0, 100)))
+                if zs_num <= WIN_EGG:
+                    eggid = await get_pokemon_eggid(pokemonid)
+                    print(pokemonid)
+                    print(eggid)
+                    mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
+                    await POKE._add_pokemon_egg(uid, eggid, 1)
+                    img_draw.text(
+                        (125, img_height + 65),
+                        f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
+                        black_color,
+                        sr_font_20,
+                        'lm',
+                    )
+                pp_num = int(math.floor(random.uniform(0, 100)))
+                if pp_num <= WIN_PROP:
+                    ppname = ''
+                    xuexi_list = POKEMON_XUEXI[pokemonid]
+                    if len(xuexi_list) > 0:
+                        while ppname == '':
+                            jineng_name = random.sample(xuexi_list, 1)[0]
+                            if JINENG_LIST[jineng_name][6] != '':
+                                ppname = jineng_name
+                            else:
+                                xuexi_list.remove(jineng_name)
+                            if len(xuexi_list) == 0:
+                                return
+                    await POKE._add_pokemon_technical(uid,ppname,1)
+                    mes += f'\n您获得了招式学习机[{ppname}]x1'
+                    img_draw.text(
+                        (125, img_height + 95),
+                        f'您获得了招式学习机[{ppname}]x1',
+                        black_color,
+                        sr_font_20,
+                        'lm',
+                    )
+                bg_img.paste(my_image, (0, img_height), my_image)
+                # mes_list.append(MessageSegment.text(mes))
+                # await bot.send(mes, at_sender=True)
+                img_height += 160
+            img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
+            img_bg.paste(bg_img, (0, 0))
+            img_bg = await convert_img(img_bg)
+            await bot.send(img_bg)
+        else:
+            return await bot.send('当前地点无法垂钓', at_sender=True)
+
+async def get_cd_info_wenzi(bot, ev: Event):
+    uid = ev.user_id
     mypokelist = POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
@@ -968,11 +1015,16 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
                 pp_num = int(math.floor(random.uniform(0, 100)))
                 if pp_num <= WIN_PROP:
                     ppname = ''
-                    while ppname == '':
-                        xuexi_list = POKEMON_XUEXI[pokemonid]
-                        jineng_name = random.sample(xuexi_list, 1)[0]
-                        if JINENG_LIST[jineng_name][6] != '':
-                            ppname = jineng_name
+                    xuexi_list = POKEMON_XUEXI[pokemonid]
+                    if len(xuexi_list) > 0:
+                        while ppname == '':
+                            jineng_name = random.sample(xuexi_list, 1)[0]
+                            if JINENG_LIST[jineng_name][6] != '':
+                                ppname = jineng_name
+                            else:
+                                xuexi_list.remove(jineng_name)
+                            if len(xuexi_list) == 0:
+                                return
                     await POKE._add_pokemon_technical(uid,ppname,1)
                     mes += f'\n您获得了招式学习机[{ppname}]x1'
             await bot.send(mes)
