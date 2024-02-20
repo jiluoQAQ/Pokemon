@@ -18,6 +18,7 @@ def init_dir():
         PLAYER_PATH,
         RESOURCE_PATH,
         CHAR_ICON_PATH,
+        CHAR_ICON_S_PATH
     ]:
         i.mkdir(parents=True, exist_ok=True)
 
