@@ -849,28 +849,57 @@ async def give_prop_pokemon_egg(bot, ev: Event):
     args = ev.text.split()
     uid = ev.user_id
     if len(args) < 2:
-        return await bot.send('请输入 赠送物品[道具/精灵蛋/金币/学习机][名称][数量]。', at_sender=True)
+        return await bot.send('请输入 赠送物品[道具/精灵蛋/金币/学习机][名称][数量][赠送对象昵称/at]。', at_sender=True)
+    proptype = args[0]
+    if proptype not in ['金币','金钱','道具', '精灵蛋', '宝可梦蛋', '蛋', '学习机']:
+        return await bot.send('请输入正确的类型 道具/精灵蛋/金币/学习机。', at_sender=True)
     if ev.at is not None:
         suid = ev.at
         smapinfo = POKE._get_map_now(suid)
         if smapinfo[2] == 0:
             return await bot.send(
-                '没有找到该训练家，请at需要赠送的对象/该人员未成为训练家。',
+                '没有找到该训练家，请at需要发放奖励的对象/该人员未成为训练家。',
                 at_sender=True,
             )
         sname = smapinfo[2]
     else:
-        return await bot.send('请at需要赠送的训练家。',at_sender=True,)
-    proptype = args[0]
-    if proptype not in ['金币','金钱','道具', '精灵蛋', '宝可梦蛋', '蛋', '学习机']:
-        return await bot.send('请输入正确的类型 道具/精灵蛋/金币/学习机。', at_sender=True)
+        if proptype in ['金币','金钱']:
+            if len(args) == 2:
+                snickname = args[1]
+            else:
+                snickname = args[2]
+        else:
+            if len(args) < 3:
+                return await bot.send(
+                    '请输入赠送训练家的昵称或at该名训练家。',
+                    at_sender=True,
+                )
+            if len(args) == 3:
+                snickname = args[2]
+            else:
+                snickname = args[3]
+        smapinfo = POKE._get_map_info_nickname(snickname)
+        if smapinfo[2] == 0:
+            return await bot.send(
+                '没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',
+                at_sender=True,
+            )
+        suid = smapinfo[2]
+        sname = snickname
+    if uid == suid:
+        return await bot.send('不要自己送自己。',at_sender=True)
+    
+    
     propname = args[1]
-    if len(args) == 3:
-        propnum = int(args[2])
+    if len(args) >= 3 and proptype in ['道具', '精灵蛋', '宝可梦蛋', '蛋', '学习机']:
+        if args[2].isdigit():
+            propnum = int(args[2])
+        else:
+            propnum = 1
     else:
         propnum = 1
     if propnum < 1:
-        return await bot.send('赠送物品的数量需大于1。', at_sender=True)
+        return await bot.send('赠送物品的数量需大于0。', at_sender=True)
     if proptype == '金币' or proptype == '金钱':
         propnum = int(args[1])
         if propnum < 1:
