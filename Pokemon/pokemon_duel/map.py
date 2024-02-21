@@ -80,6 +80,17 @@ async def get_day_pokemon_refresh(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
+@sv_pokemon_map.on_command(('替换消息发送方式', '替换发送方式'))
+async def show_poke_info(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) != 1:
+        return await bot.send('请输入 替换消息发送方式[图片/文字]。', at_sender=True)
+    if args[0] == '图片':
+        TS_PIC = 1
+    if args[0] == '文字':
+        TS_PIC = 0
+    await bot.send('消息发送类型已替换')
+
 @sv_pokemon_map.on_fullmatch(['我的金钱'])
 async def map_my_score(bot, ev: Event):
     uid = ev.user_id
@@ -1222,7 +1233,10 @@ async def pokemon_pk_auto(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(mes)
+    if TS_PIC == 1:
+        await bot.send(img_bg)
+    else:
+        await bot.send(mes)
 
 
 @sv_pokemon_map.on_prefix(['选择初始地区'])
