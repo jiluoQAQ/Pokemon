@@ -227,7 +227,7 @@ async def map_work_test(bot, ev: Event):
         return await bot.send('野外区域无法打工，请返回城镇哦', at_sender=True)
 
     if didianlist[this_map]['type'] == '城镇':
-        get_score = (int(didianlist[this_map]['need']) + 1) * 5000
+        get_score = (int(mapinfo[0]) + 1) * 5000
         SCORE.update_score(uid, get_score)
         daily_work_limiter.increase(uid)
         mes = f'您通过打工获得了{get_score}金钱'
