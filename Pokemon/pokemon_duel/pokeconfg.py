@@ -2825,6 +2825,8 @@ async def fight_pk(
             bg_num += 1
             bg_img = change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
+        if changci > 1:
+            mesg += '\n'
         mesg += f'第{changci}场\n'
         img_draw = ImageDraw.Draw(bg_img)
         img_draw.text(
