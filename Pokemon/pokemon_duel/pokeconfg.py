@@ -402,6 +402,8 @@ async def chongkai(uid):
     POKE.delete_pokemon_map(uid)
     await POKE.delete_pokemon_group(uid)
     await POKE._delete_poke_star(uid)
+    await POKE.delete_pokemon_prop(uid)
+    await POKE.delete_exchange_uid(uid)
 
 
 # 放生

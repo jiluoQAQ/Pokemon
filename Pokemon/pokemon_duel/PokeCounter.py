@@ -565,7 +565,13 @@ class PokeCounter:
                 )
         except:
             raise Exception('更新表发生错误')
-
+    
+    async def delete_pokemon_prop(self, uid):
+        with self._connect() as conn:
+            conn.execute(
+                f"DELETE FROM POKEMON_PROP WHERE UID='{uid}'"
+            ).fetchall()
+    
     async def _add_pokemon_group(self, uid, pokemon_list):
         try:
             with self._connect() as conn:
