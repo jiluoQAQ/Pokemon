@@ -57,6 +57,7 @@ async def pokemon_help(bot, ev: Event):
 22、大量出现信息(查询当前随机出现的大量宝可梦消息)
 23、宝可梦重生[精灵名](让等级到100级的精灵重生为精灵蛋)
 24、道具帮助(查看道具系统/交易所的使用说明)
+25、更新公告(查看最近更新内容)
 注:
 同一类型的精灵只能拥有一只(进化型为不同类型)
 后续功能在写了在写了(新建文件夹)
@@ -78,7 +79,29 @@ async def pokemon_help(bot, ev: Event):
     else:
         await bot.send_option(msg, buttons)
 
-
+@sv_pokemon_duel.on_fullmatch(('更新公告', '查看公告'))
+async def pokemon_gonggao(bot, ev: Event):
+    msg = """
+       宝可梦小游戏更新公告：
+2024-2-21
+1.添加部分回复类技能效果
+2024-2-20
+1.添加周本boss，暂时只加了属性查看
+2.部分技能名称优化
+2024-2-19
+1.神兽个体值修改，必定为3V及以上
+2.发放奖励&赠送道具添加给予对象的昵称识别
+2024-1-31
+1.精灵状态添加闪光精灵的形象图
+2024-1-29
+1.手动对战加入PP值设定
+2024-1-22
+1.添加成都、丰缘地图
+2.道具赠送添加金币，学习机的赠送功能
+ """
+    await bot.send(msg, at_sender=True)
+    
+    
 @sv_pokemon_duel.on_fullmatch(['小游戏帮助', '宝可梦小游戏帮助'])
 async def pokemon_help_game(bot, ev: Event):
     msg = """
