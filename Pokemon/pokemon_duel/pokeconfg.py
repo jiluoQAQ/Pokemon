@@ -2435,6 +2435,14 @@ async def get_win_reward(
     if mesg:
         mes += mesg
     newinfo = await new_pokemon_info(mypokemonid, pokemon_info, returnlevel)
+    newinfo[9] = myinfo[9]
+    newinfo[10] = myinfo[10]
+    newinfo[11] = myinfo[11]
+    newinfo[12] = myinfo[12]
+    newinfo[13] = myinfo[13]
+    newinfo[14] = myinfo[14]
+    newinfo[15] = myinfo[15]
+    newinfo[16] = myinfo[16]
     newinfo[17] = myinfo[17]
     return mes, newinfo
 
@@ -3026,7 +3034,6 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
     changci = 1
     myinfo = []
     diinfo = []
-
     mesg = ''
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
