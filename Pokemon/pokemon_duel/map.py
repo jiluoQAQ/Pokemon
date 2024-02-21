@@ -85,6 +85,7 @@ async def show_poke_info(bot, ev: Event):
     args = ev.text.split()
     if len(args) != 1:
         return await bot.send('请输入 替换消息发送方式[图片/文字]。', at_sender=True)
+    global TS_PIC
     if args[0] == '图片':
         TS_PIC = 1
     if args[0] == '文字':
@@ -256,6 +257,7 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         return
     else:
         time_send.record_user_time(uid,now_time)
+    print(TS_PIC)
     if TS_PIC == 1:
         await get_ts_info_pic(bot, ev)
     else:
@@ -311,11 +313,28 @@ async def get_ts_info_pic(bot, ev: Event):
         ts_quality = TS_POKEMON
         if ts_num <= ts_quality:
             # 遇怪
-            pokelist = didianlist[this_map]['pokemon']
+            daliang_pokemon = await POKE.get_map_refresh(didianlist[this_map]['fname'],this_map)
+            if int(daliang_pokemon) > 0:
+                daling_num = int(math.floor(random.uniform(0, 100)))
+                if daling_num <= DALIANG_POKE:
+                    pokelist = []
+                    pokelist.append(int(daliang_pokemon))
+                else:
+                    pokelist = didianlist[this_map]['pokemon']
+            else:
+                pokelist = didianlist[this_map]['pokemon']
             dipokelist = random.sample(pokelist, 1)
             pokename = CHARA_NAME[dipokelist[0]][0]
             pokemonid = dipokelist[0]
-            mes += f'野生宝可梦{pokename}出现了\n'
+            qun_num = int(math.floor(random.uniform(0, 100)))
+            if qun_num <= QUN_POKE:
+                pokemon_num = int(math.floor(random.uniform(3, 6)))
+                for item in range(0,pokemon_num):
+                    dipokelist.append(pokemonid)
+                mes += f'野生宝可梦{pokename}群出现了\n'
+            else:
+                pokemon_num = 1
+                mes += f'野生宝可梦{pokename}出现了\n'
             my_image = (
                 Image.open(trainers_path / '0.png')
                 .convert('RGBA')
@@ -343,13 +362,22 @@ async def get_ts_info_pic(bot, ev: Event):
                 sr_font_24,
                 'lm',
             )
-            img_draw.text(
-                (575, 30),
-                '野生宝可梦',
-                black_color,
-                sr_font_24,
-                'rm',
-            )
+            if pokemon_num > 1:
+                img_draw.text(
+                    (575, 30),
+                    '野生宝可梦群',
+                    black_color,
+                    sr_font_24,
+                    'rm',
+                )
+            else:
+                img_draw.text(
+                    (575, 30),
+                    '野生宝可梦',
+                    black_color,
+                    sr_font_24,
+                    'rm',
+                )
             img_draw.text(
                 (575, 65),
                 f'{pokename}',
@@ -394,23 +422,33 @@ async def get_ts_info_pic(bot, ev: Event):
                 bg_img.paste(di_image, (580, img_height), di_image)
                 img_height += 160
             if len(dipokelist) == 0:
-                mes += f'\n您打败了{pokename}'
-                # mes_list.append(MessageSegment.text(mes))
-                # await bot.send(mes, at_sender=True)
-                img_draw.text(
-                    (125, img_height + 30),
-                    f'您打败了{pokename}',
-                    black_color,
-                    sr_font_20,
-                    'lm',
-                )
-                zs_num = int(math.floor(random.uniform(0, 100)))
-                if zs_num <= WIN_EGG:
+                if pokemon_num > 1:
+                    mes += f'\n您打败了{pokename}群'
+                    img_draw.text(
+                        (125, img_height + 30),
+                        f'您打败了{pokename}群',
+                        black_color,
+                        sr_font_20,
+                        'lm',
+                    )
+                else:
+                    mes += f'\n您打败了{pokename}'
+                    img_draw.text(
+                        (125, img_height + 30),
+                        f'您打败了{pokename}',
+                        black_color,
+                        sr_font_20,
+                        'lm',
+                    )
+                egg_num = 0
+                for item in range(0,pokemon_num):
+                    zs_num = int(math.floor(random.uniform(0, 100)))
+                    if zs_num <= WIN_EGG:
+                        egg_num += 1
+                if egg_num > 0:
                     eggid = await get_pokemon_eggid(pokemonid)
-                    # print(pokemonid)
-                    # print(eggid)
-                    mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋'
-                    await POKE._add_pokemon_egg(uid, eggid, 1)
+                    mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x{egg_num}'
+                    await POKE._add_pokemon_egg(uid, eggid, egg_num)
                     img_draw.text(
                         (125, img_height + 65),
                         f'您获得了{CHARA_NAME[eggid][0]}精灵蛋',
@@ -440,6 +478,7 @@ async def get_ts_info_pic(bot, ev: Event):
                         sr_font_20,
                         'lm',
                     )
+                    
                 bg_img.paste(my_image, (0, img_height), my_image)
                 # mes_list.append(MessageSegment.text(mes))
                 # await bot.send(mes, at_sender=True)
@@ -561,7 +600,7 @@ async def get_ts_info_pic(bot, ev: Event):
                         'lm',
                     )
 
-                    get_score = (int(didianlist[this_map]['need']) + 1) * 200
+                    get_score = (int(didianlist[this_map]['need']) + 1) * 300
                     SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
                     img_draw.text(
