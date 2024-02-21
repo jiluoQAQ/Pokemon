@@ -1552,12 +1552,21 @@ async def give_prop_pokemon_info_all(bot, ev: Event):
 @sv_pm_config.on_command(('查看状态', '状态查看'))
 async def get_my_poke_info_sv(bot, ev: Event):
     args = ev.text.split()
-    if len(args) != 1:
+    if len(args) < 1:
         return await bot.send('请输入 精灵状态+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
     uid = ev.user_id
     if ev.at is not None:
         uid = ev.at
+    else:
+        nickname = args[1]
+        mapinfo = POKE._get_map_info_nickname(nickname)
+        if mapinfo[2] == 0:
+            return await bot.send(
+                '没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',
+                at_sender=True,
+            )
+        uid = mapinfo[2]
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)

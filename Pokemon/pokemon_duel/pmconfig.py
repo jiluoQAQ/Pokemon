@@ -10,6 +10,7 @@ DALIANG_POKE = 30   #当前地点大量出现的宝可梦遭遇概率
 QUN_POKE = 15   #野生宝可梦群居战概率
 TS_CD = 2   #探索CD
 TS_PIC = 0 #探索发送类型，1为发送图片，0为发送文字
+boss_fight = 3  #每周Boss挑战次数
 
 # 造成伤害天气
 tq_kouxuelist = ['沙暴', '冰雹']

@@ -1171,6 +1171,16 @@ def up_my_hp(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, bh_bl):
     mes = f'{myinfo[0]}使用了技能{jineng}回复{last_my_hp}点血量\n剩余血量{myinfo[17]}'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
+def sleep(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+    jinenginfo = JINENG_LIST[jineng]
+    hx_num = math.ceil(myinfo[3] * float(bh_bl))
+    now_my_hp = myinfo[3]
+    last_my_hp = now_my_hp - myinfo[17]
+    myinfo[17] = now_my_hp
+    myzhuangtai[0][0] = '睡眠'
+    myzhuangtai[0][1] = 2
+    mes = f'{myinfo[0]}睡觉了，身体得到了回复\n剩余血量{myinfo[17]}'
+    return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 我方技能对敌方属性提升/降低效果
 def up_shux_info_di(

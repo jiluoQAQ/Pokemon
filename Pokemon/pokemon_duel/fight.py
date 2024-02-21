@@ -3,7 +3,7 @@ import json
 import math
 import random
 from pathlib import Path
-
+import datetime
 from gsuid_core.sv import SV
 from PIL import Image, ImageDraw
 from gsuid_core.models import Event
@@ -29,6 +29,7 @@ with Path.open(Excel_path / 'map.json', encoding='utf-8') as f:
     daoguanlist = map_dict['daoguanlist']
     tianwanglist = map_dict['tianwanglist']
     guanjunlist = map_dict['guanjunlist']
+    weekbosslist = map_dict['weekbosslist']
 
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 
@@ -840,3 +841,47 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     if len(dipokelist) == 0:
         mes = f'{name}打败了{diname}，获得了对战的胜利'
     await bot.send(mes)
+
+@sv_pokemon_pk.on_fullmatch(('挑战每周boss', '周本挑战', '每周boss挑战', '周本boss信息'))
+async def pokemon_pk_boss_week(bot, ev: Event):
+    uid = ev.user_id
+    mypokelist = POKE._get_pokemon_list(uid)
+    if mypokelist == 0:
+        return await bot.send(
+            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
+            at_sender=True,
+        )
+    mapinfo = POKE._get_map_now(uid)
+    this_map = mapinfo[1]
+    # if not daily_boss.check_week(uid):
+        # return await bot.send(
+            # '本周的挑战次数已经超过上限了哦，下周再来吧。', at_sender=True
+        # )
+    diquname = didianlist[this_map]['fname']
+    bosslist_diqu = list(weekbosslist.keys())
+    if diquname not in bosslist_diqu:
+        return await bot.send(
+            f'当前地区暂时没有出现boss，清前往其他地区进行挑战', at_sender=True
+        )
+    bosslist_didian = list(weekbosslist[diquname].keys())
+    if this_map not in bosslist_didian:
+        return await bot.send(
+            f'当前地点暂时没有出现boss，清前往其他地点进行挑战', at_sender=True
+        )
+    bossinfo = weekbosslist[diquname][this_map]
+    bianhao = bossinfo['bossid']
+    pokemon_info = await get_pokeon_info_boss(bianhao, bossinfo['jinenglist'])
+    HP_1, W_atk_1, W_def_1, M_atk_1, M_def_1, speed_1 = await get_pokemon_shuxing_boss(
+        bianhao, pokemon_info, 1.2
+    )
+    HP_2, W_atk_2, W_def_2, M_atk_2, M_def_2, speed_2 = await get_pokemon_shuxing_boss(
+        bianhao, pokemon_info, 1.5
+    )
+    HP_3, W_atk_3, W_def_3, M_atk_3, M_def_3, speed_3 = await get_pokemon_shuxing_boss(
+        bianhao, pokemon_info, 2
+    )
+    mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info[0]}\n性格:{pokemon_info[13]}\n技能:{pokemon_info[14]}\n各阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}"
+    await bot.send(mes)
+    # daily_boss.increase(uid)
+    
+    

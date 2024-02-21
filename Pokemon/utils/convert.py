@@ -21,7 +21,16 @@ class DailyNumberLimiter:
             self.today = day
             self.count.clear()
         return bool(self.count[key] < self.max)
-
+    
+    def check_week(self, key) -> bool:
+        current_date = datetime.now(self.tz)
+        this_year, this_week, _ = current_date.isocalendar()
+        day = int(str(this_year) + str(this_week))
+        if day != self.today:
+            self.today = day
+            self.count.clear()
+        return bool(self.count[key] < self.max)
+    
     def get_num(self, key):
         return self.count[key]
 
@@ -51,7 +60,19 @@ class DailyAmountLimiter(DailyNumberLimiter):
             recorddb.set_date(day, key)
             recorddb.clear_key(key)
         return bool(recorddb.get_num(key) < self.max)
-
+    
+    def check_week(self, key) -> bool:
+        key = list(key)
+        key.append(self.type)
+        key = tuple(key)
+        current_date = datetime.now(self.tz)
+        this_year, this_week, _ = current_date.isocalendar()
+        day = int(str(this_year) + str(this_week))
+        if day != recorddb.get_date(key):
+            recorddb.set_date(day, key)
+            recorddb.clear_key(key)
+        return bool(recorddb.get_num(key) < self.max)
+    
     def check10(self, key) -> bool:
         now = datetime.now(self.tz)
         key = list(key)

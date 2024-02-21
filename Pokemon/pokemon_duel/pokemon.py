@@ -5727,7 +5727,7 @@ JINENG_LIST = {
         '—',
         '10',
         '连续睡上２回合。回复自己的全部ＨＰ以及治愈所有异常状态。',
-        '',
+        'sleep(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
     ],
     '岩崩': [
         '岩石',
@@ -7050,7 +7050,7 @@ JINENG_LIST = {
         '—',
         '10',
         '偷懒休息。回复自己最大ＨＰ的一半。',
-        '',
+        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
     ],
     '巨声': [
         '一般',
@@ -7518,7 +7518,7 @@ JINENG_LIST = {
         '—',
         '10',
         '降到地面，使身体休息。回复自己最大ＨＰ的一半。',
-        '',
+        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
     ],
     '重力': [
         '超能力',
@@ -8427,7 +8427,7 @@ JINENG_LIST = {
         '—',
         '10',
         '召唤手下疗伤。回复自己最大ＨＰ的一半。',
-        '',
+        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
     ],
     '双刃头锤': [
         '岩石',
@@ -10246,7 +10246,7 @@ JINENG_LIST = {
         '—',
         '10',
         '回复自己最大ＨＰ的一半。在沙暴中回复得更多。',
-        '',
+        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
     ],
     '迎头一击': [
         '虫',

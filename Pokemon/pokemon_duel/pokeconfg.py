@@ -44,6 +44,7 @@ async def get_poke_bianhao(name):
 
 daily_work_limiter = DailyAmountLimiter('work', WORK_NUM, RESET_HOUR)
 daily_random_egg = DailyAmountLimiter('random_egg', random_egg_buy, RESET_HOUR)
+daily_boss = DailyAmountLimiter('boss', boss_fight, RESET_HOUR)
 
 # 生成精灵初始技能
 def add_new_pokemon_jineng(level, bianhao):
@@ -125,12 +126,37 @@ async def new_pokemon_gt(uid, bianhao, startype=0):
     POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
     return pokemon_info
 
+# 获取宝可梦，随机个体，随机努力，测试用
+async def get_pokeon_info_boss(bianhao, jineng = '', level=100):
+    pokemon_info = []
+    pokemon_info.append(level)
+    for num in range(1, 7):
+        pokemon_info.append(31)
+
+    for num in range(1, 6):
+        if num == 1:
+            pokemon_info.append(6)
+        elif num == 2 and int(POKEMON_LIST[bianhao][2]) >= int(POKEMON_LIST[bianhao][4]):
+            pokemon_info.append(252)
+        elif num == 4 and int(POKEMON_LIST[bianhao][4]) > int(POKEMON_LIST[bianhao][2]):
+            pokemon_info.append(252)
+        else:
+            pokemon_info.append(0)
+    pokemon_info.append(252)
+    if int(POKEMON_LIST[bianhao][2]) >= int(POKEMON_LIST[bianhao][4]):
+        pokemon_info.append('固执')
+    elif int(POKEMON_LIST[bianhao][4]) > int(POKEMON_LIST[bianhao][2]):
+        pokemon_info.append('内敛')
+    else:
+        xingge = random.sample(list_xingge, 1)
+        pokemon_info.append(xingge[0])
+    pokemon_info.append(jineng)
+    return pokemon_info
 
 # 获取宝可梦，随机个体，随机努力，测试用
 def get_pokeon_info_sj(bianhao, level=100):
     pokemon_info = []
     pokemon_info.append(level)
-    gt_hp = int(math.floor(random.uniform(1, 32)))
 
     for num in range(1, 7):
         gt_num = int(math.floor(random.uniform(1, 32)))
@@ -272,6 +298,102 @@ async def get_pokemon_shuxing(bianhao, pokemon_info, level=0):
     )
     return HP, W_atk, W_def, M_atk, M_def, speed
 
+# 计算宝可梦属性
+async def get_pokemon_shuxing_boss(bianhao, pokemon_info, jieduan):
+    zhongzu_info = POKEMON_LIST[bianhao]
+    xingge_info = XINGGE_LIST[pokemon_info[13]]
+    level = int(pokemon_info[0])
+    # print(xingge_info)
+    name = zhongzu_info[0]
+    HP = math.ceil(
+        (
+            (
+                (int(zhongzu_info[1]) * 2)
+                + int(pokemon_info[1])
+                + (int(pokemon_info[7]) / 4)
+            )
+            * level
+        )
+        / 100
+        + 10
+        + level
+    ) * 5
+    W_atk = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[2]) * 2)
+                    + int(pokemon_info[2])
+                    + int(int(pokemon_info[8]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[0]) * jieduan
+    )
+    W_def = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[3]) * 2)
+                    + int(pokemon_info[3])
+                    + int(int(pokemon_info[9]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[1]) * jieduan
+    )
+    M_atk = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[4]) * 2)
+                    + int(pokemon_info[4])
+                    + int(int(pokemon_info[10]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[2]) * jieduan
+    )
+    M_def = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[5]) * 2)
+                    + int(pokemon_info[5])
+                    + int(int(pokemon_info[11]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[3]) * jieduan
+    )
+    speed = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[6]) * 2)
+                    + int(pokemon_info[6])
+                    + int(int(pokemon_info[12]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[4]) * jieduan
+    )
+    return HP, W_atk, W_def, M_atk, M_def, speed
 
 # 重开，清除宝可梦列表个人信息
 async def chongkai(uid):
