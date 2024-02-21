@@ -1281,9 +1281,10 @@ async def map_info_now(bot, ev: Event):
     diquname = diqulist[didianlist[this_map]['fname']]['name']
     mes += f'当前所在地为:{diquname}-{this_map}\n'
     if didianlist[this_map]['type'] == '城镇':
-        get_score = (int(didianlist[this_map]['need']) + 1) * 5000
+        get_score = (int(mapinfo[0]) + 1) * 5000
+        mychenghao, huizhang = get_chenghao(uid)
         buttons.append(Button('打工', '打工'))
-        mes += f'当前所在地打工可获得{get_score}金币\n'
+        mes += f'根据您当前的训练家等级-{mychenghao}\n您打工可获得{get_score}金币\n'
     if didianlist[this_map]['type'] == '野外':
         buttons.append(Button('🏝野外探索', '野外探索'))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
