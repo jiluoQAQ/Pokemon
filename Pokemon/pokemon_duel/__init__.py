@@ -863,6 +863,12 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
     eggid = await get_pokemon_eggid(bianhao)
     await POKE._add_pokemon_egg(uid, eggid, 1)
     await fangshen(uid, bianhao)
+    my_team = await POKE.get_pokemon_group(uid)
+    pokemon_list = my_team.split(',')
+    if str(bianhao) in pokemon_list:
+        pokemon_list.remove(str(bianhao))
+        pokemon_str = ','.join(pokemon_list)
+        await POKE._add_pokemon_group(uid, pokemon_str)
     mes = f'{pokename}重生成功，您获得了{POKEMON_LIST[eggid][0]}精灵蛋x1'
     buttons = [
         Button('📖宝可梦孵化', f'宝可梦孵化{POKEMON_LIST[eggid][0]}'),
