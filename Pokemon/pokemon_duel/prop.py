@@ -310,6 +310,7 @@ async def prop_use(bot, ev: Event):
                 )
             add_num = use_peop_num * propinfo['use'][2]
             change_nl = min(252, add_num + pokemon_info[nl_index])
+            change_nl = min(change_nl, need_z)
             change_nl_num = change_nl - pokemon_info[nl_index]
             # print(nl_index)
             pokemon_info = list(pokemon_info)
