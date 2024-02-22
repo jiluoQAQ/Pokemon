@@ -8,7 +8,7 @@ from .pmconfig import *
 from .pokemon import *
 from .pokeconfg import *
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH, CHAR_ICON_S_PATH
-from ..utils.fonts.starrail_fonts import sr_font_28, sr_font_32, sr_font_40
+from ..utils.fonts.starrail_fonts import sr_font_15, sr_font_28, sr_font_32, sr_font_40
 
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 sx_image = Image.open(TEXT_PATH / 'sx.png')
@@ -325,6 +325,13 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
                 sr_font_32,
                 'lm',
             )
+    img_draw.text(
+        (450, bg_height + 108),
+        'Created by GsCore & Pokemon & jiluoQAQ',
+        (140, 140, 140),
+        sr_font_15,
+        'mm',
+    )
     res = await convert_img(img)
     return res, jinhualist
 
@@ -554,5 +561,12 @@ async def draw_pokemon_info_tj(bianhao):
                 sr_font_32,
                 'lm',
             )
+    img_draw.text(
+        (450, bg_height + 108),
+        'Created by GsCore & Pokemon & jiluoQAQ',
+        (140, 140, 140),
+        sr_font_15,
+        'mm',
+    )
     res = await convert_img(img)
     return res, jinhualist

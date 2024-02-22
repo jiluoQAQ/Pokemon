@@ -143,10 +143,7 @@ async def map_my_group(bot, ev: Event):
         buttons.append(Button('挑战天王', '挑战天王'))
     elif int(huizhang) == 9:
         buttons.append(Button('挑战冠军', '挑战四天王冠军'))
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_map.on_fullmatch(['训练家名片'])
@@ -1393,10 +1390,7 @@ async def show_map_info_now(bot, ev: Event):
     buttons = [
         Button('前往', '前往', action=2),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_map.on_prefix(['前往'])
@@ -1425,12 +1419,8 @@ async def pokemom_go_map(bot, ev: Event):
     if didianlist[go_map]['fname'] == didianlist[this_map]['fname']:
         if int(my_hz) >= int(didianlist[go_map]['need']):
             POKE._add_map_now(uid, go_map)
-            if ev.bot_id == 'qqgroup':
-                mes = f'您已到达{go_map},当前地址信息可输入[当前地点信息]查询'
-                await bot.send(mes, at_sender=True)
-            else:
-                mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
-                await bot.send_option(mes, buttons)
+            mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
+            await bot.send_option(mes, buttons)
         else:
             return await bot.send(
                 f"前往{go_map}所需徽章为{didianlist[go_map]['need']!s}枚,您的徽章为{my_hz!s}枚,无法前往",
@@ -1439,12 +1429,8 @@ async def pokemom_go_map(bot, ev: Event):
     else:
         if int(my_hz) >= 8:
             POKE._add_map_now(uid, go_map)
-            if ev.bot_id == 'qqgroup':
-                mes = f'您已到达{go_map},当前地址信息可输入[当前地点信息]查询'
-                await bot.send(mes, at_sender=True)
-            else:
-                mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
-                await bot.send_option(mes, buttons)
+            mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
+            await bot.send_option(mes, buttons)
         else:
             return await bot.send(
                 f'跨地区前往需要8枚徽章,您的徽章为{my_hz!s}枚,无法前往',

@@ -64,16 +64,28 @@ async def pokemon_help(bot, ev: Event):
 
 其他宝可梦相关小游戏可以点击小游戏帮助查询
  """
-    buttons = [
-        Button('📖精灵状态', '精灵状态', action=2),
-        Button('🔄更新队伍', '更新队伍', action=2),
-        Button('✅领取初始精灵', '领取初始精灵', action=2),
-        Button('🏝️野外探索', '野外探索'),
-        Button('🗺查看地图', '查看地图'),
-        Button('✅道具帮助', '道具帮助'),
-        Button('✅大量出现信息', '大量出现信息'),
-        Button('✅小游戏帮助', '小游戏帮助'),
-    ]
+    if ev.bot_id == 'qqgroup':
+        buttons = [
+            Button('📖精灵状态', '精灵状态', action=2),
+            Button('🔄更新队伍', '更新队伍', action=2),
+            Button('✅领取初始精灵', '领取初始精灵', action=2),
+            Button('🏝️野外探索', '野外探索'),
+            Button('🗺查看地图', '查看地图'),
+            Button('✅道具帮助', '道具帮助'),
+            Button('✅大量出现信息', '大量出现信息'),
+            Button('✅小游戏帮助', '小游戏帮助'),
+        ]
+    else:
+        buttons = [
+            Button('📖精灵状态', '精灵状态', action=2),
+            Button('🔄更新队伍', '更新队伍', action=2),
+            Button('✅领取初始精灵', '领取初始精灵', action=2),
+            Button('🏝️野外探索', '野外探索'),
+            Button('🗺查看地图', '查看地图'),
+            Button('✅道具帮助', '道具帮助'),
+            Button('✅大量出现信息', '大量出现信息'),
+            Button('✅小游戏帮助', '小游戏帮助'),
+        ]
     await bot.send_option(msg, buttons)
 
 @sv_pokemon_duel.on_fullmatch(('更新公告', '查看公告'))
@@ -113,9 +125,14 @@ async def pokemon_help_game(bot, ev: Event):
 注:
 其他的宝可梦小游戏正在火速开发中(新建文件夹)
  """
-    buttons = [
-        Button('✅我是谁', '我是谁'),
-    ]
+    if ev.bot_id == 'qqgroup':
+        buttons = [
+            Button('✅我是谁', '我是谁'),
+        ]
+    else:
+        buttons = [
+            Button('✅我是谁', '我是谁'),
+        ]
     await bot.send_option(msg, buttons)
 
 
@@ -151,43 +168,19 @@ async def my_pokemon_list(bot, ev: Event):
     ]
     if page > 1:
         uppage = page - 1
-        buttons.append(Button('⬅️上一页', f'我的精灵列表{uppage}'))
+        if ev.bot_id == 'qqgroup':
+            buttons.append(Button('⬅️上一页', f'我的精灵列表{uppage}'))
+        else:
+            buttons.append(Button('⬅️上一页', f'我的精灵列表{uppage}'))
     if page_num > 1:
-        Button(f'⏺️跳转({page}/{page_num})', '我的精灵列表', action=2)
+        buttons.append(Button(f'⏺️跳转({page}/{page_num})', '我的精灵列表', action=2))
     if page < page_num:
         dowmpage = page + 1
-        buttons.append(Button('➡️下一页', f'我的精灵列表{dowmpage}'))
+        if ev.bot_id == 'qqgroup':
+            buttons.append(Button('⬅️上一页', f'我的精灵列表{uppage}'))
+        else:
+            buttons.append(Button('➡️下一页', f'我的精灵列表{dowmpage}'))
     await bot.send_option(mes, buttons)
-
-
-@sv_pokemon_duel.on_prefix(['技能测试'])
-async def get_my_poke_jineng_button_test(bot, ev: Event):
-    print(str(ev))
-    args = ev.text.split()
-    if len(args) != 1:
-        return await bot.send('请输入 技能测试+宝可梦名称。', at_sender=True)
-    pokename = args[0]
-    uid = ev.user_id
-    bianhao = await get_poke_bianhao(pokename)
-    if bianhao == 0:
-        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    pokemon_info = await get_pokeon_info(uid, bianhao)
-    if pokemon_info == 0:
-        return await bot.send(
-            f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
-        )
-    jinenglist = re.split(',', pokemon_info[14])
-    # resp = await bot.receive_resp(markdown,jinenglist,unsuported_platform=False)
-    resp = await bot.receive_resp(
-        '请在60秒内选择一个技能使用!', jinenglist, unsuported_platform=False
-    )
-    if resp is not None:
-        s = resp.text
-        uid = resp.user_id
-        if s in jinenglist:
-            jineng1 = s
-            await bot.send(f'你选择的是{resp.text}', at_sender=True)
-            jineng_use = 1
 
 
 @sv_pokemon_duel.on_command(('精灵图鉴', '宝可梦图鉴'))
@@ -261,10 +254,7 @@ async def get_chushi_list(bot, ev: Event):
     buttons = [
         Button('✅领取初始精灵', '领取初始精灵', action=2),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_command(('领取初始精灵', '领取初始宝可梦'))
@@ -334,10 +324,7 @@ async def get_chushi_pokemon(bot, ev: Event):
         Button('📖精灵状态', f'精灵状态{pokename}'),
         Button('🏝️野外探索', '野外探索'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_fullmatch(['宝可梦重开'])
@@ -348,10 +335,7 @@ async def chongkai_pokemon(bot, ev: Event):
     buttons = [
         Button('✅领取初始精灵', '领取初始精灵', action=2),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_prefix(('放生精灵', '放生宝可梦'))
@@ -447,10 +431,7 @@ async def add_pokemon_jineng(bot, ev: Event):
         Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
         Button('📖精灵状态', f'精灵状态{pokename}'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_prefix(('遗忘精灵技能', '遗忘宝可梦技能', '遗忘技能'))
@@ -498,10 +479,7 @@ async def del_pokemon_jineng(bot, ev: Event):
         Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
         Button('📖精灵状态', f'精灵状态{pokename}'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_prefix(['精灵技能信息'])
@@ -649,10 +627,7 @@ async def my_pokemon_egg_list(bot, ev: Event):
         dowmpage = page + 1
         buttons.append(Button('➡️下一页', f'我的精灵蛋{dowmpage}'))
 
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_prefix(('丢弃精灵蛋', '丢弃宝可梦蛋'))
@@ -685,10 +660,7 @@ async def my_pokemon_egg_use(bot, ev: Event):
         Button('📖重置个体值', '重置个体值', action=2),
         Button('📖我的精灵蛋', '我的精灵蛋'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_command(('重置个体值', '个体值重置'))
@@ -825,10 +797,7 @@ async def my_pokemon_gt_up(bot, ev: Event):
         Button('📖精灵状态', f'精灵状态{pokename}'),
         Button('📖重置个体值', f'重置个体值{pokename}'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_command(['宝可梦重生'])
@@ -867,10 +836,7 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
     buttons = [
         Button('📖宝可梦孵化', f'宝可梦孵化{POKEMON_LIST[eggid][0]}'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_duel.on_command(['赠送物品'])
@@ -1034,7 +1000,4 @@ async def get_pokemon_form_egg(bot, ev: Event):
         Button('📖精灵状态', f'精灵状态{pokename}'),
         Button('📖重置个体值', f'重置个体值{pokename}'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
