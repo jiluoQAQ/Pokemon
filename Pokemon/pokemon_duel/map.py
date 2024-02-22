@@ -469,16 +469,16 @@ async def get_ts_info_pic(bot, ev: Event):
                                 xuexi_list.remove(jineng_name)
                             if len(xuexi_list) == 0:
                                 return
-                    await POKE._add_pokemon_technical(uid,ppname,1)
-                    mes += f'\n您获得了招式学习机[{ppname}]x1'
-                    img_draw.text(
-                        (125, img_height + 95),
-                        f'您获得了招式学习机[{ppname}]x1',
-                        black_color,
-                        sr_font_20,
-                        'lm',
-                    )
-                    
+                    if ppname != '':
+                        await POKE._add_pokemon_technical(uid,ppname,1)
+                        mes += f'\n您获得了招式学习机[{ppname}]x1'
+                        img_draw.text(
+                            (125, img_height + 95),
+                            f'您获得了招式学习机[{ppname}]x1',
+                            black_color,
+                            sr_font_20,
+                            'lm',
+                        )
                 bg_img.paste(my_image, (0, img_height), my_image)
                 # mes_list.append(MessageSegment.text(mes))
                 # await bot.send(mes, at_sender=True)
@@ -725,8 +725,9 @@ async def get_ts_info_wenzi(bot, ev: Event):
                                 xuexi_list.remove(jineng_name)
                             if len(xuexi_list) == 0:
                                 return
-                    await POKE._add_pokemon_technical(uid,ppname,1)
-                    mes += f'\n您获得了招式学习机[{ppname}]x1'
+                    if ppname != '':
+                        await POKE._add_pokemon_technical(uid,ppname,1)
+                        mes += f'\n您获得了招式学习机[{ppname}]x1'
             await bot.send(mes)
             
         else:
@@ -969,15 +970,16 @@ async def get_cd_info_pic(bot, ev: Event):
                                 xuexi_list.remove(jineng_name)
                             if len(xuexi_list) == 0:
                                 return
-                    await POKE._add_pokemon_technical(uid,ppname,1)
-                    mes += f'\n您获得了招式学习机[{ppname}]x1'
-                    img_draw.text(
-                        (125, img_height + 95),
-                        f'您获得了招式学习机[{ppname}]x1',
-                        black_color,
-                        sr_font_20,
-                        'lm',
-                    )
+                    if ppname != '':
+                        await POKE._add_pokemon_technical(uid,ppname,1)
+                        mes += f'\n您获得了招式学习机[{ppname}]x1'
+                        img_draw.text(
+                            (125, img_height + 95),
+                            f'您获得了招式学习机[{ppname}]x1',
+                            black_color,
+                            sr_font_20,
+                            'lm',
+                        )
                 bg_img.paste(my_image, (0, img_height), my_image)
                 # mes_list.append(MessageSegment.text(mes))
                 # await bot.send(mes, at_sender=True)
@@ -1075,8 +1077,9 @@ async def get_cd_info_wenzi(bot, ev: Event):
                                 xuexi_list.remove(jineng_name)
                             if len(xuexi_list) == 0:
                                 return
-                    await POKE._add_pokemon_technical(uid,ppname,1)
-                    mes += f'\n您获得了招式学习机[{ppname}]x1'
+                    if ppname != '':
+                        await POKE._add_pokemon_technical(uid,ppname,1)
+                        mes += f'\n您获得了招式学习机[{ppname}]x1'
             await bot.send(mes)
         else:
             return await bot.send('当前地点无法垂钓', at_sender=True)
