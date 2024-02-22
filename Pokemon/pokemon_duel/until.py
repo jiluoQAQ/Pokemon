@@ -1026,7 +1026,7 @@ def get_hunluan_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     mydef = get_nowshuxing(myinfo[5], myinfo[10])
     shanghai = get_shanghai_num(
         40,
-        '一般',
+        myinfo[2],
         myatk,
         mydef,
         1,
