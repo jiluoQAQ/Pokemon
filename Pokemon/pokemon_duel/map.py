@@ -193,10 +193,7 @@ async def map_my_info(bot, ev: Event):
         Button('📖我的精灵蛋', '我的精灵蛋'),
         Button('🗺查看地图', '查看地图'),
     ]
-    if ev.bot_id == 'qqgroup':
-        await bot.send(mes, at_sender=True)
-    else:
-        await bot.send_option(mes, buttons)
+    await bot.send_option(mes, buttons)
 
 
 @sv_pokemon_map.on_prefix(('修改训练家名称', '修改名称'))
