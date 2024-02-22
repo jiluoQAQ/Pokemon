@@ -257,7 +257,6 @@ async def map_ts_test_noauto_use(bot, ev: Event):
         return
     else:
         time_send.record_user_time(uid,now_time)
-    print(TS_PIC)
     if TS_PIC == 1:
         await get_ts_info_pic(bot, ev)
     else:
