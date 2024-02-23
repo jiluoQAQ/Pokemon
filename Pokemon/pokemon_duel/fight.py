@@ -35,6 +35,28 @@ TEXT_PATH = Path(__file__).parent / 'texture2D'
 
 sv_pokemon_pk = SV('宝可梦对战', priority=5)
 
+@sv_pokemon_pk.on_fullmatch(['战斗帮助'])
+async def fight_help(bot, ev: Event):
+    msg = """
+             宝可梦战斗系统帮助
+指令：
+1、挑战【道馆/天王/四天王冠军】:通过战胜【道馆/天王/四天王冠军】获得徽章称号，进一步解锁功能
+2、训练家对战【昵称】:与昵称为【昵称】的训练家进行对战(自动战斗)
+3、无级别对战【昵称/at对方】:与其他训练家进行一场无等级限制的手动对战
+4、限制级对战【昵称/at对方】:与其他训练家进行一场等级限制为50的手动对战
+5、首领列表(查看所有的首领信息与地点)
+6、首领信息(查看当前地点的首领信息)
+7、首领挑战(挑战该地点的首领，获胜可获得大量奖励)
+ """
+    buttons = [
+        Button('首领列表', '首领列表', action=1),
+        Button('首领信息', '首领信息', action=1),
+        Button('首领挑战', '首领挑战', action=1),
+        Button('训练家对战', '训练家对战', action=2),
+        Button('无级别对战', '无级别对战', action=2),
+        Button('限制级对战', '限制级对战', action=2),
+    ]
+    await bot.send_option(msg, buttons)
 
 @sv_pokemon_pk.on_fullmatch(['挑战道馆'])
 async def pk_vs_daoguan(bot, ev: Event):
@@ -842,7 +864,19 @@ async def pokemon_pk_xzdj(bot, ev: Event):
         mes = f'{name}打败了{diname}，获得了对战的胜利'
     await bot.send(mes)
 
-@sv_pokemon_pk.on_fullmatch(('boss信息', '周本boss信息'))
+@sv_pokemon_pk.on_fullmatch(('boss列表', '首领列表'))
+async def pokemon_pk_boss_list(bot, ev: Event):
+    mes = ''
+    for diquname in weekbosslist:
+        for didianname in weekbosslist[diquname]:
+            mes += f"首领名称：{POKEMON_LIST[weekbosslist[diquname][didianname]['bossid']][0]}\n"
+            mes += f"出没地点：{diquname}-{didianname}\n"
+    buttons = [
+        Button('前往', '前往', action=2),
+    ]
+    await bot.send_option(mes, buttons)
+    
+@sv_pokemon_pk.on_fullmatch(('boss信息', '周本boss信息', '首领信息'))
 async def pokemon_pk_boss_week_info(bot, ev: Event):
     uid = ev.user_id
     mypoke = POKE._get_pokemon_list(uid)
@@ -853,10 +887,6 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
         )
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
-    # if not daily_boss.check_week(uid):
-        # return await bot.send(
-            # '本周的挑战次数已经超过上限了哦，下周再来吧。', at_sender=True
-        # )
     diquname = didianlist[this_map]['fname']
     bosslist_diqu = list(weekbosslist.keys())
     if diquname not in bosslist_diqu:
@@ -892,10 +922,12 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
         bianhao, pokemon_info, 2
     )
     mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info[0]}\n性格:{pokemon_info[13]}\n技能:{pokemon_info[14]}\n各阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}"
-    await bot.send(mes)
-    # daily_boss.increase(uid)
+    buttons = [
+        Button('首领挑战', '首领挑战', action=1),
+    ]
+    await bot.send_option(mes, buttons)
     
-@sv_pokemon_pk.on_fullmatch(('boss挑战', '周本boss挑战'))
+@sv_pokemon_pk.on_fullmatch(('boss挑战', '周本boss挑战', '首领挑战'))
 async def pokemon_pk_boss_week(bot, ev: Event):
     uid = ev.user_id
     mypoke = POKE._get_pokemon_list(uid)
@@ -907,10 +939,10 @@ async def pokemon_pk_boss_week(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     name = mapinfo[2]
     this_map = mapinfo[1]
-    # if not daily_boss.check_week(uid):
-        # return await bot.send(
-            # '本周的挑战次数已经超过上限了哦，下周再来吧。', at_sender=True
-        # )
+    if not daily_boss.check_week(uid):
+        return await bot.send(
+            '本周的挑战次数已经超过上限了哦，下周再来吧。', at_sender=True
+        )
     diquname = didianlist[this_map]['fname']
     bosslist_diqu = list(weekbosslist.keys())
     if diquname not in bosslist_diqu:
