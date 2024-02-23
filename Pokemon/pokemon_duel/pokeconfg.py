@@ -1758,7 +1758,10 @@ async def pokemon_fight_pk(
             if int(jn_use_num_my) >= int(jineng_info1[4]):
                 myjinenglist.remove(myjn)
                 myjn_name = ''
-            myjinengbuttons.append(Button(myjn_but, myjn_name))
+            if ev.bot_id == 'qqgroup':
+                myjinengbuttons.append(Button(myjn_but, myjn_name, action=3))
+            else:
+                myjinengbuttons.append(Button(myjn_but, myjn_name))
         for dijn in dijinenglist:
             jn_use_num_di = jineng_use2.count(dijn)
             jineng_info2 = JINENG_LIST[dijn]
@@ -1767,13 +1770,22 @@ async def pokemon_fight_pk(
             if int(jn_use_num_di) >= int(jineng_info2[4]):
                 dijinenglist.remove(dijn)
                 dijn_name = ''
-            dijinengbuttons.append(Button(dijn_but, dijn_name))
+            if ev.bot_id == 'qqgroup':
+                dijinengbuttons.append(Button(dijn_but, dijn_name, action=3))
+            else:
+                dijinengbuttons.append(Button(dijn_but, dijn_name))
         if len(myjinenglist) == 0:
             myjinenglist.append('挣扎')
-            myjinengbuttons = [Button('挣扎', '挣扎')]
+            if ev.bot_id == 'qqgroup':
+                myjinengbuttons = [Button('挣扎', '挣扎', action=3)]
+            else:
+                myjinengbuttons = [Button('挣扎', '挣扎')]
         if len(dijinenglist) == 0:
             dijinenglist.append('挣扎')
-            dijinengbuttons = [Button('挣扎', '挣扎')]
+            if ev.bot_id == 'qqgroup':
+                dijinengbuttons = [Button('挣扎', '挣扎', action=3)]
+            else:
+                dijinengbuttons = [Button('挣扎', '挣扎')]
         print(str(myjinengbuttons))
         print(str(dijinengbuttons))
         jineng1_use = 0
