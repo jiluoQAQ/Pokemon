@@ -6735,7 +6735,7 @@ JINENG_LIST = {
         '—',
         '20',
         '提高下一回合使出的电属性的招式威力。自己的特防也会提高。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','up')",
     ],
     '挑衅': [
         '恶',
@@ -9705,7 +9705,7 @@ JINENG_LIST = {
         '100',
         '15',
         '从身体放射出怪异电波，让对手沐浴其中，从而大幅降低其特攻。',
-        '',
+        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','2','down')"
     ],
     '毒液陷阱': [
         '毒',

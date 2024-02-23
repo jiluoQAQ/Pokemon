@@ -1403,6 +1403,10 @@ async def pokemom_go_map(bot, ev: Event):
 
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send(
+            '您还没有开局，请输入 领取初始精灵+初始宝可梦名称。', at_sender=True
+        )
     my_hz = mapinfo[0]
     buttons = [
         Button('当前地点信息', '当前地点信息', action=1),
