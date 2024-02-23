@@ -58,7 +58,31 @@ class SCORE_DB:
 
         except:
             raise Exception('更新表发生错误')
+    
+    def get_shengwang(self, uid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT SHENGWANG FROM POKEMON_SCORE WHERE UID='{uid}'"
+                ).fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    self._new_score(uid)
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
 
+    def update_shengwang(self, uid, shengwang):
+        now_shengwang = self.get_shengwang(uid) + shengwang
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE POKEMON_SCORE SET SHENGWANG = {now_shengwang} WHERE UID='{uid}'"
+                ).fetchall()
+
+        except:
+            raise Exception('更新表发生错误')
 
 class RecordDAO:
     def __init__(self):

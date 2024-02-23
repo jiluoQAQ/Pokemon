@@ -842,11 +842,11 @@ async def pokemon_pk_xzdj(bot, ev: Event):
         mes = f'{name}打败了{diname}，获得了对战的胜利'
     await bot.send(mes)
 
-@sv_pokemon_pk.on_fullmatch(('挑战每周boss', '周本挑战', '每周boss挑战', '周本boss信息'))
-async def pokemon_pk_boss_week(bot, ev: Event):
+@sv_pokemon_pk.on_fullmatch(('boss信息', '周本boss信息'))
+async def pokemon_pk_boss_week_info(bot, ev: Event):
     uid = ev.user_id
-    mypokelist = POKE._get_pokemon_list(uid)
-    if mypokelist == 0:
+    mypoke = POKE._get_pokemon_list(uid)
+    if mypoke == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
             at_sender=True,
@@ -870,7 +870,18 @@ async def pokemon_pk_boss_week(bot, ev: Event):
         )
     bossinfo = weekbosslist[diquname][this_map]
     bianhao = bossinfo['bossid']
-    pokemon_info = await get_pokeon_info_boss(bianhao, bossinfo['jinenglist'])
+    my_team = await POKE.get_pokemon_group(uid)
+    pokemon_list = my_team.split(',')
+    my_max_level = 0
+    
+    for bianhao in pokemon_list:
+        bianhao = int(bianhao)
+        pokemon_info = await get_pokeon_info(uid, bianhao)
+        if pokemon_info[0] > my_max_level:
+            my_max_level = pokemon_info[0]
+    boss_level = min(100, my_max_level+5)
+    pokemon_info = await get_pokeon_info_boss(bianhao, bossinfo['jinenglist'], boss_level)
+    boss_fight_level = min(105, my_max_level+5)
     HP_1, W_atk_1, W_def_1, M_atk_1, M_def_1, speed_1 = await get_pokemon_shuxing_boss(
         bianhao, pokemon_info, 1.2
     )
@@ -883,5 +894,84 @@ async def pokemon_pk_boss_week(bot, ev: Event):
     mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info[0]}\n性格:{pokemon_info[13]}\n技能:{pokemon_info[14]}\n各阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}"
     await bot.send(mes)
     # daily_boss.increase(uid)
+    
+@sv_pokemon_pk.on_fullmatch(('boss挑战', '周本boss挑战'))
+async def pokemon_pk_boss_week(bot, ev: Event):
+    uid = ev.user_id
+    mypoke = POKE._get_pokemon_list(uid)
+    if mypoke == 0:
+        return await bot.send(
+            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
+            at_sender=True,
+        )
+    mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
+    this_map = mapinfo[1]
+    # if not daily_boss.check_week(uid):
+        # return await bot.send(
+            # '本周的挑战次数已经超过上限了哦，下周再来吧。', at_sender=True
+        # )
+    diquname = didianlist[this_map]['fname']
+    bosslist_diqu = list(weekbosslist.keys())
+    if diquname not in bosslist_diqu:
+        return await bot.send(
+            f'当前地区暂时没有出现boss，清前往其他地区进行挑战', at_sender=True
+        )
+    bosslist_didian = list(weekbosslist[diquname].keys())
+    if this_map not in bosslist_didian:
+        return await bot.send(
+            f'当前地点暂时没有出现boss，清前往其他地点进行挑战', at_sender=True
+        )
+    bossinfo = weekbosslist[diquname][this_map]
+    bossbianhao = bossinfo['bossid']
+    my_team = await POKE.get_pokemon_group(uid)
+    pokemon_list = my_team.split(',')
+    my_max_level = 0
+    mypokelist = []
+    for bianhao in pokemon_list:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+        pokemon_info = await get_pokeon_info(uid, bianhao)
+        if pokemon_info[0] > my_max_level:
+            my_max_level = pokemon_info[0]
+    boss_level = min(100, my_max_level+5)
+    mes = f"【首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
+    await bot.send(mes)
+    name = name[:10]
+    dipokelist = [bossbianhao,bossbianhao,bossbianhao]
+    mypokelist, dipokelist = await fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, name, bossinfo)
+    
+    if len(mypokelist) == 0:
+        mes = f"您被【首领】{POKEMON_LIST[bossinfo['bossid']][0]}击败了,眼前一黑"
+
+    if len(dipokelist) == 0:
+        catch_flag = await catch_pokemon(bot, ev, uid, bossbianhao)
+        mes = f"您打败了【首领】{POKEMON_LIST[bossinfo['bossid']][0]}"
+        if catch_flag == 1:
+            eggid = await get_pokemon_eggid(bossbianhao)
+            mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x1\n'
+            await POKE._add_pokemon_egg(uid, eggid, egg_num)
+        beilv = math.ceil((boss_level - 40)/20)
+        get_score = BOSS_GOLD * beilv
+        SCORE.update_score(uid, get_score)
+        mes += f'您获得了{get_score}金钱\n'
+        get_tangguo = BOSS_TG * beilv
+        await POKE._add_pokemon_prop(uid, "神奇糖果", get_tangguo)
+        mes += f'您获得了神奇糖果x{get_tangguo}\n'
+        jswg_num = int(math.floor(random.uniform(0, 100)))
+        if jswg_num <= BOSS_WGJ * beilv:
+            await POKE._add_pokemon_prop(uid, "金色王冠", 1)
+            await POKE._add_pokemon_prop(uid, "金色王冠", 1)
+            mes += f'您获得了金色王冠x1\n'
+        yswg_num = int(math.floor(random.uniform(0, 100)))
+        if yswg_num <= BOSS_WGY * beilv:
+            await POKE._add_pokemon_prop(uid, "银色王冠", 1)
+            mes += f'您获得了银色王冠x1\n'
+        get_gold = BOSS_SCORE * beilv
+        SCORE.update_shengwang(uid, get_gold)
+        mes += f'您获得了{get_gold}首领币'
+        daily_boss.increase(uid)
+    await bot.send(mes)
+    
     
     

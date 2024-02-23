@@ -11,7 +11,12 @@ QUN_POKE = 15   #野生宝可梦群居战概率
 TS_CD = 2   #探索CD
 TS_PIC = 0 #探索发送类型，1为发送图片，0为发送文字
 boss_fight = 3  #每周Boss挑战次数
-
+FIGHT_TIME = 20 #释放技能时间
+BOSS_GOLD = 50000   #boss掉落金币基数
+BOSS_TG = 10    #boss掉落神奇糖果基数
+BOSS_WGJ = 5    #boss掉落金色王冠基础概率
+BOSS_WGY = 10   #boss掉落银色王冠基础概率
+BOSS_SCORE = 20 #boss掉落BOSS币基础概率
 # 造成伤害天气
 tq_kouxuelist = ['沙暴', '冰雹']
 # 损失血量异常状态
@@ -116,6 +121,12 @@ starlist = {
     0: '',
     1: '★',
     2: '✨',
+}
+
+boss_buff = {
+    0: 1.2,
+    1: 1.5,
+    2: 2,
 }
 
 #禁用精灵列表

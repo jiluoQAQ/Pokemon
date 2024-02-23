@@ -132,22 +132,17 @@ async def map_my_group(bot, ev: Event):
     await POKE._add_pokemon_group(uid, pokemon_str)
 
     mes = f'编组成功，当前队伍\n{name_str}'
-    if ev.bot_id == 'qqgroup':
-        buttons = [
-            Button('🏝️野外探索', '野外探索', action=3),
-        ]
-    else:
-        buttons = [
-            Button('🏝️野外探索', '野外探索'),
-        ]
+    buttons = [
+        Button('🏝️野外探索', '野外探索', action=1),
+    ]
     mapinfo = POKE._get_map_now(uid)
     huizhang = mapinfo[0]
     if int(huizhang) < 8:
-        buttons.append(Button('挑战道馆', '挑战道馆'))
+        buttons.append(Button('挑战道馆', '挑战道馆', action=1))
     elif int(huizhang) == 8:
-        buttons.append(Button('挑战天王', '挑战天王'))
+        buttons.append(Button('挑战天王', '挑战天王', action=1))
     elif int(huizhang) == 9:
-        buttons.append(Button('挑战冠军', '挑战四天王冠军'))
+        buttons.append(Button('挑战冠军', '挑战四天王冠军', action=1))
     await bot.send_option(mes, buttons)
 
 
@@ -190,18 +185,11 @@ async def map_my_info(bot, ev: Event):
             pokemon_info = await get_pokeon_info(uid, bianhao)
             startype = await POKE.get_pokemon_star(uid, bianhao)
             mes += f'\n{starlist[startype]}{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
-    if ev.bot_id == 'qqgroup':
-        buttons = [
-            Button('📖精灵状态', '精灵状态', action=2),
-            Button('📖我的精灵蛋', '我的精灵蛋', action=3),
-            Button('🗺查看地图', '查看地图', action=3),
-        ]
-    else:
-        buttons = [
-            Button('📖精灵状态', '精灵状态', action=2),
-            Button('📖我的精灵蛋', '我的精灵蛋'),
-            Button('🗺查看地图', '查看地图'),
-        ]
+    buttons = [
+        Button('📖精灵状态', '精灵状态', action=2),
+        Button('📖我的精灵蛋', '我的精灵蛋', action=1),
+        Button('🗺查看地图', '查看地图', action=1),
+    ]
     await bot.send_option(mes, buttons)
 
 
@@ -1344,24 +1332,15 @@ async def map_info_now(bot, ev: Event):
     if didianlist[this_map]['type'] == '城镇':
         get_score = (int(mapinfo[0]) + 1) * 5000
         mychenghao, huizhang = get_chenghao(uid)
-        if ev.bot_id == 'qqgroup':
-            buttons.append(Button('打工', '打工', action=3))
-        else:
-            buttons.append(Button('打工', '打工'))
+        buttons.append(Button('打工', '打工', action=1))
         mes += f'根据您当前的训练家等级-{mychenghao}\n您打工可获得{get_score}金币\n'
     if didianlist[this_map]['type'] == '野外':
-        if ev.bot_id == 'qqgroup':
-            buttons.append(Button('🏝野外探索', '野外探索', action=3))
-        else:
-            buttons.append(Button('🏝野外探索', '野外探索'))
+        buttons.append(Button('🏝野外探索', '野外探索', action=1))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
         mes += f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'
         mes += f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"
         if didianlist[this_map]['pokemon_s']:
-            if ev.bot_id == 'qqgroup':
-                buttons.append(Button('🏝野外垂钓', '野外垂钓', action=3))
-            else:
-                buttons.append(Button('🏝野外垂钓', '野外垂钓'))
+            buttons.append(Button('🏝野外垂钓', '野外垂钓', action=1))
             pokemon_s_list = didianlist[this_map]['pokemon_s']
             mes += '当前所在地野外垂钓遭遇的精灵为\n'
             for item in pokemon_s_list:
@@ -1425,14 +1404,9 @@ async def pokemom_go_map(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     this_map = mapinfo[1]
     my_hz = mapinfo[0]
-    if ev.bot_id == 'qqgroup':
-        buttons = [
-            Button('当前地点信息', '当前地点信息', action=3),
-        ]
-    else:
-        buttons = [
-            Button('当前地点信息', '当前地点信息'),
-        ]
+    buttons = [
+        Button('当前地点信息', '当前地点信息', action=1),
+    ]
     if go_map == this_map:
         return await bot.send(
             f'您已经处于{this_map}中，无需前往', at_sender=True
