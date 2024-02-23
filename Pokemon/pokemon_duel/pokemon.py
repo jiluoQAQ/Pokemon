@@ -5806,7 +5806,7 @@ JINENG_LIST = {
         '物理',
         '50',
         '100',
-        '—',
+        '999',
         '当自己的ＰＰ耗尽时，努力挣扎攻击对手。自己也会受到少许伤害。',
         'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
     ],

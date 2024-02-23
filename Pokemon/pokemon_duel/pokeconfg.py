@@ -1751,7 +1751,7 @@ async def pokemon_fight_pk(
         dijinengbuttons = []
         for myjn in myjinenglist:
             jn_use_num_my = jineng_use1.count(myjn)
-            print(f'{myjn}:{jn_use_num_my}-')
+            print(f'{myjn}:{jn_use_num_my}')
             jineng_info1 = JINENG_LIST[myjn]
             myjn_but = f'{myjn}({int(jineng_info1[4])-int(jn_use_num_my)}/{int(jineng_info1[4])})'
             myjn_name = myjn
@@ -1764,6 +1764,7 @@ async def pokemon_fight_pk(
                 myjinengbuttons.append(Button(myjn_but, myjn_name))
         for dijn in dijinenglist:
             jn_use_num_di = jineng_use2.count(dijn)
+            print(f'{dijn}:{jn_use_num_di}')
             jineng_info2 = JINENG_LIST[dijn]
             dijn_but = f'{dijn}({int(jineng_info2[4])-int(jn_use_num_di)}/{int(jineng_info2[4])})'
             dijn_name = dijn
