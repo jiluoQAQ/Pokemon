@@ -967,6 +967,7 @@ async def pokemon_pk_boss_week(bot, ev: Event):
         if pokemon_info[0] > my_max_level:
             my_max_level = pokemon_info[0]
     boss_level = min(100, my_max_level+5)
+    boss_level = max(40, boss_level)
     mes = f"【首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
     await bot.send(mes)
     name = name[:10]
