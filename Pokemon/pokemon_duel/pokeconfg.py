@@ -136,9 +136,9 @@ async def get_pokeon_info_boss(bianhao, jineng = '', level=100):
     for num in range(1, 6):
         if num == 1:
             pokemon_info.append(6)
-        elif num == 2 and int(POKEMON_LIST[bianhao][2]) >= int(POKEMON_LIST[bianhao][4]):
+        elif num == 2 and int(POKEMON_LIST[bianhao][2]) > int(POKEMON_LIST[bianhao][4]):
             pokemon_info.append(252)
-        elif num == 4 and int(POKEMON_LIST[bianhao][4]) > int(POKEMON_LIST[bianhao][2]):
+        elif num == 4 and int(POKEMON_LIST[bianhao][4]) >= int(POKEMON_LIST[bianhao][2]):
             pokemon_info.append(252)
         else:
             pokemon_info.append(0)
@@ -2190,9 +2190,10 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 changdi[0][1] = shengyutianqi
                 changdi_mesg = changdi_mesg + f'{changdi[0][0]}持续中\n'
         if shul > 15:
-            jieshu = 1
-            changdi_mesg = changdi_mesg + f'战斗超时，【首领】{diinfo[0]}狂暴了\n{diinfo[0]}获得了胜利'
-            myinfo[17] = 0
+            if myinfo[17] >0 and diinfo[17]>0:
+                jieshu = 1
+                changdi_mesg = changdi_mesg + f'战斗超时，【首领】{diinfo[0]}狂暴了\n{diinfo[0]}获得了胜利'
+                myinfo[17] = 0
         mesg = mesg + changdi_mesg
 
         await bot.send(mesg)

@@ -929,8 +929,8 @@ async def pokemon_pk_boss_week(bot, ev: Event):
     name = mapinfo[2]
     this_map = mapinfo[1]
     if not daily_boss.check_week(uid):
-        return await bot.send(
-            '本周的挑战次数已经超过上限了哦，下周再来吧。', at_sender=True
+        await bot.send(
+            '本周的挑战次数已经超过上限了哦，本次挑战无法获得奖励。', at_sender=True
         )
     diquname = didianlist[this_map]['fname']
     bosslist_diqu = list(weekbosslist.keys())
@@ -965,33 +965,34 @@ async def pokemon_pk_boss_week(bot, ev: Event):
     
     if len(mypokelist) == 0:
         mes = f"您被【首领】{POKEMON_LIST[bossinfo['bossid']][0]}击败了,眼前一黑"
-
+    
     if len(dipokelist) == 0:
-        catch_flag = await catch_pokemon(bot, ev, uid, bossbianhao)
         mes = f"您打败了【首领】{POKEMON_LIST[bossinfo['bossid']][0]}\n"
-        if catch_flag == 1:
-            eggid = await get_pokemon_eggid(bossbianhao)
-            mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x1\n'
-            await POKE._add_pokemon_egg(uid, eggid, 1)
-        beilv = math.ceil((boss_level - 40)/20)
-        get_score = BOSS_GOLD * beilv
-        SCORE.update_score(uid, get_score)
-        mes += f'您获得了{get_score}金钱\n'
-        get_tangguo = BOSS_TG * beilv
-        await POKE._add_pokemon_prop(uid, "神奇糖果", get_tangguo)
-        mes += f'您获得了神奇糖果x{get_tangguo}\n'
-        jswg_num = int(math.floor(random.uniform(0, 100)))
-        if jswg_num <= BOSS_WGJ * beilv:
-            await POKE._add_pokemon_prop(uid, "金色王冠", 1)
-            mes += f'您获得了金色王冠x1\n'
-        yswg_num = int(math.floor(random.uniform(0, 100)))
-        if yswg_num <= BOSS_WGY * beilv:
-            await POKE._add_pokemon_prop(uid, "银色王冠", 1)
-            mes += f'您获得了银色王冠x1\n'
-        get_gold = BOSS_SCORE * beilv
-        SCORE.update_shengwang(uid, get_gold)
-        mes += f'您获得了{get_gold}首领币'
-        daily_boss.increase(uid)
+        if daily_boss.check_week(uid):
+            catch_flag = await catch_pokemon(bot, ev, uid, bossbianhao)
+            if catch_flag == 1:
+                eggid = await get_pokemon_eggid(bossbianhao)
+                mes += f'您获得了{CHARA_NAME[eggid][0]}精灵蛋x1\n'
+                await POKE._add_pokemon_egg(uid, eggid, 1)
+            beilv = math.ceil((boss_level - 40)/20)
+            get_score = BOSS_GOLD * beilv
+            SCORE.update_score(uid, get_score)
+            mes += f'您获得了{get_score}金钱\n'
+            get_tangguo = BOSS_TG * beilv
+            await POKE._add_pokemon_prop(uid, "神奇糖果", get_tangguo)
+            mes += f'您获得了神奇糖果x{get_tangguo}\n'
+            jswg_num = int(math.floor(random.uniform(0, 100)))
+            if jswg_num <= BOSS_WGJ * beilv:
+                await POKE._add_pokemon_prop(uid, "金色王冠", 1)
+                mes += f'您获得了金色王冠x1\n'
+            yswg_num = int(math.floor(random.uniform(0, 100)))
+            if yswg_num <= BOSS_WGY * beilv:
+                await POKE._add_pokemon_prop(uid, "银色王冠", 1)
+                mes += f'您获得了银色王冠x1\n'
+            get_gold = BOSS_SCORE * beilv
+            SCORE.update_shengwang(uid, get_gold)
+            mes += f'您获得了{get_gold}首领币'
+            daily_boss.increase(uid)
     await bot.send(mes)
     
     
