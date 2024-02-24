@@ -11434,7 +11434,7 @@ JINENG_LIST = {
         '—',
         '10',
         '喷洒出神奇的水，回复自己和场上同伴的ＨＰ。',
-        '',
+        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.25)',
     ],
     '拦堵': [
         '恶',

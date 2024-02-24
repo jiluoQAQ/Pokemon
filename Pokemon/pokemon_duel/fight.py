@@ -968,7 +968,7 @@ async def pokemon_pk_boss_week(bot, ev: Event):
 
     if len(dipokelist) == 0:
         catch_flag = await catch_pokemon(bot, ev, uid, bossbianhao)
-        mes = f"您打败了【首领】{POKEMON_LIST[bossinfo['bossid']][0]}"
+        mes = f"您打败了【首领】{POKEMON_LIST[bossinfo['bossid']][0]}\n"
         if catch_flag == 1:
             eggid = await get_pokemon_eggid(bossbianhao)
             mes += f'\n您获得了{CHARA_NAME[eggid][0]}精灵蛋x1\n'
