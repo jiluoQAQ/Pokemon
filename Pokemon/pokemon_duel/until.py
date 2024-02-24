@@ -1458,7 +1458,7 @@ def hwlyb(
 ):
     jinenginfo = JINENG_LIST[jineng]
     sxlist = ['ATK','DEF','SPATK','SPDEF','SPD']
-    lvlist = [1,1,1,1,1]
+    lvlist = ['1','1','1','1','1']
     typelist = ['up','up','up','up','up']
     updatesx_num = len(sxlist)
     mesg = f'{myinfo[0]}使用了技能{jineng}'
