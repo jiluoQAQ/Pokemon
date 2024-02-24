@@ -983,7 +983,6 @@ async def pokemon_pk_boss_week(bot, ev: Event):
         jswg_num = int(math.floor(random.uniform(0, 100)))
         if jswg_num <= BOSS_WGJ * beilv:
             await POKE._add_pokemon_prop(uid, "金色王冠", 1)
-            await POKE._add_pokemon_prop(uid, "金色王冠", 1)
             mes += f'您获得了金色王冠x1\n'
         yswg_num = int(math.floor(random.uniform(0, 100)))
         if yswg_num <= BOSS_WGY * beilv:

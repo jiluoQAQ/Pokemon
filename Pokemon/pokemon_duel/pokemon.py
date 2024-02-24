@@ -5016,7 +5016,7 @@ JINENG_LIST = {
         '75',
         '35',
         '撒出毒粉，从而让对手陷入中毒状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒')",
+        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒',99)",
     ],
     '麻痹粉': [
         '草',
@@ -5151,7 +5151,7 @@ JINENG_LIST = {
         '90',
         '10',
         '让对手陷入剧毒状态。随着回合的推进，中毒伤害会增加。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒')",
+        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒',99)",
     ],
     '念力': [
         '超能力',
@@ -6672,7 +6672,7 @@ JINENG_LIST = {
         '85',
         '15',
         '放出怪异的火焰，从而让对手陷入灼伤状态。',
-        '',
+        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤',99)",
     ],
     '临别礼物': [
         '恶',
