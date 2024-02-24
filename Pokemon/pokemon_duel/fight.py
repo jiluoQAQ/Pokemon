@@ -900,17 +900,7 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
         )
     bossinfo = weekbosslist[diquname][this_map]
     bossbianhao = bossinfo['bossid']
-    my_team = await POKE.get_pokemon_group(uid)
-    pokemon_list = my_team.split(',')
-    my_max_level = 0
-    
-    for bianhao in pokemon_list:
-        bianhao = int(bianhao)
-        pokemon_info = await get_pokeon_info(uid, bianhao)
-        if pokemon_info[0] > my_max_level:
-            my_max_level = pokemon_info[0]
-    boss_level = min(100, my_max_level+5)
-    pokemon_info_boss = await get_pokeon_info_boss(bossbianhao, bossinfo['jinenglist'], boss_level)
+    pokemon_info_boss = await get_pokeon_info_boss(bossbianhao, bossinfo['jinenglist'], 100)
     boss_fight_level = min(105, my_max_level+5)
     HP_1, W_atk_1, W_def_1, M_atk_1, M_def_1, speed_1 = await get_pokemon_shuxing_boss(
         bianhao, pokemon_info_boss, 1.1
