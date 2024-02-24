@@ -3521,7 +3521,7 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
     while len(mypokelist) > 0 and len(dipokelist) > 0:
-        mesg = f'第{changci}场\n'
+        mesg += f'第{changci}场\n'
         changci += 1
         if len(myinfo) == 0:
             bianhao1 = mypokelist[0]
