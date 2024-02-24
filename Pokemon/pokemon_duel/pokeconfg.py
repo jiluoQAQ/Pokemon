@@ -144,7 +144,7 @@ async def get_pokeon_info_boss(bianhao, bossinfo, level=100):
             pokemon_info.append(0)
     pokemon_info.append(252)
     pokemon_info.append(bossinfo['xingge'])
-    pokemon_info.append(jineng)
+    pokemon_info.append(bossinfo['jineng'])
     return pokemon_info
 
 # 获取宝可梦，随机个体，随机努力，测试用

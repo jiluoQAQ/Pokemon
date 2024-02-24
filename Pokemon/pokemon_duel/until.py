@@ -1447,6 +1447,34 @@ def up_shux_info_my(
         mesg = mesg + '\n' + mes
     return mesg, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
+# 魂舞烈音爆
+def up_shux_info_my(
+    jineng,
+    myinfo,
+    diinfo,
+    myzhuangtai,
+    dizhuangtai,
+    changdi,
+):
+    jinenginfo = JINENG_LIST[jineng]
+    sxlist = ['ATK','DEF','SPATK','SPDEF','SPD']
+    lvlist = [1,1,1,1,1]
+    typelist = ['up','up','up','up','up']
+    updatesx_num = len(sxlist)
+    mesg = f'{myinfo[0]}使用了技能{jineng}'
+    shanghai = math.ceil(myinfo[3]/3)
+    if shanghai >= myinfo[17]:
+        mesg += '\nHP不足，技能使用失败'
+    else:
+        myinfo[17] = myinfo[17] - shanghai
+        mesg += f'\n{myinfo[0]}扣除血量{shanghai}，剩余血量{myinfo[17]}'
+        for i in range(updatesx_num):
+            sxname = sxlist[i]
+            uplevel = lvlist[i]
+            uptype = typelist[i]
+            mes, myinfo = update_shux_info(myinfo, sxname, uplevel, uptype)
+            mesg = mesg + '\n' + mes
+    return mesg, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 我方变化类技能对地方的附加状态
 def give_info_di(

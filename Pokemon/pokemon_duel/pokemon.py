@@ -11290,7 +11290,7 @@ JINENG_LIST = {
         '100',
         '5',
         '削减少许自己的ＨＰ，使所有能力都提高。',
-        '',
+        'hwlyb(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
     ],
     '扑击': [
         '格斗',
