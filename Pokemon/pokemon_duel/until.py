@@ -1448,7 +1448,7 @@ def up_shux_info_my(
     return mesg, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 魂舞烈音爆
-def up_shux_info_my(
+def hwlyb(
     jineng,
     myinfo,
     diinfo,
