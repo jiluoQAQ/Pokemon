@@ -1726,18 +1726,18 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         dijinenglist = re.split(',', dipokemon_info[14])
         myjinengbuttons = []
         dijinengbuttons = []
+        my_ues_jineng_list = []
         for myjn in myjinenglist:
             jn_use_num_my = jineng_use.count(myjn)
             print(f'{myjn}:{jn_use_num_my}')
             jineng_info1 = JINENG_LIST[myjn]
             myjn_but = f'{myjn}({int(jineng_info1[4])-int(jn_use_num_my)}/{int(jineng_info1[4])})'
             myjn_name = myjn
-            if int(jn_use_num_my) >= int(jineng_info1[4]):
-                myjinenglist.remove(myjn)
-                myjn_name = ''
-            myjinengbuttons.append(Button(myjn_but, myjn_name, action=1))
-        if len(myjinenglist) == 0:
-            myjinenglist.append('挣扎')
+            if int(jn_use_num_my) < int(jineng_info1[4]):
+                my_ues_jineng_list.append(myjn)
+                myjinengbuttons.append(Button(myjn_but, myjn_name, action=1))
+        if len(my_ues_jineng_list) == 0:
+            my_ues_jineng_list.append('挣扎')
             myjinengbuttons = [Button('挣扎', '挣扎', action=1)]
         jineng1_use = 0
         puthmy = 0
@@ -1756,7 +1756,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             uidmy = myresp.user_id
                             if str(uidmy) == str(uid):
                                 print(mys)
-                                if mys in myjinenglist:
+                                if mys in my_ues_jineng_list:
                                     jineng1 = mys
                                     jineng1_use = 1
                         runmynum = 1
@@ -1766,12 +1766,12 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             mys = myresp.text
                             uidmy = myresp.user_id
                             if str(uidmy) == str(uid):
-                                if mys in myjinenglist:
+                                if mys in my_ues_jineng_list:
                                     jineng1 = mys
                                     jineng1_use = 1
         except asyncio.TimeoutError:
             jineng1 = now_use_jineng(
-                myinfo, diinfo, myjinenglist, dijinenglist, changdi
+                myinfo, diinfo, my_ues_jineng_list, dijinenglist, changdi
             )
         jinenginfo1 = JINENG_LIST[jineng1]
         jineng_use.append(jineng1)
@@ -2224,29 +2224,31 @@ async def pokemon_fight_pk(
         dijinenglist = re.split(',', dipokemon_info[14])
         myjinengbuttons = []
         dijinengbuttons = []
+        my_ues_jineng_list = []
+        di_ues_jineng_list = []
         for myjn in myjinenglist:
             jn_use_num_my = jineng_use1.count(myjn)
             jineng_info1 = JINENG_LIST[myjn]
             myjn_but = f'{myjn}({int(jineng_info1[4])-int(jn_use_num_my)}/{int(jineng_info1[4])})'
             myjn_name = myjn
-            if int(jn_use_num_my) >= int(jineng_info1[4]):
-                myjinenglist.remove(myjn)
-                myjn_name = ''
-            myjinengbuttons.append(Button(myjn_but, myjn_name, action=1))
+            if int(jn_use_num_my) < int(jineng_info1[4]):
+                my_ues_jineng_list.append(myjn)
+                myjinengbuttons.append(Button(myjn_but, myjn_name, action=1))
+            
         for dijn in dijinenglist:
             jn_use_num_di = jineng_use2.count(dijn)
             jineng_info2 = JINENG_LIST[dijn]
             dijn_but = f'{dijn}({int(jineng_info2[4])-int(jn_use_num_di)}/{int(jineng_info2[4])})'
             dijn_name = dijn
-            if int(jn_use_num_di) >= int(jineng_info2[4]):
-                dijinenglist.remove(dijn)
-                dijn_name = ''
-            dijinengbuttons.append(Button(dijn_but, dijn_name, action=1))
-        if len(myjinenglist) == 0:
-            myjinenglist.append('挣扎')
+            if int(jn_use_num_di) < int(jineng_info2[4]):
+                di_ues_jineng_list.append(dijn)
+                dijinengbuttons.append(Button(dijn_but, dijn_name, action=1))
+            
+        if len(my_ues_jineng_list) == 0:
+            my_ues_jineng_list.append('挣扎')
             myjinengbuttons = [Button('挣扎', '挣扎', action=1)]
-        if len(dijinenglist) == 0:
-            dijinenglist.append('挣扎')
+        if len(di_ues_jineng_list) == 0:
+            di_ues_jineng_list.append('挣扎')
             dijinengbuttons = [Button('挣扎', '挣扎', action=1)]
         jineng1_use = 0
         puthmy = 0
@@ -2264,7 +2266,7 @@ async def pokemon_fight_pk(
                             mys = myresp.text
                             uidmy = myresp.user_id
                             if str(uidmy) == str(myuid):
-                                if mys in myjinenglist:
+                                if mys in my_ues_jineng_list:
                                     jineng1 = mys
                                     await bot.send(f'{myname}已选择完成')
                                     jineng1_use = 1
@@ -2275,13 +2277,13 @@ async def pokemon_fight_pk(
                             mys = myresp.text
                             uidmy = myresp.user_id
                             if str(uidmy) == str(myuid):
-                                if mys in myjinenglist:
+                                if mys in my_ues_jineng_list:
                                     jineng1 = mys
                                     await bot.send(f'{myname}已选择完成')
                                     jineng1_use = 1
         except asyncio.TimeoutError:
             jineng1 = now_use_jineng(
-                myinfo, diinfo, myjinenglist, dijinenglist, changdi
+                myinfo, diinfo, my_ues_jineng_list, di_ues_jineng_list, changdi
             )
         jinenginfo1 = JINENG_LIST[jineng1]
         jineng_use1.append(jineng1)
@@ -2303,7 +2305,7 @@ async def pokemon_fight_pk(
                             dis = diresp.text
                             uiddi = diresp.user_id
                             if str(uiddi) == str(diuid):
-                                if dis in dijinenglist:
+                                if dis in di_ues_jineng_list:
                                     jineng2 = dis
                                     await bot.send(f'{diname}已选择完成')
                                     jineng2_use = 1
@@ -2313,13 +2315,13 @@ async def pokemon_fight_pk(
                             dis = diresp.text
                             uiddi = diresp.user_id
                             if str(uiddi) == str(diuid):
-                                if dis in dijinenglist:
+                                if dis in di_ues_jineng_list:
                                     jineng2 = dis
                                     await bot.send(f'{diname}已选择完成')
                                     jineng2_use = 1
         except asyncio.TimeoutError:
             jineng2 = now_use_jineng(
-                diinfo, myinfo, dijinenglist, myjinenglist, changdi
+                diinfo, myinfo, di_ues_jineng_list, my_ues_jineng_list, changdi
             )
         jinenginfo2 = JINENG_LIST[jineng2]
         jineng_use2.append(jineng2)
