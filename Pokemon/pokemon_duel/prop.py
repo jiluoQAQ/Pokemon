@@ -461,6 +461,7 @@ async def prop_use(bot, ev: Event):
             for num in range(7, 15):
                 my_pokemon_info.append(pokemon_info[num])
             POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
+            await POKE._add_pokemon_prop(uid, '金色王冠', -1)
             mes = (
                 f'使用成功！{POKEMON_LIST[bianhao][0]}的个体值提升到极限了'
             )
@@ -484,6 +485,7 @@ async def prop_use(bot, ev: Event):
             for num in range(1, 15):
                 my_pokemon_info.append(pokemon_info[num])
             my_pokemon_info[up_key_list[up_name]] = 31
+            await POKE._add_pokemon_prop(uid, '银色王冠', -1)
             POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
             mes = (
                 f'使用成功！{POKEMON_LIST[bianhao][0]}的{up_name}个体值提升到极限了'
