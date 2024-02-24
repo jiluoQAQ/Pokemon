@@ -252,7 +252,7 @@ async def boss_prop_buy(bot, ev: Event):
         propnum = 1
     uid = ev.user_id
     try:
-        propinfo = propinfolist[propname]
+        propinfo = bossproplist[propname]
         my_score = SCORE.get_shengwang(uid)
         use_score = propinfo['score'] * propnum
         if use_score > my_score:

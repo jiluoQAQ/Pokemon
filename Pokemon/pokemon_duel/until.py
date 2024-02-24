@@ -51,6 +51,7 @@ def update_shux_info(info, sxname, uplevel, uptype):
         '3': '巨幅',
         '2': '大幅',
         '1': '',
+        '0': '',
     }
     for name in shuxlist.keys():
         if sxname == name:
@@ -1093,7 +1094,7 @@ def get_zhuangtai_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
         lasthp = 0
     else:
         lasthp = myinfo[17] - shanghai
-    shanghai = min(100, shanghai)
+    shanghai = min(60, shanghai)
     myinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}{myzhuangtai[0][0]}了，扣除血量{shanghai}'

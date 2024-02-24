@@ -2191,18 +2191,8 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 changdi_mesg = changdi_mesg + f'{changdi[0][0]}持续中\n'
         if shul > 15:
             jieshu = 1
-            if diinfo[17] > myinfo[17]:
-                changdi_mesg = (
-                    changdi_mesg
-                    + f'战斗超时，{diinfo[0]}剩余血量大于{myinfo[0]}\n{diinfo[0]}获得了胜利'
-                )
-                myinfo[17] = 0
-            else:
-                changdi_mesg = (
-                    changdi_mesg
-                    + f'战斗超时，{myinfo[0]}剩余血量大于{diinfo[0]}\n{myinfo[0]}获得了胜利'
-                )
-                diinfo[17] = 0
+            changdi_mesg = changdi_mesg + f'战斗超时，【首领】{diinfo[0]}狂暴了\n{diinfo[0]}获得了胜利'
+            myinfo[17] = 0
         mesg = mesg + changdi_mesg
 
         await bot.send(mesg)
