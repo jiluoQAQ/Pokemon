@@ -888,7 +888,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT BIANHAO,(GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) AS GT_Z FROM POKEMON_TABLE WHERE UID={uid} ORDER BY (GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) DESC LIMIT 0,50"
+                    f"SELECT BIANHAO,(GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) AS GT_Z FROM POKEMON_TABLE WHERE UID='{uid}' ORDER BY (GT_HP+GT_ATK+GT_DEF+GT_SEF+GT_SPD+GT_STK) DESC LIMIT 0,50"
                 ).fetchall()
                 if r:
                     return r

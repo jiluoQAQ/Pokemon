@@ -2186,7 +2186,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         if shul > 15:
             if myinfo[17] >0 and diinfo[17]>0:
                 jieshu = 1
-                changdi_mesg = changdi_mesg + f'战斗超时，【首领】{diinfo[0]}狂暴了\n{diinfo[0]}获得了胜利'
+                changdi_mesg = changdi_mesg + f'\n战斗超时，【首领】{diinfo[0]}狂暴了\n{diinfo[0]}获得了胜利'
                 myinfo[17] = 0
         mesg = mesg + changdi_mesg
 

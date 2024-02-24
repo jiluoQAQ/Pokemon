@@ -6996,7 +6996,7 @@ JINENG_LIST = {
         '100',
         '15',
         '撒出羽毛，笼罩在对手的周围。大幅降低对手的攻击。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','2','down')",
+        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','2','down')",
     ],
     '摇晃舞': [
         '一般',
@@ -10309,7 +10309,7 @@ JINENG_LIST = {
         '—',
         '10',
         '回复对手最大ＨＰ的一半。在青草场地时，效果会提高。',
-        '',
+        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
     ],
     '十万马力': [
         '地面',

@@ -63,7 +63,7 @@ def update_shux_info(info, sxname, uplevel, uptype):
                     if int(newnum) < -6:
                         info[shuxlist[name][0]] = -6
                         uplevel_num = int(info[shuxlist[name][0]]) + 6
-                        msg = f'{info[0]}的{shuxlist[name][1]}{shuxlvreturn[uplevel_num]}降低了！'
+                        msg = f'{info[0]}的{shuxlist[name][1]}{shuxlvreturn[str(uplevel_num)]}降低了！'
                     else:
                         info[shuxlist[name][0]] = newnum
                         msg = f'{info[0]}的{shuxlist[name][1]}{shuxlvreturn[uplevel]}降低了！'
@@ -75,7 +75,7 @@ def update_shux_info(info, sxname, uplevel, uptype):
                     if int(newnum) > 6:
                         info[shuxlist[name][0]] = 6
                         uplevel_num = 6 - int(info[shuxlist[name][0]])
-                        msg = f'{info[0]}的{shuxlist[name][1]}{shuxlvreturn[uplevel_num]}提高了！'
+                        msg = f'{info[0]}的{shuxlist[name][1]}{shuxlvreturn[str(uplevel_num)]}提高了！'
                     else:
                         info[shuxlist[name][0]] = newnum
                         msg = f'{info[0]}的{shuxlist[name][1]}{shuxlvreturn[uplevel]}提高了！'
