@@ -6483,7 +6483,7 @@ JINENG_LIST = {
         '—',
         '5',
         '在５回合内一直降雨，从而提高水属性的招式威力。火属性的招式威力则降低。',
-        '',
+        "changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'下雨')",
     ],
     '大晴天': [
         '火',
@@ -6492,7 +6492,7 @@ JINENG_LIST = {
         '—',
         '5',
         '在５回合内阳光变得强烈，从而提高火属性的招式威力。水属性的招式威力则降低。',
-        '',
+        "changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'大晴天')",
     ],
     '咬碎': [
         '恶',
@@ -6645,7 +6645,7 @@ JINENG_LIST = {
         '—',
         '10',
         '在５回合内一直降冰雹，除冰属性的宝可梦以外，给予全体宝可梦伤害。',
-        '',
+        "changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰雹')",
     ],
     '无理取闹': [
         '恶',
@@ -12294,9 +12294,9 @@ JINENG_LIST = {
     '全开猛撞':['格斗','物理','100','100','5','边变形边凶暴地落下，并引发起古老的大爆炸。若针对到弱点，威力会进一步。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
     '闪电猛冲':['电','特殊','100','100','5','边变形边高速奔走，并以未知的电击贯穿对手。若针对到弱点，威力会进一步。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
     '断尾':['一般','变化','—','—','10','削减自己的ＨＰ，制造分身后会返回，并和后备宝可梦进行替换。',''],
-    '冷笑话':['冰','变化','—','—','10','留下冷场的冷笑话后，和后备宝可梦进行替换。在５回合内会下雪。',''],
+    '冷笑话':['冰','变化','—','—','10','留下冷场的冷笑话后，和后备宝可梦进行替换。在５回合内会下雪。',"changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'下雪')"],
     '大扫除':['一般','变化','—','—','10','将撒菱、隐形岩、黏黏网、毒菱、替身全部扫除掉。自己的攻击和速度会提高。',''],
-    '雪景':['冰','变化','—','—','10','在５回合内会下雪。冰属性的防御会提高。',''],
+    '雪景':['冰','变化','—','—','10','在５回合内会下雪。冰属性的防御会提高。',"changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'下雪')"],
     '虫扑':['虫','物理','50','100','20','飞扑向对手攻击。会降低对手的速度。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down','100')"],
     '起草':['草','物理','50','100','20','跳出草丛进行攻击。通过轻快的步伐会提高自己的速度。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','up')"],
     '泼冷水':['水','特殊','50','100','20','泼洒冰冷得足以让对手失去活力的水进行攻击。会降低对手的攻击。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down','100')"],
