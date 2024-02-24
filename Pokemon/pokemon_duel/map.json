@@ -59,42 +59,51 @@
 		"关东":{
 			"关东无人发电厂":{
 				"bossid":145,
+				"xingge":"内敛",
 				"jinenglist":"原始之力,放电,空气斩,热风"
 			},
 			"关东冠军之路":{
 				"bossid":146,
+				"xingge":"内敛",
 				"jinenglist":"原始之力,热沙大地,空气斩,热风"
 			},
 			"双子岛":{
 				"bossid":144,
+				"xingge":"内敛",
 				"jinenglist":"原始之力,冰冻光束,空气斩,水之波动"
 			}
 		},
 		"城都":{
 			"愤怒之湖":{
 				"bossid":245,
+				"xingge":"内敛",
 				"jinenglist":"冲浪,冰冻光束,暗影球,空气斩"
 			},
 			"断崖洞窟":{
 				"bossid":244,
+				"xingge":"固执",
 				"jinenglist":"咬碎,神圣之火,神速,铁头"
 			},
 			"擂钵山":{
 				"bossid":243,
+				"xingge":"内敛",
 				"jinenglist":"放电,热水,暗影球,波导弹"
 			}
 		},
 		"丰缘":{
 			"105号水路":{
 				"bossid":378,
+				"xingge":"内敛",
 				"jinenglist":"冰冻光束,原始之力,十万伏特,加农光炮"
 			},
 			"120号道路":{
 				"bossid":379,
+				"xingge":"固执",
 				"jinenglist":"铁头,臂锤,地震,冰旋"
 			},
 			"丰缘沙漠":{
 				"bossid":377,
+				"xingge":"固执",
 				"jinenglist":"地震,铁头,吸取拳,雷电拳"
 			}
 		}

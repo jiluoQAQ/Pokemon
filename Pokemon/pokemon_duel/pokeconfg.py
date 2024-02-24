@@ -127,7 +127,7 @@ async def new_pokemon_gt(uid, bianhao, startype=0):
     return pokemon_info
 
 # 获取宝可梦，随机个体，随机努力，测试用
-async def get_pokeon_info_boss(bianhao, jineng = '', level=100):
+async def get_pokeon_info_boss(bianhao, bossinfo, level=100):
     pokemon_info = []
     pokemon_info.append(level)
     for num in range(1, 7):
@@ -136,20 +136,14 @@ async def get_pokeon_info_boss(bianhao, jineng = '', level=100):
     for num in range(1, 6):
         if num == 1:
             pokemon_info.append(6)
-        elif num == 2 and int(POKEMON_LIST[bianhao][2]) > int(POKEMON_LIST[bianhao][4]):
+        elif num == 2 and bossinfo['xingge'] == '固执':
             pokemon_info.append(252)
-        elif num == 4 and int(POKEMON_LIST[bianhao][4]) >= int(POKEMON_LIST[bianhao][2]):
+        elif num == 4 and bossinfo['xingge'] == '内敛':
             pokemon_info.append(252)
         else:
             pokemon_info.append(0)
     pokemon_info.append(252)
-    if int(POKEMON_LIST[bianhao][2]) >= int(POKEMON_LIST[bianhao][4]):
-        pokemon_info.append('固执')
-    elif int(POKEMON_LIST[bianhao][4]) > int(POKEMON_LIST[bianhao][2]):
-        pokemon_info.append('内敛')
-    else:
-        xingge = random.sample(list_xingge, 1)
-        pokemon_info.append(xingge[0])
+    pokemon_info.append(bossinfo['xingge'])
     pokemon_info.append(jineng)
     return pokemon_info
 
@@ -3667,7 +3661,7 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
             jineng_use = []
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
-            dipokemon_info = await get_pokeon_info_boss(bianhao2, bossinfo['jinenglist'], boss_level)
+            dipokemon_info = await get_pokeon_info_boss(bianhao2, bossinfo, boss_level)
             diinfo = await new_pokemon_info_boss(bianhao2, dipokemon_info, boss_num)
         if myinfo[3] == myinfo[17]:
             mes += f'{myname}派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'

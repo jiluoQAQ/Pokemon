@@ -900,7 +900,7 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
         )
     bossinfo = weekbosslist[diquname][this_map]
     bossbianhao = bossinfo['bossid']
-    pokemon_info_boss = await get_pokeon_info_boss(bossbianhao, bossinfo['jinenglist'], 100)
+    pokemon_info_boss = await get_pokeon_info_boss(bossbianhao, bossinfo, 100)
     HP_1, W_atk_1, W_def_1, M_atk_1, M_def_1, speed_1 = await get_pokemon_shuxing_boss(
         bossbianhao, pokemon_info_boss, 1.1
     )
