@@ -238,6 +238,18 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
     
+    async def delete_technical_uid(self,uid):
+        with self._connect() as conn:
+            conn.execute(
+                f"DELETE FROM PROP_TECHNICAL WHERE UID='{uid}'"
+            ).fetchall()
+    
+    async def change_technical_uid(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE PROP_TECHNICAL SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     async def new_exchange(self,exchangeid,proptype,propname,num,uid,score,uptime):
         try:
             with self._connect() as conn:
@@ -296,6 +308,12 @@ class PokeCounter:
         with self._connect() as conn:
             conn.execute(
                 f"DELETE FROM PROP_EXCHANGE WHERE UID='{uid}'"
+            ).fetchall()
+    
+    async def change_exchange_uid(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE PROP_EXCHANGE SET UID='{newuid}' WHERE UID='{olduid}'"
             ).fetchall()
     
     async def get_exchange_list(self, page=0):
@@ -476,7 +494,25 @@ class PokeCounter:
             conn.execute(
                 f"DELETE FROM POKEMON_STAR WHERE UID='{uid}'"
             ).fetchall()
-
+    
+    async def _change_poke_star(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_STAR SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
+    async def _delete_poke_starrush_uid(self, uid):
+        with self._connect() as conn:
+            conn.execute(
+                f"DELETE FROM POKEMON_STARRUSH WHERE UID='{uid}'"
+            ).fetchall()
+    
+    async def _change_poke_starrush_uid(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_STARRUSH SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     async def _delete_poke_star_bianhao(self, uid, bianhao):
         with self._connect() as conn:
             conn.execute(
@@ -572,6 +608,12 @@ class PokeCounter:
                 f"DELETE FROM POKEMON_PROP WHERE UID='{uid}'"
             ).fetchall()
     
+    async def change_pokemon_prop(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_PROP SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     async def _add_pokemon_group(self, uid, pokemon_list):
         try:
             with self._connect() as conn:
@@ -600,7 +642,13 @@ class PokeCounter:
             conn.execute(
                 f"DELETE FROM POKEMON_TEAM WHERE UID='{uid}'"
             ).fetchall()
-
+    
+    async def change_pokemon_group(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_TEAM SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     async def _add_pokemon_egg(self, uid, bianhao, use_num):
         eggnum = int(await self.get_pokemon_egg(uid, bianhao)) + int(use_num)
         try:
@@ -676,7 +724,13 @@ class PokeCounter:
             conn.execute(
                 f"DELETE FROM POKEMON_EGG WHERE UID='{uid}'"
             ).fetchall()
-
+    
+    async def change_pokemon_egg(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_EGG SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     def _get_map_now(self, uid):
         try:
             with self._connect() as conn:
@@ -745,7 +799,13 @@ class PokeCounter:
             conn.execute(
                 f"DELETE FROM POKEMON_MAP  WHERE UID='{uid}'"
             ).fetchall()
-
+    
+    def change_pokemon_map(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_MAP SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     def _add_huizhang_now(self, uid, huizhang):
         try:
             with self._connect() as conn:
@@ -956,7 +1016,13 @@ class PokeCounter:
             conn.execute(
                 f"DELETE FROM POKEMON_TABLE WHERE UID='{uid}'"
             ).fetchall()
-
+    
+    def _change_poke_info(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_TABLE SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     def _delete_poke_bianhao(self, uid, bianhao):
         with self._connect() as conn:
             conn.execute(

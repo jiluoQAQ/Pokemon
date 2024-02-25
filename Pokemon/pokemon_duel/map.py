@@ -1489,8 +1489,8 @@ async def give_prop_pokemon_info(bot, ev: Event):
     if len(args) < 2:
         return await bot.send('请输入 发放奖励[道具/精灵蛋][名称][数量]。', at_sender=True)
     proptype = args[0]
-    if proptype not in ['金币','金钱','道具','精灵蛋','宝可梦蛋','蛋']:
-        return await bot.send('请输入正确的类型 道具/精灵蛋。', at_sender=True)
+    if proptype not in ['金币','金钱','道具','精灵蛋','宝可梦蛋','蛋','学习机']:
+        return await bot.send('请输入正确的类型 道具/精灵蛋/学习机。', at_sender=True)
     if ev.at is not None:
         suid = ev.at
         smapinfo = POKE._get_map_now(suid)
@@ -1551,6 +1551,12 @@ async def give_prop_pokemon_info(bot, ev: Event):
             return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
         await POKE._add_pokemon_egg(suid, bianhao, propnum)
         mes = f'奖励发放成功！{sname} 获得了 {propname}精灵蛋x{propnum}。'
+    if proptype == '学习机':
+        jinenglist = JINENG_LIST.keys()
+        if propname not in jinenglist:
+            return await bot.send('无法找到该技能，请输入正确的技能学习机名称。', at_sender=True)
+        await POKE._add_pokemon_technical(suid,propname,propnum)
+        mes = f'奖励发放成功！{sname}获得了{propname}学习机x{propnum}。'
     await bot.send(mes)
 
 @sv_pm_config.on_command(['全体发放奖励'])
@@ -1592,6 +1598,26 @@ async def give_prop_pokemon_info_all(bot, ev: Event):
         mes = f'奖励发放成功！总计{game_user_num}名玩家(徽章1枚及以上)，获得了 {propname}精灵蛋x{propnum}。'
     await bot.send(mes)
 
+@sv_pm_config.on_command(['数据转移'])
+async def update_pokemon_info(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) < 2:
+        return await bot.send('请输入 数据转移 [新平台的用户ID][老平台的用户ID]。', at_sender=True)
+    newuid = args[0]
+    olduid = args[1]
+    await chongkai(newuid)
+    POKE._change_poke_info(newuid,olduid)
+    await POKE.change_pokemon_egg(newuid,olduid)
+    POKE.change_pokemon_map(newuid,olduid)
+    await POKE.change_pokemon_group(newuid,olduid)
+    await POKE._change_poke_star(newuid,olduid)
+    await POKE.change_pokemon_prop(newuid,olduid)
+    await POKE.change_exchange_uid(newuid,olduid)
+    await POKE.change_technical_uid(newuid,olduid)
+    await POKE._change_poke_starrush_uid(newuid,olduid)
+    SCORE.change_score(newuid,olduid)
+    await bot.send('用户数据转移成功')
+    
 @sv_pm_config.on_command(('查看状态', '状态查看'))
 async def get_my_poke_info_sv(bot, ev: Event):
     args = ev.text.split()
@@ -1656,7 +1682,6 @@ async def get_day_pokemon_refresh_send(bot, ev: Event):
                 )
         except Exception as e:
             logger.warning(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
-    
 
 # 每日定点执行每日大量出现精灵刷新
 @scheduler.scheduled_job('cron', hour ='*')

@@ -33,7 +33,22 @@ class SCORE_DB:
                 ).fetchall()
         except:
             raise Exception('更新表发生错误')
-
+    
+    def delete_score(self, uid):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"DELETE FROM POKEMON_SCORE WHERE UID='{uid}'"
+                ).fetchall()
+        except:
+            raise Exception('更新表发生错误')
+    
+    def change_score(self, newuid, olduid):
+        with self._connect() as conn:
+            conn.execute(
+                f"UPDATE POKEMON_SCORE SET UID='{newuid}' WHERE UID='{olduid}'"
+            ).fetchall()
+    
     def get_score(self, uid):
         try:
             with self._connect() as conn:

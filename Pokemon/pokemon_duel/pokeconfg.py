@@ -398,7 +398,9 @@ async def chongkai(uid):
     await POKE._delete_poke_star(uid)
     await POKE.delete_pokemon_prop(uid)
     await POKE.delete_exchange_uid(uid)
-
+    await POKE.delete_technical_uid(uid)
+    await POKE._delete_poke_starrush_uid(uid)
+    SCORE.delete_score(uid)
 
 # 放生
 async def fangshen(uid, bianhao):
@@ -434,7 +436,7 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
     for jineng in myjinenglist:
         jinenginfo = JINENG_LIST[jineng]
         if jinenginfo[2].isdigit():
-            tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+            tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
             if tianqi_xz > 0:
                 shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
                 if shuxing_xz > 0:
@@ -470,7 +472,7 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
     for jinengdi in dijinenglist:
         jinenginfo = JINENG_LIST[jinengdi]
         if jinenginfo[2].isdigit():
-            tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+            tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
             if tianqi_xz > 0:
                 shuxing_xz = get_shanghai_beilv(jinenginfo[0], myinfo[1])
                 if shuxing_xz > 0:
@@ -503,7 +505,7 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
             if jineng in youxian:
                 jinenginfo = JINENG_LIST[jineng]
                 if jinenginfo[2].isdigit():
-                    tianqi_xz = int(
+                    tianqi_xz = float(
                         TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]]
                     )
                     if tianqi_xz > 0:
@@ -556,7 +558,7 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
     jinenglist = copy.deepcopy(myjinenglist)
     for jineng in jinenglist:
         jinenginfo = JINENG_LIST[jineng]
-        tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+        tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
         if tianqi_xz == 0:
             jinenglist.remove(jineng)
         shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
@@ -570,7 +572,7 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
             if jinenginfo[2] == '变化':
                 jineng_use_list.append(jineng)
             if jinenginfo[2].isdigit():
-                tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+                tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
                 if tianqi_xz > 0:
                     shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
                     if shuxing_xz > 0:
@@ -1719,8 +1721,8 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     fight_flag = 0
     last_jineng1 = ''
     last_jineng2 = ''
+    mesg = ''
     while fight_flag == 0:
-        mesg = ''
         jieshu = 0
         myjinenglist = re.split(',', mypokemon_info[14])
         dijinenglist = re.split(',', dipokemon_info[14])
@@ -1747,7 +1749,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 while jineng1_use == 0:
                     if runmynum == 0:
                         myresp = await bot.receive_resp(
-                            f'{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
+                            f'{mesg}\n\n{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
                             myjinengbuttons,
                             unsuported_platform=True
                         )
@@ -2190,10 +2192,11 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 myinfo[17] = 0
         mesg = mesg + changdi_mesg
 
-        await bot.send(mesg)
+        # 
         last_jineng1 = jineng1
         if jieshu == 1:
             fight_flag = 1
+    await bot.send(mesg)
     return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use
 
 async def pokemon_fight_pk(
