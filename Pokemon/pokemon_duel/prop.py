@@ -857,8 +857,12 @@ async def mew_pm_hongbao(bot, ev: Event):
         return await bot.send(f'红包口令重复，红包发放失败', at_sender=True)
     pmhongbao.insert_hongbao(kouling,score,num)
     SCORE.update_score(uid, 0 - score)
-    await bot.send(f'红包发放成功，红包口令：{kouling}', at_sender=True)
-
+    mes = f'红包发放成功，红包口令：{kouling}'
+    buttons = [
+        Button('抢红包', f'pm抢红包{kouling}', action=1),
+    ]
+    await bot.send_option(mes, buttons)
+    
 @sv_pokemon_prop.on_command(['pm抢红包'])
 async def open_pm_hongbao(bot, ev: Event):
     uid = ev.user_id
@@ -885,7 +889,11 @@ async def open_pm_hongbao(bot, ev: Event):
     pmhongbao.open_hongbao(kouling,get_score,uid)
     if last_num == 1:
         pmhongbao.hongbao_off(kouling)
-    await bot.send(f'恭喜！您抢到了{get_score}金币', at_sender=True)
+    mes = f'恭喜！您抢到了{get_score}金币'
+    buttons = [
+        Button('抢红包', f'pm抢红包{kouling}', action=1),
+    ]
+    await bot.send_option(mes, buttons)
 
 # 每日0点执行交易所7天无销售商品自动下架
 @scheduler.scheduled_job('cron', hour ='*')
