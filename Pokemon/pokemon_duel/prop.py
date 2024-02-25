@@ -27,6 +27,40 @@ TEXT_PATH = Path(__file__).parent / 'texture2D'
 
 sv_pokemon_prop = SV('宝可梦道具', priority=5)
 
+class PM_HONGBAO:
+    def __init__(self):
+        self.hb_score = {}
+        self.hb_use_score = {}
+        self.hb_num = {}
+        self.hb_use_num = {}
+        self.hb_open_user = {}
+
+    def insert_hongbao(self, kouling, score, num):
+        self.hb_score[kouling] = score
+        self.hb_num[kouling] = num
+        self.hb_open_user[kouling] = []
+
+    def open_hongbao(self, kouling, use_score, openuser):
+        self.hb_use_score[kouling] = self.hb_use_score.get(kouling, 0) + use_score
+        self.hb_use_num[kouling] = self.hb_use_num.get(kouling, 0) + 1
+        self.hb_open_user[kouling].append(openuser)
+    
+    def get_hongbao(self, kouling):
+        score = self.hb_score[kouling] if self.hb_score.get(kouling) is not None else 0
+        use_score = self.hb_use_score[kouling] if self.hb_use_score.get(kouling) is not None else 0
+        num = self.hb_num[kouling] if self.hb_num.get(kouling) is not None else 0
+        use_num = self.hb_use_num[kouling] if self.hb_use_num.get(kouling) is not None else 0
+        openuser = self.hb_open_user[kouling] if self.hb_open_user.get(kouling) is not None else []
+        return score,use_score,num,use_num,openuser
+    
+    def hongbao_off(self, kouling):
+        self.hb_score[kouling] = 0
+        self.hb_use_score[kouling] = 0
+        self.hb_use_num[kouling] = 0
+        self.hb_num[kouling] = 0
+        self.hb_open_user[kouling] = []
+    
+pmhongbao = PM_HONGBAO()
 
 @sv_pokemon_prop.on_fullmatch(['道具帮助', '宝可梦道具帮助'])
 async def pokemon_help_prop(bot, ev: Event):
@@ -799,6 +833,59 @@ async def show_exchange_list_my(bot, ev: Event):
     if downbutton != '':
         buttons.append(Button('下一页',f'{downbutton}', action=2))
     await bot.send_option(mes, buttons)
+
+@sv_pokemon_prop.on_command(['pm发红包'])
+async def mew_pm_hongbao(bot, ev: Event):
+    uid = ev.user_id
+    args = ev.text.split()
+    if len(args) < 3:
+        return await bot.send('请输入 pm发红包[红包口令][红包金额][红包数量] 用空格分隔', at_sender=True)
+    kouling = args[0]
+    score = int(args[1])
+    num = int(args[2])
+    if score < 1:
+        return await bot.send('红包金额需要大于0', at_sender=True)
+    if num < 1:
+        return await bot.send('红包数量需要大于0', at_sender=True)
+    if num > score:
+        return await bot.send('红包数量需要大于红包金额', at_sender=True)
+    my_score = SCORE.get_score(uid)
+    if score > my_score:
+        return await bot.send(f'您的金币小于{score}，红包发放失败', at_sender=True)
+    hbscore,use_score,hbnum,use_num,openuser = pmhongbao.get_hongbao(kouling)
+    if hbscore > 0:
+        return await bot.send(f'红包口令重复，红包发放失败', at_sender=True)
+    pmhongbao.insert_hongbao(kouling,score,num)
+    SCORE.update_score(uid, 0 - score)
+    await bot.send(f'红包发放成功，红包口令：{kouling}', at_sender=True)
+
+@sv_pokemon_prop.on_command(['pm抢红包'])
+async def open_pm_hongbao(bot, ev: Event):
+    uid = ev.user_id
+    args = ev.text.split()
+    if len(args) < 1:
+        return await bot.send('请输入 pm抢红包[红包口令]', at_sender=True)
+    kouling = args[0]
+    score,use_score,num,use_num,openuser = pmhongbao.get_hongbao(kouling)
+    if uid in openuser:
+        return await bot.send('您已经抢过该红包', at_sender=True)
+    if score == 0:
+        return await bot.send('红包口令无效或该红包已被抢完', at_sender=True)
+    last_score = score - use_score
+    max_score = math.ceil(last_score * 0.6)
+    last_num = int(num) - int(use_num)
+    if last_num == 0 or last_score == 0:
+        return await bot.send('该红包已被抢完', at_sender=True)
+    if last_num == 1:
+        get_score = last_score
+    else:
+        get_score = int(math.floor(random.uniform(0, last_score)))
+        get_score = min(max_score, get_score)
+    SCORE.update_score(uid, get_score)
+    pmhongbao.open_hongbao(kouling,get_score,uid)
+    if last_num == 1:
+        pmhongbao.hongbao_off(kouling)
+    await bot.send(f'恭喜！您抢到了{get_score}金币', at_sender=True)
 
 # 每日0点执行交易所7天无销售商品自动下架
 @scheduler.scheduled_job('cron', hour ='*')

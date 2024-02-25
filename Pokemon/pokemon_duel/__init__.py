@@ -80,6 +80,7 @@ async def pokemon_gonggao(bot, ev: Event):
        宝可梦小游戏更新公告：
 2024-2-25
 1.添加平台数据转移功能(管理员)
+2.可以发红包了(pm发红包【红包口令】【红包金额】【红包数量】)
 2024-2-23
 1.完成首领挑战(周本)
 2.添加首领商店(货币为首领挑战掉落的首领币)
@@ -291,17 +292,13 @@ async def get_chushi_pokemon(bot, ev: Event):
     picfile = os.path.join(
         FILE_PATH, 'icon', f'{POKEMON_LIST[bianhao][0]}.png'
     )
-    mes = []
-    mes.append(MessageSegment.text('恭喜！您领取到了初始精灵\n'))
+    mes = ''
+    mes += '恭喜！您领取到了初始精灵\n'
     img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
     img = await convert_img(img)
     # mes.append(MessageSegment.image(img))
-    mes.append(
-        MessageSegment.text(
-            f'{starlist[startype]}{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\nHP:{HP}({pokemon_info[1]})\n物攻:{W_atk}({pokemon_info[2]})\n物防:{W_def}({pokemon_info[3]})\n特攻:{M_atk}({pokemon_info[4]})\n特防:{M_def}({pokemon_info[5]})\n速度:{speed}({pokemon_info[6]})\n'
-        )
-    )
-    mes.append(MessageSegment.text(f'可用技能\n{pokemon_info[14]}'))
+    mes += f'{starlist[startype]}{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\nHP:{HP}({pokemon_info[1]})\n物攻:{W_atk}({pokemon_info[2]})\n物防:{W_def}({pokemon_info[3]})\n特攻:{M_atk}({pokemon_info[4]})\n特防:{M_def}({pokemon_info[5]})\n速度:{speed}({pokemon_info[6]})\n'
+    mes += f'可用技能\n{pokemon_info[14]}'
     buttons = [
         Button('📖精灵状态', f'精灵状态{pokename}', action=1),
         Button('🏝️野外探索', '野外探索', action=1),
