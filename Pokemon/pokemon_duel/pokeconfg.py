@@ -1729,6 +1729,8 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         myjinengbuttons = []
         dijinengbuttons = []
         my_ues_jineng_list = []
+        button_user_input = []
+        button_user_input.append(uid)
         for myjn in myjinenglist:
             jn_use_num_my = jineng_use.count(myjn)
             print(f'{myjn}:{jn_use_num_my}')
@@ -1737,10 +1739,10 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
             myjn_name = myjn
             if int(jn_use_num_my) < int(jineng_info1[4]):
                 my_ues_jineng_list.append(myjn)
-                myjinengbuttons.append(Button(myjn_but, myjn_name, action=1))
+                myjinengbuttons.append(Button(myjn_but, myjn_name, action=1, permisson=0, specify_user_ids=button_user_input))
         if len(my_ues_jineng_list) == 0:
             my_ues_jineng_list.append('挣扎')
-            myjinengbuttons = [Button('挣扎', '挣扎', action=1)]
+            myjinengbuttons = [Button('挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input)]
         jineng1_use = 0
         puthmy = 0
         runmynum = 0
@@ -1782,7 +1784,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
-        mesg = mesg + f'\n回合：{shul}\n'
+        mesg = f'\n回合：{shul}\n'
         shul = shul + 1
         mysd = get_nowshuxing(myinfo[8], myinfo[13])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
@@ -2220,6 +2222,8 @@ async def pokemon_fight_pk(
     fight_flag = 0
     last_jineng1 = ''
     last_jineng2 = ''
+    button_user_input_my.append(myuid)
+    button_user_input_di.append(diuid)
     while fight_flag == 0:
         mesg = ''
         jieshu = 0
@@ -2236,7 +2240,7 @@ async def pokemon_fight_pk(
             myjn_name = myjn
             if int(jn_use_num_my) < int(jineng_info1[4]):
                 my_ues_jineng_list.append(myjn)
-                myjinengbuttons.append(Button(myjn_but, myjn_name, action=1))
+                myjinengbuttons.append(Button(myjn_but, myjn_name, action=1, permisson=0, specify_user_ids=button_user_input_my))
             
         for dijn in dijinenglist:
             jn_use_num_di = jineng_use2.count(dijn)
@@ -2245,14 +2249,14 @@ async def pokemon_fight_pk(
             dijn_name = dijn
             if int(jn_use_num_di) < int(jineng_info2[4]):
                 di_ues_jineng_list.append(dijn)
-                dijinengbuttons.append(Button(dijn_but, dijn_name, action=1))
+                dijinengbuttons.append(Button(dijn_but, dijn_name, action=1, permisson=0, specify_user_ids=button_user_input_di))
             
         if len(my_ues_jineng_list) == 0:
             my_ues_jineng_list.append('挣扎')
-            myjinengbuttons = [Button('挣扎', '挣扎', action=1)]
+            myjinengbuttons = [Button('挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input_my)]
         if len(di_ues_jineng_list) == 0:
             di_ues_jineng_list.append('挣扎')
-            dijinengbuttons = [Button('挣扎', '挣扎', action=1)]
+            dijinengbuttons = [Button('挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input_di)]
         jineng1_use = 0
         puthmy = 0
         runmynum = 0

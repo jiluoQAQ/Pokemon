@@ -889,7 +889,7 @@ async def open_pm_hongbao(bot, ev: Event):
     pmhongbao.open_hongbao(kouling,get_score,uid)
     if last_num == 1:
         pmhongbao.hongbao_off(kouling)
-    mes = f'恭喜！您抢到了{get_score}金币'
+    mes = f'恭喜！您抢到了{get_score}金币，红包剩余数量{last_num - 1}，剩余金额{last_score - get_score}'
     buttons = [
         Button('抢红包', f'pm抢红包{kouling}', action=1),
     ]
