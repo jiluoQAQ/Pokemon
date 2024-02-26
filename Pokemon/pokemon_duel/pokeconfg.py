@@ -2222,6 +2222,8 @@ async def pokemon_fight_pk(
     fight_flag = 0
     last_jineng1 = ''
     last_jineng2 = ''
+    button_user_input_my = []
+    button_user_input_di = []
     button_user_input_my.append(myuid)
     button_user_input_di.append(diuid)
     while fight_flag == 0:
