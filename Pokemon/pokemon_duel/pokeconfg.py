@@ -3832,7 +3832,7 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
     boss_num = 0
     shanghai = 0
     boss_hp = 0
-    while len(mypokelist) > 0:
+    while len(mypokelist) > 0 and boss_num < 30:
         mes = f'第{changci}场\n'
         mes += f"{myname}剩余精灵{len(mypokelist)}只\n【世界首领】{POKEMON_LIST[bossinfo['bossid']][0]}序列{boss_num + 1}\n"
         changci += 1

@@ -178,8 +178,8 @@ class PokeCounter:
             self._connect().execute(
                 """CREATE TABLE IF NOT EXISTS BOSS_FIGHT
                           (UID             TEXT   NOT NULL,
-                           SHANGHAI        TEXT   NOT NULL,
-                           TIME            TEXT   NOT NULL,
+                           SHANGHAI        INT   NOT NULL,
+                           TIME            INT   NOT NULL,
                            PRIMARY KEY(UID,TIME));"""
             )
         except:
