@@ -398,16 +398,18 @@ async def get_pokemon_shuxing_boss_sj(bianhao, pokemon_info, jieduan):
     HP = math.ceil(
         (
             (
-                (int(zhongzu_info[1]) * 2)
-                + int(pokemon_info[1])
-                + (int(pokemon_info[7]) / 4)
+                (
+                    (int(zhongzu_info[1]) * 2)
+                    + int(pokemon_info[1])
+                    + (int(pokemon_info[7]) / 4)
+                )
+                * level
             )
-            * level
-        )
-        / 100
-        + 10
-        + level
-    ) * jieduan * 3
+            / 100
+            + 10
+            + level
+        ) * jieduan
+    ) * 3
     W_atk = math.ceil(
         (
             (
