@@ -19,6 +19,7 @@ class PokeCounter:
         self._create_table_refresh_send()
         self._create_table_exchange()
         self._create_table_technical()
+        self._create_table_boss_fight()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -62,7 +63,7 @@ class PokeCounter:
             )
         except:
             raise Exception('创建表发生错误')
-
+    
     def _create_table_group(self):
         try:
             self._connect().execute(
@@ -171,6 +172,54 @@ class PokeCounter:
             )
         except:
             raise Exception('创建表发生错误')
+    
+    def _create_table_boss_fight(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS BOSS_FIGHT
+                          (UID             TEXT   NOT NULL,
+                           SHANGHAI        TEXT   NOT NULL,
+                           TIME            TEXT   NOT NULL,
+                           PRIMARY KEY(UID,TIME));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    async def get_boss_shanghai(self,uid,week):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT SHANGHAI FROM BOSS_FIGHT WHERE UID='{uid}' AND TIME = {week}"
+                ).fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def _new_boss_shanghai(self, uid, shanghai, week):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    'INSERT OR REPLACE INTO BOSS_FIGHT (UID,SHANGHAI,TIME) VALUES (?,?,?)',
+                    (uid, shanghai, week),
+                )
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def get_boss_shanghai_list(self,week):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT UID,SHANGHAI FROM BOSS_FIGHT WHERE TIME = {week} ORDER BY SHANGHAI DESC LIMIT 0,50"
+                ).fetchall()
+                if r:
+                    return r
+                else:
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
     
     async def get_game_user_list(self):
         try:

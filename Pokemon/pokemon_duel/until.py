@@ -209,10 +209,7 @@ def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -287,10 +284,7 @@ def get_shanghai_pt_yh(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -363,10 +357,7 @@ def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -443,10 +434,7 @@ def get_shanghai_pt_bh(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -521,10 +509,7 @@ def get_shanghai_pt_fs(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -608,10 +593,7 @@ def get_shanghai_pt_xh(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -699,10 +681,7 @@ def get_shanghai_zt(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
 
     zt_mingzhong = 0
@@ -804,10 +783,7 @@ def get_shanghai_zt_my(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
 
     # print('shanghai:' + str(shanghai))
@@ -888,10 +864,7 @@ def get_sbshanghai_pt(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -971,10 +944,7 @@ def get_lxshanghai_pt(
     cishu = int(math.floor(random.uniform(csmim, csmax)))
     shanghai = shanghai * cishu
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -1035,10 +1005,7 @@ def get_hunluan_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
         1,
         1,
     )
-    if int(shanghai) >= int(myinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = myinfo[17] - shanghai
+    lasthp = myinfo[17] - shanghai
     myinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}混乱了，攻击了自己，'
@@ -1068,10 +1035,7 @@ def get_gushang(
 
     shanghai = int(shanghai)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}使用了技能{jineng}，'
@@ -1090,11 +1054,8 @@ def get_zhuangtai_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
         shanghai = int(myinfo[3] / 16)
     if myzhuangtai[0][0] == '中毒':
         shanghai = int(myinfo[3] / 8)
-    if int(shanghai) >= int(myinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = myinfo[17] - shanghai
     shanghai = min(60, shanghai)
+    lasthp = myinfo[17] - shanghai
     myinfo[17] = lasthp
     # print('shanghai:' + str(shanghai))
     mes = f'{myinfo[0]}{myzhuangtai[0][0]}了，扣除血量{shanghai}'
@@ -1137,10 +1098,8 @@ def get_tianqi_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     mes = f'{changdi[0][0]}持续中'
     if mykouxue == 1:
         shanghai = int(myinfo[3] / 16)
-        if int(shanghai) >= int(myinfo[17]):
-            lasthp = 0
-        else:
-            lasthp = myinfo[17] - shanghai
+        shanghai = min(60, shanghai)
+        lasthp = myinfo[17] - shanghai
         myinfo[17] = lasthp
         # print('shanghai:' + str(shanghai))
         mes = mes + f'\n{myinfo[0]}扣除血量{shanghai}'
@@ -1150,10 +1109,8 @@ def get_tianqi_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
             mes = mes + f'\n{myinfo[0]}失去了战斗能力'
     if dikouxue == 1:
         shanghai = int(diinfo[3] / 16)
-        if int(shanghai) >= int(diinfo[17]):
-            lasthp = 0
-        else:
-            lasthp = diinfo[17] - shanghai
+        shanghai = min(60, shanghai)
+        lasthp = diinfo[17] - shanghai
         diinfo[17] = lasthp
         # print('shanghai:' + str(shanghai))
         mes = mes + f'\n{diinfo[0]}扣除血量{shanghai}'
@@ -1283,10 +1240,7 @@ def up_shuxshanghai_my(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
 
     # print('shanghai:' + str(shanghai))
@@ -1384,10 +1338,7 @@ def dowm_shuxshanghai_di(
     ):
         shanghai = int(shanghai * 0.5)
 
-    if int(shanghai) >= int(diinfo[17]):
-        lasthp = 0
-    else:
-        lasthp = diinfo[17] - shanghai
+    lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
 
     # print('shanghai:' + str(shanghai))

@@ -78,6 +78,8 @@ async def pokemon_help(bot, ev: Event):
 async def pokemon_gonggao(bot, ev: Event):
     msg = """
        宝可梦小游戏更新公告：
+2024-2-26
+1.添加世界boss(测试用)
 2024-2-25
 1.添加平台数据转移功能(管理员)
 2.可以发红包了(pm发红包【红包口令】【红包金额】【红包数量】)
@@ -964,7 +966,7 @@ async def get_pokemon_form_egg(bot, ev: Event):
         bianhao, pokemon_info
     )
     mes = ''
-    mes += '恭喜！孵化成功了\n'
+    mes += '恭喜!孵化成功了\n'
     mes += f'{starlist[startype]}{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\nHP:{HP}({pokemon_info[1]})\n物攻:{W_atk}({pokemon_info[2]})\n物防:{W_def}({pokemon_info[3]})\n特攻:{M_atk}({pokemon_info[4]})\n特防:{M_def}({pokemon_info[5]})\n速度:{speed}({pokemon_info[6]})\n'
     mes += f'可用技能\n{pokemon_info[14]}'
     my_team = await POKE.get_pokemon_group(uid)
@@ -973,6 +975,11 @@ async def get_pokemon_form_egg(bot, ev: Event):
         pokemon_list.append(str(bianhao))
         pokemon_str = ','.join(pokemon_list)
         await POKE._add_pokemon_group(uid, pokemon_str)
+    img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
+    img = await convert_img(img)
+    mesg = []
+    mesg.append(MessageSegment.text(mes))
+    mesg.append(MessageSegment.image(img))
     buttons = [
         Button('📖精灵状态', f'精灵状态{pokename}', action=1),
         Button('📖重置个体值', f'重置个体值{pokename}', action=1),

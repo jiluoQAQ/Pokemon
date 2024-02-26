@@ -389,6 +389,102 @@ async def get_pokemon_shuxing_boss(bianhao, pokemon_info, jieduan):
     )
     return HP, W_atk, W_def, M_atk, M_def, speed
 
+async def get_pokemon_shuxing_boss_sj(bianhao, pokemon_info, jieduan):
+    zhongzu_info = POKEMON_LIST[bianhao]
+    xingge_info = XINGGE_LIST[pokemon_info[13]]
+    level = int(pokemon_info[0])
+    # print(xingge_info)
+    name = zhongzu_info[0]
+    HP = math.ceil(
+        (
+            (
+                (int(zhongzu_info[1]) * 2)
+                + int(pokemon_info[1])
+                + (int(pokemon_info[7]) / 4)
+            )
+            * level
+        )
+        / 100
+        + 10
+        + level
+    ) * jieduan * 3
+    W_atk = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[2]) * 2)
+                    + int(pokemon_info[2])
+                    + int(int(pokemon_info[8]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[0]) * jieduan
+    )
+    W_def = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[3]) * 2)
+                    + int(pokemon_info[3])
+                    + int(int(pokemon_info[9]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[1]) * jieduan
+    )
+    M_atk = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[4]) * 2)
+                    + int(pokemon_info[4])
+                    + int(int(pokemon_info[10]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[2]) * jieduan
+    )
+    M_def = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[5]) * 2)
+                    + int(pokemon_info[5])
+                    + int(int(pokemon_info[11]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[3]) * jieduan
+    )
+    speed = math.ceil(
+        (
+            (
+                (
+                    (int(zhongzu_info[6]) * 2)
+                    + int(pokemon_info[6])
+                    + int(int(pokemon_info[12]) / 4)
+                )
+                * level
+            )
+            / 100
+            + 5
+        )
+        * float(xingge_info[4]) * jieduan
+    )
+    return HP, W_atk, W_def, M_atk, M_def, speed
+
 # 重开，清除宝可梦列表个人信息
 async def chongkai(uid):
     POKE._delete_poke_info(uid)
@@ -796,7 +892,7 @@ async def pokemon_fight(
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + my_mesg
 
@@ -846,7 +942,7 @@ async def pokemon_fight(
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + di_mesg
 
@@ -897,7 +993,7 @@ async def pokemon_fight(
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + di_mesg
 
@@ -947,7 +1043,7 @@ async def pokemon_fight(
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + my_mesg
 
@@ -969,7 +1065,7 @@ async def pokemon_fight(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -988,7 +1084,7 @@ async def pokemon_fight(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -1007,7 +1103,7 @@ async def pokemon_fight(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -1297,7 +1393,7 @@ async def pokemon_fight_s(
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + my_mesg
                 bg_img.paste(my_pokemon_img, (20, img_height), my_pokemon_img)
@@ -1360,7 +1456,7 @@ async def pokemon_fight_s(
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + di_mesg
                 bg_img.paste(di_pokemon_img, (600, img_height), di_pokemon_img)
@@ -1425,7 +1521,7 @@ async def pokemon_fight_s(
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + di_mesg
                 bg_img.paste(di_pokemon_img, (600, img_height), di_pokemon_img)
@@ -1489,7 +1585,7 @@ async def pokemon_fight_s(
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + my_mesg
                 bg_img.paste(my_pokemon_img, (20, img_height), my_pokemon_img)
@@ -1524,7 +1620,7 @@ async def pokemon_fight_s(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -1543,7 +1639,7 @@ async def pokemon_fight_s(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -1562,7 +1658,7 @@ async def pokemon_fight_s(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -1870,7 +1966,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + my_mesg
 
@@ -1920,7 +2016,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + '\n' + di_mesg
 
@@ -1971,7 +2067,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + di_mesg
 
@@ -2021,7 +2117,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + '\n' + my_mesg
 
@@ -2043,7 +2139,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -2062,7 +2158,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -2081,7 +2177,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -2420,7 +2516,7 @@ async def pokemon_fight_pk(
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + my_mesg
 
@@ -2470,7 +2566,7 @@ async def pokemon_fight_pk(
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + '\n' + di_mesg
 
@@ -2521,7 +2617,7 @@ async def pokemon_fight_pk(
                             di_mesg
                             + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + di_mesg
 
@@ -2571,7 +2667,7 @@ async def pokemon_fight_pk(
                             my_mesg
                             + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
-                if myinfo[17] == 0 or diinfo[17] == 0:
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
                 mesg = mesg + '\n' + my_mesg
 
@@ -2593,7 +2689,7 @@ async def pokemon_fight_pk(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -2612,7 +2708,7 @@ async def pokemon_fight_pk(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -2631,7 +2727,7 @@ async def pokemon_fight_pk(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
-        if myinfo[17] == 0 or diinfo[17] == 0:
+        if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
         if (
@@ -2801,6 +2897,19 @@ async def new_pokemon_info_boss(pokemonid, pokemon_info, boss_num):
     pokemoninfo.append(pokemonshux[0])
     return pokemoninfo
 
+async def new_pokemon_info_boss_sj(pokemonid, pokemon_info, boss_num):
+    pokemoninfo = []
+    pokemoninfo.append(POKEMON_LIST[pokemonid][0])
+    pokemoninfo.append(POKEMON_LIST[pokemonid][7])
+    pokemoninfo.append(pokemon_info[0] + 5)
+    pokemonshux = []
+    pokemonshux = await get_pokemon_shuxing_boss_sj(pokemonid, pokemon_info, boss_sj_buff[boss_num])
+    for shuzhi in pokemonshux:
+        pokemoninfo.append(shuzhi)
+    for num in range(1, 9):
+        pokemoninfo.append(0)
+    pokemoninfo.append(pokemonshux[0])
+    return pokemoninfo
 
 def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
     nl_z = (
@@ -3104,7 +3213,7 @@ async def fight_yw_ys_s(
             bg_img = change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         # mesg.append(MessageSegment.text(mes))
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             mesg += (
                 f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             )
@@ -3118,7 +3227,7 @@ async def fight_yw_ys_s(
             img_height = img_height
             # mesg.append(MessageSegment.text(mes))
             # await bot.send(mes, at_sender=True)
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             win_mesg = (
                 f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             )
@@ -3150,11 +3259,11 @@ async def fight_yw_ys_s(
             img_height = img_height + win_mes_h
             # mesg.append(MessageSegment.text(mes))
             # await bot.send(mes, at_sender=True)
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
             mypokelist.remove(bianhao1)
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             diinfo = []
             dizhuangtai = [['无', 0], ['无', 0]]
             dipokelist.remove(bianhao2)
@@ -3249,7 +3358,7 @@ async def fight_pk_s(
         )
 
         # mesg.append(MessageSegment.text(mes))
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             jiesuan_msg = (
                 f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             )
@@ -3264,7 +3373,7 @@ async def fight_pk_s(
             )
             jiesuan_msg += mes
 
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             jiesuan_msg = (
                 f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             )
@@ -3280,12 +3389,12 @@ async def fight_pk_s(
             )
             jiesuan_msg += mes
 
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
             mypokelist.remove(bianhao1)
             jineng_use1 = []
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             diinfo = []
             dizhuangtai = [['无', 0], ['无', 0]]
             dipokelist.remove(bianhao2)
@@ -3453,7 +3562,7 @@ async def fight_pk(
             bg_img = change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         # mesg.append(MessageSegment.text(mes))
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             lose_msg = (
                 f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             )
@@ -3479,7 +3588,7 @@ async def fight_pk(
                 )
                 lose_mes_h += 30
             img_height = img_height + lose_mes_h
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             win_mesg = (
                 f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             )
@@ -3508,11 +3617,11 @@ async def fight_pk(
             img_height = img_height + win_mes_h
             # mesg.append(MessageSegment.text(mes))
             # await bot.send(mes, at_sender=True)
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
             mypokelist.remove(bianhao1)
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             diinfo = []
             dizhuangtai = [['无', 0], ['无', 0]]
             dipokelist.remove(bianhao2)
@@ -3569,9 +3678,9 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
 
         mesg += mes
 
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             mesg += f'\n{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             mesg += f'\n{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             # 我方获得经验/努力值奖励
             mes, myinfo, mypokemon_info = await get_win_reward(
@@ -3583,11 +3692,11 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
                 dipokemon_info[0],
             )
             mesg += f'\n{mes}\n'
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
             mypokelist.remove(bianhao1)
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             diinfo = []
             dizhuangtai = [['无', 0], ['无', 0]]
             dipokelist.remove(bianhao2)
@@ -3683,10 +3792,10 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
         await bot.send(mes)
         
         myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use)
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             mes = f'【首领】{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             await bot.send(mes)
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             mesg = f'{POKEMON_LIST[bianhao1][0]}战胜了【首领】{POKEMON_LIST[bianhao2][0]}'
             # 我方获得经验/努力值奖励
             mes, myinfo, mypokemon_info = await get_win_reward(
@@ -3699,13 +3808,78 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
             )
             mesg += f'\n{mes}'
             await bot.send(mes)
-        if myinfo[17] == 0:
+        if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
             mypokelist.remove(bianhao1)
-        if diinfo[17] == 0:
+        if diinfo[17] <= 0:
             diinfo = []
             dizhuangtai = [['无', 0], ['无', 0]]
             dipokelist.remove(bianhao2)
             boss_num += 1
     return mypokelist, dipokelist
+    
+async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
+    myzhuangtai = [['无', 0], ['无', 0]]
+    dizhuangtai = [['无', 0], ['无', 0]]
+    changdi = [['无天气', 99], ['', 0]]
+    changci = 1
+    myinfo = []
+    diinfo = []
+    jineng_use = []
+    boss_num = 0
+    shanghai = 0
+    boss_hp = 0
+    while len(mypokelist) > 0:
+        mes = f'第{changci}场\n'
+        mes += f"{myname}剩余精灵{len(mypokelist)}只\n【世界首领】{POKEMON_LIST[bossinfo['bossid']][0]}序列{boss_num + 1}\n"
+        changci += 1
+        if len(myinfo) == 0:
+            bianhao1 = mypokelist[0]
+            mypokemon_info = await get_pokeon_info(uid, bianhao1)
+            myinfo = await new_pokemon_info(bianhao1, mypokemon_info)
+            startype = await POKE.get_pokemon_star(uid, bianhao1)
+            myinfo[0] = f'{starlist[startype]}{myinfo[0]}'
+            jineng_use = []
+        if len(diinfo) == 0:
+            bianhao2 = bossinfo['bossid']
+            dipokemon_info = await get_pokeon_info_boss(bianhao2, bossinfo, 100)
+            diinfo = await new_pokemon_info_boss_sj(bianhao2, dipokemon_info, boss_num)
+            boss_hp = diinfo[3]
+        if myinfo[3] == myinfo[17]:
+            mes += f'{myname}派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
+        if boss_num == 0:
+            mes += f'【世界首领】出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
+        else:
+            mes += f'【世界首领】复苏了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
+        await bot.send(mes)
+        
+        myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use)
+        if boss_hp > diinfo[17]:
+            shanghai = shanghai + boss_hp - diinfo[17]
+        boss_hp = diinfo[17]
+        if myinfo[17] <= 0:
+            mes = f'【世界首领】{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            await bot.send(mes)
+        if diinfo[17] <= 0:
+            mesg = f'{POKEMON_LIST[bianhao1][0]}战胜了【世界首领】{POKEMON_LIST[bianhao2][0]}'
+            # 我方获得经验/努力值奖励
+            mes, myinfo, mypokemon_info = await get_win_reward(
+                uid,
+                bianhao1,
+                myinfo,
+                mypokemon_info,
+                bianhao2,
+                dipokemon_info[0],
+            )
+            mesg += f'\n{mes}'
+            await bot.send(mes)
+        if myinfo[17] <= 0:
+            myinfo = []
+            myzhuangtai = [['无', 0], ['无', 0]]
+            mypokelist.remove(bianhao1)
+        if diinfo[17] <= 0:
+            diinfo = []
+            dizhuangtai = [['无', 0], ['无', 0]]
+            boss_num += 1
+    return shanghai

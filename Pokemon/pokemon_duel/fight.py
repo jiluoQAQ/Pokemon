@@ -2,8 +2,9 @@ import copy
 import json
 import math
 import random
+import pytz
+from datetime import datetime
 from pathlib import Path
-import datetime
 from gsuid_core.sv import SV
 from PIL import Image, ImageDraw
 from gsuid_core.models import Event
@@ -47,11 +48,15 @@ async def fight_help(bot, ev: Event):
 5、首领列表(查看所有的首领信息与地点)
 6、首领信息(查看当前地点的首领信息)
 7、首领挑战(挑战该地点的首领，获胜可获得大量奖励)
+8、世界boss挑战(挑战世界boss，一级神，测试用)
+9、世界boss伤害排名(查看boss的伤害排名)
  """
     buttons = [
         Button('首领列表', '首领列表', action=1),
         Button('首领信息', '首领信息', action=1),
         Button('首领挑战', '首领挑战', action=1),
+        Button('世界boss挑战', '世界boss挑战', action=1),
+        Button('世界boss排名', '世界boss伤害排名', action=1),
         Button('训练家对战', '训练家对战', action=2),
         Button('无级别对战', '无级别对战', action=2),
         Button('限制级对战', '限制级对战', action=2),
@@ -995,5 +1000,84 @@ async def pokemon_pk_boss_week(bot, ev: Event):
             daily_boss.increase(uid)
     await bot.send(mes)
     
+@sv_pokemon_pk.on_fullmatch(('世界boss挑战', '世界首领挑战'))
+async def pokemon_pk_boss_sj(bot, ev: Event):
+    uid = ev.user_id
+    mypoke = POKE._get_pokemon_list(uid)
+    if mypoke == 0:
+        return await bot.send(
+            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
+            at_sender=True,
+        )
+    mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
+    this_map = mapinfo[1]
+    # if not daily_boss.check_week(uid):
+        # await bot.send(
+            # '本周的挑战次数已经超过上限了哦，本次挑战无法获得奖励。', at_sender=True
+        # )
+    bossbianhao = sjbossinfo['bossid']
+    my_team = await POKE.get_pokemon_group(uid)
+    pokemon_list = my_team.split(',')
+    my_max_level = 0
+    mypokelist = []
+    for bianhao in pokemon_list:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+    mes = f"【世界首领】{POKEMON_LIST[sjbossinfo['bossid']][0]}进入了战斗"
+    await bot.send(mes)
+    name = name[:10]
+    shanghai = await fight_boss_sj(bot, ev, uid, mypokelist, name, sjbossinfo)
+    tz = pytz.timezone('Asia/Shanghai')
+    current_date = datetime.now(tz)
+    this_year, this_week, _ = current_date.isocalendar()
+    week = int(str(this_year) + str(this_week))
+    old_shanghai = await POKE.get_boss_shanghai(uid, week)
+    mes = f"【世界首领】挑战完成，本次造成伤害{shanghai}"
+    if shanghai > old_shanghai:
+        await POKE._new_boss_shanghai(uid, shanghai, week)
+        old_shanghai = shanghai
+    mes += f"\n本周最高伤害{old_shanghai}"
+    buttons = [
+        Button('本周伤害排名', '世界boss伤害排名', action=1),
+        Button('上周伤害排名', '世界boss伤害排名上周', action=1),
+        Button('再次挑战', '世界boss挑战', action=1),
+    ]
+    await bot.send_option(mes, buttons)
+
+@sv_pokemon_pk.on_command(('世界boss伤害排名'))
+async def pokemon_pk_boss_sj_paiming(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) == 1:
+        week_key = args[0]
+    else:
+        week_key = '本周'
+    tz = pytz.timezone('Asia/Shanghai')
+    current_date = datetime.now(tz)
+    this_year, this_week, _ = current_date.isocalendar()
+    if week_key == '上周':
+        # 设置第一天的日期
+        first_day = current_date.replace(year=current_date.year - (current_date.month-1)//12, month=(current_date.month-1)*12+1, day=1).weekday() + 1
+        # 计算上一周的周数
+        previous_week = ((current_date - first_day).days // 7) + 1
+        previous_year = this_year
+        if this_week == 1:
+            previous_year = this_year - 1
+        week = int(str(previous_year) + str(previous_week))
+    else:
+        week = int(str(this_year) + str(this_week))
+    print(week)
+    shanghai_list = await POKE.get_boss_shanghai_list(week)
+    if shanghai_list == 0:
+        return await bot.send(f'{week_key}还没有训练家挑战世界boss')
+    mes = f'{week_key}世界boss伤害排名(只显示前50名)'
+    for detail in shanghai_list:
+        mapinfo = POKE._get_map_now(detail[0])
+        mes += f'\n{mapinfo[2]} 伤害：{detail[1]}'
     
-    
+    buttons = [
+        Button('本周伤害排名', '世界boss伤害排名', action=1),
+        Button('上周伤害排名', '世界boss伤害排名上周', action=1),
+        Button('再次挑战', '世界boss挑战', action=1),
+    ]
+    await bot.send_option(mes, buttons)
