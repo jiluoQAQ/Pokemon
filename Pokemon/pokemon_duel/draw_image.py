@@ -337,6 +337,10 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
 
 async def draw_pokemon_info_tj(bianhao):
     bg_height = 600
+    jinengxxlist = get_level_jineng(100, bianhao)
+    jinengxx_num = len(jinengxxlist)
+    if jinengxx_num > 0:
+        bg_height += math.ceil(jinengxx_num / 4) * 45 + 130
     jinenglist = POKEMON_XUEXI[bianhao]
     jineng_num = len(jinenglist)
     if jineng_num > 0:
@@ -498,6 +502,43 @@ async def draw_pokemon_info_tj(bianhao):
         )
         miaoshu_h += 40
     start_height = 600 + miaoshu_h + 10
+    djjn_height = 0
+    if len(jinengxxlist) > 0:
+        img.paste(skill_title, (77, start_height), skill_title)
+        img_draw.text(
+            (274, start_height + 37),
+            '等级技能',
+            info_text_color,
+            sr_font_40,
+            'mm',
+        )
+        jineng_bar_mask = mask_bar.copy()
+        jineng_bar_mask = jineng_bar_mask.resize((180, 38))
+        jn_y = 0
+        for shul, jineng in enumerate(jinengxxlist):
+            jn_y = math.floor(shul / 4)
+            jn_x = shul - (4 * jn_y)
+            jineng_img = Image.new(
+                'RGBA', (180, 38), SHUX_LIST_DRAW[JINENG_LIST[jineng][0]][0]
+            )
+            jineng_img.paste(
+                sx_image, JINENG_LEIXING[JINENG_LIST[jineng][1]], sx_image
+            )
+            jineng_temp = Image.new('RGBA', (180, 38))
+            jineng_temp.paste(jineng_img, (0, 0), jineng_bar_mask)
+            jineng_draw = ImageDraw.Draw(jineng_temp)
+            jineng_draw.text(
+                (100, 19),
+                f'{jineng}',
+                (255, 255, 255),
+                sr_font_28,
+                'mm',
+            )
+            img.paste(
+                jineng_temp, (187 * jn_x + 82, jn_y * 45 + start_height + 90), jineng_temp
+            )
+        djjn_height = djjn_height + 160 + (jn_y * 45)
+    start_height = 600 + miaoshu_h + 10 + djjn_height
     img.paste(skill_title, (77, start_height), skill_title)
     img_draw.text(
         (274, start_height + 37),
@@ -506,8 +547,6 @@ async def draw_pokemon_info_tj(bianhao):
         sr_font_40,
         'mm',
     )
-    jineng_bar_mask = mask_bar.copy()
-    jineng_bar_mask = jineng_bar_mask.resize((180, 38))
     jn_y = 0
     for shul, jineng in enumerate(jinenglist):
         jn_y = math.floor(shul / 4)

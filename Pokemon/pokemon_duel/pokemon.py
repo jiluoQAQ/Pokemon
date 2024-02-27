@@ -9327,7 +9327,7 @@ JINENG_LIST = {
         '90',
         '10',
         '用大冰柱激烈地撞向对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
     ],
     'V热焰': [
         '火',
@@ -12298,7 +12298,7 @@ JINENG_LIST = {
     '大扫除':['一般','变化','—','—','10','将撒菱、隐形岩、黏黏网、毒菱、替身全部扫除掉。自己的攻击和速度会提高。',''],
     '雪景':['冰','变化','—','—','10','在５回合内会下雪。冰属性的防御会提高。',"changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'下雪')"],
     '虫扑':['虫','物理','50','100','20','飞扑向对手攻击。会降低对手的速度。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down','100')"],
-    '起草':['草','物理','50','100','20','跳出草丛进行攻击。通过轻快的步伐会提高自己的速度。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','up')"],
+    '起草':['草','物理','50','100','20','跳出草丛进行攻击。通过轻快的步伐会提高自己的速度。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','up','100')"],
     '泼冷水':['水','特殊','50','100','20','泼洒冰冷得足以让对手失去活力的水进行攻击。会降低对手的攻击。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down','100')"],
     '强力钻':['一般','物理','100','100','5','急速旋转尖锐的身体部位贯穿对手。可以无视守住和看穿等招式。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
     '双光束':['超能力','特殊','80','100','10','从两眼发射出神奇的光线攻击。连续２次给予伤害。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],

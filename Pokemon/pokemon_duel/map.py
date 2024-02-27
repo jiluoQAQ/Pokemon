@@ -100,7 +100,7 @@ async def map_my_score(bot, ev: Event):
     await bot.send(f'您的金钱为{my_score}', at_sender=True)
 
 
-@sv_pokemon_map.on_prefix(('更新队伍', '创建队伍'))
+@sv_pokemon_map.on_prefix(('更新队伍', '新建队伍'))
 async def map_my_group(bot, ev: Event):
     args = ev.text.split()
     if len(args) < 1:
