@@ -985,4 +985,4 @@ async def get_pokemon_form_egg(bot, ev: Event):
         Button('📖精灵状态', f'精灵状态{pokename}', action=1),
         Button('📖重置个体值', f'重置个体值{pokename}', action=1),
     ]
-    await bot.send_option(mes, buttons)
+    await bot.send_option(mesg, buttons)

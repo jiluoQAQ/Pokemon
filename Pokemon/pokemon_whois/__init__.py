@@ -11,7 +11,7 @@ from gsuid_core.models import Event
 from PIL import Image, ImageDraw, ImageFont
 from gsuid_core.message_models import Button
 from gsuid_core.utils.image.convert import convert_img
-
+from gsuid_core.segment import MessageSegment
 from . import poke_data
 from ..utils.convert import DailyAmountLimiter
 from ..utils.dbbase.GameCounter import GAME_DB
@@ -205,14 +205,20 @@ async def pokemon_whois(bot: Bot, ev: Event):
     # output = BytesIO()
     # im.save(output, format="PNG")
     # base64_str = 'base64://' + base64.b64encode(output.getvalue()).decode()
-
+    mesg_a = []
     mes = f'猜猜我是谁，({ONE_TURN_TIME}s后公布答案)'
-    await bot.send(mes)
+    mesg_a.append(MessageSegment.text(mes))
+    #await bot.send(mes)
     # print(img_send)
-    await bot.send(img)
-    buttons = [
-        Button('✅查看图鉴', f'精灵图鉴{name}'),
+    #await bot.send(img)
+    mesg_a.append(MessageSegment.image(img))
+    buttons_d = [
+        Button('✅查看图鉴', f'精灵图鉴{name}', action=1),
     ]
+    buttons_a = [
+        Button('猜一下', ''),
+    ]
+    await bot.send_option(mesg_a, buttons_a)
     try:
         async with timeout(ONE_TURN_TIME):
             while True:
@@ -231,7 +237,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
                     ):
                         GAME = GAME_DB()
                         win_num = GAME.update_game_num(uid, 'whois')
-                        mesg = ''
+                        mesg_d = []
                         if daily_whois_limiter.check(uid):
                             SCORE = SCORE_DB()
                             SCORE.update_score(uid, 1000)
@@ -240,19 +246,10 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         winner_judger.record_winner(ev.group_id, ev.user_id)
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
-                        '''
-                        msg = [
-                            MessageSegment.text(
-                                f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:'
-                            ),
-                            MessageSegment.image(win_mes),
-                        ]
-                        '''
-                        await bot.send_option(
-                            f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}',
-                            buttons,
-                        )
-                        await bot.send(win_mes)
+                        mes = f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                        mesg_d.append(MessageSegment.text(mes))
+                        mesg_d.append(MessageSegment.image(win_mes))
+                        await bot.send_option(mesg_d, buttons_d)
                         return
     except asyncio.TimeoutError:
         pass
@@ -260,16 +257,11 @@ async def pokemon_whois(bot: Bot, ev: Event):
         winner_judger.turn_off(ev.group_id)
         return
     winner_judger.turn_off(ev.group_id)
-    await bot.send_option(f'很遗憾，没有人答对~\n正确答案是:{name}', buttons)
-    await bot.send(win_mes)
-    '''
-    msg = [
-        MessageSegment.text('正确答案是:'),
-        MessageSegment.image(win_mes),
-        MessageSegment.text(''),
-    ]
-    await bot.send(msg)
-    '''
+    mes = f'很遗憾，没有人答对~\n正确答案是:{name}'
+    mesg_c = []
+    mesg_c.append(MessageSegment.text(mes))
+    mesg_c.append(MessageSegment.image(win_mes))
+    await bot.send_option(mesg_c, buttons_d)
 
 
 @sv_pokemon_whois.on_fullmatch('重置我是谁')

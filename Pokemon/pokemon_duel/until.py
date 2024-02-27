@@ -941,7 +941,7 @@ def get_lxshanghai_pt(
     ):
         shanghai = int(shanghai * 0.5)
 
-    cishu = int(math.floor(random.uniform(csmim, csmax)))
+    cishu = int(math.floor(random.uniform(csmim, csmax + 1)))
     shanghai = shanghai * cishu
 
     lasthp = diinfo[17] - shanghai

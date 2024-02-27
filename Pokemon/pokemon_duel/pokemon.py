@@ -10987,7 +10987,7 @@ JINENG_LIST = {
         'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
     ],
     '钢拳双击': [
-        '鋼',
+        '钢',
         '物理',
         '60',
         '100',
