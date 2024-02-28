@@ -295,6 +295,9 @@ async def get_ts_info_pic(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
+    buttons = [
+        Button('🏝️野外探索', '野外探索', action=1),
+    ]
     name = name[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -479,7 +482,7 @@ async def get_ts_info_pic(bot, ev: Event):
             img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
             img_bg.paste(bg_img, (0, 0))
             img_bg = await convert_img(img_bg)
-            await bot.send(img_bg)
+            await bot.send_option(img_bg, buttons)
 
         else:
             ts_quality += TS_FIGHT
@@ -610,11 +613,11 @@ async def get_ts_info_pic(bot, ev: Event):
                 img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
                 img_bg.paste(bg_img, (0, 0))
                 img_bg = await convert_img(img_bg)
-                await bot.send(img_bg)
+                await bot.send_option(img_bg, buttons)
             else:
                 prop_name = random.sample(ts_prop_list, 1)[0]
                 await POKE._add_pokemon_prop(uid, prop_name, 1)
-                await bot.send(f'您获得了道具[{prop_name}]', at_sender=True)
+                await bot.send_option(f'您获得了道具[{prop_name}]', buttons)
 
 
 async def get_ts_info_wenzi(bot, ev: Event):
@@ -648,7 +651,9 @@ async def get_ts_info_wenzi(bot, ev: Event):
         )
 
     mes = ''
-
+    buttons = [
+        Button('🏝️野外探索', '野外探索', action=1),
+    ]
     if didianlist[this_map]['type'] == '野外':
         ts_z = TS_FIGHT + TS_PROP + TS_POKEMON
         ts_num = int(math.floor(random.uniform(0, ts_z)))
@@ -721,7 +726,7 @@ async def get_ts_info_wenzi(bot, ev: Event):
                     if ppname != '':
                         await POKE._add_pokemon_technical(uid,ppname,1)
                         mes += f'\n您获得了招式学习机[{ppname}]x1'
-            await bot.send(mes)
+            await bot.send_option(mes, buttons)
             
         else:
             ts_quality += TS_FIGHT
@@ -761,11 +766,11 @@ async def get_ts_info_wenzi(bot, ev: Event):
                     get_score = (int(didianlist[this_map]['need']) + 1) * 300
                     SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
-                await bot.send(mes)
+                await bot.send_option(mes, buttons)
             else:
                 prop_name = random.sample(ts_prop_list, 1)[0]
                 await POKE._add_pokemon_prop(uid, prop_name, 1)
-                await bot.send(f'您获得了道具[{prop_name}]', at_sender=True)
+                await bot.send_option(f'您获得了道具[{prop_name}]', buttons)
 
 
 @sv_pokemon_map.on_fullmatch(['野外垂钓'])
@@ -823,6 +828,9 @@ async def get_cd_info_pic(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
+    buttons = [
+        Button('🏝野外垂钓', '野外垂钓', action=1),
+    ]
     name = name[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -980,7 +988,7 @@ async def get_cd_info_pic(bot, ev: Event):
             img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
             img_bg.paste(bg_img, (0, 0))
             img_bg = await convert_img(img_bg)
-            await bot.send(img_bg)
+            await bot.send_option(img_bg, buttons)
         else:
             return await bot.send('当前地点无法垂钓', at_sender=True)
 
@@ -1013,7 +1021,9 @@ async def get_cd_info_wenzi(bot, ev: Event):
         return await bot.send(
             '您当前处于城镇中没有可探索的区域', at_sender=True
         )
-
+    buttons = [
+        Button('🏝野外垂钓', '野外垂钓', action=1),
+    ]
     mychenghao, huizhang = get_chenghao(uid)
     mes = ''
     if didianlist[this_map]['type'] == '野外':
@@ -1073,7 +1083,7 @@ async def get_cd_info_wenzi(bot, ev: Event):
                     if ppname != '':
                         await POKE._add_pokemon_technical(uid,ppname,1)
                         mes += f'\n您获得了招式学习机[{ppname}]x1'
-            await bot.send(mes)
+            await bot.send_option(mes, buttons)
         else:
             return await bot.send('当前地点无法垂钓', at_sender=True)
 

@@ -165,9 +165,16 @@ boss_sj_buff = {
 }
 
 sjbossinfo = {
-    "bossid": 384,
-    "jinenglist":"画龙点睛,铁头,龙爪,咬碎",
-    "xingge":"固执"
+    "20248" :{
+        "bossid": 384,
+        "jinenglist":"画龙点睛,铁头,龙爪,咬碎",
+        "xingge":"固执"
+    },
+    "20249" :{
+        "bossid": 384,
+        "jinenglist":"画龙点睛,铁头,龙爪,咬碎",
+        "xingge":"固执"
+    }
 }
 
 #禁用精灵列表

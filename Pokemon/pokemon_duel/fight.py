@@ -1003,8 +1003,13 @@ async def pokemon_pk_boss_week(bot, ev: Event):
 @sv_pokemon_pk.on_fullmatch(('世界boss信息'))
 async def pokemon_pk_boss_week_info(bot, ev: Event):
     uid = ev.user_id
-    bossbianhao = sjbossinfo['bossid']
-    pokemon_info_boss = await get_pokeon_info_boss(bossbianhao, sjbossinfo, 100)
+    tz = pytz.timezone('Asia/Shanghai')
+    current_date = datetime.datetime.now(tz)
+    this_year, this_week, _ = current_date.isocalendar()
+    week = int(str(this_year) + str(this_week))
+    bossinfo = sjbossinfo[str(week)]
+    bossbianhao = bossinfo['bossid']
+    pokemon_info_boss = await get_pokeon_info_boss(bossbianhao, bossinfo, 100)
     HP_1, W_atk_1, W_def_1, M_atk_1, M_def_1, speed_1 = await get_pokemon_shuxing_boss_sj(
         bossbianhao, pokemon_info_boss, 1.1
     )
@@ -1014,7 +1019,8 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
     HP_3, W_atk_3, W_def_3, M_atk_3, M_def_3, speed_3 = await get_pokemon_shuxing_boss_sj(
         bossbianhao, pokemon_info_boss, 1.4
     )
-    mes = f"boss信息\n名称:{POKEMON_LIST[sjbossinfo['bossid']][0]}(测试用)\n等级:{pokemon_info_boss[0]}\n性格:{pokemon_info_boss[13]}\n技能:{pokemon_info_boss[14]}\n前三阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}"
+    mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info_boss[0]}\n性格:{pokemon_info_boss[13]}\n技能:{pokemon_info_boss[14]}\n前三阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}\n"
+    mes += f"世界boss奖励：\n超过10人最高伤害10000以上，第一名100首领币，第二名80首领币，第三名60首领币，4-10名30首领币，其他参与者(伤害>0)10首领币\n超过20人最高伤害10000以上，追加第一名奖励当期世界boss精灵蛋\n超过30人最高伤害10000以上追加第二名奖励当期世界boss精灵蛋\n超过50人最高伤害10000以上追加第三名奖励当期世界boss精灵蛋"
     buttons = [
         Button('世界boss挑战', '世界boss挑战', action=1),
     ]
@@ -1032,7 +1038,12 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
     mapinfo = POKE._get_map_now(uid)
     name = mapinfo[2]
     this_map = mapinfo[1]
-    bossbianhao = sjbossinfo['bossid']
+    tz = pytz.timezone('Asia/Shanghai')
+    current_date = datetime.datetime.now(tz)
+    this_year, this_week, _ = current_date.isocalendar()
+    week = int(str(this_year) + str(this_week))
+    bossinfo = sjbossinfo[str(week)]
+    bossbianhao = bossinfo['bossid']
     my_team = await POKE.get_pokemon_group(uid)
     pokemon_list = my_team.split(',')
     my_max_level = 0
@@ -1040,14 +1051,11 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
     for bianhao in pokemon_list:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    mes = f"【世界首领】(测试用){POKEMON_LIST[sjbossinfo['bossid']][0]}进入了战斗"
+    mes = f"【世界首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
     await bot.send(mes)
     name = name[:10]
-    shanghai = await fight_boss_sj(bot, ev, uid, mypokelist, name, sjbossinfo)
-    tz = pytz.timezone('Asia/Shanghai')
-    current_date = datetime.datetime.now(tz)
-    this_year, this_week, _ = current_date.isocalendar()
-    week = int(str(this_year) + str(this_week))
+    shanghai = await fight_boss_sj(bot, ev, uid, mypokelist, name, bossinfo)
+    
     old_shanghai = await POKE.get_boss_shanghai(uid, week)
     mes = f"【世界首领】挑战完成，本次造成伤害{shanghai}"
     if int(shanghai) > int(old_shanghai):
@@ -1084,7 +1092,8 @@ async def pokemon_pk_boss_sj_paiming(bot, ev: Event):
     shanghai_list = await POKE.get_boss_shanghai_list(week)
     if shanghai_list == 0:
         return await bot.send(f'{week_key}还没有训练家挑战世界boss')
-    mes = f'{week_key}世界boss伤害排名(只显示前50名)'
+    bossinfo = sjbossinfo[str(week)]
+    mes = f"{week_key}世界boss伤害排名【{POKEMON_LIST[bossinfo['bossid']][0]}】(只显示前50名)"
     for detail in shanghai_list:
         mapinfo = POKE._get_map_now(detail[0])
         mes += f'\n{mapinfo[2]} 伤害：{detail[1]}'
@@ -1092,6 +1101,7 @@ async def pokemon_pk_boss_sj_paiming(bot, ev: Event):
     buttons = [
         Button('本周伤害排名', '世界boss伤害排名', action=1),
         Button('上周伤害排名', '世界boss伤害排名上周', action=1),
+        Button('世界boss信息', '世界boss信息', action=1),
         Button('再次挑战', '世界boss挑战', action=1),
     ]
     await bot.send_option(mes, buttons)

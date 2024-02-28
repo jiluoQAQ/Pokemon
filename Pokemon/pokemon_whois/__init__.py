@@ -213,7 +213,8 @@ async def pokemon_whois(bot: Bot, ev: Event):
     #await bot.send(img)
     mesg_a.append(MessageSegment.image(img))
     buttons_d = [
-        Button('✅查看图鉴', f'精灵图鉴{name}', action=1),
+        Button('✅再猜一下', '我是谁', action=1),
+        Button('📖查看图鉴', f'精灵图鉴{name}', action=1),
     ]
     buttons_a = [
         Button('猜一下', ''),
