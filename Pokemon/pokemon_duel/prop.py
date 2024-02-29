@@ -185,7 +185,9 @@ async def buy_random_egg(bot, ev: Event):
     my_score = SCORE.get_score(uid)
     if my_score < need_score:
         return await bot.send(f'随机精灵蛋需要金币{need_score},您的金币不足',at_sender=True)
-    mes = ''
+    mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
+    mes = f'{name}\n'
     chara_id_list = list(POKEMON_LIST.keys())
     jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289,6461,6462,8881,8981,8982]
     for jinyongid in jinyonglist_random_egg:
@@ -217,13 +219,12 @@ async def buy_random_egg(bot, ev: Event):
                 SCORE.update_score(uid, -100000)
                 await POKE._add_pokemon_egg(uid, eggid, 1)
         mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
-    await bot.send(mes,at_sender=True)
     buttons = [
         Button('✅再开一个', '购买随机精灵蛋', action=1),
         Button('📖宝可梦孵化', '宝可梦孵化', action=2),
         Button('📖我的精灵蛋', '我的精灵蛋', action=1),
     ]
-    await bot.send_option('还要继续吗？客官', buttons)
+    await bot.send_option(mes, buttons)
     
     
 @sv_pokemon_prop.on_command(['购买道具'])
@@ -875,21 +876,22 @@ async def open_pm_hongbao(bot, ev: Event):
         return await bot.send('您已经抢过该红包', at_sender=True)
     if score == 0:
         return await bot.send('红包口令无效或该红包已被抢完', at_sender=True)
+    mapinfo = POKE._get_map_now(uid)
+    name = mapinfo[2]
     last_score = score - use_score
-    max_score = math.ceil(last_score * 0.6)
     last_num = int(num) - int(use_num)
+    max_score = (last_score/last_num)*1.5
     if last_num == 0 or last_score == 0:
         return await bot.send('该红包已被抢完', at_sender=True)
     if last_num == 1:
         get_score = last_score
     else:
-        get_score = int(math.floor(random.uniform(0, last_score)))
-        get_score = min(max_score, get_score)
+        get_score = int(math.floor(random.uniform(1, max_score)))
     SCORE.update_score(uid, get_score)
     pmhongbao.open_hongbao(kouling,get_score,uid)
     if last_num == 1:
         pmhongbao.hongbao_off(kouling)
-    mes = f'恭喜！您抢到了{get_score}金币，红包剩余数量{last_num - 1}，剩余金额{last_score - get_score}'
+    mes = f'【{name}】恭喜！您抢到了{get_score}金币，红包剩余数量{last_num - 1}，剩余金额{last_score - get_score}'
     buttons = [
         Button('抢红包', f'pm抢红包{kouling}', action=1),
     ]

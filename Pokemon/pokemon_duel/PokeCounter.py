@@ -240,7 +240,7 @@ class PokeCounter:
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT PROP,NUM FROM PROP_TECHNICAL WHERE UID='{uid}' AND NUM>0 ORDER BY NUM LIMIT {startnum},{num}"
+                    f"SELECT PROP,NUM FROM PROP_TECHNICAL WHERE UID='{uid}' AND NUM>0 ORDER BY NUM DESC LIMIT {startnum},{num}"
                 ).fetchall()
                 if r:
                     num = conn.execute(
