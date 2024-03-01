@@ -16,6 +16,7 @@ from . import poke_data
 from ..utils.convert import DailyAmountLimiter
 from ..utils.dbbase.GameCounter import GAME_DB
 from ..utils.dbbase.ScoreCounter import SCORE_DB
+from ..utils.dbbase.PokeCounter import PokeCounter
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 
 PIC_SIDE_LENGTH = 25
@@ -248,6 +249,15 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
                         mes = f'猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                        POKE = PokeCounter()
+                        chongsheng_num = await POKE.get_chongsheng_num(uid,150)
+                        if chongsheng_num >= 999:
+                            mapinfo = POKE._get_map_now(uid)
+                            name = mapinfo[2]
+                            await POKE._add_pokemon_egg(uid, 150, 1)
+                            mes = f'\n{name}获得了超梦精灵蛋x1'
+                            await POKE._new_chongsheng_num(uid,150)
+                        await POKE.update_chongsheng(uid,384,1)
                         mesg_d.append(MessageSegment.text(mes))
                         mesg_d.append(MessageSegment.image(win_mes))
                         await bot.send_option(mesg_d, buttons_d)

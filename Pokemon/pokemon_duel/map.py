@@ -17,7 +17,6 @@ import json
 from .pmconfig import *
 from .pokeconfg import *
 from .pokemon import *
-from .PokeCounter import *
 from .until import *
 from pathlib import Path
 from .nameconfig import First_Name, Last_Name, Call_Name
@@ -436,6 +435,14 @@ async def get_ts_info_pic(bot, ev: Event):
                         sr_font_20,
                         'lm',
                     )
+                if pokemonid == 22 and '火' in POKEMON_LIST[mypokelist[0]][7]:
+                    chongsheng_num = await POKE.get_chongsheng_num(uid,250)
+                    if chongsheng_num >= 99999:
+                        egg_cd_num = int(math.floor(random.uniform(0, 100)))
+                        if egg_cd_num <= 50:
+                            await POKE._add_pokemon_egg(uid, 250, 1)
+                            mes += f'\n您获得了{CHARA_NAME[250][0]}精灵蛋x1'
+                        await POKE._new_chongsheng_num(uid,250)
                 egg_num = 0
                 for item in range(0,pokemon_num):
                     zs_num = int(math.floor(random.uniform(0, 100)))

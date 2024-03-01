@@ -79,6 +79,8 @@ async def pokemon_help(bot, ev: Event):
 async def pokemon_gonggao(bot, ev: Event):
     msg = """
        宝可梦小游戏更新公告：
+2024-3-1
+1.增加部分小彩蛋
 2024-2-26
 1.添加世界boss(测试用)
 2024-2-25
@@ -815,7 +817,7 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
         await POKE._add_pokemon_group(uid, pokemon_str)
     if eggid == 10:
         chongsheng_num = await POKE.get_chongsheng_num(uid,384)
-        if chongsheng_num >= 9999:
+        if chongsheng_num >= 999:
             eggid = 384
             await POKE._new_chongsheng_num(uid,384)
         else:

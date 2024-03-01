@@ -8,7 +8,6 @@ from PIL import Image, ImageDraw
 import copy
 from async_timeout import timeout
 from .pokemon import *
-from .PokeCounter import *
 from .pmconfig import *
 from gsuid_core.message_models import Button
 from .until import *
@@ -17,6 +16,7 @@ from gsuid_core.utils.image.convert import convert_img
 from gsuid_core.segment import MessageSegment
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH, CHAR_ICON_S_PATH
 from ..utils.dbbase.ScoreCounter import SCORE_DB
+from ..utils.dbbase.PokeCounter import PokeCounter
 from ..utils.convert import DailyAmountLimiter
 from ..utils.fonts.starrail_fonts import (
     sr_font_18,
