@@ -8,7 +8,6 @@ import time
 from .pokeconfg import *
 from .pmconfig import *
 from .pokemon import *
-from .PokeCounter import *
 from .until import *
 from pathlib import Path
 from datetime import datetime

@@ -20,7 +20,6 @@ from .pokemon import *
 from .until import *
 from pathlib import Path
 from .nameconfig import First_Name, Last_Name, Call_Name
-from ..utils.dbbase.ScoreCounter import SCORE_DB
 from .draw_image import draw_pokemon_info
 from ..utils.fonts.starrail_fonts import (
     sr_font_20,

@@ -15,7 +15,6 @@ from .fight import *
 from .until import *
 from .pokemon import *
 from .pokeconfg import *
-from .PokeCounter import *
 from .draw_image import draw_pokemon_info, draw_pokemon_info_tj
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
 

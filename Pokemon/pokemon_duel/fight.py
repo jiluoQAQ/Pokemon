@@ -13,7 +13,6 @@ from .pmconfig import *
 from .until import *
 from .pokemon import *
 from .pokeconfg import *
-from .PokeCounter import *
 from ..utils.fonts.starrail_fonts import sr_font_20, sr_font_24
 
 TS_FIGHT = 20

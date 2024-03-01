@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from ..utils.resource.RESOURCE_PATH import MAIN_PATH
+from ..resource.RESOURCE_PATH import MAIN_PATH
 
 DB_PATH = os.path.expanduser(MAIN_PATH / 'pokemon.db')
 
