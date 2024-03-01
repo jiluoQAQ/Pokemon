@@ -76,7 +76,7 @@ async def get_day_pokemon_refresh(bot, ev: Event):
         mes += f'\n{POKEMON_LIST[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
     mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
     buttons = [
-        Button('前往', '前往', action=2),
+        Button('前往', '前往', '前往', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -133,16 +133,16 @@ async def map_my_group(bot, ev: Event):
 
     mes = f'编组成功，当前队伍\n{name_str}'
     buttons = [
-        Button('🏝️野外探索', '野外探索', action=1),
+        Button('🏝️野外探索', '野外探索', '🏝️野外探索', action=1),
     ]
     mapinfo = POKE._get_map_now(uid)
     huizhang = mapinfo[0]
     if int(huizhang) < 8:
-        buttons.append(Button('挑战道馆', '挑战道馆', action=1))
+        buttons.append(Button('挑战道馆', '挑战道馆', '挑战道馆', action=1))
     elif int(huizhang) == 8:
-        buttons.append(Button('挑战天王', '挑战天王', action=1))
+        buttons.append(Button('挑战天王', '挑战天王', '挑战天王', action=1))
     elif int(huizhang) == 9:
-        buttons.append(Button('挑战冠军', '挑战四天王冠军', action=1))
+        buttons.append(Button('挑战冠军', '挑战四天王冠军', '挑战冠军', action=1))
     await bot.send_option(mes, buttons)
 
 
@@ -186,9 +186,9 @@ async def map_my_info(bot, ev: Event):
             startype = await POKE.get_pokemon_star(uid, bianhao)
             mes += f'\n{starlist[startype]}{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
     buttons = [
-        Button('📖精灵状态', '精灵状态', action=2),
-        Button('📖我的精灵蛋', '我的精灵蛋', action=1),
-        Button('🗺查看地图', '查看地图', action=1),
+        Button('📖精灵状态', '精灵状态', '📖精灵状态', action=2),
+        Button('📖我的精灵蛋', '我的精灵蛋', '📖我的精灵蛋', action=1),
+        Button('🗺查看地图', '查看地图', '🗺查看地图', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -296,7 +296,7 @@ async def get_ts_info_pic(bot, ev: Event):
                 name = sender['nickname']
     mes = ''
     buttons = [
-        Button('🏝️野外探索', '野外探索', action=1),
+        Button('🏝️野外探索', '野外探索', '🏝️野外探索', action=1),
     ]
     name = name[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
@@ -652,7 +652,7 @@ async def get_ts_info_wenzi(bot, ev: Event):
 
     mes = ''
     buttons = [
-        Button('🏝️野外探索', '野外探索', action=1),
+        Button('🏝️野外探索', '野外探索', '🏝️野外探索', action=1),
     ]
     if didianlist[this_map]['type'] == '野外':
         ts_z = TS_FIGHT + TS_PROP + TS_POKEMON
@@ -829,7 +829,7 @@ async def get_cd_info_pic(bot, ev: Event):
                 name = sender['nickname']
     mes = ''
     buttons = [
-        Button('🏝野外垂钓', '野外垂钓', action=1),
+        Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1),
     ]
     name = name[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
@@ -1022,7 +1022,7 @@ async def get_cd_info_wenzi(bot, ev: Event):
             '您当前处于城镇中没有可探索的区域', at_sender=True
         )
     buttons = [
-        Button('🏝野外垂钓', '野外垂钓', action=1),
+        Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1),
     ]
     mychenghao, huizhang = get_chenghao(uid)
     mes = ''
@@ -1342,15 +1342,15 @@ async def map_info_now(bot, ev: Event):
     if didianlist[this_map]['type'] == '城镇':
         get_score = (int(mapinfo[0]) + 1) * 5000
         mychenghao, huizhang = get_chenghao(uid)
-        buttons.append(Button('打工', '打工', action=1))
+        buttons.append(Button('打工', '打工', '打工', action=1))
         mes += f'根据您当前的训练家等级-{mychenghao}\n您打工可获得{get_score}金币\n'
     if didianlist[this_map]['type'] == '野外':
-        buttons.append(Button('🏝野外探索', '野外探索', action=1))
+        buttons.append(Button('🏝野外探索', '野外探索', '🏝野外探索', action=1))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
         mes += f'当前所在地野外探索遭遇的精灵为\n{name_str}\n'
         mes += f"等级:{didianlist[this_map]['level'][0]}-{didianlist[this_map]['level'][1]}\n"
         if didianlist[this_map]['pokemon_s']:
-            buttons.append(Button('🏝野外垂钓', '野外垂钓', action=1))
+            buttons.append(Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1))
             pokemon_s_list = didianlist[this_map]['pokemon_s']
             mes += '当前所在地野外垂钓遭遇的精灵为\n'
             for item in pokemon_s_list:
@@ -1398,7 +1398,7 @@ async def show_map_info_now(bot, ev: Event):
             else:
                 mes += f"\n{didianname} Lv.{didianinfo['level'][0]}~{didianinfo['level'][1]} 需求徽章{didianinfo['need']}"
     buttons = [
-        Button('前往', '前往', action=2),
+        Button('前往', '前往', '前往', action=2),
     ]
     await bot.send_option(mes, buttons)
 

@@ -63,15 +63,15 @@ async def pokemon_help(bot, ev: Event):
 其他宝可梦相关小游戏可以点击小游戏帮助查询
  """
     buttons = [
-        Button('✅道具帮助', '道具帮助', action=1),
-        Button('✅战斗帮助', '战斗帮助', action=1),
-        Button('📖精灵状态', '精灵状态', action=2),
-        Button('🔄更新队伍', '更新队伍', action=2),
-        Button('✅领取初始精灵', '领取初始精灵', action=2),
-        Button('🏝️野外探索', '野外探索', action=1),
-        Button('🗺查看地图', '查看地图', action=1),
-        Button('✅大量出现信息', '大量出现信息', action=1),
-        Button('✅小游戏帮助', '小游戏帮助', action=1),
+        Button('✅道具帮助', '道具帮助', '✅道具帮助', action=1),
+        Button('✅战斗帮助', '战斗帮助', '✅战斗帮助', action=1),
+        Button('📖精灵状态', '精灵状态', '📖精灵状态', action=2),
+        Button('🔄更新队伍', '更新队伍', '🔄更新队伍', action=2),
+        Button('✅领取初始精灵', '领取初始精灵', '✅领取初始精灵', action=2),
+        Button('🏝️野外探索', '野外探索','🏝️野外探索', action=1),
+        Button('🗺查看地图', '查看地图','🗺查看地图', action=1),
+        Button('✅大量出现信息', '大量出现信息','✅大量出现信息', action=1),
+        Button('✅小游戏帮助', '小游戏帮助','✅小游戏帮助', action=1),
     ]
     await bot.send_option(msg, buttons)
 
@@ -122,7 +122,7 @@ async def pokemon_help_game(bot, ev: Event):
 其他的宝可梦小游戏正在火速开发中(新建文件夹)
  """
     buttons = [
-        Button('✅我是谁', '我是谁', action=1),
+        Button('✅我是谁', '我是谁', '✅我是谁', action=1),
     ]
     await bot.send_option(msg, buttons)
 
@@ -154,17 +154,17 @@ async def my_pokemon_list(bot, ev: Event):
     if page_num > 1:
         mes += f'\n第({page}/{page_num})页'
     buttons = [
-        Button('📖精灵状态', '精灵状态', action=2),
-        Button('🔄更新队伍', '更新队伍', action=2),
+        Button('📖精灵状态', '精灵状态', '📖精灵状态', action=2),
+        Button('🔄更新队伍', '更新队伍', '🔄更新队伍', action=2),
     ]
     if page > 1:
         uppage = page - 1
-        buttons.append(Button('⬅️上一页', f'我的精灵列表{uppage}', action=1))
+        buttons.append(Button('⬅️上一页', f'我的精灵列表{uppage}', '⬅️上一页', action=1))
     if page_num > 1:
-        buttons.append(Button(f'⏺️跳转({page}/{page_num})', '我的精灵列表', action=2))
+        buttons.append(Button(f'⏺️跳转({page}/{page_num})', '我的精灵列表', f'⏺️跳转({page}/{page_num})', action=2))
     if page < page_num:
         dowmpage = page + 1
-        buttons.append(Button('➡️下一页', f'我的精灵列表{dowmpage}', action=1))
+        buttons.append(Button('➡️下一页', f'我的精灵列表{dowmpage}', '➡️下一页', action=1))
     await bot.send_option(mes, buttons)
 
 
@@ -186,6 +186,7 @@ async def show_poke_info(bot, ev: Event):
             Button(
                 f'📖图鉴{jinhuainfo[1]}',
                 f'精灵图鉴{jinhuainfo[1]}',
+                f'📖图鉴{jinhuainfo[1]}',
                 action=1,
             )
         )
@@ -209,20 +210,21 @@ async def get_my_poke_info_t(bot, ev: Event):
         )
     im, jinhualist = await draw_pokemon_info(uid, pokemon_info, bianhao)
     buttons = [
-        Button('📖查图鉴', f'精灵图鉴{pokename}', action=1),
-        Button('📖学技能', f'学习技能{pokename}', action=2),
-        Button('📖遗忘技能', f'遗忘技能{pokename}', action=2),
+        Button('📖查图鉴', f'精灵图鉴{pokename}', '📖查图鉴', action=1),
+        Button('📖学技能', f'学习技能{pokename}', '📖学技能', action=2),
+        Button('📖遗忘技能', f'遗忘技能{pokename}', '📖遗忘技能', action=2),
     ]
     if pokename == '伊布':
         buttons = [
-            Button('📖学技能', f'学习技能{pokename}', action=2),
-            Button('📖遗忘技能', f'遗忘技能{pokename}', action=2),
+            Button('📖学技能', f'学习技能{pokename}', '📖学技能', action=2),
+            Button('📖遗忘技能', f'遗忘技能{pokename}', '📖遗忘技能', action=2),
         ]
     for jinhuainfo in jinhualist:
         buttons.append(
             Button(
                 f'⏫进化{jinhuainfo[1]}',
                 f'宝可梦进化{jinhuainfo[1]}',
+                f'⏫进化{jinhuainfo[1]}',
                 action=1,
             )
         )
@@ -239,7 +241,7 @@ async def get_chushi_list(bot, ev: Event):
         # img = await convert_img(img)
         mes += f'\n{POKEMON_LIST[bianhao][0]} 属性:{POKEMON_LIST[bianhao][7]}'
     buttons = [
-        Button('✅领取初始精灵', '领取初始精灵', action=2),
+        Button('✅领取初始精灵', '领取初始精灵', '✅领取初始精灵', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -250,7 +252,7 @@ async def get_chushi_pokemon(bot, ev: Event):
     if len(args) != 1:
         mes = '请输入 领取初始精灵+宝可梦名称。初始精灵列表可点击下方按钮查询'
         buttons = [
-            Button('📖初始精灵列表', '初始精灵列表', action=1),
+            Button('📖初始精灵列表', '初始精灵列表', '📖初始精灵列表', action=1),
         ]
         return await bot.send_option(mes, buttons)
     pokename = args[0]
@@ -303,8 +305,8 @@ async def get_chushi_pokemon(bot, ev: Event):
     mes += f'{starlist[startype]}{POKEMON_LIST[bianhao][0]}\nLV:{pokemon_info[0]}\n属性:{POKEMON_LIST[bianhao][7]}\n性格:{pokemon_info[13]}\nHP:{HP}({pokemon_info[1]})\n物攻:{W_atk}({pokemon_info[2]})\n物防:{W_def}({pokemon_info[3]})\n特攻:{M_atk}({pokemon_info[4]})\n特防:{M_def}({pokemon_info[5]})\n速度:{speed}({pokemon_info[6]})\n'
     mes += f'可用技能\n{pokemon_info[14]}'
     buttons = [
-        Button('📖精灵状态', f'精灵状态{pokename}', action=1),
-        Button('🏝️野外探索', '野外探索', action=1),
+        Button('📖精灵状态', f'精灵状态{pokename}', '📖精灵状态', action=1),
+        Button('🏝️野外探索', '野外探索', '🏝️野外探索', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -315,7 +317,7 @@ async def chongkai_pokemon(bot, ev: Event):
     await chongkai(uid)
     mes = '重开成功，请重新领取初始精灵开局'
     buttons = [
-        Button('✅领取初始精灵', '领取初始精灵', action=2),
+        Button('✅领取初始精灵', '领取初始精灵', '✅领取初始精灵', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -408,9 +410,9 @@ async def add_pokemon_jineng(bot, ev: Event):
     POKE._add_pokemon_jineng(uid, bianhao, jineng)
     mes = f'恭喜，{mes_xh}您的精灵 {starlist[startype]}{POKEMON_LIST[bianhao][0]}学会了技能{jinengname}'
     buttons = [
-        Button('📖学习技能', f'学习技能 {pokename}', action=2),
-        Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
-        Button('📖精灵状态', f'精灵状态{pokename}', action=1),
+        Button('📖学习技能', f'学习技能 {pokename}', '📖学习技能', action=2),
+        Button('📖遗忘技能', f'遗忘技能 {pokename}', '📖遗忘技能', action=2),
+        Button('📖精灵状态', f'精灵状态{pokename}', '📖精灵状态', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -456,9 +458,9 @@ async def del_pokemon_jineng(bot, ev: Event):
     POKE._add_pokemon_jineng(uid, bianhao, jineng)
     mes = f'成功，您的精灵{starlist[startype]}{POKEMON_LIST[bianhao][0]}遗忘了技能{jinengname}'
     buttons = [
-        Button('📖学习技能', f'学习技能 {pokename}', action=2),
-        Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
-        Button('📖精灵状态', f'精灵状态{pokename}', action=1),
+        Button('📖学习技能', f'学习技能 {pokename}', '📖学习技能', action=2),
+        Button('📖遗忘技能', f'遗忘技能 {pokename}', '📖遗忘技能', action=2),
+        Button('📖精灵状态', f'精灵状态{pokename}', '📖精灵状态', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -537,9 +539,9 @@ async def get_jineng_info(bot, ev: Event):
                 await POKE._add_pokemon_group(uid, pokemon_str)
             mes = f'恭喜！您的宝可梦 {starlist[startype]}{POKEMON_LIST[kid_poke_id][0]} 进化成了 {starlist[startype]}{POKEMON_LIST[bianhao][0]}'
             buttons = [
-                Button('📖学习技能', f'学习技能 {pokename}', action=2),
-                Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
-                Button('📖精灵状态', f'精灵状态{pokename}', action=1),
+                Button('📖学习技能', f'学习技能 {pokename}', '📖学习技能', action=2),
+                Button('📖遗忘技能', f'遗忘技能 {pokename}', '📖遗忘技能', action=2),
+                Button('📖精灵状态', f'精灵状态{pokename}', '📖精灵状态', action=1),
             ]
             await bot.send_option(mes, buttons)
     else:
@@ -566,9 +568,9 @@ async def get_jineng_info(bot, ev: Event):
                 await POKE._add_pokemon_group(uid, pokemon_str)
             mes = f'恭喜！您的宝可梦 {starlist[startype]}{POKEMON_LIST[kid_poke_id][0]} 进化成了 {starlist[startype]}{POKEMON_LIST[bianhao][0]}'
             buttons = [
-                Button('📖学习技能', f'学习技能 {pokename}', action=2),
-                Button('📖遗忘技能', f'遗忘技能 {pokename}', action=2),
-                Button('📖精灵状态', f'精灵状态{pokename}', action=1),
+                Button('📖学习技能', f'学习技能 {pokename}', '📖学习技能', action=2),
+                Button('📖遗忘技能', f'遗忘技能 {pokename}', '📖遗忘技能', action=2),
+                Button('📖精灵状态', f'精灵状态{pokename}', '📖精灵状态', action=1),
             ]
             await bot.send_option(mes, buttons)
 
@@ -595,18 +597,18 @@ async def my_pokemon_egg_list(bot, ev: Event):
     if page_num > 1:
         mes += f'第({page}/{page_num})页'
     buttons = [
-        Button('📖宝可梦孵化', '宝可梦孵化', action=2),
-        Button('📖重置个体值', '重置个体值', action=2),
-        Button('📖丢弃精灵蛋', '丢弃精灵蛋', action=2),
+        Button('📖宝可梦孵化', '宝可梦孵化', '📖宝可梦孵化', action=2),
+        Button('📖重置个体值', '重置个体值', '📖重置个体值', action=2),
+        Button('📖丢弃精灵蛋', '丢弃精灵蛋', '📖丢弃精灵蛋', action=2),
     ]
     if page > 1:
         uppage = page - 1
-        buttons.append(Button('⬅️上一页', f'我的精灵蛋{uppage}', action=1))
+        buttons.append(Button('⬅️上一页', f'我的精灵蛋{uppage}', '⬅️上一页', action=1))
     if page_num > 1:
-        buttons.append(Button(f'⏺️跳转({page}/{page_num})', '我的精灵蛋', action=2))
+        buttons.append(Button(f'⏺️跳转({page}/{page_num})', '我的精灵蛋', f'⏺️跳转({page}/{page_num})', action=2))
     if page < page_num:
         dowmpage = page + 1
-        buttons.append(Button('➡️下一页', f'我的精灵蛋{dowmpage}', action=1))
+        buttons.append(Button('➡️下一页', f'我的精灵蛋{dowmpage}', '➡️下一页', action=1))
 
     await bot.send_option(mes, buttons)
 
@@ -636,9 +638,9 @@ async def my_pokemon_egg_use(bot, ev: Event):
     await POKE._add_pokemon_egg(uid, bianhao, 0 - eggnum)
     mes = f'成功！您丢弃了{pokename}精灵蛋x{eggnum}'
     buttons = [
-        Button('📖宝可梦孵化', '宝可梦孵化', action=2),
-        Button('📖重置个体值', '重置个体值', action=2),
-        Button('📖我的精灵蛋', '我的精灵蛋', action=1),
+        Button('📖宝可梦孵化', '宝可梦孵化', '📖宝可梦孵化', action=2),
+        Button('📖重置个体值', '重置个体值', '📖重置个体值', action=2),
+        Button('📖我的精灵蛋', '我的精灵蛋', '📖我的精灵蛋', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -774,8 +776,8 @@ async def my_pokemon_gt_up(bot, ev: Event):
         mes += f'HP:{HP_o}→{HP}({my_pokemon_info[1]}→{pokemon_info[1]})\n物攻:{W_atk_o}→{W_atk}({my_pokemon_info[2]}→{pokemon_info[2]})\n物防:{W_def_o}→{W_def}({my_pokemon_info[3]}→{pokemon_info[3]})\n特攻:{M_atk_o}→{M_atk}({my_pokemon_info[4]}→{pokemon_info[4]})\n特防:{M_def_o}→{M_def}({my_pokemon_info[5]}→{pokemon_info[5]})\n速度:{speed_o}→{speed}({my_pokemon_info[6]}→{pokemon_info[6]})'
         mes += f'\n({starflag}/1024)'
     buttons = [
-        Button('📖精灵状态', f'精灵状态{pokename}', action=1),
-        Button('📖重置个体值', f'重置个体值{pokename}', action=2),
+        Button('📖精灵状态', f'精灵状态{pokename}', '📖精灵状态', action=1),
+        Button('📖重置个体值', f'重置个体值{pokename}', '📖重置个体值', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -804,7 +806,6 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
         return await bot.send('您就这么一只精灵了，无法重生。', at_sender=True)
 
     eggid = await get_pokemon_eggid(bianhao)
-    await POKE._add_pokemon_egg(uid, eggid, 1)
     await fangshen(uid, bianhao)
     my_team = await POKE.get_pokemon_group(uid)
     pokemon_list = my_team.split(',')
@@ -812,9 +813,17 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
         pokemon_list.remove(str(bianhao))
         pokemon_str = ','.join(pokemon_list)
         await POKE._add_pokemon_group(uid, pokemon_str)
+    if eggid == 10:
+        chongsheng_num = await POKE.get_chongsheng_num(uid)
+        if chongsheng_num >= 9999:
+            eggid = 384
+            await POKE._new_chongsheng_num(uid)
+        else:
+            await POKE.update_chongsheng(uid,1)
+    await POKE._add_pokemon_egg(uid, eggid, 1)
     mes = f'{pokename}重生成功，您获得了{POKEMON_LIST[eggid][0]}精灵蛋x1'
     buttons = [
-        Button('📖宝可梦孵化', f'宝可梦孵化{POKEMON_LIST[eggid][0]}', action=1),
+        Button('📖宝可梦孵化', f'宝可梦孵化{POKEMON_LIST[eggid][0]}', '📖宝可梦孵化', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -982,7 +991,7 @@ async def get_pokemon_form_egg(bot, ev: Event):
     mesg.append(MessageSegment.text(mes))
     mesg.append(MessageSegment.image(img))
     buttons = [
-        Button('📖精灵状态', f'精灵状态{pokename}', action=1),
-        Button('📖重置个体值', f'重置个体值{pokename}', action=1),
+        Button('📖精灵状态', f'精灵状态{pokename}', '📖精灵状态', action=1),
+        Button('📖重置个体值', f'重置个体值{pokename}', '📖重置个体值', action=1),
     ]
     await bot.send_option(mesg, buttons)

@@ -9843,7 +9843,7 @@ JINENG_LIST = {
         '可以击中浮在空中的宝可梦。空中的对手被击落后，会掉到地面。',
         'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
     ],
-    '千波激盪': [
+    '千波激荡': [
         '地面',
         '物理',
         '90',

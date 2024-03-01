@@ -52,14 +52,14 @@ async def fight_help(bot, ev: Event):
 9、世界boss伤害排名(查看boss的伤害排名)
  """
     buttons = [
-        Button('首领列表', '首领列表', action=1),
-        Button('首领信息', '首领信息', action=1),
-        Button('首领挑战', '首领挑战', action=1),
-        Button('世界boss挑战', '世界boss挑战', action=1),
-        Button('世界boss排名', '世界boss伤害排名', action=1),
-        Button('训练家对战', '训练家对战', action=2),
-        Button('无级别对战', '无级别对战', action=2),
-        Button('限制级对战', '限制级对战', action=2),
+        Button('首领列表', '首领列表', '首领列表', action=1),
+        Button('首领信息', '首领信息', '首领信息', action=1),
+        Button('首领挑战', '首领挑战', '首领挑战', action=1),
+        Button('世界boss挑战', '世界boss挑战', '世界boss挑战', action=1),
+        Button('世界boss排名', '世界boss伤害排名', '世界boss排名', action=1),
+        Button('训练家对战', '训练家对战', '训练家对战', action=2),
+        Button('无级别对战', '无级别对战', '无级别对战', action=2),
+        Button('限制级对战', '限制级对战', '限制级对战', action=2),
     ]
     await bot.send_option(msg, buttons)
 
@@ -232,7 +232,7 @@ async def pk_vs_daoguan(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(mes)
+    await bot.send(img_bg)
 
 
 @sv_pokemon_pk.on_fullmatch(['挑战天王'])
@@ -407,7 +407,7 @@ async def pk_vs_tianwang(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(mes)
+    await bot.send(img_bg)
 
 
 @sv_pokemon_pk.on_fullmatch(['挑战四天王冠军'])
@@ -572,7 +572,7 @@ async def pk_vs_guanjun(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(mes)
+    await bot.send(img_bg)
 
 
 @sv_pokemon_pk.on_command(('无级别对战', '无级别战斗', '无级别挑战'))
@@ -877,7 +877,7 @@ async def pokemon_pk_boss_list(bot, ev: Event):
             mes += f"首领名称：{POKEMON_LIST[weekbosslist[diquname][didianname]['bossid']][0]}\n"
             mes += f"出没地点：{diquname}-{didianname}\n"
     buttons = [
-        Button('前往', '前往', action=2),
+        Button('前往', '前往', '前往', action=2),
     ]
     await bot.send_option(mes, buttons)
     
@@ -917,7 +917,7 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
     )
     mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info_boss[0]}\n性格:{pokemon_info_boss[13]}\n技能:{pokemon_info_boss[14]}\n各阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}"
     buttons = [
-        Button('首领挑战', '首领挑战', action=1),
+        Button('首领挑战', '首领挑战', '首领挑战', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -1022,7 +1022,7 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
     mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info_boss[0]}\n性格:{pokemon_info_boss[13]}\n技能:{pokemon_info_boss[14]}\n前三阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}\n"
     mes += f"世界boss奖励：\n超过10人最高伤害10000以上，第一名100首领币，第二名80首领币，第三名60首领币，4-10名30首领币，其他参与者(伤害>0)10首领币\n超过20人最高伤害10000以上，追加第一名奖励当期世界boss精灵蛋\n超过30人最高伤害10000以上追加第二名奖励当期世界boss精灵蛋\n超过50人最高伤害10000以上追加第三名奖励当期世界boss精灵蛋"
     buttons = [
-        Button('世界boss挑战', '世界boss挑战', action=1),
+        Button('世界boss挑战', '世界boss挑战', '世界boss挑战', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -1063,9 +1063,9 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
         old_shanghai = shanghai
     mes += f"\n本周最高伤害{old_shanghai}"
     buttons = [
-        Button('本周伤害排名', '世界boss伤害排名', action=1),
-        Button('上周伤害排名', '世界boss伤害排名上周', action=1),
-        Button('再次挑战', '世界boss挑战', action=1),
+        Button('本周伤害排名', '世界boss伤害排名', '本周伤害排名', action=1),
+        Button('上周伤害排名', '世界boss伤害排名上周', '上周伤害排名', action=1),
+        Button('再次挑战', '世界boss挑战', '再次挑战', action=1),
     ]
     await bot.send_option(mes, buttons)
 
@@ -1099,9 +1099,9 @@ async def pokemon_pk_boss_sj_paiming(bot, ev: Event):
         mes += f'\n{mapinfo[2]} 伤害：{detail[1]}'
     
     buttons = [
-        Button('本周伤害排名', '世界boss伤害排名', action=1),
-        Button('上周伤害排名', '世界boss伤害排名上周', action=1),
-        Button('世界boss信息', '世界boss信息', action=1),
-        Button('再次挑战', '世界boss挑战', action=1),
+        Button('本周伤害排名', '世界boss伤害排名', '本周伤害排名', action=1),
+        Button('上周伤害排名', '世界boss伤害排名上周', '上周伤害排名', action=1),
+        Button('世界boss信息', '世界boss信息', '世界boss信息', action=1),
+        Button('再次挑战', '世界boss挑战', '再次挑战', action=1),
     ]
     await bot.send_option(mes, buttons)

@@ -20,6 +20,7 @@ class PokeCounter:
         self._create_table_exchange()
         self._create_table_technical()
         self._create_table_boss_fight()
+        self._create_table_chongsheng_num()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -184,6 +185,53 @@ class PokeCounter:
             )
         except:
             raise Exception('创建表发生错误')
+    
+    def _create_table_chongsheng_num(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS CHONGSHENG
+                          (UID             TEXT   NOT NULL,
+                           NUM             INT    NOT NULL,
+                           PRIMARY KEY(UID));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    async def _new_chongsheng_num(self, uid):
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    'INSERT OR REPLACE INTO CHONGSHENG (UID,NUM) VALUES (?,?)',
+                    (uid, 0),
+                )
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def get_chongsheng_num(self,uid):
+        try:
+            with self._connect() as conn:
+                r = conn.execute(
+                    f"SELECT NUM FROM CHONGSHENG WHERE UID='{uid}'"
+                ).fetchall()
+                if r:
+                    return r[0][0]
+                else:
+                    await self._new_chongsheng_num(uid)
+                    return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def update_chongsheng(self,uid,num):
+        chongsheng_num = await self.get_chongsheng_num(uid)
+        now_num = int(chongsheng_num) + num
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    f"UPDATE CHONGSHENG SET NUM={now_num} WHERE UID='{uid}'"
+                )
+
+        except:
+            raise Exception('更新表发生错误')
     
     async def get_boss_shanghai(self,uid,week):
         try:

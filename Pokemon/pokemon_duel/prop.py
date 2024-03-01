@@ -88,14 +88,14 @@ PS
 每人每天限购50颗随机精灵蛋，先到先得哦~
  """
     buttons = [
-        Button('💰道具商店', '道具商店', action=1),
-        Button('💰首领商店', '首领商店', action=1),
-        Button('✅我的道具', '我的道具', action=1),
-        Button('💰查看交易所', '查看交易所', action=1),
-        Button('✅购买道具', '购买道具', action=2),
-        Button('✅道具信息', '道具信息', action=2),
-        Button('✅使用道具', '使用道具', action=2),
-        Button('购买随机精灵蛋', '购买随机精灵蛋', action=1),
+        Button('💰道具商店', '道具商店', '💰道具商店', action=1),
+        Button('💰首领商店', '首领商店', '💰首领商店', action=1),
+        Button('✅我的道具', '我的道具', '✅我的道具', action=1),
+        Button('💰查看交易所', '查看交易所', '💰查看交易所', action=1),
+        Button('✅购买道具', '购买道具', '✅购买道具', action=2),
+        Button('✅道具信息', '道具信息', '✅道具信息', action=2),
+        Button('✅使用道具', '使用道具', '✅使用道具', action=2),
+        Button('购买随机精灵蛋', '购买随机精灵蛋', '购买随机精灵蛋', action=1),
     ]
     await bot.send_option(msg, buttons)
 
@@ -123,8 +123,8 @@ async def prop_shop_list(bot, ev: Event):
     else:
         mes += propinfolist
         buttons = [
-            Button('✅购买道具', '购买道具', action=2),
-            Button('📖道具信息', '道具信息', action=2),
+            Button('✅购买道具', '购买道具', '✅购买道具', action=2),
+            Button('📖道具信息', '道具信息', '📖道具信息', action=2),
         ]
     await bot.send_option(mes, buttons)
 
@@ -139,8 +139,8 @@ async def prop_boss_list(bot, ev: Event):
         propinfolist += f"{propinfo} [{bossproplist[propinfo]['type']}] 售价:{bossproplist[propinfo]['score']}\n"
     mes += propinfolist
     buttons = [
-        Button('✅兑换道具', '兑换道具', action=2),
-        Button('📖道具信息', '道具信息', action=2),
+        Button('✅兑换道具', '兑换道具', '✅兑换道具', action=2),
+        Button('📖道具信息', '道具信息', '📖道具信息', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -159,7 +159,7 @@ async def prop_info(bot, ev: Event):
             mes += f"\n售价：{propinfo['score']}"
         if propinfo['score'] > 0 and int(huizhang) >= propinfo['huizhang']:
             buttons = [
-                Button('✅购买道具', f'购买道具 {propname}', action=2),
+                Button('✅购买道具', f'购买道具 {propname}', '✅购买道具', action=2),
             ]
             await bot.send_option(mes, buttons)
         else:
@@ -220,9 +220,9 @@ async def buy_random_egg(bot, ev: Event):
                 await POKE._add_pokemon_egg(uid, eggid, 1)
         mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
     buttons = [
-        Button('✅再开一个', '购买随机精灵蛋', action=1),
-        Button('📖宝可梦孵化', '宝可梦孵化', action=2),
-        Button('📖我的精灵蛋', '我的精灵蛋', action=1),
+        Button('✅再开一个', '购买随机精灵蛋', '✅再开一个', action=1),
+        Button('📖宝可梦孵化', '宝可梦孵化', '📖宝可梦孵化', action=2),
+        Button('📖我的精灵蛋', '我的精灵蛋', '📖我的精灵蛋', action=1),
     ]
     await bot.send_option(mes, buttons)
     
@@ -263,7 +263,7 @@ async def prop_buy(bot, ev: Event):
         mes = f'恭喜！您花费了{use_score}金币成功购买了{propnum}件{propname}'
         if propinfo['type'] == '消耗品':
             buttons = [
-                Button('✅使用道具', f'使用道具 {propname}', action=2),
+                Button('✅使用道具', f'使用道具 {propname}', '✅使用道具', action=2),
             ]
             await bot.send_option(mes, buttons)
         else:
@@ -300,19 +300,19 @@ async def boss_prop_buy(bot, ev: Event):
             await POKE._add_pokemon_prop(uid, propname, propnum)
             mes = f'恭喜！您花费了{use_score}首领币成功购买了{propnum}件{propname}'
             buttons = [
-                Button('✅使用道具', f'使用道具 {propname}', action=2),
+                Button('✅使用道具', f'使用道具 {propname}', '✅使用道具', action=2),
             ]
         if propinfo['type'] == '精灵蛋':
             await POKE._add_pokemon_egg(uid, int(propinfo['name']), propnum)
             mes = f'恭喜！您花费了{use_score}首领币成功购买了{propname}x{propnum}'
             buttons = [
-                Button('✅精灵孵化', f"宝可梦孵化{CHARA_NAME[int(propinfo['name'])][0]}", action=1),
+                Button('✅精灵孵化', f"宝可梦孵化{CHARA_NAME[int(propinfo['name'])][0]}", '✅精灵孵化', action=1),
             ]
         if propinfo['type'] == '学习机':
             await POKE._add_pokemon_technical(uid, propname, propnum)
             mes = f'恭喜！您花费了{use_score}首领币成功购买了{propname}学习机x{propnum}'
             buttons = [
-                Button('✅学习技能', f'学习技能', action=2),
+                Button('✅学习技能', f'学习技能', '✅学习技能', action=2),
             ]
         await bot.send_option(mes, buttons)
     except:
@@ -538,8 +538,8 @@ async def prop_my_list(bot, ev: Event):
     for propinfo in myproplist:
         mes += f'{propinfo[0]} 数量 {propinfo[1]}\n'
     buttons = [
-        Button('📖道具信息', '道具信息', action=2),
-        Button('✅使用道具', '使用道具', action=2),
+        Button('📖道具信息', '道具信息', '📖道具信息', action=2),
+        Button('✅使用道具', '使用道具', '✅使用道具', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -563,17 +563,17 @@ async def technical_my_list(bot, ev: Event):
     if page_num > 1:
         mes += f'\n第({page}/{page_num})页'
     buttons = [
-        Button('📖技能信息', '精灵技能信息', action=2),
-        Button('📖学习技能', '学习技能', action=2),
+        Button('📖技能信息', '精灵技能信息', '📖技能信息', action=2),
+        Button('📖学习技能', '学习技能', '📖学习技能', action=2),
     ]
     if page > 1:
         uppage = page - 1
-        buttons.append(Button('⬅️上一页', f'我的学习机{uppage}', action=1))
+        buttons.append(Button('⬅️上一页', f'我的学习机{uppage}', '⬅️上一页', action=1))
     if page_num > 1:
-        buttons.append(Button(f'⏺️跳转({page}/{page_num})', '我的学习机', action=2))
+        buttons.append(Button(f'⏺️跳转({page}/{page_num})', '我的学习机', f'⏺️跳转({page}/{page_num})', action=2))
     if page < page_num:
         dowmpage = page + 1
-        buttons.append(Button('➡️下一页', f'我的学习机{dowmpage}', action=1))
+        buttons.append(Button('➡️下一页', f'我的学习机{dowmpage}', '➡️下一页', action=1))
     await bot.send_option(mes, buttons)
 
 @sv_pokemon_prop.on_command(['交易所上架'])
@@ -624,11 +624,11 @@ async def exchange_up_prop(bot, ev: Event):
         await POKE._add_pokemon_egg(uid, bianhao, 0 - propnum)
         mes = f'您以单价{score}的价格成功上架了{propname}精灵蛋x{propnum}。'
     buttons = [
-        Button('💰寄售商品','交易所上架', action=2),
-        Button('💰购买商品','交易所购买', action=2),
-        Button('💰我的寄售','我的寄售', action=1),
-        Button('💰查看交易所', '查看交易所', action=1),
-        Button('💰交易所筛选', '查看交易所', action=2),
+        Button('💰寄售商品','交易所上架', '💰寄售商品', action=2),
+        Button('💰购买商品','交易所购买', '💰购买商品', action=2),
+        Button('💰我的寄售','我的寄售', '💰我的寄售', action=1),
+        Button('💰查看交易所', '查看交易所', '💰查看交易所', action=1),
+        Button('💰交易所筛选', '查看交易所', '💰交易所筛选', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -652,11 +652,11 @@ async def exchange_down_prop(bot, ev: Event):
         mes = f'您下架了{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}x{exchange_info[2]}。'
     await POKE.delete_exchange(exchangeid)
     buttons = [
-        Button('💰寄售商品','交易所上架', action=2),
-        Button('💰购买商品','交易所购买', action=2),
-        Button('💰我的寄售','我的寄售', action=1),
-        Button('💰查看交易所', '查看交易所', action=1),
-        Button('💰交易所筛选', '查看交易所', action=2),
+        Button('💰寄售商品','交易所上架', '💰寄售商品', action=2),
+        Button('💰购买商品','交易所购买', '💰购买商品', action=2),
+        Button('💰我的寄售','我的寄售', '💰我的寄售', action=1),
+        Button('💰查看交易所', '查看交易所', '💰查看交易所', action=1),
+        Button('💰交易所筛选', '查看交易所', '💰交易所筛选', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -737,14 +737,14 @@ async def show_exchange_list(bot, ev: Event):
     if page_num > 1:
         mes += f'\n第({page + 1}/{page_num})页'
     buttons = [
-        Button('💰我的寄售','我的寄售', action=1),
-        Button('💰寄售商品','交易所上架', action=2),
-        Button('💰购买商品','交易所购买', action=2),
+        Button('💰我的寄售','我的寄售', '💰我的寄售', action=1),
+        Button('💰寄售商品','交易所上架', '💰寄售商品', action=2),
+        Button('💰购买商品','交易所购买', '💰购买商品', action=2),
     ]
     if upbutton != '':
-        buttons.append(Button('上一页',f'{upbutton}', action=2))
+        buttons.append(Button('上一页',f'{upbutton}', '上一页', action=2))
     if downbutton != '':
-        buttons.append(Button('下一页',f'{downbutton}', action=2))
+        buttons.append(Button('下一页',f'{downbutton}', '下一页', action=2))
     await bot.send_option(mes, buttons)
 
 @sv_pokemon_prop.on_command(['交易所购买'])
@@ -784,11 +784,11 @@ async def exchange_buy_prop(bot, ev: Event):
     get_score = math.ceil(need_score * 0.9)
     SCORE.update_score(exchange_info[3], get_score)
     buttons = [
-        Button('💰寄售商品','交易所上架', action=2),
-        Button('💰购买商品','交易所购买', action=2),
-        Button('💰我的寄售','我的寄售', action=1),
-        Button('💰查看交易所', '查看交易所', action=1),
-        Button('💰交易所筛选', '查看交易所', action=2),
+        Button('💰寄售商品','交易所上架', '💰寄售商品', action=2),
+        Button('💰购买商品','交易所购买', '💰购买商品', action=2),
+        Button('💰我的寄售','我的寄售', '💰我的寄售', action=1),
+        Button('💰查看交易所', '查看交易所', '💰查看交易所', action=1),
+        Button('💰交易所筛选', '查看交易所', '💰交易所筛选', action=2),
     ]
     await bot.send_option(mes, buttons)
 
@@ -826,13 +826,13 @@ async def show_exchange_list_my(bot, ev: Event):
     if page_num > 1:
         mes += f'\n第({page + 1}/{page_num})页'
     buttons = [
-        Button('💰寄售商品','交易所上架', action=2),
-        Button('💰购买商品','交易所购买', action=2),
+        Button('💰寄售商品','交易所上架', '💰寄售商品', action=2),
+        Button('💰购买商品','交易所购买', '💰购买商品', action=2),
     ]
     if upbutton != '':
-        buttons.append(Button('上一页',f'{upbutton}', action=2))
+        buttons.append(Button('上一页',f'{upbutton}', '上一页', action=2))
     if downbutton != '':
-        buttons.append(Button('下一页',f'{downbutton}', action=2))
+        buttons.append(Button('下一页',f'{downbutton}', '下一页', action=2))
     await bot.send_option(mes, buttons)
 
 @sv_pokemon_prop.on_command(['pm发红包'])
@@ -860,7 +860,7 @@ async def mew_pm_hongbao(bot, ev: Event):
     SCORE.update_score(uid, 0 - score)
     mes = f'红包发放成功，红包口令：{kouling}'
     buttons = [
-        Button('抢红包', f'pm抢红包{kouling}', action=1),
+        Button('抢红包', f'pm抢红包{kouling}', '抢红包', action=1),
     ]
     await bot.send_option(mes, buttons)
     
@@ -893,7 +893,7 @@ async def open_pm_hongbao(bot, ev: Event):
         pmhongbao.hongbao_off(kouling)
     mes = f'【{name}】恭喜！您抢到了{get_score}金币，红包剩余数量{last_num - 1}，剩余金额{last_score - get_score}'
     buttons = [
-        Button('抢红包', f'pm抢红包{kouling}', action=1),
+        Button('抢红包', f'pm抢红包{kouling}', '抢红包', action=1),
     ]
     await bot.send_option(mes, buttons)
 

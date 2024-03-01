@@ -17,6 +17,7 @@ BOSS_TG = 10    #boss掉落神奇糖果基数
 BOSS_WGJ = 5    #boss掉落金色王冠基础概率
 BOSS_WGY = 10   #boss掉落银色王冠基础概率
 BOSS_SCORE = 20 #boss掉落BOSS币基础概率
+button_action = 1
 # 造成伤害天气
 tq_kouxuelist = ['沙暴', '冰雹']
 # 损失血量异常状态
@@ -174,6 +175,16 @@ sjbossinfo = {
         "bossid": 384,
         "jinenglist":"画龙点睛,铁头,龙爪,咬碎",
         "xingge":"固执"
+    },
+    "202410" :{
+        "bossid": 383,
+        "jinenglist":"断崖之剑,雷电拳,高温重压,劈瓦",
+        "xingge":"固执"
+    },
+    "202411" :{
+        "bossid": 382,
+        "jinenglist":"十万伏特,原始之力,根源波动,冰冻光束",
+        "xingge":"内敛"
     }
 }
 
