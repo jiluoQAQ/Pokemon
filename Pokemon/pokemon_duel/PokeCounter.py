@@ -191,43 +191,44 @@ class PokeCounter:
             self._connect().execute(
                 """CREATE TABLE IF NOT EXISTS CHONGSHENG
                           (UID             TEXT   NOT NULL,
+                           BIANHAO        INT    NOT NULL,
                            NUM             INT    NOT NULL,
-                           PRIMARY KEY(UID));"""
+                           PRIMARY KEY(UID,BIANHAO));"""
             )
         except:
             raise Exception('创建表发生错误')
     
-    async def _new_chongsheng_num(self, uid):
+    async def _new_chongsheng_num(self, uid, bianhao):
         try:
             with self._connect() as conn:
                 conn.execute(
-                    'INSERT OR REPLACE INTO CHONGSHENG (UID,NUM) VALUES (?,?)',
-                    (uid, 0),
+                    'INSERT OR REPLACE INTO CHONGSHENG (UID,BIANHAO,NUM) VALUES (?,?,?)',
+                    (uid, bianhao, 0),
                 )
         except:
             raise Exception('更新表发生错误')
     
-    async def get_chongsheng_num(self,uid):
+    async def get_chongsheng_num(self,uid, bianhao):
         try:
             with self._connect() as conn:
                 r = conn.execute(
-                    f"SELECT NUM FROM CHONGSHENG WHERE UID='{uid}'"
+                    f"SELECT NUM FROM CHONGSHENG WHERE UID='{uid}' AND BIANHAO = {bianhao}"
                 ).fetchall()
                 if r:
                     return r[0][0]
                 else:
-                    await self._new_chongsheng_num(uid)
+                    await self._new_chongsheng_num(uid, bianhao)
                     return 0
         except:
             raise Exception('查找表发生错误')
     
-    async def update_chongsheng(self,uid,num):
-        chongsheng_num = await self.get_chongsheng_num(uid)
+    async def update_chongsheng(self,uid,bianhao,num):
+        chongsheng_num = await self.get_chongsheng_num(uid, bianhao)
         now_num = int(chongsheng_num) + num
         try:
             with self._connect() as conn:
                 conn.execute(
-                    f"UPDATE CHONGSHENG SET NUM={now_num} WHERE UID='{uid}'"
+                    f"UPDATE CHONGSHENG SET NUM={now_num} WHERE UID='{uid}' AND BIANHAO = {bianhao}"
                 )
 
         except:

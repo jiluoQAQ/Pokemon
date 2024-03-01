@@ -814,12 +814,12 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
         pokemon_str = ','.join(pokemon_list)
         await POKE._add_pokemon_group(uid, pokemon_str)
     if eggid == 10:
-        chongsheng_num = await POKE.get_chongsheng_num(uid)
+        chongsheng_num = await POKE.get_chongsheng_num(uid,384)
         if chongsheng_num >= 9999:
             eggid = 384
-            await POKE._new_chongsheng_num(uid)
+            await POKE._new_chongsheng_num(uid,384)
         else:
-            await POKE.update_chongsheng(uid,1)
+            await POKE.update_chongsheng(uid,384,1)
     await POKE._add_pokemon_egg(uid, eggid, 1)
     mes = f'{pokename}重生成功，您获得了{POKEMON_LIST[eggid][0]}精灵蛋x1'
     buttons = [
