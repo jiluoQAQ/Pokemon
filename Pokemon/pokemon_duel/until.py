@@ -105,7 +105,7 @@ def get_mingzhong(jineng_mz, my_mngzhong, di_shanbi, changdi):
         return 0
 
 
-def get_nowshuxing(shuxing, dengji):
+def get_nowshuxing(shuxing, dengji, sxtype, shuxinglist, tianqi):
     if dengji > 0:
         xiuzheng = (2 + int(dengji)) / 2
     elif dengji < 0:
@@ -113,6 +113,12 @@ def get_nowshuxing(shuxing, dengji):
     else:
         xiuzheng = 1
     shuzhi = int(int(shuxing) * xiuzheng)
+    if tianqi == "下雪" and "冰" in shuxinglist and sxtype == '物防':
+        shuzhi = int(shuzhi * 1.5)
+    if tianqi == "沙暴" and "岩石" in shuxinglist and sxtype == '特防':
+        shuzhi = int(shuzhi * 1.5)
+    if tianqi == "晴朗" and "草" in shuxinglist and sxtype == '速度':
+        shuzhi = int(shuzhi * 1.5)
     return shuzhi
 
 
@@ -164,7 +170,7 @@ def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -184,11 +190,11 @@ def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -239,7 +245,7 @@ def get_shanghai_pt_yh(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -259,11 +265,11 @@ def get_shanghai_pt_yh(
     yaohai_xz = 1.5
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -312,7 +318,7 @@ def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -332,11 +338,11 @@ def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -388,7 +394,7 @@ def get_shanghai_pt_bh(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -408,11 +414,11 @@ def get_shanghai_pt_bh(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     jineng_sh = myinfo[int(index)]
     shanghai = get_shanghai_num(
@@ -464,7 +470,7 @@ def get_shanghai_pt_fs(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -484,11 +490,11 @@ def get_shanghai_pt_fs(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -548,7 +554,7 @@ def get_shanghai_pt_xh(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -568,11 +574,11 @@ def get_shanghai_pt_xh(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -636,7 +642,7 @@ def get_shanghai_zt(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -656,11 +662,11 @@ def get_shanghai_zt(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -730,7 +736,7 @@ def get_shanghai_zt_my(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -758,11 +764,11 @@ def get_shanghai_zt_my(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -816,7 +822,7 @@ def get_sbshanghai_pt(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -836,11 +842,11 @@ def get_sbshanghai_pt(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     weili = int(jinenginfo[2])
     if int(dizhuangtai[0][1]) > 0 and dizhuangtai[0][0] != '无':
@@ -893,7 +899,7 @@ def get_lxshanghai_pt(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -913,11 +919,11 @@ def get_lxshanghai_pt(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     weili = int(jinenginfo[2])
     if int(dizhuangtai[0][1]) > 0 and dizhuangtai[0][0] != '无':
@@ -972,7 +978,7 @@ def get_shanghai_sxj(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -992,11 +998,11 @@ def get_shanghai_sxj(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     weili = int(jinenginfo[2])
     if int(dizhuangtai[0][1]) > 0 and dizhuangtai[0][0] != '无':
@@ -1088,8 +1094,8 @@ def add_wudi(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
 
 
 def get_hunluan_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
-    myatk = get_nowshuxing(myinfo[4], myinfo[9])
-    mydef = get_nowshuxing(myinfo[5], myinfo[10])
+    myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+    mydef = get_nowshuxing(myinfo[5], myinfo[10], '物防', myinfo[1], changdi[0][0])
     shanghai = get_shanghai_num(
         40,
         myinfo[2],
@@ -1290,7 +1296,7 @@ def up_shuxshanghai_my(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -1310,11 +1316,11 @@ def up_shuxshanghai_my(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],
@@ -1388,7 +1394,7 @@ def dowm_shuxshanghai_di(
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
     ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = int(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
@@ -1408,11 +1414,11 @@ def dowm_shuxshanghai_di(
     yaohai_xz = get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-        didef = get_nowshuxing(diinfo[5], diinfo[10])
+        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-        didef = get_nowshuxing(diinfo[7], diinfo[12])
+        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     shanghai = get_shanghai_num(
         jinenginfo[2],

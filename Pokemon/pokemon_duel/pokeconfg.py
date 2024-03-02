@@ -525,8 +525,8 @@ async def get_pokemon_star(uid):
 
 # 技能使用ai
 def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
-    mysd = get_nowshuxing(myinfo[8], myinfo[13])
-    disd = get_nowshuxing(diinfo[8], diinfo[13])
+    mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
+    disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
     # 判断技能中是否有能够击杀对方的技能/伤害最大的技能
     max_shanghai = 0
     use_jineng = ''
@@ -541,11 +541,11 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
                     benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
                     yaohai_xz = 1
                     if jinenginfo[1] == '物理':
-                        myatk = get_nowshuxing(myinfo[4], myinfo[9])
-                        didef = get_nowshuxing(diinfo[5], diinfo[10])
+                        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+                        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
                     else:
-                        myatk = get_nowshuxing(myinfo[6], myinfo[11])
-                        didef = get_nowshuxing(diinfo[7], diinfo[12])
+                        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+                        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
                     shanghai = get_shanghai_num(
                         jinenginfo[2],
                         myinfo[2],
@@ -616,11 +616,11 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
                             )
                             yaohai_xz = 1
                             if jinenginfo[1] == '物理':
-                                myatk = get_nowshuxing(myinfo[4], myinfo[9])
-                                didef = get_nowshuxing(diinfo[5], diinfo[10])
+                                myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+                                didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
                             else:
-                                myatk = get_nowshuxing(myinfo[6], myinfo[11])
-                                didef = get_nowshuxing(diinfo[7], diinfo[12])
+                                myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+                                didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
                             shanghai = get_shanghai_num(
                                 jinenginfo[2],
                                 myinfo[2],
@@ -679,11 +679,11 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
                         )
                         yaohai_xz = 1
                         if jinenginfo[1] == '物理':
-                            myatk = get_nowshuxing(myinfo[4], myinfo[9])
-                            didef = get_nowshuxing(diinfo[5], diinfo[10])
+                            myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+                            didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
                         else:
-                            myatk = get_nowshuxing(myinfo[6], myinfo[11])
-                            didef = get_nowshuxing(diinfo[7], diinfo[12])
+                            myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+                            didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
                         shanghai = get_shanghai_num(
                             jinenginfo[2],
                             myinfo[2],
@@ -813,10 +813,10 @@ async def pokemon_fight(
 
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13])
+        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13])
+        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
@@ -1309,10 +1309,10 @@ async def pokemon_fight_s(
         img_height += 50
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13])
+        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13])
+        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
@@ -1884,10 +1884,10 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         jinenginfo2 = JINENG_LIST[jineng2]
         mesg = f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13])
+        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13])
+        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
@@ -2434,10 +2434,10 @@ async def pokemon_fight_pk(
         jineng_use2.append(jineng2)
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13])
+        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13])
+        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
