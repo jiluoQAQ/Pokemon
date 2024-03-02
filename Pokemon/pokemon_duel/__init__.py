@@ -81,6 +81,7 @@ async def pokemon_gonggao(bot, ev: Event):
 2024-3-2
 1.添加部分天气的属性值加成
 2.添加神奥地区
+3.添加合众地区
 2024-3-1
 1.增加部分小彩蛋
 2024-2-26
@@ -280,8 +281,10 @@ async def get_chushi_pokemon(bot, ev: Event):
         go_didian = '101号道路'
     elif bianhao in [387,390,393]:
         go_didian = '201号道路'
+    elif bianhao in [495,498,501]:
+        go_didian = '合众19号道路'
     else:
-        csdidianlist = ['1号道路', '29号道路', '101号道路', '201号道路']
+        csdidianlist = ['1号道路', '29号道路', '101号道路', '201号道路','合众19号道路']
         go_didian = random.sample(csdidianlist, 1)[0]
     name = uid
     if ev.sender:
