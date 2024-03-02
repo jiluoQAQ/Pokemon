@@ -78,6 +78,8 @@ async def pokemon_help(bot, ev: Event):
 async def pokemon_gonggao(bot, ev: Event):
     msg = """
        宝可梦小游戏更新公告：
+2024-3-2
+1.添加部分天气的属性值加成
 2024-3-1
 1.增加部分小彩蛋
 2024-2-26
@@ -101,13 +103,6 @@ async def pokemon_gonggao(bot, ev: Event):
 2024-2-19
 1.神兽个体值修改，必定为3V及以上
 2.发放奖励、赠送道具添加给予对象的昵称识别
-2024-1-31
-1.精灵状态添加闪光精灵的形象图
-2024-1-29
-1.手动对战加入PP值设定
-2024-1-22
-1.添加成都、丰缘地图
-2.道具赠送添加金币，学习机的赠送功能
  """
     await bot.send(msg, at_sender=True)
     

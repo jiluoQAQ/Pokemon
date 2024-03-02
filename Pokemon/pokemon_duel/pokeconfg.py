@@ -577,11 +577,11 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
                     benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
                     yaohai_xz = 1
                     if jinenginfo[1] == '物理':
-                        myatk = get_nowshuxing(diinfo[4], diinfo[9])
-                        didef = get_nowshuxing(myinfo[5], myinfo[10])
+                        myatk = get_nowshuxing(diinfo[4], diinfo[9], '物攻', myinfo[1], changdi[0][0])
+                        didef = get_nowshuxing(myinfo[5], myinfo[10], '物防', diinfo[1], changdi[0][0])
                     else:
-                        myatk = get_nowshuxing(diinfo[6], diinfo[11])
-                        didef = get_nowshuxing(myinfo[7], myinfo[12])
+                        myatk = get_nowshuxing(diinfo[6], diinfo[11], '特攻', myinfo[1], changdi[0][0])
+                        didef = get_nowshuxing(myinfo[7], myinfo[12], '特防', diinfo[1], changdi[0][0])
                     shanghai = get_shanghai_num(
                         jinenginfo[2],
                         diinfo[2],

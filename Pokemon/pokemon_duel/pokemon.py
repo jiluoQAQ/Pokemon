@@ -12099,8 +12099,8 @@ JINENG_LIST = {
         '70',
         '90',
         '10',
-        '用不可思议的力量强化自己。偏向攻击时会提高进攻力，偏向防御时会提高防守力。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        '放出不可思议的力量攻击。会提高自己的特攻。',
+        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','up','100')",
     ],
     '大愤慨': [
         '火',

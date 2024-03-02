@@ -1400,9 +1400,17 @@ async def show_map_info_now(bot, ev: Event):
         didianinfo = didianlist[didianname]
         if didianinfo['fname'] == diquname:
             if didianinfo['type'] == '城镇':
-                mes += f"\n{didianname} {didianinfo['type']} 需求徽章{didianinfo['need']}"
+                mes += f"\n{didianname} {didianinfo['type']}"
+                if int(didianinfo['need']) >= 10:
+                    mes += f" 成为冠军后"
+                else:
+                    mes += f" 需求徽章{didianinfo['need']}"
             else:
-                mes += f"\n{didianname} Lv.{didianinfo['level'][0]}~{didianinfo['level'][1]} 需求徽章{didianinfo['need']}"
+                mes += f"\n{didianname} Lv.{didianinfo['level'][0]}~{didianinfo['level'][1]}"
+                if int(didianinfo['need']) >= 10:
+                    mes += f" 成为冠军后"
+                else:
+                    mes += f" 需求徽章{didianinfo['need']}"
     buttons = [
         Button('前往', '前往', '前往', action=2),
     ]
@@ -1442,10 +1450,11 @@ async def pokemom_go_map(bot, ev: Event):
             mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
             await bot.send_option(mes, buttons)
         else:
-            return await bot.send(
-                f"前往{go_map}所需徽章为{didianlist[go_map]['need']!s}枚,您的徽章为{my_hz!s}枚,无法前往",
-                at_sender=True,
-            )
+            if int(didianlist[go_map]['need']) >= 10:
+                mes = f"需要成为冠军后才能前往{go_map},您当前无法前往"
+            else:
+                mes = f"前往{go_map}所需徽章为{didianlist[go_map]['need']}枚,您的徽章为{my_hz}枚,无法前往"
+            return await bot.send(mes,at_sender=True)
     else:
         if int(my_hz) >= 8:
             POKE._add_map_now(uid, go_map)
