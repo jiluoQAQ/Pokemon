@@ -1416,7 +1416,47 @@ async def show_map_info_now(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
-
+@sv_pokemon_map.on_command(['分布查询'])
+async def pokemom_map_info_have(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) < 1:
+        return await bot.send('请输入 需要查询分宝可梦名称。', at_sender=True)
+    pokename = args[0]
+    bianhao = await get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    mes = ''
+    for didianname in didianlist:
+        didianinfo = didianlist[didianname]
+        if didianinfo['type'] == '野外':
+            if bianhao in didianinfo['pokemon']:
+                mes += f"\n{didianinfo['fname']}-{didianname}"
+                if int(didianinfo['need']) >= 10:
+                    mes += f" 成为冠军后"
+                else:
+                    mes += f" 需求徽章{didianinfo['need']}"
+            if didianinfo['pokemon_s']:
+                pokemon_s_list = didianinfo['pokemon_s']
+                chuidiao_flag = 0
+                for item in pokemon_s_list:
+                    if bianhao in pokemon_s_list[item]['pokemon']:
+                        chuidiao_flag = 1
+                if chuidiao_flag == 1:
+                    mes += f"\n{didianinfo['fname']}-{didianname}【垂钓】"
+                    if int(didianinfo['need']) >= 10:
+                        mes += f" 成为冠军后"
+                    else:
+                        mes += f" 需求徽章{didianinfo['need']}"
+    if mes == '':
+        mes = f'{pokename}当前暂无获取途径'
+    else:
+        mes = f'{pokename}的获取途径为:{mes}'
+    buttons = [
+        Button('前往', '前往', '前往', action=2),
+    ]
+    await bot.send_option(mes, buttons)
+    
+    
 @sv_pokemon_map.on_prefix(['前往'])
 async def pokemom_go_map(bot, ev: Event):
     args = ev.text.split()
