@@ -1,6 +1,7 @@
 import re
 import math
 from pathlib import Path
+from opencc import OpenCC
 
 from PIL import Image, ImageDraw
 from gsuid_core.utils.image.convert import convert_img
@@ -48,7 +49,8 @@ JINENG_LEIXING = {
     '特殊': (0, -762),
     '变化': (0, -802),
 }
-
+# 创建转换器，'t2s': 繁体转简体
+cc = OpenCC('t2s')
 
 async def draw_pokemon_info(uid, pokemon_info, bianhao):
     bg_height = 770
@@ -518,6 +520,7 @@ async def draw_pokemon_info_tj(bianhao):
         for shul, jineng in enumerate(jinengxxlist):
             jn_y = math.floor(shul / 4)
             jn_x = shul - (4 * jn_y)
+            SHUX_LIST_DRAW[JINENG_LIST[jineng][0]][0] = cc.convert(SHUX_LIST_DRAW[JINENG_LIST[jineng][0]][0])
             jineng_img = Image.new(
                 'RGBA', (180, 38), SHUX_LIST_DRAW[JINENG_LIST[jineng][0]][0]
             )
