@@ -214,7 +214,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
     #await bot.send(img)
     mesg_a.append(MessageSegment.image(img))
     buttons_d = [
-        Button('✅再猜一下', '我是谁', action=1),
+        Button('✅再来一局', '我是谁', action=1),
         Button('📖查看图鉴', f'精灵图鉴{name}', action=1),
     ]
     buttons_a = [
@@ -257,7 +257,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
                             await POKE._add_pokemon_egg(uid, 150, 1)
                             mes = f'\n{name}获得了超梦精灵蛋x1'
                             await POKE._new_chongsheng_num(uid,150)
-                        await POKE.update_chongsheng(uid,384,1)
+                        await POKE.update_chongsheng(uid,150,1)
                         mesg_d.append(MessageSegment.text(mes))
                         mesg_d.append(MessageSegment.image(win_mes))
                         await bot.send_option(mesg_d, buttons_d)

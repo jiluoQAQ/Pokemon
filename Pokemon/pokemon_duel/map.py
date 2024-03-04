@@ -1416,7 +1416,7 @@ async def show_map_info_now(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
-@sv_pokemon_map.on_command(['分布查询'])
+@sv_pokemon_map.on_command(('分布查询','精灵分布'))
 async def pokemom_map_info_have(bot, ev: Event):
     args = ev.text.split()
     if len(args) < 1:
@@ -1716,6 +1716,8 @@ async def get_my_poke_info_sv(bot, ev: Event):
 async def new_refresh_send_group(bot, ev: Event):
     groupid = ev.group_id
     botid = ev.bot_id
+    if botid == 'qqgroup':
+        return await bot.send('暂不支持QQ群的消息推送',at_sender=True)
     await POKE.update_refresh_send(groupid,botid)
     await bot.send('消息推送房间/群标记成功',at_sender=True)
     
