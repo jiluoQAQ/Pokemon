@@ -109,7 +109,7 @@ async def pk_vs_daoguan(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
-    name = name[:10]
+    name = str(name)[:10]
 
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -281,7 +281,7 @@ async def pk_vs_tianwang(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
-    name = name[:10]
+    name = str(name)[:10]
 
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -448,7 +448,7 @@ async def pk_vs_guanjun(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
-    name = name[:10]
+    name = str(name)[:10]
 
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -703,8 +703,8 @@ async def pokemon_pk_wjb(bot, ev: Event):
     mychenghao, myhuizhang = get_chenghao(uid)
     dichenghao, dihuizhang = get_chenghao(diuid)
 
-    name = name[:10]
-    diname = diname[:10]
+    name = str(name)[:10]
+    diname = str(diname)[:10]
     # 对战
     mes = f'{mychenghao} {name}向{dichenghao} {diname}发起了挑战'
     await bot.send(mes)
@@ -851,8 +851,8 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     mychenghao, myhuizhang = get_chenghao(uid)
     dichenghao, dihuizhang = get_chenghao(diuid)
 
-    name = name[:10]
-    diname = diname[:10]
+    name = str(name)[:10]
+    diname = str(diname)[:10]
     # 对战
     mes = f'{mychenghao} {name}向{dichenghao} {diname}发起了挑战'
     await bot.send(mes)
@@ -963,7 +963,7 @@ async def pokemon_pk_boss_week(bot, ev: Event):
     boss_level = max(40, boss_level)
     mes = f"【首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
     await bot.send(mes)
-    name = name[:10]
+    name = str(name)[:10]
     dipokelist = [bossbianhao,bossbianhao,bossbianhao]
     mypokelist, dipokelist = await fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, name, bossinfo)
     
@@ -1052,7 +1052,7 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
         mypokelist.append(bianhao)
     mes = f"【世界首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
     await bot.send(mes)
-    name = name[:10]
+    name = str(name)[:10]
     shanghai = await fight_boss_sj(bot, ev, uid, mypokelist, name, bossinfo)
     
     old_shanghai = await POKE.get_boss_shanghai(uid, week)

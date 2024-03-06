@@ -200,7 +200,8 @@ async def update_my_name(bot, ev: Event):
     name = args[0]
     if len(name) > 10:
         return await bot.send('昵称长度不能超过10个字符。', at_sender=True)
-
+    if name.isdigit():
+        return await bot.send('昵称不能为纯数字。', at_sender=True)
     mapinfo = POKE._get_map_info_nickname(name)
     if mapinfo[2] == 0:
         POKE._update_map_name(uid, name)
@@ -296,7 +297,7 @@ async def get_ts_info_pic(bot, ev: Event):
     buttons = [
         Button('🏝️野外探索', '野外探索', '🏝️野外探索', action=1),
     ]
-    name = name[:10]
+    name = str(name)[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
     bg_img.paste(vs_img, (300, 12), vs_img)
@@ -837,7 +838,7 @@ async def get_cd_info_pic(bot, ev: Event):
     buttons = [
         Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1),
     ]
-    name = name[:10]
+    name = str(name)[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
     bg_img.paste(vs_img, (300, 12), vs_img)
@@ -1172,8 +1173,8 @@ async def pokemon_pk_auto(bot, ev: Event):
         bianhao = int(bianhao)
         dipokelist.append(bianhao)
 
-    name = name[:10]
-    diname = diname[:10]
+    name = str(name)[:10]
+    diname = str(diname)[:10]
     # 对战
     mes = ''
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')

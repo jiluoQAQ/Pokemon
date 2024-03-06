@@ -252,7 +252,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         POKE = PokeCounter()
                         mapinfo = POKE._get_map_now(uid)
                         myname = mapinfo[2]
-                        myname = myname[:10]
+                        myname = str(myname)[:10]
                         mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                         chongsheng_num = await POKE.get_chongsheng_num(uid,150)
                         if chongsheng_num >= 999:
