@@ -3673,7 +3673,7 @@ POKEMON_LIST = {
     980:['土王','130','75','60','45','100','20','毒,地面','194','20'],
     981:['奇麒麟','120','90','70','110','70','60','一般,超能力','203','32'],
     982:['土龙节节','125','100','80','85','75','55','一般','206','32'],
-    983:['仆斩将军','100','135','120','60','85','50','恶,钢','525','60'],
+    983:['仆斩将军','100','135','120','60','85','50','恶,钢','625','60'],
     984:['雄伟牙','115','131','131','53','53','87','地面,格斗','-','-'],
     985:['吼叫尾','115','65','99','65','115','111','妖精,超能力','-','-'],
     986:['猛恶菇','111','127','99','79','99','55','草,恶','-','-'],
@@ -6537,7 +6537,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用原始之力进行攻击。有时会提高自己所有的能力。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,SPATK,SPDEF','1,1,1,1','up,up,up,up','5')",
+        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,SPATK,SPDEF,SPD','1,1,1,1,1','up,up,up,up,up','5')",
     ],
     '暗影球': [
         '幽灵',
@@ -8517,7 +8517,7 @@ JINENG_LIST = {
         '100',
         '5',
         '突然刮起毛骨悚然的暴风攻击对手。有时会提高自己的全部能力。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,SPATK,SPDEF','1,1,1,1','up,up,up,up','5')",
+        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,SPATK,SPDEF,SPD','1,1,1,1,1','up,up,up,up,up','10')",
     ],
     '暗影潜袭': [
         '幽灵',
