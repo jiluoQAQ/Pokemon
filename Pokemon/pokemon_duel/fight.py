@@ -195,6 +195,7 @@ async def pk_vs_daoguan(bot, ev: Event):
         bg_img.paste(di_image, (580, img_height), di_image)
         img_height += 130
         # await bot.send(mes, at_sender=True)
+    new_huizhang = int(huizhang)
     if len(dipokelist) == 0:
         mes += f'\n您打败了{diname}\n'
         img_draw.text(
@@ -231,7 +232,15 @@ async def pk_vs_daoguan(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    if new_huizhang < 8:
+        buttons = [
+            Button('挑战道馆', '挑战道馆', '挑战道馆', action=1),
+        ]
+    else:
+        buttons = [
+            Button('挑战天王', '挑战天王', '挑战天王', action=1),
+        ]
+    await bot.send_option(img_bg, buttons)
 
 
 @sv_pokemon_pk.on_fullmatch(['挑战天王'])
@@ -370,6 +379,7 @@ async def pk_vs_tianwang(bot, ev: Event):
         bg_img.paste(di_image, (580, img_height), di_image)
         img_height += 130
         # await bot.send(mes, at_sender=True)
+    new_huizhang = int(huizhang)
     if len(dipokelist) == 0:
         mes += f'\n您打败了{diname}\n'
         img_draw.text(
@@ -406,7 +416,15 @@ async def pk_vs_tianwang(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    if new_huizhang == 8:
+        buttons = [
+            Button('重新挑战', '挑战天王', '重新挑战', action=1),
+        ]
+    else:
+        buttons = [
+            Button('挑战冠军', '挑战四天王冠军', '挑战冠军', action=1),
+        ]
+    await bot.send_option(img_bg, buttons)
 
 
 @sv_pokemon_pk.on_fullmatch(['挑战四天王冠军'])
@@ -535,6 +553,7 @@ async def pk_vs_guanjun(bot, ev: Event):
         bg_img.paste(di_image, (580, img_height), di_image)
         img_height += 130
         # await bot.send(mes, at_sender=True)
+    new_huizhang = int(mapinfo[0])
     if len(dipokelist) == 0:
         mes += f'\n您打败了{diname}\n'
         img_draw.text(
@@ -571,7 +590,15 @@ async def pk_vs_guanjun(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    if new_huizhang == 9:
+        buttons = [
+            Button('重新挑战', '挑战四天王冠军', '重新挑战', action=1),
+        ]
+    else:
+        buttons = [
+            Button('查看名片', '训练家名片', '查看名片', action=1),
+        ]
+    await bot.send_option(img_bg, buttons)
 
 
 @sv_pokemon_pk.on_command(('无级别对战', '无级别战斗', '无级别挑战'))
