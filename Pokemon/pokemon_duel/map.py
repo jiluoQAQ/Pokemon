@@ -71,7 +71,7 @@ async def get_day_pokemon_refresh(bot, ev: Event):
     refresh_list = await POKE.get_map_refresh_list()
     mes = "当前大量出现信息"
     for refresh in refresh_list:
-        mes += f'\n{POKEMON_LIST[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
+        mes += f'\n{CHARA_NAME[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
     mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
     buttons = [
         Button('前往', '前往', '前往', action=2),
@@ -118,7 +118,7 @@ async def map_my_group(bot, ev: Event):
         pokemon_info = await get_pokeon_info(uid, bianhao)
         if pokemon_info == 0:
             return await bot.send(
-                f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
+                f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
             )
         if str(bianhao) not in pokemon_list:
             pokemon_list.append(str(bianhao))
@@ -1542,7 +1542,7 @@ async def new_pokemom_show(bot, ev: Event):
                 pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
                 if pokemon_zz <= zx_max:
                     await POKE.update_map_refresh(diqu,didianname,pokeminid)
-                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {CHARA_NAME[pokeminid][0]}"
                     find_flag = 1
     buttons = [
         Button('前往', '前往', action=2),
@@ -1708,7 +1708,7 @@ async def get_my_poke_info_sv(bot, ev: Event):
     pokemon_info = await get_pokeon_info(uid, bianhao)
     if pokemon_info == 0:
         return await bot.send(
-            f'当前用户还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
+            f'当前用户还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
     im, jinhualist = await draw_pokemon_info(uid, pokemon_info, bianhao)
     await bot.send(im)
@@ -1790,7 +1790,7 @@ async def refresh_pokemon_day():
                 pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
                 if pokemon_zz <= zx_max:
                     await POKE.update_map_refresh(diqu,didianname,pokeminid)
-                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {CHARA_NAME[pokeminid][0]}"
                     find_flag = 1
     refresh_send_list = await POKE.get_refresh_send_list()
     for refresh in refresh_send_list:

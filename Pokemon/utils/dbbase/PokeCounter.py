@@ -1016,7 +1016,7 @@ class PokeCounter:
         except:
             raise Exception('更新表发生错误')
 
-    def _get_pokemon_info(self, uid, bianhao):
+    async def _get_pokemon_info(self, uid, bianhao):
         try:
             with self._connect() as conn:
                 r = conn.execute(

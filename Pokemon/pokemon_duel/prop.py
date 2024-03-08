@@ -188,7 +188,7 @@ async def buy_random_egg(bot, ev: Event):
     name = mapinfo[2]
     mes = f'{name}\n'
     chara_id_list = list(POKEMON_LIST.keys())
-    jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289,6461,6462,8881,8981,8982]
+    jinyonglist_random_egg = [144,145,146,150,151,243,244,245,249,250,251,377,378,379,380,381,382,383,384,385,386,480,481,482,483,484,485,486,487,488,490,491,492,493,494,638,639,640,641,642,643,644,645,646,647,648,649,716,717,718,719,720,721,772,773,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,888,889,890,891,892,893,894,895,896,897,898,905,1001,1002,1003,1004,1007,1008,1009,1010,1014,1015,1016,1017,287,288,289,646001,646002,888001,898001,898002,144002,145002,146002]
     for jinyongid in jinyonglist_random_egg:
         chara_id_list.remove(jinyongid)
     for i in range(0,num):
@@ -341,7 +341,7 @@ async def prop_use(bot, ev: Event):
     pokemon_info = await get_pokeon_info(uid, bianhao)
     if pokemon_info == 0:
         return await bot.send(
-            f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
+            f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
 
     propkeylist = proplist.keys()
@@ -370,12 +370,12 @@ async def prop_use(bot, ev: Event):
     if propinfo['use'][0] == '性格':
         if pokemon_info[13] == propinfo['use'][1]:
             return await bot.send(
-                f'您的{POKEMON_LIST[bianhao][0]}的性格已经是{pokemon_info[13]}了，使用失败。',
+                f'您的{CHARA_NAME[bianhao][0]}的性格已经是{pokemon_info[13]}了，使用失败。',
                 at_sender=True,
             )
         POKE._add_pokemon_xingge(uid, bianhao, propinfo['use'][1])
         await POKE._add_pokemon_prop(uid, propname, -1)
-        mes = f"使用成功！您的{POKEMON_LIST[bianhao][0]}的性格变成了{propinfo['use'][1]}。"
+        mes = f"使用成功！您的{CHARA_NAME[bianhao][0]}的性格变成了{propinfo['use'][1]}。"
         await bot.send_option(mes, buttons)
     elif propinfo['use'][0] == '努力':
         if propinfo['use'][2] > 0:
@@ -389,13 +389,13 @@ async def prop_use(bot, ev: Event):
             )
             if nl_z >= 510:
                 return await bot.send(
-                    f'使用失败,{POKEMON_LIST[bianhao][0]}的基础值已经无法再提升了。',
+                    f'使用失败,{CHARA_NAME[bianhao][0]}的基础值已经无法再提升了。',
                     at_sender=True,
                 )
             nl_index = int(propinfo['use'][1] + 7)
             if pokemon_info[nl_index] >= 252:
                 return await bot.send(
-                    f"使用失败,{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值已经无法再提升了。",
+                    f"使用失败,{CHARA_NAME[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值已经无法再提升了。",
                     at_sender=True,
                 )
             add_num = propnum * propinfo['use'][2]
@@ -426,14 +426,14 @@ async def prop_use(bot, ev: Event):
                 pokemon_info[11],
                 pokemon_info[12],
             )
-            mes = f"使用成功！{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值提升了{change_nl_num}点"
+            mes = f"使用成功！{CHARA_NAME[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值提升了{change_nl_num}点"
             await POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
             await bot.send_option(mes, buttons)
         else:
             nl_index = int(propinfo['use'][1] + 7)
             if pokemon_info[nl_index] == 0:
                 return await bot.send(
-                    f"使用失败,{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值已经无法再降低了。",
+                    f"使用失败,{CHARA_NAME[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值已经无法再降低了。",
                     at_sender=True,
                 )
             add_num = 0 - propnum * propinfo['use'][2]
@@ -460,14 +460,14 @@ async def prop_use(bot, ev: Event):
                 pokemon_info[11],
                 pokemon_info[12],
             )
-            mes = f"使用成功！{POKEMON_LIST[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值降低了{change_nl_num}点"
+            mes = f"使用成功！{CHARA_NAME[bianhao][0]}的{zhongzu_list[propinfo['use'][1]][1]}基础值降低了{change_nl_num}点"
             await POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
             await bot.send_option(mes, buttons)
     elif propinfo['use'][0] == '升级':
         if propinfo['use'][1] == 'level':
             if pokemon_info[0] == 100:
                 return await bot.send(
-                    f'使用失败,{POKEMON_LIST[bianhao][0]}的等级已经无法再提升了。',
+                    f'使用失败,{CHARA_NAME[bianhao][0]}的等级已经无法再提升了。',
                     at_sender=True,
                 )
             add_level = propinfo['use'][2] * propnum
@@ -482,7 +482,7 @@ async def prop_use(bot, ev: Event):
             now_level = pokemon_info[0] + add_level
             POKE._add_pokemon_level(uid, bianhao, now_level, 0)
             mes = (
-                f'使用成功！{POKEMON_LIST[bianhao][0]}的等级提升了{add_level}'
+                f'使用成功！{CHARA_NAME[bianhao][0]}的等级提升了{add_level}'
             )
             await POKE._add_pokemon_prop(uid, propname, 0 - use_peop_num)
             await bot.send_option(mes, buttons)
@@ -497,7 +497,7 @@ async def prop_use(bot, ev: Event):
             POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
             await POKE._add_pokemon_prop(uid, '金色王冠', -1)
             mes = (
-                f'使用成功！{POKEMON_LIST[bianhao][0]}的个体值提升到极限了'
+                f'使用成功！{CHARA_NAME[bianhao][0]}的个体值提升到极限了'
             )
             await bot.send(mes)
         if propname == '银色王冠':
@@ -522,7 +522,7 @@ async def prop_use(bot, ev: Event):
             await POKE._add_pokemon_prop(uid, '银色王冠', -1)
             POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
             mes = (
-                f'使用成功！{POKEMON_LIST[bianhao][0]}的{up_name}个体值提升到极限了'
+                f'使用成功！{CHARA_NAME[bianhao][0]}的{up_name}个体值提升到极限了'
             )
             await bot.send(mes)
 
@@ -648,7 +648,7 @@ async def exchange_down_prop(bot, ev: Event):
         mes = f'您下架了{exchange_info[1]}{exchange_info[0]}x{exchange_info[2]}。'
     if exchange_info[0] == '精灵蛋':
         await POKE._add_pokemon_egg(uid, int(exchange_info[1]), int(exchange_info[2]))
-        mes = f'您下架了{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}x{exchange_info[2]}。'
+        mes = f'您下架了{CHARA_NAME[int(exchange_info[1])][0]}{exchange_info[0]}x{exchange_info[2]}。'
     await POKE.delete_exchange(exchangeid)
     buttons = [
         Button('💰寄售商品','交易所上架', '💰寄售商品', action=2),
@@ -731,7 +731,7 @@ async def show_exchange_list(bot, ev: Event):
         mes += f'\n{exchangeinfo[0]} {exchangeinfo[1]}'
         propname = exchangeinfo[2]
         if exchangeinfo[1] == '精灵蛋':
-            propname = POKEMON_LIST[int(exchangeinfo[2])][0]
+            propname = CHARA_NAME[int(exchangeinfo[2])][0]
         mes += f' {propname} {exchangeinfo[3]} {exchangeinfo[4]}'
     if page_num > 1:
         mes += f'\n第({page + 1}/{page_num})页'
@@ -766,7 +766,7 @@ async def exchange_buy_prop(bot, ev: Event):
     my_score = SCORE.get_score(uid)
     if need_score > my_score:
         if exchange_info[0] == '精灵蛋':
-            return await bot.send(f'购买{buy_num}件{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}需要金币{need_score}，您的金币不足', at_sender=True)
+            return await bot.send(f'购买{buy_num}件{CHARA_NAME[int(exchange_info[1])][0]}{exchange_info[0]}需要金币{need_score}，您的金币不足', at_sender=True)
         if exchange_info[0] == '道具':
             return await bot.send(f'购买{buy_num}件{exchange_info[1]}需要金币{need_score}，您的金币不足', at_sender=True)
     if buy_num == int(exchange_info[2]):
@@ -778,7 +778,7 @@ async def exchange_buy_prop(bot, ev: Event):
         mes = f'您花费了{need_score}金币，成功购买了{exchange_info[1]}{exchange_info[0]}x{buy_num}。'
     if exchange_info[0] == '精灵蛋':
         await POKE._add_pokemon_egg(uid, int(exchange_info[1]), buy_num)
-        mes = f'您花费了{need_score}金币，成功购买了{POKEMON_LIST[int(exchange_info[1])][0]}{exchange_info[0]}x{buy_num}。'
+        mes = f'您花费了{need_score}金币，成功购买了{CHARA_NAME[int(exchange_info[1])][0]}{exchange_info[0]}x{buy_num}。'
     SCORE.update_score(uid, 0 - need_score)
     get_score = math.ceil(need_score * 0.9)
     SCORE.update_score(exchange_info[3], get_score)
@@ -820,7 +820,7 @@ async def show_exchange_list_my(bot, ev: Event):
         mes += f'\n{exchangeinfo[0]} {exchangeinfo[1]}'
         propname = exchangeinfo[2]
         if exchangeinfo[1] == '精灵蛋':
-            propname = POKEMON_LIST[int(exchangeinfo[2])][0]
+            propname = CHARA_NAME[int(exchangeinfo[2])][0]
         mes += f' {propname} {exchangeinfo[3]} {exchangeinfo[4]}'
     if page_num > 1:
         mes += f'\n第({page + 1}/{page_num})页'
