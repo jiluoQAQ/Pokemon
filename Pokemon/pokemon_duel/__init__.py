@@ -856,20 +856,13 @@ async def give_prop_pokemon_egg(bot, ev: Event):
         sname = smapinfo[2]
     else:
         if proptype in ['金币','金钱']:
-            if len(args) == 2:
-                snickname = args[1]
-            else:
-                snickname = args[2]
-        else:
             if len(args) < 3:
-                return await bot.send(
-                    '请输入赠送训练家的昵称或at该名训练家。',
-                    at_sender=True,
-                )
-            if len(args) == 3:
-                snickname = args[2]
-            else:
-                snickname = args[3]
+                return await bot.send('请输入正确的指令 赠送物品[金币/金钱][数量][昵称/at]。', at_sender=True)
+            snickname = args[2]
+        else:
+            if len(args) < 4:
+                return await bot.send('请输入正确的指令 赠送物品[道具/精灵蛋/学习机][名称][数量][昵称/at]。',at_sender=True)
+            snickname = args[3]
         smapinfo = POKE._get_map_info_nickname(snickname)
         if smapinfo[2] == 0:
             return await bot.send(
