@@ -641,6 +641,8 @@ async def my_pokemon_egg_use(bot, ev: Event):
             eggnum = egg_num
     else:
         eggnum = egg_num
+    if eggnum < 1:
+        return await bot.send('请输入正确的丢弃数量', at_sender=True)
     await POKE._add_pokemon_egg(uid, bianhao, 0 - eggnum)
     mes = f'成功！您丢弃了{pokename}精灵蛋x{eggnum}'
     buttons = [

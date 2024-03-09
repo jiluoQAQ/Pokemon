@@ -367,7 +367,8 @@ async def prop_use(bot, ev: Event):
         return await bot.send(
             f'您的{propname}数量小于{propnum}，使用失败。', at_sender=True
         )
-    
+    if propnum < 1:
+        return await bot.send('请输入正确的道具数量', at_sender=True)
     buttons = [
         Button('📖精灵状态', f'精灵状态{pokename}', action=1),
     ]
@@ -764,6 +765,8 @@ async def exchange_buy_prop(bot, ev: Event):
         buy_num = int(args[1])
     else:
         buy_num = 1
+    if buy_num < 1:
+        return await bot.send('请输入正确的道具数量', at_sender=True)
     if buy_num > int(exchange_info[2]):
         return await bot.send(f'寄售中物品数量不足{buy_num}，请重新输入数量', at_sender=True)
     need_score = buy_num * int(exchange_info[4])
