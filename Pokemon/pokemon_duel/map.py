@@ -439,7 +439,7 @@ async def get_ts_info_pic(bot, ev: Event):
                     if chongsheng_num >= 99999:
                         egg_cd_num = int(math.floor(random.uniform(0, 100)))
                         if egg_cd_num <= 50:
-                            await POKE._add_pokemon_egg(uid, 250, 1)
+                            await POKE._add_pokemon_egg(uid, 250, pokemon_num)
                             mes += f'\n您获得了{CHARA_NAME[250][0]}精灵蛋x1'
                         await POKE._new_chongsheng_num(uid,250)
                 egg_num = 0
@@ -708,6 +708,14 @@ async def get_ts_info_wenzi(bot, ev: Event):
                 else:
                     mes += f'\n您打败了{pokename}'
                 egg_num = 0
+                if pokemonid == 22 and '火' in POKEMON_LIST[mypokelist[0]][7]:
+                    chongsheng_num = await POKE.get_chongsheng_num(uid,250)
+                    if chongsheng_num >= 99999:
+                        egg_cd_num = int(math.floor(random.uniform(0, 100)))
+                        if egg_cd_num <= 50:
+                            await POKE._add_pokemon_egg(uid, 250, pokemon_num)
+                            mes += f'\n您获得了{CHARA_NAME[250][0]}精灵蛋x1'
+                        await POKE._new_chongsheng_num(uid,250)
                 for item in range(0,pokemon_num):
                     zs_num = int(math.floor(random.uniform(0, 100)))
                     if zs_num <= WIN_EGG:
