@@ -64,7 +64,8 @@ ts_prop_list = [
     '茄番果',
 ]
 
-sv_pokemon_map = SV('宝可梦探索', priority=5)
+sv_pokemon_map = SV('宝可梦地图', priority=5)
+sv_pokemon_tansuo = SV('宝可梦探索', priority=5)
 sv_pm_config = SV('宝可梦管理', pm=0)
 @sv_pokemon_map.on_fullmatch(['大量出现信息'])
 async def get_day_pokemon_refresh(bot, ev: Event):
@@ -238,7 +239,7 @@ async def map_work_test(bot, ev: Event):
     else:
         return await bot.send('该区域无法打工，请返回城镇哦', at_sender=True)
 
-@sv_pokemon_map.on_fullmatch(['野外探索'])
+@sv_pokemon_tansuo.on_fullmatch(['野外探索'])
 async def map_ts_test_noauto_use(bot, ev: Event):
     uid = ev.user_id
     last_send_time = time_send.get_user_time(uid)
@@ -787,7 +788,7 @@ async def get_ts_info_wenzi(bot, ev: Event):
                 await bot.send_option(f'您获得了道具[{prop_name}]', buttons)
 
 
-@sv_pokemon_map.on_fullmatch(['野外垂钓'])
+@sv_pokemon_tansuo.on_fullmatch(['野外垂钓'])
 async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
     uid = ev.user_id
     last_send_time = time_send.get_user_time(uid)
@@ -1102,7 +1103,7 @@ async def get_cd_info_wenzi(bot, ev: Event):
             return await bot.send('当前地点无法垂钓', at_sender=True)
 
 
-@sv_pokemon_map.on_prefix(('训练家对战', '训练家挑战', '挑战训练家'))
+@sv_pokemon_tansuo.on_prefix(('训练家对战', '训练家挑战', '挑战训练家'))
 async def pokemon_pk_auto(bot, ev: Event):
     args = ev.text.split()
     if len(args) != 1:

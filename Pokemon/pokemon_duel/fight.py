@@ -34,7 +34,7 @@ with Path.open(Excel_path / 'map.json', encoding='utf-8') as f:
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 
 sv_pokemon_pk = SV('宝可梦对战', priority=5)
-
+sv_pokemon_tansuo = SV('宝可梦探索', priority=5)
 @sv_pokemon_pk.on_fullmatch(['战斗帮助'])
 async def fight_help(bot, ev: Event):
     msg = """
@@ -62,7 +62,7 @@ async def fight_help(bot, ev: Event):
     ]
     await bot.send_option(msg, buttons)
 
-@sv_pokemon_pk.on_fullmatch(['挑战道馆'])
+@sv_pokemon_tansuo.on_fullmatch(['挑战道馆'])
 async def pk_vs_daoguan(bot, ev: Event):
     uid = ev.user_id
 
@@ -243,7 +243,7 @@ async def pk_vs_daoguan(bot, ev: Event):
     await bot.send_option(img_bg, buttons)
 
 
-@sv_pokemon_pk.on_fullmatch(['挑战天王'])
+@sv_pokemon_tansuo.on_fullmatch(['挑战天王'])
 async def pk_vs_tianwang(bot, ev: Event):
     uid = ev.user_id
 
@@ -427,7 +427,7 @@ async def pk_vs_tianwang(bot, ev: Event):
     await bot.send_option(img_bg, buttons)
 
 
-@sv_pokemon_pk.on_fullmatch(['挑战四天王冠军'])
+@sv_pokemon_tansuo.on_fullmatch(['挑战四天王冠军'])
 async def pk_vs_guanjun(bot, ev: Event):
     uid = ev.user_id
 
