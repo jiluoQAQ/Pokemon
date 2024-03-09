@@ -176,6 +176,8 @@ async def buy_random_egg(bot, ev: Event):
         num = 1
     else:
         num = int(args[0])
+    if num < 1:
+        return await bot.send('请输入正确的数量', at_sender=True)
     uid = ev.user_id
     if not daily_random_egg.check(uid):
         return await bot.send(
