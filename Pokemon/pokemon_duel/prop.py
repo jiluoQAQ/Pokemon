@@ -240,7 +240,8 @@ async def prop_buy(bot, ev: Event):
     else:
         propnum = 1
     uid = ev.user_id
-
+    if propnum < 1:
+        return await bot.send('请输入正确的道具数量', at_sender=True)
     mychenghao, huizhang = get_chenghao(uid)
     try:
         propinfo = proplist[propname]
@@ -285,6 +286,8 @@ async def boss_prop_buy(bot, ev: Event):
         propnum = int(args[1])
     else:
         propnum = 1
+    if propnum < 1:
+        return await bot.send('请输入正确的道具数量', at_sender=True)
     uid = ev.user_id
     try:
         propinfo = bossproplist[propname]
