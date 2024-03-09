@@ -1004,6 +1004,19 @@ async def get_pokemon_form_egg(bot, ev: Event):
     ]
     await bot.send_option(mesg, buttons)
 
+@sv_pokemon_duel.on_fullmatch(['形态列表'])
+async def get_pokemon_xingtai_list(bot, ev: Event):
+    mes = '下面为宝可梦可转换的形态:'
+    for pokemonid in CHARA_NAME:
+        if pokemonid > 10000:
+            fpokemonid = int(str(pokemonid)[0:-3])
+            mes += f"\n{CHARA_NAME[fpokemonid][0]}可转换为{CHARA_NAME[pokemonid][0]}"
+    buttons = [
+        Button('🔄形态转换', '形态转换', '🔄形态转换', action=2),
+        Button('🔍︎查看图鉴', '精灵图鉴', '🔍︎查看图鉴', action=2),
+    ]
+    await bot.send_option(mes, buttons)
+
 @sv_pokemon_duel.on_prefix(['形态转换'])
 async def get_pokemon_form_xingtai(bot, ev: Event):
     args = ev.text.split()

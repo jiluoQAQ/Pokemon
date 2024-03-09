@@ -228,16 +228,15 @@ async def map_work_test(bot, ev: Event):
         return await bot.send(
             '今天的打工次数已经超过上限了哦，明天再来吧。', at_sender=True
         )
-    if didianlist[this_map]['type'] == '野外':
-        return await bot.send('野外区域无法打工，请返回城镇哦', at_sender=True)
-
+    
     if didianlist[this_map]['type'] == '城镇':
         get_score = (int(mapinfo[0]) + 1) * 5000
         SCORE.update_score(uid, get_score)
         daily_work_limiter.increase(uid)
         mes = f'您通过打工获得了{get_score}金钱'
         await bot.send(mes, at_sender=True)
-
+    else:
+        return await bot.send('该区域无法打工，请返回城镇哦', at_sender=True)
 
 @sv_pokemon_map.on_fullmatch(['野外探索'])
 async def map_ts_test_noauto_use(bot, ev: Event):
@@ -280,9 +279,9 @@ async def get_ts_info_pic(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前所处的地点没有可探索的区域', at_sender=True
         )
 
     mapinfo = POKE._get_map_now(uid)
@@ -652,9 +651,9 @@ async def get_ts_info_wenzi(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前处于的地点没有可探索的区域', at_sender=True
         )
 
     mes = ''
@@ -821,9 +820,9 @@ async def get_cd_info_pic(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前所处的地点没有可探索的区域', at_sender=True
         )
 
     mapinfo = POKE._get_map_now(uid)
@@ -1024,9 +1023,9 @@ async def get_cd_info_wenzi(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前所处的地点没有可探索的区域', at_sender=True
         )
     buttons = [
         Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1),
@@ -1351,6 +1350,10 @@ async def map_info_now(bot, ev: Event):
         mychenghao, huizhang = get_chenghao(uid)
         buttons.append(Button('打工', '打工', '打工', action=1))
         mes += f'根据您当前的训练家等级-{mychenghao}\n您打工可获得{get_score}金币\n'
+    if didianlist[this_map]['type'] == '建筑':
+        buttons.append(Button('首领信息', '首领信息', '首领信息', action=1))
+        buttons.append(Button('首领挑战', '首领挑战', '首领挑战', action=1))
+        mes += f"{didianlist[this_map]['content']}\n"
     if didianlist[this_map]['type'] == '野外':
         buttons.append(Button('🏝野外探索', '野外探索', '🏝野外探索', action=1))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
@@ -1406,6 +1409,13 @@ async def show_map_info_now(bot, ev: Event):
                     mes += f" 成为冠军后"
                 else:
                     mes += f" 需求徽章{didianinfo['need']}"
+            elif didianinfo['type'] == '建筑':
+                mes += f"\n{didianname} {didianinfo['type']}"
+                if int(didianinfo['need']) >= 10:
+                    mes += f" 成为冠军后"
+                else:
+                    mes += f" 需求徽章{didianinfo['need']}"
+                mes += f"\n{didianinfo['content']}"
             else:
                 mes += f"\n{didianname} Lv.{didianinfo['level'][0]}~{didianinfo['level'][1]}"
                 if int(didianinfo['need']) >= 10:
