@@ -78,6 +78,10 @@ async def pokemon_help(bot, ev: Event):
 async def pokemon_gonggao(bot, ev: Event):
     msg = """
        宝可梦小游戏更新公告：
+2024-3-9
+1.添加阿罗拉地区
+2024-3-8
+1.添加宝可梦的形态转换
 2024-3-3
 1.添加卡洛斯地区
 2024-3-2
@@ -101,12 +105,6 @@ async def pokemon_gonggao(bot, ev: Event):
 3.修改打工获取的金币为根据自身训练家等级获取
 4.修改连续战队只获取一次努力值的bug
 5.消息发送方式【图片/文字】可以指令替换
-2024-2-20
-1.添加周本boss，暂时只加了属性查看
-2.部分技能名称优化
-2024-2-19
-1.神兽个体值修改，必定为3V及以上
-2.发放奖励、赠送道具添加给予对象的昵称识别
  """
     await bot.send(msg, at_sender=True)
     
@@ -1052,6 +1050,16 @@ async def get_pokemon_form_xingtai(bot, ev: Event):
         await POKE.update_pokemon_star(uid, newbianhao, startype)
         await POKE._delete_poke_star_bianhao(uid, oldbianhao)
         POKE._add_pokemon_id(uid, oldbianhao, newbianhao)
+        my_team = await POKE.get_pokemon_group(uid)
+        pokemon_list = my_team.split(',')
+        if str(oldbianhao) in pokemon_list:
+            team_list = []
+            for pokeid in pokemon_list:
+                if int(pokeid) == int(oldbianhao):
+                    pokeid = newbianhao
+                team_list.append(str(pokeid))
+            pokemon_str = ','.join(team_list)
+            await POKE._add_pokemon_group(uid, pokemon_str)
         mes = f'您消耗了50000金币,您的{oldpokename}变成了{newpokename}'
         buttons = [
             Button('📖精灵状态', f'精灵状态{newpokename}', '📖精灵状态', action=1),
