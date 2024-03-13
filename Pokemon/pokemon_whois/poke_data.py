@@ -781,7 +781,7 @@ CHARA_NAME = {
     775: ['树枕尾熊', 'Komala'],
     776: ['爆焰龟兽', 'Turtonator'],
     777: ['托戈德玛尔', 'Togedemaru'],
-    778: ['谜拟Ｑ', 'Mimikyu'],
+    778: ['谜拟丘', 'Mimikyu'],
     779: ['磨牙彩皮鱼', 'Bruxish'],
     780: ['老翁龙', 'Drampa'],
     781: ['破破舵轮', 'Dhelmise'],

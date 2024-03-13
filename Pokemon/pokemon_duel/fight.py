@@ -34,7 +34,7 @@ with Path.open(Excel_path / 'map.json', encoding='utf-8') as f:
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 
 sv_pokemon_pk = SV('宝可梦对战', priority=5)
-
+sv_pokemon_tansuo = SV('宝可梦探索', priority=5)
 @sv_pokemon_pk.on_fullmatch(['战斗帮助'])
 async def fight_help(bot, ev: Event):
     msg = """
@@ -62,7 +62,7 @@ async def fight_help(bot, ev: Event):
     ]
     await bot.send_option(msg, buttons)
 
-@sv_pokemon_pk.on_fullmatch(['挑战道馆'])
+@sv_pokemon_tansuo.on_fullmatch(['挑战道馆'])
 async def pk_vs_daoguan(bot, ev: Event):
     uid = ev.user_id
 
@@ -109,7 +109,7 @@ async def pk_vs_daoguan(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
-    name = name[:10]
+    name = str(name)[:10]
 
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -195,6 +195,7 @@ async def pk_vs_daoguan(bot, ev: Event):
         bg_img.paste(di_image, (580, img_height), di_image)
         img_height += 130
         # await bot.send(mes, at_sender=True)
+    new_huizhang = int(huizhang)
     if len(dipokelist) == 0:
         mes += f'\n您打败了{diname}\n'
         img_draw.text(
@@ -231,10 +232,18 @@ async def pk_vs_daoguan(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    if new_huizhang < 8:
+        buttons = [
+            Button('挑战道馆', '挑战道馆', '挑战道馆', action=1),
+        ]
+    else:
+        buttons = [
+            Button('挑战天王', '挑战天王', '挑战天王', action=1),
+        ]
+    await bot.send_option(img_bg, buttons)
 
 
-@sv_pokemon_pk.on_fullmatch(['挑战天王'])
+@sv_pokemon_tansuo.on_fullmatch(['挑战天王'])
 async def pk_vs_tianwang(bot, ev: Event):
     uid = ev.user_id
 
@@ -281,7 +290,7 @@ async def pk_vs_tianwang(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
-    name = name[:10]
+    name = str(name)[:10]
 
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -370,6 +379,7 @@ async def pk_vs_tianwang(bot, ev: Event):
         bg_img.paste(di_image, (580, img_height), di_image)
         img_height += 130
         # await bot.send(mes, at_sender=True)
+    new_huizhang = int(huizhang)
     if len(dipokelist) == 0:
         mes += f'\n您打败了{diname}\n'
         img_draw.text(
@@ -406,10 +416,18 @@ async def pk_vs_tianwang(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    if new_huizhang == 8:
+        buttons = [
+            Button('重新挑战', '挑战天王', '重新挑战', action=1),
+        ]
+    else:
+        buttons = [
+            Button('挑战冠军', '挑战四天王冠军', '挑战冠军', action=1),
+        ]
+    await bot.send_option(img_bg, buttons)
 
 
-@sv_pokemon_pk.on_fullmatch(['挑战四天王冠军'])
+@sv_pokemon_tansuo.on_fullmatch(['挑战四天王冠军'])
 async def pk_vs_guanjun(bot, ev: Event):
     uid = ev.user_id
 
@@ -448,7 +466,7 @@ async def pk_vs_guanjun(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
     mes = ''
-    name = name[:10]
+    name = str(name)[:10]
 
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
@@ -535,6 +553,7 @@ async def pk_vs_guanjun(bot, ev: Event):
         bg_img.paste(di_image, (580, img_height), di_image)
         img_height += 130
         # await bot.send(mes, at_sender=True)
+    new_huizhang = int(mapinfo[0])
     if len(dipokelist) == 0:
         mes += f'\n您打败了{diname}\n'
         img_draw.text(
@@ -571,7 +590,15 @@ async def pk_vs_guanjun(bot, ev: Event):
     img_bg = Image.new('RGB', (700, img_height), (255, 255, 255))
     img_bg.paste(bg_img, (0, 0))
     img_bg = await convert_img(img_bg)
-    await bot.send(img_bg)
+    if new_huizhang == 9:
+        buttons = [
+            Button('重新挑战', '挑战四天王冠军', '重新挑战', action=1),
+        ]
+    else:
+        buttons = [
+            Button('查看名片', '训练家名片', '查看名片', action=1),
+        ]
+    await bot.send_option(img_bg, buttons)
 
 
 @sv_pokemon_pk.on_command(('无级别对战', '无级别战斗', '无级别挑战'))
@@ -703,8 +730,8 @@ async def pokemon_pk_wjb(bot, ev: Event):
     mychenghao, myhuizhang = get_chenghao(uid)
     dichenghao, dihuizhang = get_chenghao(diuid)
 
-    name = name[:10]
-    diname = diname[:10]
+    name = str(name)[:10]
+    diname = str(diname)[:10]
     # 对战
     mes = f'{mychenghao} {name}向{dichenghao} {diname}发起了挑战'
     await bot.send(mes)
@@ -851,8 +878,8 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     mychenghao, myhuizhang = get_chenghao(uid)
     dichenghao, dihuizhang = get_chenghao(diuid)
 
-    name = name[:10]
-    diname = diname[:10]
+    name = str(name)[:10]
+    diname = str(diname)[:10]
     # 对战
     mes = f'{mychenghao} {name}向{dichenghao} {diname}发起了挑战'
     await bot.send(mes)
@@ -963,7 +990,7 @@ async def pokemon_pk_boss_week(bot, ev: Event):
     boss_level = max(40, boss_level)
     mes = f"【首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
     await bot.send(mes)
-    name = name[:10]
+    name = str(name)[:10]
     dipokelist = [bossbianhao,bossbianhao,bossbianhao]
     mypokelist, dipokelist = await fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, name, bossinfo)
     
@@ -1052,7 +1079,7 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
         mypokelist.append(bianhao)
     mes = f"【世界首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
     await bot.send(mes)
-    name = name[:10]
+    name = str(name)[:10]
     shanghai = await fight_boss_sj(bot, ev, uid, mypokelist, name, bossinfo)
     
     old_shanghai = await POKE.get_boss_shanghai(uid, week)

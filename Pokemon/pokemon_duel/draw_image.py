@@ -58,9 +58,9 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
     jinhualist = []
     for pokemonid in POKEMON_LIST:
         if len(POKEMON_LIST[pokemonid]) > 8:
-            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao):
+            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao) and POKEMON_LIST[pokemonid][9] != '-':
                 jinhualist.append(
-                    [POKEMON_LIST[pokemonid][9], POKEMON_LIST[pokemonid][0]]
+                    [POKEMON_LIST[pokemonid][9], CHARA_NAME[pokemonid][0]]
                 )
     if len(jinhualist) > 0:
         bg_height += len(jinhualist) * 150 + 50
@@ -118,9 +118,9 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
         'mm',
     )
     # 画形象
-    icon_src = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
+    icon_src = CHAR_ICON_PATH / f'{CHARA_NAME[bianhao][0]}.png'
     if startype > 0:
-        icon_src = CHAR_ICON_S_PATH / f'{POKEMON_LIST[bianhao][0]}_s.png'
+        icon_src = CHAR_ICON_S_PATH / f'{CHARA_NAME[bianhao][0]}_s.png'
     pokemon_img = (
         Image.open(icon_src)
         .convert('RGBA')
@@ -347,9 +347,9 @@ async def draw_pokemon_info_tj(bianhao):
     jinhualist = []
     for pokemonid in POKEMON_LIST:
         if len(POKEMON_LIST[pokemonid]) > 8:
-            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao):
+            if str(POKEMON_LIST[pokemonid][8]) == str(bianhao) and POKEMON_LIST[pokemonid][9] != '-':
                 jinhualist.append(
-                    [POKEMON_LIST[pokemonid][9], POKEMON_LIST[pokemonid][0]]
+                    [POKEMON_LIST[pokemonid][9], CHARA_NAME[pokemonid][0]]
                 )
     if len(jinhualist) > 0:
         bg_height += len(jinhualist) * 150 + 50
@@ -398,7 +398,7 @@ async def draw_pokemon_info_tj(bianhao):
     )
     # 画形象
     pokemon_img = (
-        Image.open(CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png')
+        Image.open(CHAR_ICON_PATH / f'{CHARA_NAME[bianhao][0]}.png')
         .convert('RGBA')
         .resize((300, 300))
     )

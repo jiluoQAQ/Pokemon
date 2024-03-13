@@ -64,14 +64,15 @@ ts_prop_list = [
     '茄番果',
 ]
 
-sv_pokemon_map = SV('宝可梦探索', priority=5)
+sv_pokemon_map = SV('宝可梦地图', priority=5)
+sv_pokemon_tansuo = SV('宝可梦探索', priority=5)
 sv_pm_config = SV('宝可梦管理', pm=0)
 @sv_pokemon_map.on_fullmatch(['大量出现信息'])
 async def get_day_pokemon_refresh(bot, ev: Event):
     refresh_list = await POKE.get_map_refresh_list()
     mes = "当前大量出现信息"
     for refresh in refresh_list:
-        mes += f'\n{POKEMON_LIST[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
+        mes += f'\n{CHARA_NAME[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]} 大量出现了'
     mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
     buttons = [
         Button('前往', '前往', '前往', action=2),
@@ -118,7 +119,7 @@ async def map_my_group(bot, ev: Event):
         pokemon_info = await get_pokeon_info(uid, bianhao)
         if pokemon_info == 0:
             return await bot.send(
-                f'您还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
+                f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
             )
         if str(bianhao) not in pokemon_list:
             pokemon_list.append(str(bianhao))
@@ -200,7 +201,8 @@ async def update_my_name(bot, ev: Event):
     name = args[0]
     if len(name) > 10:
         return await bot.send('昵称长度不能超过10个字符。', at_sender=True)
-
+    if name.isdigit():
+        return await bot.send('昵称不能为纯数字。', at_sender=True)
     mapinfo = POKE._get_map_info_nickname(name)
     if mapinfo[2] == 0:
         POKE._update_map_name(uid, name)
@@ -227,18 +229,17 @@ async def map_work_test(bot, ev: Event):
         return await bot.send(
             '今天的打工次数已经超过上限了哦，明天再来吧。', at_sender=True
         )
-    if didianlist[this_map]['type'] == '野外':
-        return await bot.send('野外区域无法打工，请返回城镇哦', at_sender=True)
-
+    
     if didianlist[this_map]['type'] == '城镇':
         get_score = (int(mapinfo[0]) + 1) * 5000
         SCORE.update_score(uid, get_score)
         daily_work_limiter.increase(uid)
         mes = f'您通过打工获得了{get_score}金钱'
         await bot.send(mes, at_sender=True)
+    else:
+        return await bot.send('该区域无法打工，请返回城镇哦', at_sender=True)
 
-
-@sv_pokemon_map.on_fullmatch(['野外探索'])
+@sv_pokemon_tansuo.on_fullmatch(['野外探索'])
 async def map_ts_test_noauto_use(bot, ev: Event):
     uid = ev.user_id
     last_send_time = time_send.get_user_time(uid)
@@ -279,9 +280,9 @@ async def get_ts_info_pic(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前所处的地点没有可探索的区域', at_sender=True
         )
 
     mapinfo = POKE._get_map_now(uid)
@@ -296,7 +297,7 @@ async def get_ts_info_pic(bot, ev: Event):
     buttons = [
         Button('🏝️野外探索', '野外探索', '🏝️野外探索', action=1),
     ]
-    name = name[:10]
+    name = str(name)[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
     bg_img.paste(vs_img, (300, 12), vs_img)
@@ -439,7 +440,7 @@ async def get_ts_info_pic(bot, ev: Event):
                     if chongsheng_num >= 99999:
                         egg_cd_num = int(math.floor(random.uniform(0, 100)))
                         if egg_cd_num <= 50:
-                            await POKE._add_pokemon_egg(uid, 250, 1)
+                            await POKE._add_pokemon_egg(uid, 250, pokemon_num)
                             mes += f'\n您获得了{CHARA_NAME[250][0]}精灵蛋x1'
                         await POKE._new_chongsheng_num(uid,250)
                 egg_num = 0
@@ -651,9 +652,9 @@ async def get_ts_info_wenzi(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前处于的地点没有可探索的区域', at_sender=True
         )
 
     mes = ''
@@ -708,6 +709,14 @@ async def get_ts_info_wenzi(bot, ev: Event):
                 else:
                     mes += f'\n您打败了{pokename}'
                 egg_num = 0
+                if pokemonid == 22 and '火' in POKEMON_LIST[mypokelist[0]][7]:
+                    chongsheng_num = await POKE.get_chongsheng_num(uid,250)
+                    if chongsheng_num >= 99999:
+                        egg_cd_num = int(math.floor(random.uniform(0, 100)))
+                        if egg_cd_num <= 50:
+                            await POKE._add_pokemon_egg(uid, 250, pokemon_num)
+                            mes += f'\n您获得了{CHARA_NAME[250][0]}精灵蛋x1'
+                        await POKE._new_chongsheng_num(uid,250)
                 for item in range(0,pokemon_num):
                     zs_num = int(math.floor(random.uniform(0, 100)))
                     if zs_num <= WIN_EGG:
@@ -779,7 +788,7 @@ async def get_ts_info_wenzi(bot, ev: Event):
                 await bot.send_option(f'您获得了道具[{prop_name}]', buttons)
 
 
-@sv_pokemon_map.on_fullmatch(['野外垂钓'])
+@sv_pokemon_tansuo.on_fullmatch(['野外垂钓'])
 async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
     uid = ev.user_id
     last_send_time = time_send.get_user_time(uid)
@@ -820,9 +829,9 @@ async def get_cd_info_pic(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前所处的地点没有可探索的区域', at_sender=True
         )
 
     mapinfo = POKE._get_map_now(uid)
@@ -837,7 +846,7 @@ async def get_cd_info_pic(bot, ev: Event):
     buttons = [
         Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1),
     ]
-    name = name[:10]
+    name = str(name)[:10]
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
     vs_img = Image.open(TEXT_PATH / 'vs.png').convert('RGBA').resize((100, 89))
     bg_img.paste(vs_img, (300, 12), vs_img)
@@ -1023,9 +1032,9 @@ async def get_cd_info_wenzi(bot, ev: Event):
     for bianhao in pokemon_team:
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
-    if didianlist[this_map]['type'] == '城镇':
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
         return await bot.send(
-            '您当前处于城镇中没有可探索的区域', at_sender=True
+            '您当前所处的地点没有可探索的区域', at_sender=True
         )
     buttons = [
         Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1),
@@ -1094,7 +1103,7 @@ async def get_cd_info_wenzi(bot, ev: Event):
             return await bot.send('当前地点无法垂钓', at_sender=True)
 
 
-@sv_pokemon_map.on_prefix(('训练家对战', '训练家挑战', '挑战训练家'))
+@sv_pokemon_tansuo.on_prefix(('训练家对战', '训练家挑战', '挑战训练家'))
 async def pokemon_pk_auto(bot, ev: Event):
     args = ev.text.split()
     if len(args) != 1:
@@ -1172,8 +1181,8 @@ async def pokemon_pk_auto(bot, ev: Event):
         bianhao = int(bianhao)
         dipokelist.append(bianhao)
 
-    name = name[:10]
-    diname = diname[:10]
+    name = str(name)[:10]
+    diname = str(diname)[:10]
     # 对战
     mes = ''
     bg_img = Image.open(TEXT_PATH / 'duel_bg.jpg')
@@ -1350,6 +1359,10 @@ async def map_info_now(bot, ev: Event):
         mychenghao, huizhang = get_chenghao(uid)
         buttons.append(Button('打工', '打工', '打工', action=1))
         mes += f'根据您当前的训练家等级-{mychenghao}\n您打工可获得{get_score}金币\n'
+    if didianlist[this_map]['type'] == '建筑':
+        buttons.append(Button('首领信息', '首领信息', '首领信息', action=1))
+        buttons.append(Button('首领挑战', '首领挑战', '首领挑战', action=1))
+        mes += f"{didianlist[this_map]['content']}\n"
     if didianlist[this_map]['type'] == '野外':
         buttons.append(Button('🏝野外探索', '野外探索', '🏝野外探索', action=1))
         name_str = get_pokemon_name_list(didianlist[this_map]['pokemon'])
@@ -1405,6 +1418,13 @@ async def show_map_info_now(bot, ev: Event):
                     mes += f" 成为冠军后"
                 else:
                     mes += f" 需求徽章{didianinfo['need']}"
+            elif didianinfo['type'] == '建筑':
+                mes += f"\n{didianname} {didianinfo['type']}"
+                if int(didianinfo['need']) >= 10:
+                    mes += f" 成为冠军后"
+                else:
+                    mes += f" 需求徽章{didianinfo['need']}"
+                mes += f"\n{didianinfo['content']}"
             else:
                 mes += f"\n{didianname} Lv.{didianinfo['level'][0]}~{didianinfo['level'][1]}"
                 if int(didianinfo['need']) >= 10:
@@ -1541,7 +1561,7 @@ async def new_pokemom_show(bot, ev: Event):
                 pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
                 if pokemon_zz <= zx_max:
                     await POKE.update_map_refresh(diqu,didianname,pokeminid)
-                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {CHARA_NAME[pokeminid][0]}"
                     find_flag = 1
     buttons = [
         Button('前往', '前往', action=2),
@@ -1567,38 +1587,23 @@ async def give_prop_pokemon_info(bot, ev: Event):
         sname = smapinfo[2]
     else:
         if proptype in ['金币','金钱']:
-            if len(args) == 2:
-                snickname = args[1]
-            else:
-                snickname = args[2]
-        else:
             if len(args) < 3:
-                return await bot.send(
-                    '请输入赠送训练家的昵称或at该名训练家。',
-                    at_sender=True,
-                )
-            if len(args) == 3:
-                snickname = args[2]
-            else:
-                snickname = args[3]
+                return await bot.send('请输入正确的指令 发放奖励[金币/金钱][数量][昵称/at]。', at_sender=True)
+            snickname = args[2]
+        else:
+            if len(args) < 4:
+                return await bot.send('请输入正确的指令 发放奖励[道具/精灵蛋/学习机][名称][数量][昵称/at]。',at_sender=True)
+            snickname = args[3]
         smapinfo = POKE._get_map_info_nickname(snickname)
         if smapinfo[2] == 0:
-            return await bot.send(
-                '没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',
-                at_sender=True,
-            )
+            return await bot.send('没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',at_sender=True)
         suid = smapinfo[2]
         sname = snickname
     propname = args[1]
     if len(args) >= 3 and proptype in ['道具', '精灵蛋', '宝可梦蛋', '蛋', '学习机']:
-        if args[2].isdigit():
-            propnum = int(args[2])
-        else:
-            propnum = 1
+        propnum = int(args[2])
     else:
         propnum = 1
-    if propnum < 1:
-        return await bot.send('赠送物品的数量需大于1。', at_sender=True)
     if proptype == '金币' or proptype == '金钱':
         propnum = int(args[1])
         SCORE.update_score(suid, propnum)
@@ -1707,7 +1712,7 @@ async def get_my_poke_info_sv(bot, ev: Event):
     pokemon_info = await get_pokeon_info(uid, bianhao)
     if pokemon_info == 0:
         return await bot.send(
-            f'当前用户还没有{POKEMON_LIST[bianhao][0]}。', at_sender=True
+            f'当前用户还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
     im, jinhualist = await draw_pokemon_info(uid, pokemon_info, bianhao)
     await bot.send(im)
@@ -1789,7 +1794,7 @@ async def refresh_pokemon_day():
                 pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
                 if pokemon_zz <= zx_max:
                     await POKE.update_map_refresh(diqu,didianname,pokeminid)
-                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {POKEMON_LIST[pokeminid][0]}"
+                    mes += f"\n{diqu}地区-{didianname} 出现了大量的 {CHARA_NAME[pokeminid][0]}"
                     find_flag = 1
     refresh_send_list = await POKE.get_refresh_send_list()
     for refresh in refresh_send_list:

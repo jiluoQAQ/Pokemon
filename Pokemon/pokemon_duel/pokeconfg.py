@@ -30,6 +30,7 @@ SCORE = SCORE_DB()
 FILE_PATH = os.path.dirname(__file__)
 black_color = (0, 0, 0)
 TEXT_PATH = Path(__file__).parent / 'texture2D'
+pokemon_id_keys = list(POKEMON_LIST.keys())
 
 Excel_path = Path(__file__).parent
 with Path.open(Excel_path / 'prop.json', encoding='utf-8') as f:
@@ -190,7 +191,7 @@ def get_pokeon_info_sj(bianhao, level=100):
 
 # 获取宝可梦信息
 async def get_pokeon_info(uid, bianhao):
-    pokemon_info = POKE._get_pokemon_info(uid, bianhao)
+    pokemon_info = await POKE._get_pokemon_info(uid, bianhao)
     return pokemon_info
 
 
@@ -757,13 +758,19 @@ async def get_pokemon_eggid(pokemonid):
     find_flag = 0
     kidid = 0
     while find_flag == 0:
-        zhongzu = POKEMON_LIST[pokemonid]
-        if zhongzu[8] == '-':
+        if pokemonid in pokemon_id_keys:
+            zhongzu = POKEMON_LIST[pokemonid]
+            if zhongzu[8] == '-':
+                kidid = pokemonid
+                find_flag = 1
+            else:
+                pokemonid = int(zhongzu[8])
+        else:
             kidid = pokemonid
             find_flag = 1
-        else:
-            pokemonid = int(zhongzu[8])
-    return kidid
+    if kidid > 10000:
+        kidid = str(kidid)[0:-3]
+    return int(kidid)
 
 async def get_chushou_flag(zhuangtai):
     chushou = 1
@@ -1253,12 +1260,12 @@ async def pokemon_fight_s(
     fight_flag = 0
     mesg = ''
     my_pokemon_img = (
-        Image.open(CHAR_ICON_PATH / f'{myinfo[0]}.png')
+        Image.open(CHAR_ICON_PATH / f'{CHARA_NAME[myinfo[18]][0]}.png')
         .convert('RGBA')
         .resize((80, 80))
     )
     di_pokemon_img = (
-        Image.open(CHAR_ICON_PATH / f'{diinfo[0]}.png')
+        Image.open(CHAR_ICON_PATH / f'{CHARA_NAME[diinfo[18]][0]}.png')
         .convert('RGBA')
         .resize((80, 80))
     )
@@ -2883,6 +2890,7 @@ async def new_pokemon_info(pokemonid, pokemon_info, level=0):
     for num in range(1, 9):
         pokemoninfo.append(0)
     pokemoninfo.append(pokemonshux[0])
+    pokemoninfo.append(pokemonid)
     return pokemoninfo
 
 async def new_pokemon_info_boss(pokemonid, pokemon_info, boss_num):
@@ -2897,6 +2905,7 @@ async def new_pokemon_info_boss(pokemonid, pokemon_info, boss_num):
     for num in range(1, 9):
         pokemoninfo.append(0)
     pokemoninfo.append(pokemonshux[0])
+    pokemoninfo.append(pokemonid)
     return pokemoninfo
 
 async def new_pokemon_info_boss_sj(pokemonid, pokemon_info, boss_num):
@@ -2911,6 +2920,7 @@ async def new_pokemon_info_boss_sj(pokemonid, pokemon_info, boss_num):
     for num in range(1, 9):
         pokemoninfo.append(0)
     pokemoninfo.append(pokemonshux[0])
+    pokemoninfo.append(pokemonid)
     return pokemoninfo
 
 def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
@@ -3308,9 +3318,9 @@ async def fight_pk_s(
         await bot.send(mes)
 
         mes = f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[bianhao1][0]} Lv.{myinfo[2]}'
-        img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao1][0]}.png'
+        img = CHAR_ICON_PATH / f'{CHARA_NAME[bianhao1][0]}.png'
         if mystartype > 0:
-            img = CHAR_ICON_S_PATH / f'{POKEMON_LIST[bianhao1][0]}_s.png'
+            img = CHAR_ICON_S_PATH / f'{CHARA_NAME[bianhao1][0]}_s.png'
         img = await convert_img(img)
         if ev.bot_id == 'qqgroup':
             await bot.send(mes)
@@ -3321,9 +3331,9 @@ async def fight_pk_s(
             )
 
         mes = f'{diname}派出了精灵\n{starlist[distartype]}{POKEMON_LIST[bianhao2][0]} Lv.{diinfo[2]}'
-        img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao2][0]}.png'
+        img = CHAR_ICON_PATH / f'{CHARA_NAME[bianhao2][0]}.png'
         if distartype > 0:
-            img = CHAR_ICON_S_PATH / f'{POKEMON_LIST[bianhao2][0]}_s.png'
+            img = CHAR_ICON_S_PATH / f'{CHARA_NAME[bianhao2][0]}_s.png'
         img = await convert_img(img)
         if ev.bot_id == 'qqgroup':
             await bot.send(mes)
@@ -3834,7 +3844,7 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
     boss_hp = 0
     while len(mypokelist) > 0 and boss_num < 30:
         mes = f'第{changci}场\n'
-        mes += f"{myname}剩余精灵{len(mypokelist)}只\n【世界首领】{POKEMON_LIST[bossinfo['bossid']][0]}序列{boss_num + 1}\n"
+        mes += f"{myname}剩余精灵{len(mypokelist)}只\n【世界首领】{CHARA_NAME[bossinfo['bossid']][0]}序列{boss_num + 1}\n"
         changci += 1
         if len(myinfo) == 0:
             bianhao1 = mypokelist[0]
