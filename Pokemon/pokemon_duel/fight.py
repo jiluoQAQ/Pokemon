@@ -736,9 +736,12 @@ async def pokemon_pk_wjb(bot, ev: Event):
     mes = f'{mychenghao} {name}向{dichenghao} {diname}发起了挑战'
     await bot.send(mes)
 
-    mypokelist, dipokelist = await fight_pk_s(
-        bot, ev, uid, diuid, mypokelist, dipokelist, name, diname
-    )
+    try:
+        mypokelist, dipokelist = await fight_pk_s(
+            bot, ev, uid, diuid, mypokelist, dipokelist, name, diname
+        )
+    except asyncio.TimeoutError:
+        return await bot.send("超时已自动取消")
 
     if len(mypokelist) == 0:
         mes = f'{diname}打败了{name}，获得了对战的胜利'
@@ -884,9 +887,12 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     mes = f'{mychenghao} {name}向{dichenghao} {diname}发起了挑战'
     await bot.send(mes)
 
-    mypokelist, dipokelist = await fight_pk_s(
-        bot, ev, uid, diuid, mypokelist, dipokelist, name, diname, 50
-    )
+    try:
+        mypokelist, dipokelist = await fight_pk_s(
+            bot, ev, uid, diuid, mypokelist, dipokelist, name, diname, 50
+        )
+    except asyncio.TimeoutError:
+        return await bot.send("超时已自动取消")
 
     if len(mypokelist) == 0:
         mes = f'{diname}打败了{name}，获得了对战的胜利'
@@ -992,8 +998,11 @@ async def pokemon_pk_boss_week(bot, ev: Event):
     await bot.send(mes)
     name = str(name)[:10]
     dipokelist = [bossbianhao,bossbianhao,bossbianhao]
-    mypokelist, dipokelist = await fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, name, bossinfo)
-    
+    try:
+        mypokelist, dipokelist = await fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, name, bossinfo)
+    except asyncio.TimeoutError:
+        return await bot.send("超时已自动取消")
+        
     if len(mypokelist) == 0:
         mes = f"您被【首领】{POKEMON_LIST[bossinfo['bossid']][0]}击败了,眼前一黑"
     
@@ -1080,8 +1089,10 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
     mes = f"【世界首领】{POKEMON_LIST[bossinfo['bossid']][0]}进入了战斗"
     await bot.send(mes)
     name = str(name)[:10]
-    shanghai = await fight_boss_sj(bot, ev, uid, mypokelist, name, bossinfo)
-    
+    try:
+        shanghai = await fight_boss_sj(bot, ev, uid, mypokelist, name, bossinfo)
+    except asyncio.TimeoutError:
+            return await bot.send("超时已自动取消")
     old_shanghai = await POKE.get_boss_shanghai(uid, week)
     mes = f"【世界首领】挑战完成，本次造成伤害{shanghai}"
     if int(shanghai) > int(old_shanghai):
