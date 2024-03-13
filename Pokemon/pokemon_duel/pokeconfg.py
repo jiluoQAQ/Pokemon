@@ -1851,37 +1851,33 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         jineng1_use = 0
         puthmy = 0
         runmynum = 0
-        try:
-            async with timeout(FIGHT_TIME):
-                while jineng1_use == 0:
-                    if runmynum == 0:
-                        myresp = await bot.receive_resp(
-                            f'{mesg}\n\n{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
-                            myjinengbuttons,
-                            unsuported_platform=True
-                        )
-                        if myresp is not None:
-                            mys = myresp.text
-                            uidmy = myresp.user_id
-                            if str(uidmy) == str(uid):
-                                print(mys)
-                                if mys in my_ues_jineng_list:
-                                    jineng1 = mys
-                                    jineng1_use = 1
+
+        async with timeout(FIGHT_TIME):
+            while jineng1_use == 0:
+                if runmynum == 0:
+                    myresp = await bot.receive_resp(
+                        f'{mesg}\n\n{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
+                        myjinengbuttons,
+                        unsuported_platform=True
+                    )
+                    if myresp is not None:
+                        mys = myresp.text
+                        uidmy = myresp.user_id
+                        if str(uidmy) == str(uid):
+                            print(mys)
+                            if mys in my_ues_jineng_list:
+                                jineng1 = mys
+                                jineng1_use = 1
                         runmynum = 1
-                    else:
-                        myresp = await bot.receive_mutiply_resp()
-                        if myresp is not None:
-                            mys = myresp.text
-                            uidmy = myresp.user_id
-                            if str(uidmy) == str(uid):
-                                if mys in my_ues_jineng_list:
-                                    jineng1 = mys
-                                    jineng1_use = 1
-        except asyncio.TimeoutError:
-            jineng1 = now_use_jineng(
-                myinfo, diinfo, my_ues_jineng_list, dijinenglist, changdi
-            )
+                else:
+                    myresp = await bot.receive_mutiply_resp()
+                    if myresp is not None:
+                        mys = myresp.text
+                        uidmy = myresp.user_id
+                        if str(uidmy) == str(uid):
+                            if mys in my_ues_jineng_list:
+                                jineng1 = mys
+                                jineng1_use = 1
         jinenginfo1 = JINENG_LIST[jineng1]
         jineng_use.append(jineng1)
 
@@ -2367,76 +2363,69 @@ async def pokemon_fight_pk(
         jineng1_use = 0
         puthmy = 0
         runmynum = 0
-        try:
-            async with timeout(FIGHT_TIME):
-                while jineng1_use == 0:
-                    if runmynum == 0:
-                        myresp = await bot.receive_resp(
-                            f'{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
-                            myjinengbuttons,
-                            unsuported_platform=True
-                        )
-                        if myresp is not None:
-                            mys = myresp.text
-                            uidmy = myresp.user_id
-                            if str(uidmy) == str(myuid):
-                                if mys in my_ues_jineng_list:
-                                    jineng1 = mys
-                                    await bot.send(f'{myname}已选择完成')
-                                    jineng1_use = 1
-                        runmynum = 1
-                    else:
-                        myresp = await bot.receive_mutiply_resp()
-                        if myresp is not None:
-                            mys = myresp.text
-                            uidmy = myresp.user_id
-                            if str(uidmy) == str(myuid):
-                                if mys in my_ues_jineng_list:
-                                    jineng1 = mys
-                                    await bot.send(f'{myname}已选择完成')
-                                    jineng1_use = 1
-        except asyncio.TimeoutError:
-            jineng1 = now_use_jineng(
-                myinfo, diinfo, my_ues_jineng_list, di_ues_jineng_list, changdi
-            )
+
+        async with timeout(FIGHT_TIME):
+            while jineng1_use == 0:
+                if runmynum == 0:
+                    myresp = await bot.receive_resp(
+                        f'{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
+                        myjinengbuttons,
+                        unsuported_platform=True
+                    )
+                    if myresp is not None:
+                        mys = myresp.text
+                        uidmy = myresp.user_id
+                        if str(uidmy) == str(myuid):
+                            if mys in my_ues_jineng_list:
+                                jineng1 = mys
+                                await bot.send(f'{myname}已选择完成')
+                                jineng1_use = 1
+                    runmynum = 1
+                else:
+                    myresp = await bot.receive_mutiply_resp()
+                    if myresp is not None:
+                        mys = myresp.text
+                        uidmy = myresp.user_id
+                        if str(uidmy) == str(myuid):
+                            if mys in my_ues_jineng_list:
+                                jineng1 = mys
+                                await bot.send(f'{myname}已选择完成')
+                                jineng1_use = 1
+
         jinenginfo1 = JINENG_LIST[jineng1]
         jineng_use1.append(jineng1)
         jineng2_use = 0
         puthdi = 0
         rundinum = 0
-        try:
-            async with timeout(FIGHT_TIME):
-                while jineng2_use == 0:
-                    if rundinum == 0:
-                        diresp = await bot.receive_resp(
-                            f'{diname}请在{FIGHT_TIME}秒内选择一个技能使用!',
-                            dijinengbuttons,
-                            unsuported_platform=True,
-                            is_mutiply=True,
-                        )
-                        rundinum = 1
-                        if diresp is not None:
-                            dis = diresp.text
-                            uiddi = diresp.user_id
-                            if str(uiddi) == str(diuid):
-                                if dis in di_ues_jineng_list:
-                                    jineng2 = dis
-                                    await bot.send(f'{diname}已选择完成')
-                                    jineng2_use = 1
-                    else:
-                        diresp = await bot.receive_mutiply_resp()
-                        if diresp is not None:
-                            dis = diresp.text
-                            uiddi = diresp.user_id
-                            if str(uiddi) == str(diuid):
-                                if dis in di_ues_jineng_list:
-                                    jineng2 = dis
-                                    await bot.send(f'{diname}已选择完成')
-                                    jineng2_use = 1
-        except asyncio.TimeoutError:
-            jineng2 = now_use_jineng(
-                diinfo, myinfo, di_ues_jineng_list, my_ues_jineng_list, changdi
-            )
+
+        async with timeout(FIGHT_TIME):
+            while jineng2_use == 0:
+                if rundinum == 0:
+                    diresp = await bot.receive_resp(
+                        f'{diname}请在{FIGHT_TIME}秒内选择一个技能使用!',
+                        dijinengbuttons,
+                        unsuported_platform=True,
+                        is_mutiply=True,
+                    )
+                    rundinum = 1
+                    if diresp is not None:
+                        dis = diresp.text
+                        uiddi = diresp.user_id
+                        if str(uiddi) == str(diuid):
+                            if dis in di_ues_jineng_list:
+                                jineng2 = dis
+                                await bot.send(f'{diname}已选择完成')
+                                jineng2_use = 1
+                else:
+                    diresp = await bot.receive_mutiply_resp()
+                    if diresp is not None:
+                        dis = diresp.text
+                        uiddi = diresp.user_id
+                        if str(uiddi) == str(diuid):
+                            if dis in di_ues_jineng_list:
+                                jineng2 = dis
+                                await bot.send(f'{diname}已选择完成')
+                                jineng2_use = 1
         jinenginfo2 = JINENG_LIST[jineng2]
         jineng_use2.append(jineng2)
         mesg = mesg + f'\n回合：{shul}\n'
