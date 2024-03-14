@@ -65,9 +65,7 @@ async def add_new_pokemon_jineng(level, bianhao):
 async def get_level_jineng(level, bianhao):
     jinenglist = LEVEL_JINENG_LIST[bianhao]
     kexuelist = []
-    # print(jinenglist)
     for item in jinenglist:
-        # print(item[0])
         if int(level) >= int(item[0]):
             if JINENG_LIST[item[1]][6] != '':
                 kexuelist.append(item[1])
@@ -202,7 +200,6 @@ async def get_pokemon_shuxing(bianhao, pokemon_info, level=0):
     xingge_info = XINGGE_LIST[pokemon_info[13]]
     if level == 0:
         level = int(pokemon_info[0])
-    # print(xingge_info)
     name = zhongzu_info[0]
     HP = math.ceil(
         (
@@ -299,7 +296,6 @@ async def get_pokemon_shuxing_boss(bianhao, pokemon_info, jieduan):
     zhongzu_info = POKEMON_LIST[bianhao]
     xingge_info = XINGGE_LIST[pokemon_info[13]]
     level = int(pokemon_info[0])
-    # print(xingge_info)
     name = zhongzu_info[0]
     HP = math.ceil(
         (
@@ -395,7 +391,6 @@ async def get_pokemon_shuxing_boss_sj(bianhao, pokemon_info, jieduan):
     zhongzu_info = POKEMON_LIST[bianhao]
     xingge_info = XINGGE_LIST[pokemon_info[13]]
     level = int(pokemon_info[0])
-    # print(xingge_info)
     name = zhongzu_info[0]
     HP = math.ceil(
         (
@@ -513,12 +508,10 @@ async def get_pokemon_star(uid):
     await POKE.update_pokemon_starrush(uid, 1)
     starflag = await POKE.get_pokemon_starrush(uid)
     star_num = int(math.floor(random.uniform(0, 40960)))
-    print(star_num)
     startype = 0
     if starflag >= 1024 or star_num <= 10:
         startype = 1
         star_num2 = int(math.floor(random.uniform(0, 160)))
-        print(star_num2)
         if star_num2 <= 10:
             startype = 2
         await POKE.new_pokemon_starrush(uid)
@@ -812,12 +805,10 @@ async def pokemon_fight(
             myinfo, diinfo, myjinenglist, dijinenglist, changdi
         )
         jinenginfo1 = JINENG_LIST[jineng1]
-        # print(jineng1)
         jineng2 = await now_use_jineng(
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
-        # print(jineng2)
 
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
@@ -1228,12 +1219,10 @@ async def pokemon_fight_s(
             myinfo, diinfo, myjinenglist, dijinenglist, changdi
         )
         jinenginfo1 = JINENG_LIST[jineng1]
-        #print(jineng1)
         jineng2 = await now_use_jineng(
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
-        #print(jineng2)
         img_height += 30
         if math.ceil((img_height + 50) / 1280) > bg_num:
             bg_num += 1
@@ -1706,7 +1695,6 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         button_user_input.append(uid)
         for myjn in myjinenglist:
             jn_use_num_my = jineng_use.count(myjn)
-            print(f'{myjn}:{jn_use_num_my}')
             jineng_info1 = JINENG_LIST[myjn]
             myjn_but = f'{myjn}({int(jineng_info1[4])-int(jn_use_num_my)}/{int(jineng_info1[4])})'
             myjn_name = myjn
@@ -1732,7 +1720,6 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             mys = myresp.text
                             uidmy = myresp.user_id
                             if str(uidmy) == str(uid):
-                                print(mys)
                                 if mys in my_ues_jineng_list:
                                     jineng1 = mys
                                     jineng1_use = 1
@@ -2681,7 +2668,6 @@ async def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
     change_nl = min(252, nl_num + pokemon_info[nl_index])
     if change_nl > pokemon_info[nl_index]:
         change_nl_num = change_nl - pokemon_info[nl_index]
-        # print(nl_index)
         pokemon_info = list(pokemon_info)
         pokemon_info[nl_index] = change_nl
 

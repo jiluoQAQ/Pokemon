@@ -203,7 +203,7 @@ async def show_poke_info(bot, ev: Event):
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
-    im, jinhualist = await draw_pokemon_info_tj(bianhao)
+    im, jinhualist = await draw_pokemon_info_tj(bianhao,0)
     
     buttons = []
     for jinhuainfo in jinhualist:
@@ -217,6 +217,29 @@ async def show_poke_info(bot, ev: Event):
         )
     await bot.send_option(im, buttons)
 
+@sv_pokemon_duel.on_command(('闪光图鉴', '闪光宝可梦图鉴'))
+async def show_poke_info_star(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) != 1:
+        return await bot.send('请输入 闪光图鉴+宝可梦名称 中间用空格隔开。', at_sender=True)
+    pokename = args[0]
+    uid = ev.user_id
+    bianhao = await get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    im, jinhualist = await draw_pokemon_info_tj(bianhao,1)
+    
+    buttons = []
+    for jinhuainfo in jinhualist:
+        buttons.append(
+            Button(
+                f'🔍︎{jinhuainfo[1]}',
+                f'闪光图鉴{jinhuainfo[1]}',
+                f'🔍︎{jinhuainfo[1]}',
+                action=1,
+            )
+        )
+    await bot.send_option(im, buttons)
 
 @sv_pokemon_duel.on_command(('精灵状态', '宝可梦状态'))
 async def get_my_poke_info_t(bot, ev: Event):

@@ -335,7 +335,7 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
     res = await convert_img(img)
     return res, jinhualist
 
-async def draw_pokemon_info_tj(bianhao):
+async def draw_pokemon_info_tj(bianhao,startype):
     bg_height = 600
     jinengxxlist = await get_level_jineng(100, bianhao)
     jinengxx_num = len(jinengxxlist)
@@ -354,8 +354,13 @@ async def draw_pokemon_info_tj(bianhao):
                 )
     if len(jinhualist) > 0:
         bg_height += len(jinhualist) * 150 + 50
+    starlist_draw = {
+        0: '',
+        1: '★',
+        2: '◆',
+    }
     miaoshu = POKEMON_CONTENT[bianhao][0]
-    miaoshu_para = get_text_line(miaoshu, 25)
+    miaoshu_para = await get_text_line(miaoshu, 25)
     miaoshu_height = len(miaoshu_para) * 40
     bg_height += miaoshu_height
     bg_height = max(bg_height, 1376)
@@ -369,6 +374,21 @@ async def draw_pokemon_info_tj(bianhao):
     img.paste(info_title_img, (0, 41), info_title_img)
     img_draw = ImageDraw.Draw(img)
     # 画名称标题
+    img_draw.text(
+        (285, 121),
+        f'{POKEMON_LIST[bianhao][0]}',
+        info_text_color,
+        sr_font_40,
+        'mm',
+    )
+    if startype > 0:
+        img_draw.text(
+            (350, 190),
+            f'{starlist_draw[startype]}',
+            (255, 255, 0),
+            sr_font_40,
+            'mm',
+        )
     img_draw.text(
         (285, 121),
         f'{POKEMON_LIST[bianhao][0]}',
@@ -398,11 +418,18 @@ async def draw_pokemon_info_tj(bianhao):
         'mm',
     )
     # 画形象
-    pokemon_img = (
-        Image.open(CHAR_ICON_PATH / f'{CHARA_NAME[bianhao][0]}.png')
-        .convert('RGBA')
-        .resize((300, 300))
-    )
+    if startype == 1:
+        pokemon_img = (
+            Image.open(CHAR_ICON_S_PATH / f'{CHARA_NAME[bianhao][0]}_s.png')
+            .convert('RGBA')
+            .resize((300, 300))
+        )
+    else:
+        pokemon_img = (
+            Image.open(CHAR_ICON_PATH / f'{CHARA_NAME[bianhao][0]}.png')
+            .convert('RGBA')
+            .resize((300, 300))
+        )
     img.paste(pokemon_img, (70, 168), pokemon_img)
 
     # 画属性
