@@ -18,6 +18,7 @@ from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH, CHAR_ICON_S_PATH
 from ..utils.dbbase.ScoreCounter import SCORE_DB
 from ..utils.dbbase.PokeCounter import PokeCounter
 from ..utils.convert import DailyAmountLimiter
+from .data_source import make_jineng_use
 from ..utils.fonts.starrail_fonts import (
     sr_font_18,
     sr_font_20,
@@ -48,8 +49,8 @@ daily_random_egg = DailyAmountLimiter('random_egg', random_egg_buy, RESET_HOUR)
 daily_boss = DailyAmountLimiter('boss', boss_fight, RESET_HOUR)
 
 # 生成精灵初始技能
-def add_new_pokemon_jineng(level, bianhao):
-    jinenglist = get_level_jineng(level, bianhao)
+async def add_new_pokemon_jineng(level, bianhao):
+    jinenglist = await get_level_jineng(level, bianhao)
     if len(jinenglist) <= 4:
         if len(jinenglist) == 0:
             jinengzu = ['挣扎']
@@ -61,7 +62,7 @@ def add_new_pokemon_jineng(level, bianhao):
 
 
 # 获取当前等级可以学习的技能
-def get_level_jineng(level, bianhao):
+async def get_level_jineng(level, bianhao):
     jinenglist = LEVEL_JINENG_LIST[bianhao]
     kexuelist = []
     # print(jinenglist)
@@ -74,7 +75,7 @@ def get_level_jineng(level, bianhao):
 
 
 # 添加宝可梦，随机生成个体值
-def add_pokemon(uid, bianhao, startype=0):
+async def add_pokemon(uid, bianhao, startype=0):
     pokemon_info = []
     level = 5
     pokemon_info.append(level)
@@ -93,7 +94,7 @@ def add_pokemon(uid, bianhao, startype=0):
         pokemon_info.append(0)
     xingge = random.sample(list_xingge, 1)
     pokemon_info.append(xingge[0])
-    jinengzu = add_new_pokemon_jineng(level, bianhao)
+    jinengzu = await add_new_pokemon_jineng(level, bianhao)
     jineng = ''
     shul = 0
     for jinengname in jinengzu:
@@ -149,7 +150,7 @@ async def get_pokeon_info_boss(bianhao, bossinfo, level=100):
     return pokemon_info
 
 # 获取宝可梦，随机个体，随机努力，测试用
-def get_pokeon_info_sj(bianhao, level=100):
+async def get_pokeon_info_sj(bianhao, level=100):
     pokemon_info = []
     pokemon_info.append(level)
 
@@ -177,7 +178,7 @@ def get_pokeon_info_sj(bianhao, level=100):
         pokemon_info.append(0)
     xingge = random.sample(list_xingge, 1)
     pokemon_info.append(xingge[0])
-    jinengzu = add_new_pokemon_jineng(level, bianhao)
+    jinengzu = await add_new_pokemon_jineng(level, bianhao)
     jineng = ''
     shul = 0
     for jinengname in jinengzu:
@@ -525,9 +526,9 @@ async def get_pokemon_star(uid):
 
 
 # 技能使用ai
-def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
-    mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
-    disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
+async def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
+    mysd = await get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
+    disd = await get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
     # 判断技能中是否有能够击杀对方的技能/伤害最大的技能
     max_shanghai = 0
     use_jineng = ''
@@ -537,17 +538,17 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
         if jinenginfo[2].isdigit():
             tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
             if tianqi_xz > 0:
-                shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+                shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
                 if shuxing_xz > 0:
-                    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+                    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
                     yaohai_xz = 1
                     if jinenginfo[1] == '物理':
-                        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-                        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+                        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+                        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
                     else:
-                        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-                        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
-                    shanghai = get_shanghai_num(
+                        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+                        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+                    shanghai = await get_shanghai_num(
                         jinenginfo[2],
                         myinfo[2],
                         myatk,
@@ -573,17 +574,17 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
         if jinenginfo[2].isdigit():
             tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
             if tianqi_xz > 0:
-                shuxing_xz = get_shanghai_beilv(jinenginfo[0], myinfo[1])
+                shuxing_xz = await get_shanghai_beilv(jinenginfo[0], myinfo[1])
                 if shuxing_xz > 0:
-                    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+                    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
                     yaohai_xz = 1
                     if jinenginfo[1] == '物理':
-                        myatk = get_nowshuxing(diinfo[4], diinfo[9], '物攻', myinfo[1], changdi[0][0])
-                        didef = get_nowshuxing(myinfo[5], myinfo[10], '物防', diinfo[1], changdi[0][0])
+                        myatk = await get_nowshuxing(diinfo[4], diinfo[9], '物攻', myinfo[1], changdi[0][0])
+                        didef = await get_nowshuxing(myinfo[5], myinfo[10], '物防', diinfo[1], changdi[0][0])
                     else:
-                        myatk = get_nowshuxing(diinfo[6], diinfo[11], '特攻', myinfo[1], changdi[0][0])
-                        didef = get_nowshuxing(myinfo[7], myinfo[12], '特防', diinfo[1], changdi[0][0])
-                    shanghai = get_shanghai_num(
+                        myatk = await get_nowshuxing(diinfo[6], diinfo[11], '特攻', myinfo[1], changdi[0][0])
+                        didef = await get_nowshuxing(myinfo[7], myinfo[12], '特防', diinfo[1], changdi[0][0])
+                    shanghai = await get_shanghai_num(
                         jinenginfo[2],
                         diinfo[2],
                         myatk,
@@ -608,21 +609,21 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
                         TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]]
                     )
                     if tianqi_xz > 0:
-                        shuxing_xz = get_shanghai_beilv(
+                        shuxing_xz = await get_shanghai_beilv(
                             jinenginfo[0], diinfo[1]
                         )
                         if shuxing_xz > 0:
-                            benxi_xz = get_shuxing_xiuzheng(
+                            benxi_xz = await get_shuxing_xiuzheng(
                                 jinenginfo[0], myinfo[1]
                             )
                             yaohai_xz = 1
                             if jinenginfo[1] == '物理':
-                                myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-                                didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+                                myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+                                didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
                             else:
-                                myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-                                didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
-                            shanghai = get_shanghai_num(
+                                myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+                                didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+                            shanghai = await get_shanghai_num(
                                 jinenginfo[2],
                                 myinfo[2],
                                 myatk,
@@ -660,7 +661,7 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
         tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
         if tianqi_xz == 0:
             jinenglist.remove(jineng)
-        shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+        shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
         if shuxing_xz == 0:
             jinenglist.remove(jineng)
     # 保留变化类招式与可以造成1/5伤害以上的招式
@@ -673,19 +674,19 @@ def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
             if jinenginfo[2].isdigit():
                 tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
                 if tianqi_xz > 0:
-                    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+                    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
                     if shuxing_xz > 0:
-                        benxi_xz = get_shuxing_xiuzheng(
+                        benxi_xz = await get_shuxing_xiuzheng(
                             jinenginfo[0], myinfo[1]
                         )
                         yaohai_xz = 1
                         if jinenginfo[1] == '物理':
-                            myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-                            didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+                            myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+                            didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
                         else:
-                            myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-                            didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
-                        shanghai = get_shanghai_num(
+                            myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+                            didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+                        shanghai = await get_shanghai_num(
                             jinenginfo[2],
                             myinfo[2],
                             myatk,
@@ -733,7 +734,7 @@ def get_chenghao(uid):
             return chenghao, huizhang
 
 
-def get_text_line(content, num):
+async def get_text_line(content, num):
     content_line = []
     text_list = content.split('\n')
     for text in text_list:
@@ -743,7 +744,7 @@ def get_text_line(content, num):
     return content_line
 
 
-def change_bg_img(bg_img, bg_num):
+async def change_bg_img(bg_img, bg_num):
     img_bg = Image.new('RGB', (700, 1280 * bg_num), (255, 255, 255))
     bg_img_bg = Image.open(TEXT_PATH / 'duel_bg.jpg')
     img_bg.paste(bg_img_bg, (0, 1280 * (bg_num - 1)))
@@ -807,12 +808,12 @@ async def pokemon_fight(
         myjinenglist = re.split(',', mypokemon_info[14])
         dijinenglist = re.split(',', dipokemon_info[14])
         
-        jineng1 = now_use_jineng(
+        jineng1 = await now_use_jineng(
             myinfo, diinfo, myjinenglist, dijinenglist, changdi
         )
         jinenginfo1 = JINENG_LIST[jineng1]
         # print(jineng1)
-        jineng2 = now_use_jineng(
+        jineng2 = await now_use_jineng(
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
@@ -820,10 +821,10 @@ async def pokemon_fight(
 
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
+        mysd = await get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
+        disd = await get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
@@ -861,24 +862,7 @@ async def pokemon_fight(
                     if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
-                        # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = my_mesg + mes
                 else:
                     if (
@@ -892,7 +876,7 @@ async def pokemon_fight(
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = my_mesg + '\n' + mes
@@ -911,24 +895,7 @@ async def pokemon_fight(
                     if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
-                        # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = '\n' + di_mesg + mes
                 else:
                     if (
@@ -942,7 +909,7 @@ async def pokemon_fight(
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = '\n' + di_mesg + '\n' + mes
@@ -962,24 +929,7 @@ async def pokemon_fight(
                     if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
-                        # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -993,7 +943,7 @@ async def pokemon_fight(
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = di_mesg + '\n' + mes
@@ -1012,24 +962,7 @@ async def pokemon_fight(
                     if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
-                        # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = '\n' + my_mesg + mes
                 else:
                     if (
@@ -1043,7 +976,7 @@ async def pokemon_fight(
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = '\n' + my_mesg + '\n' + mes
@@ -1070,7 +1003,7 @@ async def pokemon_fight(
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -1089,7 +1022,7 @@ async def pokemon_fight(
                 dizhuangtai,
                 myzhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -1108,7 +1041,7 @@ async def pokemon_fight(
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_tianqi_sh(
+            ) = await get_tianqi_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -1289,14 +1222,14 @@ async def pokemon_fight_s(
         # # await bot.send(f'你选择的是{resp.text}')
         # jineng_use = 1
         # except asyncio.TimeoutError:
-        # jineng1 = now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
+        # jineng1 = await now_use_jineng(myinfo,diinfo,myjinenglist,dijinenglist,changdi)
         
-        jineng1 = now_use_jineng(
+        jineng1 = await now_use_jineng(
             myinfo, diinfo, myjinenglist, dijinenglist, changdi
         )
         jinenginfo1 = JINENG_LIST[jineng1]
         #print(jineng1)
-        jineng2 = now_use_jineng(
+        jineng2 = await now_use_jineng(
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
@@ -1304,7 +1237,7 @@ async def pokemon_fight_s(
         img_height += 30
         if math.ceil((img_height + 50) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         img_draw.text(
             (350, img_height),
@@ -1316,10 +1249,10 @@ async def pokemon_fight_s(
         img_height += 50
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
+        mysd = await get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
+        disd = await get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
@@ -1349,7 +1282,7 @@ async def pokemon_fight_s(
 
         if math.ceil((img_height + 240) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         # 双方出手
         my_mesg = ''
@@ -1361,24 +1294,7 @@ async def pokemon_fight_s(
                     if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
-                        # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = my_mesg + mes
 
                 else:
@@ -1393,7 +1309,7 @@ async def pokemon_fight_s(
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = my_mesg + '\n' + mes
@@ -1406,7 +1322,7 @@ async def pokemon_fight_s(
                     jieshu = 1
                 mesg = mesg + my_mesg
                 bg_img.paste(my_pokemon_img, (20, img_height), my_pokemon_img)
-                my_para = get_text_line(my_mesg, 25)
+                my_para = await get_text_line(my_mesg, 25)
                 my_mes_h = 0
                 for line in my_para:
                     img_draw.text(
@@ -1426,23 +1342,7 @@ async def pokemon_fight_s(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -1456,7 +1356,7 @@ async def pokemon_fight_s(
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = di_mesg + '\n' + mes
@@ -1469,7 +1369,7 @@ async def pokemon_fight_s(
                     jieshu = 1
                 mesg = mesg + di_mesg
                 bg_img.paste(di_pokemon_img, (600, img_height), di_pokemon_img)
-                di_para = get_text_line(di_mesg, 25)
+                di_para = await get_text_line(di_mesg, 25)
                 di_mes_h = 0
                 for line in di_para:
                     img_draw.text(
@@ -1491,23 +1391,7 @@ async def pokemon_fight_s(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -1521,7 +1405,7 @@ async def pokemon_fight_s(
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = di_mesg + '\n' + mes
@@ -1534,7 +1418,7 @@ async def pokemon_fight_s(
                     jieshu = 1
                 mesg = mesg + di_mesg
                 bg_img.paste(di_pokemon_img, (600, img_height), di_pokemon_img)
-                di_para = get_text_line(di_mesg, 25)
+                di_para = await get_text_line(di_mesg, 25)
                 di_mes_h = 0
                 for line in di_para:
                     img_draw.text(
@@ -1555,23 +1439,7 @@ async def pokemon_fight_s(
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
                         # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = my_mesg + mes
                 else:
                     if (
@@ -1585,7 +1453,7 @@ async def pokemon_fight_s(
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = my_mesg + '\n' + mes
@@ -1598,7 +1466,7 @@ async def pokemon_fight_s(
                     jieshu = 1
                 mesg = mesg + my_mesg
                 bg_img.paste(my_pokemon_img, (20, img_height), my_pokemon_img)
-                my_para = get_text_line(my_mesg, 25)
+                my_para = await get_text_line(my_mesg, 25)
                 my_mes_h = 0
                 for line in my_para:
                     img_draw.text(
@@ -1625,7 +1493,7 @@ async def pokemon_fight_s(
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -1644,7 +1512,7 @@ async def pokemon_fight_s(
                 dizhuangtai,
                 myzhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -1663,7 +1531,7 @@ async def pokemon_fight_s(
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_tianqi_sh(
+            ) = await get_tianqi_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -1790,9 +1658,9 @@ async def pokemon_fight_s(
         mesg = mesg + changdi_mesg
         if math.ceil((img_height + 120) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
-        changdi_para = get_text_line(changdi_mesg, 30)
+        changdi_para = await get_text_line(changdi_mesg, 30)
         changdi_mes_h = 0
         for line in changdi_para:
             img_draw.text(
@@ -1879,22 +1747,22 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                                     jineng1 = mys
                                     jineng1_use = 1
         except asyncio.TimeoutError:
-            jineng1 = now_use_jineng(
+            jineng1 = await now_use_jineng(
                 myinfo, diinfo, my_ues_jineng_list, dijinenglist, changdi
             )
         jinenginfo1 = JINENG_LIST[jineng1]
         jineng_use.append(jineng1)
 
-        jineng2 = now_use_jineng(
+        jineng2 = await now_use_jineng(
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
         mesg = f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
+        mysd = await get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
+        disd = await get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
@@ -1935,23 +1803,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
                         # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = my_mesg + mes
 
                 else:
@@ -1966,7 +1818,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = my_mesg + '\n' + mes
@@ -1986,23 +1838,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -2016,7 +1852,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = di_mesg + '\n' + mes
@@ -2037,23 +1873,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -2067,7 +1887,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = di_mesg + '\n' + mes
@@ -2087,23 +1907,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
                         # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = my_mesg + mes
                 else:
                     if (
@@ -2117,7 +1921,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = my_mesg + '\n' + mes
@@ -2144,7 +1948,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -2163,7 +1967,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 dizhuangtai,
                 myzhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -2182,7 +1986,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_tianqi_sh(
+            ) = await get_tianqi_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -2396,7 +2200,7 @@ async def pokemon_fight_pk(
                                     await bot.send(f'{myname}已选择完成')
                                     jineng1_use = 1
         except asyncio.TimeoutError:
-            jineng1 = now_use_jineng(
+            jineng1 = await now_use_jineng(
                 myinfo, diinfo, my_ues_jineng_list, di_ues_jineng_list, changdi
             )
         jinenginfo1 = JINENG_LIST[jineng1]
@@ -2434,17 +2238,17 @@ async def pokemon_fight_pk(
                                     await bot.send(f'{diname}已选择完成')
                                     jineng2_use = 1
         except asyncio.TimeoutError:
-            jineng2 = now_use_jineng(
+            jineng2 = await now_use_jineng(
                 diinfo, myinfo, di_ues_jineng_list, my_ues_jineng_list, changdi
             )
         jinenginfo2 = JINENG_LIST[jineng2]
         jineng_use2.append(jineng2)
         mesg = mesg + f'\n回合：{shul}\n'
         shul = shul + 1
-        mysd = get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
+        mysd = await get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
             mysd = int(mysd * 0.5)
-        disd = get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
+        disd = await get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
         if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
             disd = int(mysd * 0.5)
 
@@ -2485,23 +2289,7 @@ async def pokemon_fight_pk(
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
                         # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = my_mesg + mes
 
                 else:
@@ -2516,7 +2304,7 @@ async def pokemon_fight_pk(
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = my_mesg + '\n' + mes
@@ -2536,23 +2324,7 @@ async def pokemon_fight_pk(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -2566,7 +2338,7 @@ async def pokemon_fight_pk(
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = di_mesg + '\n' + mes
@@ -2587,23 +2359,7 @@ async def pokemon_fight_pk(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        canshu2 = {
-                            'jineng': jineng2,
-                            'myinfo': diinfo,
-                            'diinfo': myinfo,
-                            'myzhuangtai': dizhuangtai,
-                            'dizhuangtai': myzhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo2[6]}', globals(), canshu2)
-                        (
-                            mes,
-                            diinfo,
-                            myinfo,
-                            dizhuangtai,
-                            myzhuangtai,
-                            changdi,
-                        ) = canshu2['ret']
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -2617,7 +2373,7 @@ async def pokemon_fight_pk(
                             dizhuangtai,
                             myzhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
                         di_mesg = di_mesg + '\n' + mes
@@ -2637,23 +2393,7 @@ async def pokemon_fight_pk(
                         my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
                         # 我方攻击
-                        canshu1 = {
-                            'jineng': jineng1,
-                            'myinfo': myinfo,
-                            'diinfo': diinfo,
-                            'myzhuangtai': myzhuangtai,
-                            'dizhuangtai': dizhuangtai,
-                            'changdi': changdi,
-                        }
-                        exec(f'ret = {jinenginfo1[6]}', globals(), canshu1)
-                        (
-                            mes,
-                            myinfo,
-                            diinfo,
-                            myzhuangtai,
-                            dizhuangtai,
-                            changdi,
-                        ) = canshu1['ret']
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
                         my_mesg = my_mesg + mes
                 else:
                     if (
@@ -2667,7 +2407,7 @@ async def pokemon_fight_pk(
                             myzhuangtai,
                             dizhuangtai,
                             changdi,
-                        ) = get_hunluan_sh(
+                        ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
                         my_mesg = my_mesg + '\n' + mes
@@ -2694,7 +2434,7 @@ async def pokemon_fight_pk(
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -2713,7 +2453,7 @@ async def pokemon_fight_pk(
                 dizhuangtai,
                 myzhuangtai,
                 changdi,
-            ) = get_zhuangtai_sh(
+            ) = await get_zhuangtai_sh(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -2732,7 +2472,7 @@ async def pokemon_fight_pk(
                 myzhuangtai,
                 dizhuangtai,
                 changdi,
-            ) = get_tianqi_sh(
+            ) = await get_tianqi_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
             changdi_mesg = changdi_mesg + mes + '\n'
@@ -2923,7 +2663,7 @@ async def new_pokemon_info_boss_sj(pokemonid, pokemon_info, boss_num):
     pokemoninfo.append(pokemonid)
     return pokemoninfo
 
-def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
+async def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
     nl_z = (
         pokemon_info[7]
         + pokemon_info[8]
@@ -3040,7 +2780,7 @@ async def get_win_reward(
         nl_num += 1
     if max_zhongzu >= 100:
         nl_num += 1
-    mesg, pokemon_info = get_nl_info(
+    mesg, pokemon_info = await get_nl_info(
         uid, mypokemonid, pokemon_info, max_zhongzuid, nl_num
     )
     if mesg:
@@ -3077,7 +2817,7 @@ async def fight_yw_ys_s(
         img_height += 30
         if math.ceil((img_height + 50) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         mesg += f'第{changci}场\n'
         img_draw = ImageDraw.Draw(bg_img)
@@ -3090,7 +2830,7 @@ async def fight_yw_ys_s(
         )
         if math.ceil((img_height + 50) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         ball_new = (
             Image.open(TEXT_PATH / 'ball_new.png')
@@ -3123,7 +2863,7 @@ async def fight_yw_ys_s(
 
         if math.ceil((img_height + 120) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         # mesg.append(MessageSegment.text(mes))
         changci += 1
@@ -3135,7 +2875,7 @@ async def fight_yw_ys_s(
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
             dilevel = int(math.floor(random.uniform(minlevel, maxlevel)))
-            dipokemon_info = get_pokeon_info_sj(bianhao2, dilevel)
+            dipokemon_info = await get_pokeon_info_sj(bianhao2, dilevel)
             diinfo = await new_pokemon_info(bianhao2, dipokemon_info)
         if myinfo[3] == myinfo[17]:
             mesg += f'我方派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
@@ -3222,7 +2962,7 @@ async def fight_yw_ys_s(
         mesg += mes
         if math.ceil((img_height + 100) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         # mesg.append(MessageSegment.text(mes))
         if myinfo[17] <= 0:
@@ -3256,7 +2996,7 @@ async def fight_yw_ys_s(
             )
             win_mesg += mes
             mesg += f'\n{mes}'
-            win_para = get_text_line(win_mesg, 30)
+            win_para = await get_text_line(win_mesg, 30)
             win_mes_h = 0
             for line in win_para:
                 img_draw.text(
@@ -3434,7 +3174,7 @@ async def fight_pk(
         img_height += 30
         if math.ceil((img_height + 50) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         if changci > 1:
             mesg += '\n'
@@ -3449,7 +3189,7 @@ async def fight_pk(
         )
         if math.ceil((img_height + 50) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         ball_new = (
             Image.open(TEXT_PATH / 'ball_new.png')
@@ -3482,7 +3222,7 @@ async def fight_pk(
 
         if math.ceil((img_height + 120) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         # mesg.append(MessageSegment.text(mes))
         changci += 1
@@ -3571,7 +3311,7 @@ async def fight_pk(
         mesg += mes
         if math.ceil((img_height + 100) / 1280) > bg_num:
             bg_num += 1
-            bg_img = change_bg_img(bg_img, bg_num)
+            bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
         # mesg.append(MessageSegment.text(mes))
         if myinfo[17] <= 0:
@@ -3588,7 +3328,7 @@ async def fight_pk(
             )
             lose_msg += mes
             mesg += f'\n{mes}'
-            lose_para = get_text_line(lose_msg, 30)
+            lose_para = await get_text_line(lose_msg, 30)
             lose_mes_h = 0
             for line in lose_para:
                 img_draw.text(
@@ -3615,7 +3355,7 @@ async def fight_pk(
             )
             win_mesg += mes
             mesg += f'\n{mes}'
-            win_para = get_text_line(win_mesg, 30)
+            win_para = await get_text_line(win_mesg, 30)
             win_mes_h = 0
             for line in win_para:
                 img_draw.text(
@@ -3662,7 +3402,7 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
             dilevel = int(math.floor(random.uniform(minlevel, maxlevel)))
-            dipokemon_info = get_pokeon_info_sj(bianhao2, dilevel)
+            dipokemon_info = await get_pokeon_info_sj(bianhao2, dilevel)
             diinfo = await new_pokemon_info(bianhao2, dipokemon_info)
         if myinfo[3] == myinfo[17]:
             mesg += f'我方派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'

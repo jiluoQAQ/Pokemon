@@ -400,7 +400,7 @@ async def get_ts_info_pic(bot, ev: Event):
             )
             if math.ceil((img_height + 120) / 1280) > bg_num:
                 bg_num += 1
-                bg_img = change_bg_img(bg_img, bg_num)
+                bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
             mes += mes_list
             if len(mypokelist) == 0:
@@ -578,7 +578,7 @@ async def get_ts_info_pic(bot, ev: Event):
                 mes += mes_list
                 if math.ceil((img_height + 120) / 1280) > bg_num:
                     bg_num += 1
-                    bg_img = change_bg_img(bg_img, bg_num)
+                    bg_img = await change_bg_img(bg_img, bg_num)
                 img_draw = ImageDraw.Draw(bg_img)
                 if len(mypokelist) == 0:
                     mes += f'\n您被{diname}打败了，眼前一黑'
@@ -932,7 +932,7 @@ async def get_cd_info_pic(bot, ev: Event):
             )
             if math.ceil((img_height + 120) / 1280) > bg_num:
                 bg_num += 1
-                bg_img = change_bg_img(bg_img, bg_num)
+                bg_img = await change_bg_img(bg_img, bg_num)
             img_draw = ImageDraw.Draw(bg_img)
             mes += mes_list
             if len(mypokelist) == 0:
@@ -1240,7 +1240,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     mes += mes_list
     if math.ceil((img_height + 120) / 1280) > bg_num:
         bg_num += 1
-        bg_img = change_bg_img(bg_img, bg_num)
+        bg_img = await change_bg_img(bg_img, bg_num)
     img_draw = ImageDraw.Draw(bg_img)
     if len(mypokelist) == 0:
         mes += f'\n您被{diname}打败了，眼前一黑'

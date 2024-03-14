@@ -4,7 +4,7 @@ import math
 from .pokemon import *
 
 
-def get_shuxing_xiuzheng(atkshux, myshux):
+async def get_shuxing_xiuzheng(atkshux, myshux):
     shuxinglist = re.split(',', myshux)
     xiuzheng = 1
     if atkshux in shuxinglist:
@@ -12,7 +12,7 @@ def get_shuxing_xiuzheng(atkshux, myshux):
     return xiuzheng
 
 
-def get_shanghai_beilv(atkshux, dishux):
+async def get_shanghai_beilv(atkshux, dishux):
     kezhilist = SHUXING_LIST[atkshux]
     shuxinglist = re.split(',', dishux)
     beilv = 1
@@ -21,7 +21,7 @@ def get_shanghai_beilv(atkshux, dishux):
     return beilv
 
 
-def get_yaohai(yaohai):
+async def get_yaohai(yaohai):
     yaohailist = [42, 125, 500, 1000]
     if int(yaohai) > 3:
         return 1.5
@@ -32,7 +32,7 @@ def get_yaohai(yaohai):
         return 1
 
 
-def update_shux_info(info, sxname, uplevel, uptype):
+async def update_shux_info(info, sxname, uplevel, uptype):
     # 9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级
     shuxlist = {
         'ATK': [9, '攻击'],
@@ -82,7 +82,7 @@ def update_shux_info(info, sxname, uplevel, uptype):
     return msg, info
 
 
-def get_mingzhong(jineng_mz, my_mngzhong, di_shanbi, changdi):
+async def get_mingzhong(jineng_mz, my_mngzhong, di_shanbi, changdi):
     if jineng_mz == '-':
         return 1
     jineng_b = (255 * int(jineng_mz)) / 100
@@ -105,7 +105,7 @@ def get_mingzhong(jineng_mz, my_mngzhong, di_shanbi, changdi):
         return 0
 
 
-def get_nowshuxing(shuxing, dengji, sxtype, shuxinglist, tianqi):
+async def get_nowshuxing(shuxing, dengji, sxtype, shuxinglist, tianqi):
     if dengji > 0:
         xiuzheng = (2 + int(dengji)) / 2
     elif dengji < 0:
@@ -122,7 +122,7 @@ def get_nowshuxing(shuxing, dengji, sxtype, shuxinglist, tianqi):
     return shuzhi
 
 
-def get_shanghai_num(
+async def get_shanghai_num(
     weili, level, atk, fangyu, yaohai, shuxing, benxi, tianqi_xz
 ):
     lvxiuzheng = (2 * int(level) + 10) / 250
@@ -139,7 +139,7 @@ def get_shanghai_num(
     return shanghai
 
 
-def get_teshu_zt(zt_jl, ztname, dishux):
+async def get_teshu_zt(zt_jl, ztname, dishux):
     mianyi = 0
     shuxinglist = re.split(',', dishux)
     if ztname == '麻痹' and '电' in shuxinglist:
@@ -159,9 +159,91 @@ def get_teshu_zt(zt_jl, ztname, dishux):
     else:
         return 0
 
+# 附加异常状态伤害技能
+async def get_shanghai_zt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
+    # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
+    jinenginfo = JINENG_LIST[jineng]
+
+    if dizhuangtai[1][0] == '无敌' and int(dizhuangtai[1][1]) > 0:
+        mes = f'{diinfo[0]}处于保护状态，技能无效'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    if tianqi_xz == 0:
+        mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+    # print(myinfo)
+    # print(diinfo)
+    if ismingzhong == 0:
+        mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    # print('shuxing_xz:' + str(shuxing_xz))
+    if shuxing_xz == 0:
+        mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+
+    # print('benxi_xz:' + str(benxi_xz))
+    yaohai_xz = await get_yaohai(myinfo[14])
+    # print('yaohai_xz:' + str(yaohai_xz))
+    if jinenginfo[1] == '物理':
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+    else:
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+
+    shanghai = await get_shanghai_num(
+        jinenginfo[2],
+        myinfo[2],
+        myatk,
+        didef,
+        yaohai_xz,
+        shuxing_xz,
+        benxi_xz,
+        tianqi_xz,
+    )
+
+    # 灼伤状态我方物理伤害减半
+    if (
+        myzhuangtai[0][1] > 0
+        and myzhuangtai[0][1] == '灼伤'
+        and jinenginfo[1] == '物理'
+    ):
+        shanghai = int(shanghai * 0.5)
+
+    lasthp = diinfo[17] - shanghai
+    diinfo[17] = lasthp
+
+    zt_mingzhong = 0
+    if dizhuangtai[0][0] == '无' or int(dizhuangtai[0][1]) == 0:
+        zt_mingzhong = await get_teshu_zt(kwargs['zt_jl'], kwargs['ztname'], diinfo[1])
+        if zt_mingzhong == 1:
+            dizhuangtai[0][0] = kwargs['ztname']
+            dizhuangtai[0][1] = int(kwargs['zt_hh'])
+
+    # print('shanghai:' + str(shanghai))
+    mes = f'{myinfo[0]}使用了技能{jineng}，'
+    if shuxing_xz > 1:
+        mes = mes + '效果拔群，'
+    elif shuxing_xz < 1:
+        mes = mes + '效果不理想，'
+    if yaohai_xz > 1:
+        mes = mes + '命中要害，'
+    mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
+    if diinfo[17] > 0:
+        mes = mes + f'\n{diinfo[0]}剩余血量{diinfo[17]}'
+        if zt_mingzhong == 1:
+            mes = mes + f"\n{diinfo[0]}{kwargs['ztname']}了"
+    else:
+        mes = mes + f'\n{diinfo[0]}失去了战斗能力'
+
+    return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 无加成伤害技能
-def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+async def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -169,7 +251,7 @@ def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -179,24 +261,24 @@ def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -234,9 +316,7 @@ def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
 
 
 # 无加成命中要害伤害技能
-def get_shanghai_pt_yh(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-):
+async def get_shanghai_pt_yh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -244,7 +324,7 @@ def get_shanghai_pt_yh(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -254,24 +334,24 @@ def get_shanghai_pt_yh(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = 1.5
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -308,9 +388,7 @@ def get_shanghai_pt_yh(
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 无加成命中要害伤害技能
-def get_shanghai_pt_yh_lx(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, cishu
-):
+async def get_shanghai_pt_yh_lx(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -318,7 +396,7 @@ def get_shanghai_pt_yh_lx(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -328,24 +406,24 @@ def get_shanghai_pt_yh_lx(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = 1.5
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -363,7 +441,7 @@ def get_shanghai_pt_yh_lx(
         and jinenginfo[1] == '物理'
     ):
         shanghai = int(shanghai * 0.5)
-    shanghai = shanghai * int(cishu)
+    shanghai = shanghai * int(kwargs['cishu'])
     
     lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
@@ -375,7 +453,7 @@ def get_shanghai_pt_yh_lx(
         mes = mes + '效果不理想，'
     if yaohai_xz > 1:
         mes = mes + '命中要害，'
-    mes = mes + f'命中{cishu}下，对{diinfo[0]}造成了{shanghai}点伤害'
+    mes = mes + f"命中{kwargs['cishu']}下，对{diinfo[0]}造成了{shanghai}点伤害"
     if diinfo[17] > 0:
         mes = mes + f'\n{diinfo[0]}剩余血量{diinfo[17]}'
     else:
@@ -383,42 +461,50 @@ def get_shanghai_pt_yh_lx(
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 自爆
-def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+async def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
     if dizhuangtai[1][0] == '无敌' and int(dizhuangtai[1][1]) > 0:
         mes = f'{diinfo[0]}处于保护状态，技能无效'
+        myinfo[17] = 0
+        mes = mes + f'\n{myinfo[0]}失去了战斗能力'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
+        myinfo[17] = 0
+        mes = mes + f'\n{myinfo[0]}失去了战斗能力'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
     # print(myinfo)
     # print(diinfo)
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
+        myinfo[17] = 0
+        mes = mes + f'\n{myinfo[0]}失去了战斗能力'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
+        myinfo[17] = 0
+        mes = mes + f'\n{myinfo[0]}失去了战斗能力'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -457,9 +543,7 @@ def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
-def get_shanghai_pt_bh(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, index
-):
+async def get_shanghai_pt_bh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -467,7 +551,7 @@ def get_shanghai_pt_bh(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -477,25 +561,25 @@ def get_shanghai_pt_bh(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    jineng_sh = myinfo[int(index)]
-    shanghai = get_shanghai_num(
+    jineng_sh = myinfo[int(kwargs['index'])]
+    shanghai = await get_shanghai_num(
         jineng_sh,
         myinfo[2],
         myatk,
@@ -533,9 +617,7 @@ def get_shanghai_pt_bh(
 
 
 # 会对自身造成伤害的技能
-def get_shanghai_pt_fs(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-):
+async def get_shanghai_pt_fs(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -543,7 +625,7 @@ def get_shanghai_pt_fs(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -553,24 +635,24 @@ def get_shanghai_pt_fs(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -617,9 +699,7 @@ def get_shanghai_pt_fs(
 
 
 # 会对自身回复血量的技能
-def get_shanghai_pt_xh(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, xh_bl
-):
+async def get_shanghai_pt_xh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -627,7 +707,7 @@ def get_shanghai_pt_xh(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -637,24 +717,24 @@ def get_shanghai_pt_xh(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -684,7 +764,7 @@ def get_shanghai_pt_xh(
     if yaohai_xz > 1:
         mes = mes + '命中要害，'
     mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
-    hx_num = math.ceil(shanghai * float(xh_bl))
+    hx_num = math.ceil(shanghai * float(kwargs['xh_bl']))
     now_my_hp = min(myinfo[3], myinfo[17] + hx_num)
     last_my_hp = now_my_hp - myinfo[17]
     myinfo[17] = now_my_hp
@@ -697,17 +777,7 @@ def get_shanghai_pt_xh(
 
 
 # 附加异常状态伤害技能
-def get_shanghai_zt(
-    jineng,
-    myinfo,
-    diinfo,
-    myzhuangtai,
-    dizhuangtai,
-    changdi,
-    ztname,
-    zt_jl,
-    zt_hh=99,
-):
+async def get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,**kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -715,101 +785,7 @@ def get_shanghai_zt(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
-    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
-    if tianqi_xz == 0:
-        mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
-        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    # print(myinfo)
-    # print(diinfo)
-    if ismingzhong == 0:
-        mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
-        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
-    # print('shuxing_xz:' + str(shuxing_xz))
-    if shuxing_xz == 0:
-        mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
-        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
-
-    # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
-    # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
-    else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
-
-    shanghai = get_shanghai_num(
-        jinenginfo[2],
-        myinfo[2],
-        myatk,
-        didef,
-        yaohai_xz,
-        shuxing_xz,
-        benxi_xz,
-        tianqi_xz,
-    )
-
-    # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
-        shanghai = int(shanghai * 0.5)
-
-    lasthp = diinfo[17] - shanghai
-    diinfo[17] = lasthp
-
-    zt_mingzhong = 0
-    if dizhuangtai[0][0] == '无' or int(dizhuangtai[0][1]) == 0:
-        zt_mingzhong = get_teshu_zt(zt_jl, ztname, diinfo[1])
-        if zt_mingzhong == 1:
-            dizhuangtai[0][0] = ztname
-            dizhuangtai[0][1] = int(zt_hh)
-
-    # print('shanghai:' + str(shanghai))
-    mes = f'{myinfo[0]}使用了技能{jineng}，'
-    if shuxing_xz > 1:
-        mes = mes + '效果拔群，'
-    elif shuxing_xz < 1:
-        mes = mes + '效果不理想，'
-    if yaohai_xz > 1:
-        mes = mes + '命中要害，'
-    mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
-    if diinfo[17] > 0:
-        mes = mes + f'\n{diinfo[0]}剩余血量{diinfo[17]}'
-        if zt_mingzhong == 1:
-            mes = mes + f'\n{diinfo[0]}{ztname}了'
-    else:
-        mes = mes + f'\n{diinfo[0]}失去了战斗能力'
-
-    return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-
-
-# 附加异常状态伤害技能
-def get_shanghai_zt_my(
-    jineng,
-    myinfo,
-    diinfo,
-    myzhuangtai,
-    dizhuangtai,
-    changdi,
-    ztname,
-    zt_jl,
-    zt_hh=99,
-):
-    # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
-    jinenginfo = JINENG_LIST[jineng]
-
-    if dizhuangtai[1][0] == '无敌' and int(dizhuangtai[1][1]) > 0:
-        mes = f'{diinfo[0]}处于保护状态，技能无效'
-        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -818,33 +794,33 @@ def get_shanghai_zt_my(
     # print(diinfo)
     zt_mingzhong = 0
     if myzhuangtai[0][0] == '无' or int(myzhuangtai[0][1]) == 0:
-        zt_mingzhong = get_teshu_zt(zt_jl, ztname, diinfo[1])
+        zt_mingzhong = await get_teshu_zt(kwargs['zt_jl'], kwargs['ztname'], diinfo[1])
         if zt_mingzhong == 1:
-            myzhuangtai[0][0] = ztname
-            myzhuangtai[0][1] = int(zt_hh)
+            myzhuangtai[0][0] = kwargs['ztname']
+            myzhuangtai[0][1] = int(kwargs['zt_hh'])
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         if zt_mingzhong == 1:
-            mes = mes + f'\n{myinfo[0]}{ztname}了'
+            mes = mes + f"\n{myinfo[0]}{kwargs['ztname']}了"
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -880,14 +856,12 @@ def get_shanghai_zt_my(
     else:
         mes = mes + f'\n{diinfo[0]}失去了战斗能力'
     if zt_mingzhong == 1:
-        mes = mes + f'\n{myinfo[0]}{ztname}了'
+        mes = mes + f"\n{myinfo[0]}{kwargs['ztname']}了"
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
 # 异常状态双倍伤害技能普通
-def get_sbshanghai_pt(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-):
+async def get_sbshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -895,7 +869,7 @@ def get_sbshanghai_pt(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -905,27 +879,27 @@ def get_sbshanghai_pt(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     weili = int(jinenginfo[2])
     if int(dizhuangtai[0][1]) > 0 and dizhuangtai[0][0] != '无':
         weili = weili * 2
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         weili,
         myinfo[2],
         myatk,
@@ -962,9 +936,7 @@ def get_sbshanghai_pt(
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
-def get_lxshanghai_pt(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, csmim, csmax
-):
+async def get_lxshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -972,7 +944,7 @@ def get_lxshanghai_pt(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -982,28 +954,25 @@ def get_lxshanghai_pt(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    weili = int(jinenginfo[2])
-    if int(dizhuangtai[0][1]) > 0 and dizhuangtai[0][0] != '无':
-        weili = weili * 2
-    shanghai = get_shanghai_num(
-        weili,
+    shanghai = await get_shanghai_num(
+        jinenginfo[2],
         myinfo[2],
         myatk,
         didef,
@@ -1021,7 +990,7 @@ def get_lxshanghai_pt(
     ):
         shanghai = int(shanghai * 0.5)
 
-    cishu = int(math.floor(random.uniform(csmim, csmax + 1)))
+    cishu = int(math.floor(random.uniform(kwargs['csmim'], kwargs['csmax'] + 1)))
     shanghai = shanghai * cishu
 
     lasthp = diinfo[17] - shanghai
@@ -1041,9 +1010,7 @@ def get_lxshanghai_pt(
         mes = mes + f'\n{diinfo[0]}失去了战斗能力'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-def get_shanghai_sxj(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-):
+async def get_shanghai_sxj(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -1051,7 +1018,7 @@ def get_shanghai_sxj(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -1061,27 +1028,25 @@ def get_shanghai_sxj(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
     weili = int(jinenginfo[2])
-    if int(dizhuangtai[0][1]) > 0 and dizhuangtai[0][0] != '无':
-        weili = weili * 2
-    shanghai1 = get_shanghai_num(
+    shanghai1 = await get_shanghai_num(
         weili,
         myinfo[2],
         myatk,
@@ -1091,7 +1056,7 @@ def get_shanghai_sxj(
         benxi_xz,
         tianqi_xz,
     )
-    shanghai2 = get_shanghai_num(
+    shanghai2 = await get_shanghai_num(
         weili * 2,
         myinfo[2],
         myatk,
@@ -1101,7 +1066,7 @@ def get_shanghai_sxj(
         benxi_xz,
         tianqi_xz,
     )
-    shanghai3 = get_shanghai_num(
+    shanghai3 = await get_shanghai_num(
         weili * 3,
         myinfo[2],
         myatk,
@@ -1137,7 +1102,7 @@ def get_shanghai_sxj(
         mes = mes + f'\n{diinfo[0]}失去了战斗能力'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-def get_bisha(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+async def get_bisha(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
     if myinfo[2] < diinfo[2]:
@@ -1160,17 +1125,17 @@ def get_bisha(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
-def add_wudi(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+async def add_wudi(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     myzhuangtai[1][0] = '无敌'
     myzhuangtai[1][1] = 1
     mes = f'{myinfo[0]}使用了技能{jineng}'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
-def get_hunluan_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
-    myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-    mydef = get_nowshuxing(myinfo[5], myinfo[10], '物防', myinfo[1], changdi[0][0])
-    shanghai = get_shanghai_num(
+async def get_hunluan_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+    myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+    mydef = await get_nowshuxing(myinfo[5], myinfo[10], '物防', myinfo[1], changdi[0][0])
+    shanghai = await get_shanghai_num(
         40,
         myinfo[2],
         myatk,
@@ -1191,9 +1156,7 @@ def get_hunluan_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
-def get_gushang(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, shanghai
-):
+async def get_gushang(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -1201,14 +1164,14 @@ def get_gushang(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     # print(myinfo)
     # print(diinfo)
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    shanghai = int(shanghai)
+    shanghai = int(kwargs['shanghai'])
 
     lasthp = diinfo[17] - shanghai
     diinfo[17] = lasthp
@@ -1224,7 +1187,7 @@ def get_gushang(
 
 
 # 获取状态持续伤害
-def get_zhuangtai_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+async def get_zhuangtai_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     if myzhuangtai[0][0] == '灼伤':
         shanghai = int(myinfo[3] / 16)
     if myzhuangtai[0][0] == '中毒':
@@ -1242,7 +1205,7 @@ def get_zhuangtai_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
 
 
 # 获取天气持续伤害
-def get_tianqi_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+async def get_tianqi_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     myshuxinglist = re.split(',', myinfo[1])
     dishuxinglist = re.split(',', diinfo[1])
 
@@ -1296,16 +1259,16 @@ def get_tianqi_sh(myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
-def up_my_hp(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, bh_bl):
+async def up_my_hp(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     jinenginfo = JINENG_LIST[jineng]
-    hx_num = math.ceil(myinfo[3] * float(bh_bl))
+    hx_num = math.ceil(myinfo[3] * float(kwargs['bh_bl']))
     now_my_hp = min(myinfo[3], myinfo[17] + hx_num)
     last_my_hp = now_my_hp - myinfo[17]
     myinfo[17] = now_my_hp
     mes = f'{myinfo[0]}使用了技能{jineng}回复{last_my_hp}点血量\n剩余血量{myinfo[17]}'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-def sleep(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
+async def sleep(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     myinfo[17] = myinfo[3]
     myzhuangtai[0][0] = '睡眠'
     myzhuangtai[0][1] = 2
@@ -1313,55 +1276,34 @@ def sleep(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 我方技能对敌方属性提升/降低效果
-def up_shux_info_di(
-    jineng,
-    myinfo,
-    diinfo,
-    myzhuangtai,
-    dizhuangtai,
-    changdi,
-    sxinfo,
-    lvinfo,
-    typeinfo,
-):
+async def up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,**kwargs):
     jinenginfo = JINENG_LIST[jineng]
 
     if dizhuangtai[1][0] == '无敌' and int(dizhuangtai[1][1]) > 0:
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    sxlist = re.split(',', sxinfo)
-    lvlist = re.split(',', lvinfo)
-    typelist = re.split(',', typeinfo)
+    sxlist = re.split(',', kwargs['sxinfo'])
+    lvlist = re.split(',', kwargs['lvinfo'])
+    typelist = re.split(',', kwargs['typeinfo'])
     updatesx_num = len(sxlist)
     mesg = f'{myinfo[0]}使用了技能{jineng}'
     for i in range(updatesx_num):
         sxname = sxlist[i]
         uplevel = lvlist[i]
         uptype = typelist[i]
-        mes, diinfo = update_shux_info(diinfo, sxname, uplevel, uptype)
+        mes, diinfo = await update_shux_info(diinfo, sxname, uplevel, uptype)
         mesg = mesg + '\n' + mes
     return mesg, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
 # 我方伤害技能对我方属性提升/降低效果
-def up_shuxshanghai_my(
-    jineng,
-    myinfo,
-    diinfo,
-    myzhuangtai,
-    dizhuangtai,
-    changdi,
-    sxinfo,
-    lvinfo,
-    typeinfo,
-    bh_jl=20,
-):
+async def up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,**kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -1369,7 +1311,7 @@ def up_shuxshanghai_my(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -1379,24 +1321,24 @@ def up_shuxshanghai_my(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -1428,16 +1370,16 @@ def up_shuxshanghai_my(
         mes = mes + '命中要害，'
     mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
     suiji = int(math.floor(random.uniform(0, 100)))
-    if suiji < int(bh_jl):
-        sxlist = re.split(',', sxinfo)
-        lvlist = re.split(',', lvinfo)
-        typelist = re.split(',', typeinfo)
+    if suiji < int(kwargs['bh_jl']):
+        sxlist = re.split(',', kwargs['sxinfo'])
+        lvlist = re.split(',', kwargs['lvinfo'])
+        typelist = re.split(',', kwargs['typeinfo'])
         updatesx_num = len(sxlist)
         for i in range(updatesx_num):
             sxname = sxlist[i]
             uplevel = lvlist[i]
             uptype = typelist[i]
-            mesg, myinfo = update_shux_info(myinfo, sxname, uplevel, uptype)
+            mesg, myinfo = await update_shux_info(myinfo, sxname, uplevel, uptype)
             mes = mes + '\n' + mesg
     if diinfo[17] > 0:
         mes = mes + f'\n{diinfo[0]}剩余血量{diinfo[17]}'
@@ -1448,18 +1390,7 @@ def up_shuxshanghai_my(
 
 
 # 我方伤害技能对敌方属性提升/降低效果
-def dowm_shuxshanghai_di(
-    jineng,
-    myinfo,
-    diinfo,
-    myzhuangtai,
-    dizhuangtai,
-    changdi,
-    sxinfo,
-    lvinfo,
-    typeinfo,
-    bh_jl=20,
-):
+async def dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi, **kwargs):
     # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
     jinenginfo = JINENG_LIST[jineng]
 
@@ -1467,7 +1398,7 @@ def dowm_shuxshanghai_di(
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
     if tianqi_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
@@ -1477,24 +1408,24 @@ def dowm_shuxshanghai_di(
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    shuxing_xz = get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    benxi_xz = get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
-    yaohai_xz = get_yaohai(myinfo[14])
+    yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
     if jinenginfo[1] == '物理':
-        myatk = get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
-        myatk = get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
-        didef = get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+        myatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+        didef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
 
-    shanghai = get_shanghai_num(
+    shanghai = await get_shanghai_num(
         jinenginfo[2],
         myinfo[2],
         myatk,
@@ -1527,16 +1458,16 @@ def dowm_shuxshanghai_di(
     mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
     if diinfo[17] > 0:
         suiji = int(math.floor(random.uniform(0, 100)))
-        if suiji < int(bh_jl):
-            sxlist = re.split(',', sxinfo)
-            lvlist = re.split(',', lvinfo)
-            typelist = re.split(',', typeinfo)
+        if suiji < int(kwargs['bh_jl']):
+            sxlist = re.split(',', kwargs['sxinfo'])
+            lvlist = re.split(',', kwargs['lvinfo'])
+            typelist = re.split(',', kwargs['typeinfo'])
             updatesx_num = len(sxlist)
             for i in range(updatesx_num):
                 sxname = sxlist[i]
                 uplevel = lvlist[i]
                 uptype = typelist[i]
-                mesg, diinfo = update_shux_info(
+                mesg, diinfo = await update_shux_info(
                     diinfo, sxname, uplevel, uptype
                 )
                 mes = mes + '\n' + mesg
@@ -1548,40 +1479,23 @@ def dowm_shuxshanghai_di(
 
 
 # 我方变化类技能对我方的属性提升
-def up_shux_info_my(
-    jineng,
-    myinfo,
-    diinfo,
-    myzhuangtai,
-    dizhuangtai,
-    changdi,
-    sxinfo,
-    lvinfo,
-    typeinfo,
-):
+async def up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi, **kwargs):
     jinenginfo = JINENG_LIST[jineng]
-    sxlist = re.split(',', sxinfo)
-    lvlist = re.split(',', lvinfo)
-    typelist = re.split(',', typeinfo)
+    sxlist = re.split(',', kwargs['sxinfo'])
+    lvlist = re.split(',', kwargs['lvinfo'])
+    typelist = re.split(',', kwargs['typeinfo'])
     updatesx_num = len(sxlist)
     mesg = f'{myinfo[0]}使用了技能{jineng}'
     for i in range(updatesx_num):
         sxname = sxlist[i]
         uplevel = lvlist[i]
         uptype = typelist[i]
-        mes, myinfo = update_shux_info(myinfo, sxname, uplevel, uptype)
+        mes, myinfo = await update_shux_info(myinfo, sxname, uplevel, uptype)
         mesg = mesg + '\n' + mes
     return mesg, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 魂舞烈音爆
-def hwlyb(
-    jineng,
-    myinfo,
-    diinfo,
-    myzhuangtai,
-    dizhuangtai,
-    changdi,
-):
+async def hwlyb(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi, **kwargs):
     jinenginfo = JINENG_LIST[jineng]
     sxlist = ['ATK','DEF','SPATK','SPDEF','SPD']
     lvlist = ['1','1','1','1','1']
@@ -1598,42 +1512,38 @@ def hwlyb(
             sxname = sxlist[i]
             uplevel = lvlist[i]
             uptype = typelist[i]
-            mes, myinfo = update_shux_info(myinfo, sxname, uplevel, uptype)
+            mes, myinfo = await update_shux_info(myinfo, sxname, uplevel, uptype)
             mesg = mesg + '\n' + mes
     return mesg, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 我方变化类技能对地方的附加状态
-def give_info_di(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, ztname, hh_num=5
-):
+async def give_info_di(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     jinenginfo = JINENG_LIST[jineng]
 
     if dizhuangtai[1][0] == '无敌' and int(dizhuangtai[1][1]) > 0:
         mes = f'{diinfo[0]}处于保护状态，技能无效'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
-    ismingzhong = get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
     mes = f'{myinfo[0]}使用了技能{jineng}\n'
     zt_mingzhong = 0
     if dizhuangtai[0][0] == '无' or int(dizhuangtai[0][1]) == 0:
-        zt_mingzhong = get_teshu_zt(100, ztname, diinfo[1])
+        zt_mingzhong = await get_teshu_zt(100, kwargs['ztname'], diinfo[1])
         if zt_mingzhong == 1:
-            dizhuangtai[0][0] = ztname
-            dizhuangtai[0][1] = int(hh_num)
-            mes = mes + f'\n{diinfo[0]}{ztname}了'
+            dizhuangtai[0][0] = kwargs['ztname']
+            dizhuangtai[0][1] = int(kwargs['hh_num'])
+            mes = mes + f"\n{diinfo[0]}{kwargs['ztname']}了"
     else:
         mes = mes + f'\n{diinfo[0]}{dizhuangtai[0][0]}中'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 
-def changdi_change(
-    jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, tqname
-):
+async def changdi_change(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     jinenginfo = JINENG_LIST[jineng]
-    changdi[0][0] = tqname
+    changdi[0][0] = kwargs['tqname']
     changdi[0][1] = 5
-    mes = f'\n{myinfo[0]}使用了技能{jineng}\n天气变成了{tqname}'
+    mes = f"\n{myinfo[0]}使用了技能{jineng}\n天气变成了{kwargs['tqname']}"
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi

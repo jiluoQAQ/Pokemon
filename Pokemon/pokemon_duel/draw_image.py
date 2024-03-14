@@ -52,7 +52,7 @@ JINENG_LEIXING = {
 
 async def draw_pokemon_info(uid, pokemon_info, bianhao):
     bg_height = 770
-    jinenglist = get_level_jineng(pokemon_info[0], bianhao)
+    jinenglist = await get_level_jineng(pokemon_info[0], bianhao)
     jineng_num = len(jinenglist)
     if jineng_num > 0:
         bg_height += math.ceil(jineng_num / 4) * 45 + 130
@@ -337,7 +337,7 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
 
 async def draw_pokemon_info_tj(bianhao):
     bg_height = 600
-    jinengxxlist = get_level_jineng(100, bianhao)
+    jinengxxlist = await get_level_jineng(100, bianhao)
     jinengxx_num = len(jinengxxlist)
     if jinengxx_num > 0:
         bg_height += math.ceil(jinengxx_num / 4) * 45 + 130

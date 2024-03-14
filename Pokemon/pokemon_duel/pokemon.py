@@ -4596,7 +4596,8 @@ JINENG_LIST = {
         '100',
         '35',
         '使用长长的尾巴或手等拍打对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '空手劈': [
         '格斗',
@@ -4605,7 +4606,8 @@ JINENG_LIST = {
         '100',
         '25',
         '用锋利的手刀劈向对手进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '连环巴掌': [
         '一般',
@@ -4614,7 +4616,8 @@ JINENG_LIST = {
         '85',
         '10',
         '用连环巴掌拍打对手进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',
+        {'csmim':2,'csmax':5},
     ],
     '连续拳': [
         '一般',
@@ -4623,7 +4626,8 @@ JINENG_LIST = {
         '85',
         '15',
         '用拳头怒涛般的殴打对手进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',
+        {'csmim':2,'csmax':5},
     ],
     '百万吨重拳': [
         '一般',
@@ -4632,7 +4636,8 @@ JINENG_LIST = {
         '85',
         '20',
         '用充满力量的拳头攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '聚宝功': [
         '一般',
@@ -4641,7 +4646,8 @@ JINENG_LIST = {
         '100',
         '20',
         '向对手的身体投掷小金币进行攻击。战斗后可以拿到钱。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '火焰拳': [
         '火',
@@ -4650,7 +4656,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用充满火焰的拳头攻击对手。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '冰冻拳': [
         '冰',
@@ -4659,7 +4666,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用充满寒气的拳头攻击对手。有时会让对手陷入冰冻状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰冻','10')",
+        '状态伤害',
+        {'ztname':'冰冻','zt_jl':'10','zt_hh':99},
     ],
     '雷电拳': [
         '电',
@@ -4668,7 +4676,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用充满电流的拳头攻击对手。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '抓': [
         '一般',
@@ -4677,7 +4686,7 @@ JINENG_LIST = {
         '100',
         '35',
         '用坚硬且无比锋利的爪子抓对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '夹住': [
         '一般',
@@ -4686,7 +4695,7 @@ JINENG_LIST = {
         '100',
         '30',
         '将对手从两侧夹住，给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '断头钳': [
         '一般',
@@ -4695,7 +4704,8 @@ JINENG_LIST = {
         '变化',
         '5',
         '用大钳子或剪刀等夹断对手进行攻击。只要命中就会一击濒死。',
-        'get_bisha(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '一击必杀',
+        '',
     ],
     '旋风刀': [
         '一般',
@@ -4704,7 +4714,8 @@ JINENG_LIST = {
         '100',
         '10',
         '制造风之刃，于第２回合攻击对手。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '剑舞': [
         '一般',
@@ -4713,7 +4724,7 @@ JINENG_LIST = {
         '—',
         '20',
         '激烈地跳起战舞提高气势。大幅提高自己的攻击。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','2','up')",
+        '自身强化',{'sxinfo':'ATK','lvinfo':'2','typeinfo':'up'}
     ],
     '居合斩': [
         '一般',
@@ -4722,7 +4733,8 @@ JINENG_LIST = {
         '95',
         '30',
         '用镰刀或爪子等切斩对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '起风': [
         '飞行',
@@ -4731,7 +4743,8 @@ JINENG_LIST = {
         '100',
         '35',
         '用翅膀将刮起的狂风袭向对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '翅膀攻击': [
         '飞行',
@@ -4740,7 +4753,8 @@ JINENG_LIST = {
         '100',
         '35',
         '大大地展开美丽的翅膀，将其撞向对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '吹飞': [
         '一般',
@@ -4758,7 +4772,8 @@ JINENG_LIST = {
         '95',
         '15',
         '第１回合飞上天空，第２回合攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '绑紧': [
         '一般',
@@ -4767,7 +4782,8 @@ JINENG_LIST = {
         '85',
         '20',
         '使用长长的身体或藤蔓等，在４～５回合内绑紧对手进行攻击。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,4,5)',
+        '连续伤害',
+        {'csmim':4,'csmax':5},
     ],
     '摔打': [
         '一般',
@@ -4776,7 +4792,8 @@ JINENG_LIST = {
         '75',
         '20',
         '使用长长的尾巴或藤蔓等摔打对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '藤鞭': [
         '草',
@@ -4785,7 +4802,8 @@ JINENG_LIST = {
         '100',
         '25',
         '用如同鞭子般弯曲而细长的藤蔓摔打对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '踩踏': [
         '一般',
@@ -4794,7 +4812,8 @@ JINENG_LIST = {
         '100',
         '20',
         '用大脚踩踏对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '二连踢': [
         '格斗',
@@ -4803,7 +4822,8 @@ JINENG_LIST = {
         '100',
         '30',
         '用２只脚踢飞对手进行攻击。连续２次给予伤害。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,2)',
+        '连续伤害',
+        {'csmim':2,'csmax':2},
     ],
     '百万吨重踢': [
         '一般',
@@ -4812,7 +4832,8 @@ JINENG_LIST = {
         '75',
         '5',
         '使出力大无穷的重踢踢飞对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '飞踢': [
         '格斗',
@@ -4821,7 +4842,8 @@ JINENG_LIST = {
         '95',
         '10',
         '使出高高的腾空踢攻击对手。如果踢偏则自己会受到伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '回旋踢': [
         '格斗',
@@ -4830,7 +4852,8 @@ JINENG_LIST = {
         '85',
         '15',
         '一边使身体快速旋转，一边踢飞对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '泼沙': [
         '地面',
@@ -4839,7 +4862,7 @@ JINENG_LIST = {
         '100',
         '15',
         '向对手脸上泼沙子，从而降低命中率。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '敌方削弱',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down'}
     ],
     '头锤': [
         '一般',
@@ -4848,7 +4871,8 @@ JINENG_LIST = {
         '100',
         '15',
         '将头伸出，笔直地扑向对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '角撞': [
         '一般',
@@ -4857,7 +4881,8 @@ JINENG_LIST = {
         '100',
         '25',
         '用尖锐的角攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '乱击': [
         '一般',
@@ -4866,7 +4891,8 @@ JINENG_LIST = {
         '85',
         '20',
         '用角或喙刺向对手进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',
+        {'csmim':2,'csmax':5},
     ],
     '角钻': [
         '一般',
@@ -4875,7 +4901,8 @@ JINENG_LIST = {
         '变化',
         '5',
         '用旋转的角刺入对手进行攻击。只要命中就会一击濒死。',
-        'get_bisha(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '一击必杀',
+        '',
     ],
     '撞击': [
         '一般',
@@ -4884,7 +4911,8 @@ JINENG_LIST = {
         '100',
         '35',
         '用整个身体撞向对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '泰山压顶': [
         '一般',
@@ -4893,7 +4921,9 @@ JINENG_LIST = {
         '100',
         '15',
         '用整个身体压住对手进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
+        
     ],
     '紧束': [
         '一般',
@@ -4902,7 +4932,8 @@ JINENG_LIST = {
         '90',
         '20',
         '使用长长的身体或藤蔓等，在４～５回合内紧束对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '猛撞': [
         '一般',
@@ -4911,7 +4942,8 @@ JINENG_LIST = {
         '85',
         '20',
         '以惊人的气势撞向对手进行攻击。自己也会受到少许伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '大闹一番': [
         '一般',
@@ -4929,7 +4961,8 @@ JINENG_LIST = {
         '100',
         '15',
         '拼命地猛撞向对手进行攻击。自己也会受到不小的伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '摇尾巴': [
         '一般',
@@ -4938,7 +4971,7 @@ JINENG_LIST = {
         '100',
         '30',
         '可爱地左右摇晃尾巴，诱使对手疏忽大意。会降低对手的防御。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '敌方削弱',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down'}
     ],
     '毒针': [
         '毒',
@@ -4947,7 +4980,8 @@ JINENG_LIST = {
         '100',
         '35',
         '将有毒的针刺入对手进行攻击。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','30')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'30','zt_hh':99},
     ],
     '双针': [
         '虫',
@@ -4956,7 +4990,8 @@ JINENG_LIST = {
         '100',
         '20',
         '将２根针刺入对手，连续２次给予伤害。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','20')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'20','zt_hh':99},
     ],
     '飞弹针': [
         '虫',
@@ -4965,7 +5000,8 @@ JINENG_LIST = {
         '95',
         '20',
         '向对手发射锐针进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',
+        {'csmim':2,'csmax':5},
     ],
     '瞪眼': [
         '一般',
@@ -4974,7 +5010,7 @@ JINENG_LIST = {
         '100',
         '30',
         '用犀利的眼神使其害怕，从而降低对手的防御。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '敌方削弱',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down'}
     ],
     '咬住': [
         '恶',
@@ -4983,7 +5019,7 @@ JINENG_LIST = {
         '100',
         '25',
         '用尖锐的牙咬住对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '叫声': [
         '一般',
@@ -4992,7 +5028,7 @@ JINENG_LIST = {
         '100',
         '40',
         '让对手听可爱的叫声，引开注意力使其疏忽，从而降低对手的攻击。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '敌方削弱',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down'}
     ],
     '吼叫': [
         '一般',
@@ -5010,7 +5046,7 @@ JINENG_LIST = {
         '55',
         '15',
         '让对手听舒适、美妙的歌声，从而陷入睡眠状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'睡眠')",
+        '附加状态',{'ztname':'睡眠','hh_num':5}
     ],
     '超音波': [
         '一般',
@@ -5019,7 +5055,7 @@ JINENG_LIST = {
         '55',
         '20',
         '从身体发出特殊的音波，从而使对手混乱。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱')",
+        '附加状态',{'ztname':'混乱','hh_num':5}
     ],
     '音爆': [
         '一般',
@@ -5028,7 +5064,7 @@ JINENG_LIST = {
         '90',
         '20',
         '将冲击波撞向对手进行攻击。必定会给予２０的伤害。',
-        'get_gushang(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,20)',
+        '固定伤害',{'shanghai':20}
     ],
     '定身法': [
         '一般',
@@ -5046,7 +5082,7 @@ JINENG_LIST = {
         '100',
         '30',
         '将强酸泼向对手进行攻击。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '火花': [
         '火',
@@ -5055,7 +5091,8 @@ JINENG_LIST = {
         '100',
         '25',
         '向对手发射小型火焰进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '喷射火焰': [
         '火',
@@ -5064,7 +5101,8 @@ JINENG_LIST = {
         '100',
         '15',
         '向对手发射烈焰进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '白雾': [
         '冰',
@@ -5082,7 +5120,8 @@ JINENG_LIST = {
         '100',
         '25',
         '向对手猛烈地喷射水流进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '水炮': [
         '水',
@@ -5091,7 +5130,8 @@ JINENG_LIST = {
         '80',
         '5',
         '向对手猛烈地喷射大量水流进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '冲浪': [
         '水',
@@ -5100,7 +5140,8 @@ JINENG_LIST = {
         '100',
         '15',
         '利用大浪攻击自己周围所有的宝可梦。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害',
+        '',
     ],
     '冰冻光束': [
         '冰',
@@ -5109,7 +5150,8 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手发射冰冻光束进行攻击。有时会让对手陷入冰冻状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰冻','10')",
+        '状态伤害',
+        {'ztname':'冰冻','zt_jl':'10','zt_hh':99},
     ],
     '暴风雪': [
         '冰',
@@ -5118,7 +5160,8 @@ JINENG_LIST = {
         '70',
         '5',
         '将猛烈的暴风雪刮向对手进行攻击。有时会让对手陷入冰冻状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰冻','10')",
+        '状态伤害',
+        {'ztname':'冰冻','zt_jl':'10','zt_hh':99},
     ],
     '幻象光线': [
         '超能力',
@@ -5127,7 +5170,8 @@ JINENG_LIST = {
         '100',
         '20',
         '向对手发射神奇的光线进行攻击。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','10','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'10','zt_hh':5},
     ],
     '泡沫光线': [
         '水',
@@ -5136,7 +5180,7 @@ JINENG_LIST = {
         '100',
         '20',
         '向对手猛烈地喷射泡沫进行攻击。有时会降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '极光束': [
         '冰',
@@ -5145,7 +5189,7 @@ JINENG_LIST = {
         '100',
         '20',
         '向对手发射虹色光束进行攻击。有时会降低对手的攻击。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '附加伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '破坏光线': [
         '一般',
@@ -5154,7 +5198,7 @@ JINENG_LIST = {
         '90',
         '5',
         '向对手发射强烈的光线进行攻击。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '啄': [
         '飞行',
@@ -5163,7 +5207,7 @@ JINENG_LIST = {
         '100',
         '35',
         '用尖锐的喙或角刺向对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '啄钻': [
         '飞行',
@@ -5172,7 +5216,7 @@ JINENG_LIST = {
         '100',
         '20',
         '一边旋转，一边将尖喙刺入对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '地狱翻滚': [
         '格斗',
@@ -5181,7 +5225,7 @@ JINENG_LIST = {
         '80',
         '20',
         '将对手连同自己一起摔向地面进行攻击。自己也会受到少许伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害',''
     ],
     '踢倒': [
         '格斗',
@@ -5190,7 +5234,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用力踢对手的脚，使其摔倒进行攻击。对手越重，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '双倍奉还': [
         '格斗',
@@ -5208,7 +5252,7 @@ JINENG_LIST = {
         '100',
         '20',
         '利用引力将对手甩飞出去。给予对手和自己等级相同的伤害。',
-        'get_shanghai_pt_bh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2)',
+        '变化伤害',{'index':2}
     ],
     '怪力': [
         '一般',
@@ -5217,7 +5261,7 @@ JINENG_LIST = {
         '100',
         '15',
         '使出浑身力气殴打对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '吸取': [
         '草',
@@ -5226,7 +5270,7 @@ JINENG_LIST = {
         '100',
         '25',
         '吸取对手的养分进行攻击。可以回复给予对手伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5}
     ],
     '超级吸取': [
         '草',
@@ -5235,7 +5279,7 @@ JINENG_LIST = {
         '100',
         '15',
         '吸取对手的养分进行攻击。可以回复给予对手伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5}
     ],
     '寄生种子': [
         '草',
@@ -5253,7 +5297,7 @@ JINENG_LIST = {
         '—',
         '20',
         '让身体一下子长大，从而提高攻击和特攻。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPATK','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,SPATK','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '飞叶快刀': [
         '草',
@@ -5262,7 +5306,7 @@ JINENG_LIST = {
         '95',
         '25',
         '飞出叶片，切斩对手进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '日光束': [
         '草',
@@ -5271,7 +5315,7 @@ JINENG_LIST = {
         '100',
         '10',
         '第１回合收集满满的日光，第２回合发射光束进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '毒粉': [
         '毒',
@@ -5280,7 +5324,7 @@ JINENG_LIST = {
         '75',
         '35',
         '撒出毒粉，从而让对手陷入中毒状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒',99)",
+        '附加状态',{'ztname':'中毒','hh_num':99}
     ],
     '麻痹粉': [
         '草',
@@ -5289,7 +5333,7 @@ JINENG_LIST = {
         '75',
         '30',
         '撒出麻痹粉，从而让对手陷入麻痹状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹')",
+        '附加状态',{'ztname':'麻痹','hh_num':99}
     ],
     '催眠粉': [
         '草',
@@ -5298,7 +5342,7 @@ JINENG_LIST = {
         '75',
         '15',
         '撒出催眠粉，从而让对手陷入睡眠状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'睡眠')",
+        '附加状态',{'ztname':'睡眠','hh_num':5}
     ],
     '花瓣舞': [
         '草',
@@ -5316,7 +5360,7 @@ JINENG_LIST = {
         '95',
         '40',
         '用口中吐出的丝缠绕对手，从而大幅降低对手的速度。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '敌方削弱',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down'}
     ],
     '龙之怒': [
         '龙',
@@ -5325,7 +5369,7 @@ JINENG_LIST = {
         '100',
         '10',
         '将愤怒的冲击波撞向对手进行攻击。必定会给予４０的伤害。',
-        'get_gushang(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,40)',
+        '固定伤害',{'shanghai':40}
     ],
     '火焰旋涡': [
         '火',
@@ -5334,7 +5378,7 @@ JINENG_LIST = {
         '85',
         '15',
         '将对手困在激烈的火焰旋涡中，在４～５回合内进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '电击': [
         '电',
@@ -5343,7 +5387,8 @@ JINENG_LIST = {
         '100',
         '30',
         '发出电流刺激对手进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '十万伏特': [
         '电',
@@ -5352,7 +5397,8 @@ JINENG_LIST = {
         '100',
         '15',
         '向对手发出强力电击进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '电磁波': [
         '电',
@@ -5361,7 +5407,7 @@ JINENG_LIST = {
         '90',
         '20',
         '向对手发出微弱的电击，从而让对手陷入麻痹状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹')",
+        '附加状态',{'ztname':'麻痹','hh_num':99}
     ],
     '打雷': [
         '电',
@@ -5370,7 +5416,8 @@ JINENG_LIST = {
         '70',
         '10',
         '向对手劈下暴雷进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '落石': [
         '岩石',
@@ -5379,7 +5426,7 @@ JINENG_LIST = {
         '90',
         '15',
         '拿起小岩石，投掷对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '地震': [
         '地面',
@@ -5388,7 +5435,7 @@ JINENG_LIST = {
         '100',
         '10',
         '利用地震的冲击，攻击自己周围所有的宝可梦。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '地裂': [
         '地面',
@@ -5397,7 +5444,7 @@ JINENG_LIST = {
         '变化',
         '5',
         '让对手掉落于地裂的裂缝中进行攻击。只要命中就会一击濒死。',
-        'get_bisha(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '一击必杀','',
     ],
     '挖洞': [
         '地面',
@@ -5406,7 +5453,7 @@ JINENG_LIST = {
         '100',
         '10',
         '第１回合钻入，第２回合攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '剧毒': [
         '毒',
@@ -5415,7 +5462,7 @@ JINENG_LIST = {
         '90',
         '10',
         '让对手陷入剧毒状态。随着回合的推进，中毒伤害会增加。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒',99)",
+        '附加状态',{'ztname':'中毒','hh_num':99}
     ],
     '念力': [
         '超能力',
@@ -5424,7 +5471,8 @@ JINENG_LIST = {
         '100',
         '25',
         '向对手发送微弱的念力进行攻击。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','10','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'10','zt_hh':5},
     ],
     '精神强念': [
         '超能力',
@@ -5433,7 +5481,7 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手发送强大的念力进行攻击。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '催眠术': [
         '超能力',
@@ -5442,7 +5490,7 @@ JINENG_LIST = {
         '60',
         '20',
         '施以诱导睡意的暗示，让对手陷入睡眠状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'睡眠')",
+        '附加状态',{'ztname':'睡眠','hh_num':5}
     ],
     '瑜伽姿势': [
         '超能力',
@@ -5451,7 +5499,7 @@ JINENG_LIST = {
         '—',
         '40',
         '唤醒身体深处沉睡的力量，从而提高自己的攻击。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        '自身强化',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'up'}
     ],
     '高速移动': [
         '超能力',
@@ -5460,7 +5508,7 @@ JINENG_LIST = {
         '—',
         '30',
         '让身体放松变得轻盈，以便高速移动。大幅提高自己的速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','2','up')",
+        '自身强化',{'sxinfo':'SPD','lvinfo':'2','typeinfo':'up'}
     ],
     '电光一闪': [
         '一般',
@@ -5469,7 +5517,7 @@ JINENG_LIST = {
         '100',
         '30',
         '以迅雷不及掩耳之势扑向对手。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '愤怒': [
         '一般',
@@ -5478,7 +5526,7 @@ JINENG_LIST = {
         '100',
         '20',
         '如果在使出招式后受到攻击的话，会因愤怒的力量而提高攻击。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        '强化伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'up','bh_jl':100}
     ],
     '瞬间移动': [
         '超能力',
@@ -5496,7 +5544,7 @@ JINENG_LIST = {
         '100',
         '15',
         '显示恐怖幻影，只给予对手和自己等级相同的伤害。',
-        'get_shanghai_pt_bh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2)',
+        '变化伤害',{'index':2}
     ],
     '模仿': [
         '一般',
@@ -5514,7 +5562,7 @@ JINENG_LIST = {
         '85',
         '40',
         '发出不由自主想要捂起耳朵的刺耳声，从而大幅降低对手的防御。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','2','down')",
+        '敌方削弱',{'sxinfo':'DEF','lvinfo':'2','typeinfo':'down'}
     ],
     '影子分身': [
         '一般',
@@ -5523,7 +5571,7 @@ JINENG_LIST = {
         '—',
         '15',
         '通过快速移动来制造分身，扰乱对手，从而提高闪避率。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ER','1','up')",
+        '自身强化',{'sxinfo':'ER','lvinfo':'1','typeinfo':'up'}
     ],
     '自我再生': [
         '一般',
@@ -5532,7 +5580,7 @@ JINENG_LIST = {
         '—',
         '10',
         '让全身的细胞获得再生，回复一半ＨＰ。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '变硬': [
         '一般',
@@ -5541,7 +5589,7 @@ JINENG_LIST = {
         '—',
         '30',
         '全身使劲，让身体变硬，从而提高自己的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'up'}
     ],
     '变小': [
         '一般',
@@ -5550,7 +5598,7 @@ JINENG_LIST = {
         '—',
         '10',
         '蜷缩身体显得很小，从而大幅提高自己的闪避率。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ER','2','up')",
+        '自身强化',{'sxinfo':'ER','lvinfo':'2','typeinfo':'up'}
     ],
     '烟幕': [
         '一般',
@@ -5559,7 +5607,7 @@ JINENG_LIST = {
         '100',
         '20',
         '向对手喷出烟或墨汁等，从而降低对手的命中率。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '敌方削弱',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down'}
     ],
     '奇异之光': [
         '幽灵',
@@ -5568,7 +5616,7 @@ JINENG_LIST = {
         '100',
         '10',
         '显示奇怪的光，扰乱对手。使对手混乱。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱')",
+        '附加状态',{'ztname':'混乱','hh_num':5}
     ],
     '缩入壳中': [
         '水',
@@ -5577,7 +5625,7 @@ JINENG_LIST = {
         '—',
         '40',
         '缩入壳里保护身体，从而提高自己的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'up'}
     ],
     '变圆': [
         '一般',
@@ -5586,7 +5634,7 @@ JINENG_LIST = {
         '—',
         '40',
         '将身体蜷曲变圆，从而提高自己的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'up'}
     ],
     '屏障': [
         '超能力',
@@ -5595,7 +5643,7 @@ JINENG_LIST = {
         '—',
         '20',
         '制造坚固的壁障，从而大幅提高自己的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','2','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'2','typeinfo':'up'}
     ],
     '光墙': [
         '超能力',
@@ -5631,7 +5679,7 @@ JINENG_LIST = {
         '—',
         '30',
         '深深地吸口气，集中精神。自己的攻击会变得容易击中要害。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'CT','1','up')",
+        '自身强化',{'sxinfo':'CT','lvinfo':'1','typeinfo':'up'}
     ],
     '忍耐': [
         '一般',
@@ -5667,7 +5715,7 @@ JINENG_LIST = {
         '100',
         '5',
         '引发爆炸，攻击自己周围所有的宝可梦。使用后陷入濒死。',
-        'get_shanghai_zb(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '自爆',''
     ],
     '炸蛋': [
         '一般',
@@ -5676,7 +5724,7 @@ JINENG_LIST = {
         '75',
         '10',
         '向对手用力投掷大大的蛋进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '舌舔': [
         '幽灵',
@@ -5685,7 +5733,8 @@ JINENG_LIST = {
         '100',
         '30',
         '用长长的舌头，舔遍对手进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '浊雾': [
         '毒',
@@ -5694,7 +5743,8 @@ JINENG_LIST = {
         '70',
         '20',
         '将肮脏的浓雾吹向对手进行攻击。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','40')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'40','zt_hh':99},
     ],
     '污泥攻击': [
         '毒',
@@ -5703,7 +5753,8 @@ JINENG_LIST = {
         '100',
         '20',
         '用污泥投掷对手进行攻击。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','30')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'30','zt_hh':99},
     ],
     '骨棒': [
         '地面',
@@ -5712,7 +5763,7 @@ JINENG_LIST = {
         '85',
         '20',
         '用手中的骨头殴打对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '大字爆炎': [
         '火',
@@ -5721,7 +5772,8 @@ JINENG_LIST = {
         '85',
         '5',
         '用大字形状的火焰烧尽对手。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '攀瀑': [
         '水',
@@ -5730,7 +5782,7 @@ JINENG_LIST = {
         '100',
         '15',
         '以惊人的气势扑向对手。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '贝壳夹击': [
         '水',
@@ -5748,7 +5800,7 @@ JINENG_LIST = {
         '100',
         '20',
         '发射星形的光攻击对手。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '火箭头锤': [
         '一般',
@@ -5757,7 +5809,7 @@ JINENG_LIST = {
         '100',
         '10',
         '第１回合把头缩进去，从而提高防御。第２回合攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '尖刺加农炮': [
         '一般',
@@ -5766,7 +5818,7 @@ JINENG_LIST = {
         '100',
         '15',
         '向对手发射锐针进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '缠绕': [
         '一般',
@@ -5775,7 +5827,7 @@ JINENG_LIST = {
         '100',
         '35',
         '用触手或青藤等缠绕进行攻击。有时会降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '瞬间失忆': [
         '超能力',
@@ -5784,7 +5836,7 @@ JINENG_LIST = {
         '—',
         '20',
         '将头脑清空，瞬间忘记某事，从而大幅提高自己的特防。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','2','up')",
+        '自身强化',{'sxinfo':'SPDEF','lvinfo':'2','typeinfo':'up'}
     ],
     '折弯汤匙': [
         '超能力',
@@ -5793,7 +5845,7 @@ JINENG_LIST = {
         '80',
         '15',
         '折弯汤匙引开注意，从而降低对手的命中率。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '敌方削弱',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down'}
     ],
     '生蛋': [
         '一般',
@@ -5802,7 +5854,7 @@ JINENG_LIST = {
         '—',
         '10',
         '回复自己最大ＨＰ的一半。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5}
     ],
     '飞膝踢': [
         '格斗',
@@ -5811,7 +5863,7 @@ JINENG_LIST = {
         '90',
         '10',
         '跳起后用膝盖撞对手进行攻击。如果撞偏则自己会受到伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '大蛇瞪眼': [
         '一般',
@@ -5820,7 +5872,7 @@ JINENG_LIST = {
         '100',
         '30',
         '用腹部的花纹使对手害怕，从而让其陷入麻痹状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹')",
+        '附加状态',{'ztname':'麻痹','hh_num':99}
     ],
     '食梦': [
         '超能力',
@@ -5829,7 +5881,7 @@ JINENG_LIST = {
         '100',
         '15',
         '吃掉正在睡觉的对手的梦进行攻击。回复对手所受到伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5}
     ],
     '毒瓦斯': [
         '毒',
@@ -5838,7 +5890,7 @@ JINENG_LIST = {
         '90',
         '40',
         '将毒瓦斯吹到对手的脸上，从而让对手陷入中毒状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒',99)",
+        '附加状态',{'ztname':'中毒','hh_num':99}
     ],
     '投球': [
         '一般',
@@ -5847,7 +5899,7 @@ JINENG_LIST = {
         '85',
         '20',
         '向对手投掷圆形物体进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '吸血': [
         '虫',
@@ -5856,7 +5908,7 @@ JINENG_LIST = {
         '100',
         '10',
         '吸取血液攻击对手。可以回复给予对手伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '恶魔之吻': [
         '一般',
@@ -5865,7 +5917,7 @@ JINENG_LIST = {
         '75',
         '10',
         '用恐怖的脸强吻对手。让对手陷入睡眠状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'睡眠')",
+        '附加状态',{'ztname':'睡眠','hh_num':5}
     ],
     '神鸟猛击': [
         '飞行',
@@ -5874,7 +5926,7 @@ JINENG_LIST = {
         '90',
         '5',
         '第２回合攻击对手。偶尔使对手畏缩。也容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '变身': [
         '一般',
@@ -5892,7 +5944,7 @@ JINENG_LIST = {
         '100',
         '30',
         '向对手用力吹起无数泡泡进行攻击。有时会降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '迷昏拳': [
         '一般',
@@ -5901,7 +5953,8 @@ JINENG_LIST = {
         '100',
         '10',
         '有节奏地出拳攻击对手。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','30','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'30','zt_hh':5},
     ],
     '蘑菇孢子': [
         '草',
@@ -5910,7 +5963,7 @@ JINENG_LIST = {
         '100',
         '15',
         '沙沙沙地撒满具有催眠效果的孢子，从而让对手陷入睡眠状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'睡眠')",
+        '附加状态',{'ztname':'睡眠','hh_num':5}
     ],
     '闪光': [
         '一般',
@@ -5919,7 +5972,7 @@ JINENG_LIST = {
         '100',
         '20',
         '使出耀眼光芒，从而降低对手的命中率。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '敌方削弱',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down'}
     ],
     '精神波': [
         '超能力',
@@ -5946,7 +5999,8 @@ JINENG_LIST = {
         '—',
         '20',
         '通过细胞的变化进行液化，从而大幅提高自己的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','2','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'2','typeinfo':'up'}
+        
     ],
     '蟹钳锤': [
         '水',
@@ -5955,7 +6009,7 @@ JINENG_LIST = {
         '90',
         '10',
         '用大钳子敲打对手进行攻击。容易击中要害。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'CT','1','up')",
+        "",
     ],
     '大爆炸': [
         '一般',
@@ -5964,7 +6018,7 @@ JINENG_LIST = {
         '100',
         '5',
         '引发大爆炸，攻击自己周围所有的宝可梦。使用后自己会陷入濒死。',
-        'get_shanghai_zb(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '自爆','',
     ],
     '乱抓': [
         '一般',
@@ -5973,7 +6027,7 @@ JINENG_LIST = {
         '80',
         '15',
         '用爪子或镰刀等抓对手进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '骨头回力镖': [
         '地面',
@@ -5982,7 +6036,8 @@ JINENG_LIST = {
         '90',
         '10',
         '用手中的骨头投掷对手，来回连续２次给予伤害。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,2)',
+        '连续伤害',
+        {'csmim':2,'csmax':2},
     ],
     '睡觉': [
         '超能力',
@@ -5991,7 +6046,7 @@ JINENG_LIST = {
         '—',
         '10',
         '连续睡上２回合。回复自己的全部ＨＰ以及治愈所有异常状态。',
-        'sleep(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '睡觉',''
     ],
     '岩崩': [
         '岩石',
@@ -6000,7 +6055,7 @@ JINENG_LIST = {
         '90',
         '10',
         '将大岩石猛烈地撞向对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '必杀门牙': [
         '一般',
@@ -6009,7 +6064,7 @@ JINENG_LIST = {
         '90',
         '15',
         '用锋利的门牙牢牢地咬住对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '棱角化': [
         '一般',
@@ -6018,7 +6073,7 @@ JINENG_LIST = {
         '—',
         '30',
         '增加身体的角，变得棱棱角角，从而提高自己的攻击。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        '自身强化',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'up'}
     ],
     '纹理': [
         '一般',
@@ -6036,7 +6091,8 @@ JINENG_LIST = {
         '100',
         '10',
         '用３种光线进行攻击。有时会让对手陷入麻痹、灼伤或冰冻的状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '愤怒门牙': [
         '一般',
@@ -6045,7 +6101,7 @@ JINENG_LIST = {
         '90',
         '10',
         '用锋利的门牙猛烈地咬住对手进行攻击。对手的ＨＰ减半。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '劈开': [
         '一般',
@@ -6054,7 +6110,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用爪子或镰刀等劈开对手进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '替身': [
         '一般',
@@ -6072,7 +6128,7 @@ JINENG_LIST = {
         '100',
         '999',
         '当自己的ＰＰ耗尽时，努力挣扎攻击对手。自己也会受到少许伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '写生': [
         '一般',
@@ -6090,7 +6146,7 @@ JINENG_LIST = {
         '90',
         '10',
         '连续３次踢对手进行攻击。每踢中一次，威力就会提高。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,3,3)',
+        '连续加伤',''
     ],
     '小偷': [
         '恶',
@@ -6099,7 +6155,7 @@ JINENG_LIST = {
         '100',
         '25',
         '攻击的同时盗取道具。当自己携带道具时，不会去盗取。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '蛛网': [
         '虫',
@@ -6135,7 +6191,8 @@ JINENG_LIST = {
         '100',
         '25',
         '让火焰覆盖全身，猛撞向对手进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '打鼾': [
         '一般',
@@ -6144,7 +6201,7 @@ JINENG_LIST = {
         '100',
         '15',
         '在自己睡觉时，发出噪音进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '诅咒': [
         '幽灵',
@@ -6162,7 +6219,7 @@ JINENG_LIST = {
         '100',
         '15',
         '抓狂般乱打进行攻击。自己的ＨＰ越少，招式的威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '纹理2': [
         '一般',
@@ -6180,7 +6237,7 @@ JINENG_LIST = {
         '95',
         '5',
         '发射空气旋涡进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '棉孢子': [
         '草',
@@ -6189,7 +6246,7 @@ JINENG_LIST = {
         '100',
         '40',
         '将棉花般柔软的孢子紧贴对手，从而大幅降低对手的速度。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','2','down')",
+        '敌方削弱',{'sxinfo':'SPD','lvinfo':'2','typeinfo':'down'}
     ],
     '起死回生': [
         '格斗',
@@ -6198,7 +6255,7 @@ JINENG_LIST = {
         '100',
         '15',
         '竭尽全力进行攻击。自己的ＨＰ越少，招式的威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '怨恨': [
         '幽灵',
@@ -6216,7 +6273,8 @@ JINENG_LIST = {
         '100',
         '25',
         '将冰冷的细雪吹向对手进行攻击。有时会让对手陷入冰冻状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰冻','10')",
+        '状态伤害',
+        {'ztname':'冰冻','zt_jl':'10','zt_hh':99},
     ],
     '守住': [
         '一般',
@@ -6225,7 +6283,7 @@ JINENG_LIST = {
         '—',
         '10',
         '完全抵挡对手的攻击。连续使出则容易失败。',
-        'add_wudi(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '无敌','',
     ],
     '音速拳': [
         '格斗',
@@ -6234,7 +6292,7 @@ JINENG_LIST = {
         '100',
         '30',
         '以迅雷不及掩耳之势出拳。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '鬼面': [
         '一般',
@@ -6243,7 +6301,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用恐怖的脸瞪着对手，使其害怕，从而大幅降低对手的速度。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','2','down')",
+        '敌方削弱',{'sxinfo':'SPD','lvinfo':'2','typeinfo':'down'}
     ],
     '出奇一击': [
         '恶',
@@ -6252,7 +6310,7 @@ JINENG_LIST = {
         '100',
         '20',
         '悄悄地靠近对手，趁其不备进行殴打。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '天使之吻': [
         '妖精',
@@ -6261,7 +6319,7 @@ JINENG_LIST = {
         '75',
         '10',
         '像天使般可爱地亲吻对手，从而使对手混乱。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱')",
+        '附加状态',{'ztname':'混乱','hh_num':5}
     ],
     '腹鼓': [
         '一般',
@@ -6270,7 +6328,7 @@ JINENG_LIST = {
         '—',
         '10',
         '将自己的ＨＰ减少到最大ＨＰ的一半，从而最大限度提高自己的攻击。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','2','up')",
+        "",
     ],
     '污泥炸弹': [
         '毒',
@@ -6279,7 +6337,8 @@ JINENG_LIST = {
         '100',
         '10',
         '用污泥投掷对手进行攻击。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','30')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'30','zt_hh':99},
     ],
     '掷泥': [
         '地面',
@@ -6288,7 +6347,7 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手的脸等投掷泥块进行攻击。会降低对手的命中率。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down','100')",
+        '附加伤害',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '章鱼桶炮': [
         '水',
@@ -6297,7 +6356,7 @@ JINENG_LIST = {
         '85',
         '10',
         '向对手的脸等喷出墨汁进行攻击。有时会降低对手的命中率。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '附加伤害',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '撒菱': [
         '地面',
@@ -6315,7 +6374,8 @@ JINENG_LIST = {
         '50',
         '5',
         '发射大炮一样的电流进行攻击。让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','100')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'100','zt_hh':99},
     ],
     '识破': [
         '一般',
@@ -6351,7 +6411,7 @@ JINENG_LIST = {
         '95',
         '15',
         '将结冰的冷气吹向对手进行攻击。会降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '看穿': [
         '格斗',
@@ -6360,7 +6420,7 @@ JINENG_LIST = {
         '—',
         '5',
         '完全抵挡对手的攻击。连续使出则容易失败。',
-        'add_wudi(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '无敌','',
     ],
     '骨棒乱打': [
         '地面',
@@ -6369,7 +6429,7 @@ JINENG_LIST = {
         '90',
         '10',
         '用坚硬的骨头殴打对手进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '锁定': [
         '一般',
@@ -6387,7 +6447,7 @@ JINENG_LIST = {
         '100',
         '10',
         '在２～３回合内，乱打一气地进行攻击。大闹一番后自己会陷入混乱。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '沙暴': [
         '岩石',
@@ -6396,7 +6456,7 @@ JINENG_LIST = {
         '—',
         '10',
         '在５回合内扬起沙暴，除岩石、地面和钢属性以外的宝可梦，都会受到伤害。岩石属性的特防还会提高。',
-        "changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'沙暴')",
+        '天气',{'tqname':'沙暴'}
     ],
     '终极吸取': [
         '草',
@@ -6405,7 +6465,7 @@ JINENG_LIST = {
         '100',
         '10',
         '吸取对手的养分进行攻击。可以回复给予对手伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '挺住': [
         '一般',
@@ -6423,7 +6483,7 @@ JINENG_LIST = {
         '100',
         '20',
         '可爱地凝视，诱使对手疏忽大意，从而大幅降低对手的攻击。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','2','down')",
+        '敌方削弱',{'sxinfo':'ATK','lvinfo':'2','typeinfo':'down'}
     ],
     '滚动': [
         '岩石',
@@ -6432,7 +6492,7 @@ JINENG_LIST = {
         '90',
         '20',
         '在５回合内连续滚动攻击对手。招式每次击中，威力就会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '点到为止': [
         '一般',
@@ -6441,7 +6501,7 @@ JINENG_LIST = {
         '100',
         '40',
         '对手的ＨＰ至少会留下１ＨＰ，如此般手下留情地攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '虚张声势': [
         '一般',
@@ -6459,7 +6519,7 @@ JINENG_LIST = {
         '—',
         '10',
         '回复自己最大ＨＰ的一半。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5}
     ],
     '电光': [
         '电',
@@ -6468,7 +6528,8 @@ JINENG_LIST = {
         '100',
         '20',
         '让电流覆盖全身，猛撞向对手进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '连斩': [
         '虫',
@@ -6477,7 +6538,7 @@ JINENG_LIST = {
         '95',
         '20',
         '用镰刀或爪子等切斩对手进行攻击。连续击中，威力就会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '钢翼': [
         '钢',
@@ -6486,7 +6547,7 @@ JINENG_LIST = {
         '90',
         '25',
         '用坚硬的翅膀敲打对手进行攻击。有时会提高自己的防御。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','up')",
+        '强化伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'up','bh_jl':20}
     ],
     '黑色目光': [
         '一般',
@@ -6531,7 +6592,7 @@ JINENG_LIST = {
         '100',
         '20',
         '为了训练家而全力攻击对手。亲密度越高，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '礼物': [
         '一般',
@@ -6540,7 +6601,7 @@ JINENG_LIST = {
         '90',
         '15',
         '递给对手设有圈套的盒子进行攻击。也有可能回复对手ＨＰ。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '迁怒': [
         '一般',
@@ -6549,7 +6610,7 @@ JINENG_LIST = {
         '100',
         '20',
         '为了发泄不满而全力攻击对手。亲密度越低，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '神秘守护': [
         '一般',
@@ -6576,7 +6637,8 @@ JINENG_LIST = {
         '95',
         '5',
         '用神秘的火焰烧尽对手进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','50')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'50','zt_hh':99},
     ],
     '震级': [
         '地面',
@@ -6585,7 +6647,7 @@ JINENG_LIST = {
         '100',
         '30',
         '晃动地面，攻击自己周围所有的宝可梦。招式的威力会有各种变化。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '爆裂拳': [
         '格斗',
@@ -6594,7 +6656,8 @@ JINENG_LIST = {
         '50',
         '5',
         '使出浑身力气出拳进行攻击。必定会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','100','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'100','zt_hh':5},
     ],
     '超级角击': [
         '虫',
@@ -6603,7 +6666,7 @@ JINENG_LIST = {
         '85',
         '10',
         '用坚硬且华丽的角狠狠地刺入对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '龙息': [
         '龙',
@@ -6612,7 +6675,8 @@ JINENG_LIST = {
         '100',
         '20',
         '将强烈的气息吹向对手进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '接棒': [
         '一般',
@@ -6639,7 +6703,7 @@ JINENG_LIST = {
         '100',
         '20',
         '当对手替换宝可梦上场时使出此招式的话，能够以２倍的威力进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '高速旋转': [
         '一般',
@@ -6657,7 +6721,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用香气大幅降低对手的闪避率。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ER','2','down')",
+        '敌方削弱',{'sxinfo':'ER','lvinfo':'2','typeinfo':'down'}
     ],
     '铁尾': [
         '钢',
@@ -6666,7 +6730,7 @@ JINENG_LIST = {
         '75',
         '15',
         '使用坚硬的尾巴摔打对手进行攻击。有时会降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '金属爪': [
         '钢',
@@ -6675,7 +6739,7 @@ JINENG_LIST = {
         '95',
         '35',
         '用钢铁之爪劈开对手进行攻击。有时会提高自己的攻击。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        '强化伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'up','bh_jl':20}
     ],
     '借力摔': [
         '格斗',
@@ -6684,7 +6748,7 @@ JINENG_LIST = {
         '100',
         '10',
         '会在对手之后进行攻击。但是自己的攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '晨光': [
         '一般',
@@ -6693,7 +6757,7 @@ JINENG_LIST = {
         '—',
         '5',
         '回复自己的ＨＰ。根据天气的不同，回复量也会有所变化。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '光合作用': [
         '草',
@@ -6702,7 +6766,7 @@ JINENG_LIST = {
         '—',
         '5',
         '回复自己的ＨＰ。根据天气的不同，回复量也会有所变化。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '月光': [
         '妖精',
@@ -6711,7 +6775,7 @@ JINENG_LIST = {
         '—',
         '5',
         '回复自己的ＨＰ。根据天气的不同，回复量也会有所变化。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '觉醒力量': [
         '一般',
@@ -6729,7 +6793,7 @@ JINENG_LIST = {
         '80',
         '5',
         '用两手呈十字劈打对手进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '龙卷风': [
         '龙',
@@ -6738,7 +6802,7 @@ JINENG_LIST = {
         '100',
         '20',
         '兴起龙卷风，将对手卷入进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '求雨': [
         '水',
@@ -6747,7 +6811,7 @@ JINENG_LIST = {
         '—',
         '5',
         '在５回合内一直降雨，从而提高水属性的招式威力。火属性的招式威力则降低。',
-        "changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'下雨')",
+        '天气',{'tqname':'下雨'}
     ],
     '大晴天': [
         '火',
@@ -6756,7 +6820,7 @@ JINENG_LIST = {
         '—',
         '5',
         '在５回合内阳光变得强烈，从而提高火属性的招式威力。水属性的招式威力则降低。',
-        "changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'大晴天')",
+        '天气',{'tqname':'大晴天'}
     ],
     '咬碎': [
         '恶',
@@ -6765,7 +6829,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用利牙咬碎对手进行攻击。有时会降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '镜面反射': [
         '超能力',
@@ -6792,7 +6856,7 @@ JINENG_LIST = {
         '100',
         '5',
         '以迅雷不及掩耳之势猛撞向对手进行攻击。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '原始之力': [
         '岩石',
@@ -6801,7 +6865,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用原始之力进行攻击。有时会提高自己所有的能力。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,SPATK,SPDEF,SPD','1,1,1,1,1','up,up,up,up,up','5')",
+        '强化伤害',{'sxinfo':'ATK,DEF,SPATK,SPDEF,SPD','lvinfo':'1,1,1,1,1','typeinfo':'up,up,up,up,up','bh_jl':5}
     ],
     '暗影球': [
         '幽灵',
@@ -6810,7 +6874,7 @@ JINENG_LIST = {
         '100',
         '15',
         '投掷一团黑影进行攻击。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '预知未来': [
         '超能力',
@@ -6819,7 +6883,7 @@ JINENG_LIST = {
         '100',
         '10',
         '在使用招式２回合后，向对手发送一团念力进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '碎岩': [
         '格斗',
@@ -6828,7 +6892,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用拳头进行攻击。有时会降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '潮旋': [
         '水',
@@ -6837,7 +6901,7 @@ JINENG_LIST = {
         '85',
         '15',
         '将对手困在激烈的水流旋涡中，在４～５回合内进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '围攻': [
         '恶',
@@ -6846,7 +6910,7 @@ JINENG_LIST = {
         '100',
         '10',
         '我方全员进行攻击。同行的宝可梦越多，招式的攻击次数越多。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '击掌奇袭': [
         '一般',
@@ -6855,7 +6919,7 @@ JINENG_LIST = {
         '100',
         '10',
         '进行先制攻击，使对手畏缩。要在出场后立刻使出才能成功。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '吵闹': [
         '一般',
@@ -6864,7 +6928,7 @@ JINENG_LIST = {
         '100',
         '10',
         '在３回合内用骚乱攻击对手。在此期间谁都不能入眠。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '蓄力': [
         '一般',
@@ -6873,7 +6937,8 @@ JINENG_LIST = {
         '—',
         '20',
         '积蓄力量，提高自己的防御和特防。最多积蓄３次。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','up')",
+        "",
+        
     ],
     '喷出': [
         '一般',
@@ -6900,7 +6965,8 @@ JINENG_LIST = {
         '90',
         '10',
         '将炎热的气息吹向对手进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '冰雹': [
         '冰',
@@ -6909,7 +6975,7 @@ JINENG_LIST = {
         '—',
         '10',
         '在５回合内一直降冰雹，除冰属性的宝可梦以外，给予全体宝可梦伤害。',
-        "changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰雹')",
+        '天气',{'tqname':'冰雹'}
     ],
     '无理取闹': [
         '恶',
@@ -6936,7 +7002,7 @@ JINENG_LIST = {
         '85',
         '15',
         '放出怪异的火焰，从而让对手陷入灼伤状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤',99)",
+        '附加状态',{'ztname':'灼伤','hh_num':99}
     ],
     '临别礼物': [
         '恶',
@@ -6945,7 +7011,7 @@ JINENG_LIST = {
         '100',
         '10',
         '虽然会使自己陷入濒死，但是能够大幅降低对手的攻击和特攻。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPATK','1,1','down,down')",
+        '敌方削弱',{'sxinfo':'ATK,SPATK','lvinfo':'1,1','typeinfo':'down,down'}
     ],
     '硬撑': [
         '一般',
@@ -6954,7 +7020,7 @@ JINENG_LIST = {
         '100',
         '20',
         '当自己处于中毒、麻痹、灼伤状态时，向对手使出此招式的话，威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '真气拳': [
         '格斗',
@@ -6963,7 +7029,7 @@ JINENG_LIST = {
         '100',
         '20',
         '集中精神出拳。在招式使出前若受到攻击则会失败。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '清醒': [
         '一般',
@@ -6972,7 +7038,7 @@ JINENG_LIST = {
         '100',
         '10',
         '对于麻痹状态下的对手，威力会变成２倍。但相反对手的麻痹也会被治愈。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '看我嘛': [
         '一般',
@@ -6990,7 +7056,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用自然之力进行攻击。根据所使用场所的不同，使出的招式也会有所变化。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '充电': [
         '电',
@@ -6999,7 +7065,7 @@ JINENG_LIST = {
         '—',
         '20',
         '提高下一回合使出的电属性的招式威力。自己的特防也会提高。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','up')",
+        '自身强化',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'up'}
     ],
     '挑衅': [
         '恶',
@@ -7071,7 +7137,7 @@ JINENG_LIST = {
         '100',
         '5',
         '发挥惊人的力量攻击对手。自己的攻击和防御会降低。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '魔法反射': [
         '超能力',
@@ -7098,7 +7164,7 @@ JINENG_LIST = {
         '100',
         '10',
         '如果受到对手的招式攻击，就能给予对手２倍的伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '劈瓦': [
         '格斗',
@@ -7107,7 +7173,7 @@ JINENG_LIST = {
         '100',
         '15',
         '将手刀猛烈地挥下攻击对手。还可以破坏光墙和反射壁等。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '哈欠': [
         '一般',
@@ -7125,7 +7191,7 @@ JINENG_LIST = {
         '100',
         '20',
         '拍落对手的持有物，直到战斗结束都不能使用。对手携带道具时会增加伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '蛮干': [
         '一般',
@@ -7143,7 +7209,7 @@ JINENG_LIST = {
         '100',
         '5',
         '爆发怒火攻击对手。自己的ＨＰ越少，招式的威力越小。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '特性互换': [
         '超能力',
@@ -7197,7 +7263,7 @@ JINENG_LIST = {
         '100',
         '20',
         '根据使用场所不同，该招式的追加效果也会有所变化。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '潜水': [
         '水',
@@ -7206,7 +7272,7 @@ JINENG_LIST = {
         '100',
         '10',
         '第１回合潜入，第２回合浮上来进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '猛推': [
         '格斗',
@@ -7215,7 +7281,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用张开着的双手猛推对手进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '保护色': [
         '一般',
@@ -7233,7 +7299,7 @@ JINENG_LIST = {
         '—',
         '20',
         '凝视闪烁的光芒，集中自己的精神，从而巨幅提高特攻。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','3','up')",
+        '自身强化',{'sxinfo':'SPATK','lvinfo':'3','typeinfo':'up'}
     ],
     '洁净光芒': [
         '超能力',
@@ -7242,7 +7308,7 @@ JINENG_LIST = {
         '100',
         '5',
         '释放耀眼的光芒进行攻击。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '薄雾球': [
         '超能力',
@@ -7251,7 +7317,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用围绕着雾状羽毛的球进行攻击。有时会降低对手的特攻。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '附加伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '羽毛舞': [
         '飞行',
@@ -7260,7 +7326,7 @@ JINENG_LIST = {
         '100',
         '15',
         '撒出羽毛，笼罩在对手的周围。大幅降低对手的攻击。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','2','down')",
+        '敌方削弱',{'sxinfo':'ATK','lvinfo':'2','typeinfo':'down'}
     ],
     '摇晃舞': [
         '一般',
@@ -7278,7 +7344,8 @@ JINENG_LIST = {
         '90',
         '10',
         '攻击对手后，有时会使其陷入灼伤状态。也容易击中要害。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '玩泥巴': [
         '地面',
@@ -7296,7 +7363,7 @@ JINENG_LIST = {
         '90',
         '20',
         '在５回合内攻击对手。招式每次击中，威力就会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '尖刺臂': [
         '草',
@@ -7305,7 +7372,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用带刺的手臂猛烈地挥舞进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '偷懒': [
         '一般',
@@ -7314,7 +7381,7 @@ JINENG_LIST = {
         '—',
         '10',
         '偷懒休息。回复自己最大ＨＰ的一半。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '巨声': [
         '一般',
@@ -7323,7 +7390,7 @@ JINENG_LIST = {
         '100',
         '10',
         '给予对手又吵又响的巨大震动进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '剧毒牙': [
         '毒',
@@ -7332,7 +7399,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用有毒的牙齿咬住对手进行攻击。有时会使对手中剧毒。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','50')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'50','zt_hh':99},
     ],
     '撕裂爪': [
         '一般',
@@ -7341,7 +7409,7 @@ JINENG_LIST = {
         '95',
         '10',
         '用坚硬的锐爪劈开对手进行攻击。有时会降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '爆炸烈焰': [
         '火',
@@ -7350,7 +7418,7 @@ JINENG_LIST = {
         '90',
         '5',
         '用爆炸的火焰烧尽对手进行攻击。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '加农水炮': [
         '水',
@@ -7359,7 +7427,7 @@ JINENG_LIST = {
         '90',
         '5',
         '向对手喷射水炮进行攻击。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '彗星拳': [
         '钢',
@@ -7368,7 +7436,7 @@ JINENG_LIST = {
         '90',
         '10',
         '使出彗星般的拳头攻击对手。有时会提高自己的攻击。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        '强化伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'up','bh_jl':20}
     ],
     '惊吓': [
         '幽灵',
@@ -7377,7 +7445,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用尖叫声等突然惊吓对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '气象球': [
         '一般',
@@ -7386,7 +7454,7 @@ JINENG_LIST = {
         '100',
         '10',
         '根据使用时的天气，招式属性和威力会改变。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '芳香治疗': [
         '草',
@@ -7404,7 +7472,7 @@ JINENG_LIST = {
         '100',
         '20',
         '装哭流泪。使对手不知所措，从而大幅降低对手的特防。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','2','down')",
+        '敌方削弱',{'sxinfo':'SPDEF','lvinfo':'2','typeinfo':'down'}
     ],
     '空气利刃': [
         '飞行',
@@ -7413,7 +7481,7 @@ JINENG_LIST = {
         '95',
         '25',
         '用锐利的风切斩对手进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '过热': [
         '火',
@@ -7440,7 +7508,7 @@ JINENG_LIST = {
         '95',
         '15',
         '投掷岩石进行攻击。封住对手的行动，从而降低速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '银色旋风': [
         '虫',
@@ -7449,7 +7517,7 @@ JINENG_LIST = {
         '100',
         '5',
         '在风中掺入鳞粉攻击对手。有时会提高自己的全部能力。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,SPATK,SPDEF','1,1,1,1','up,up,up,up','5')",
+        '强化伤害',{'sxinfo':'ATK,DEF,SPATK,SPDEF,SPD','lvinfo':'1,1,1,1,1','typeinfo':'up,up,up,up,up','bh_jl':5}
     ],
     '金属音': [
         '钢',
@@ -7458,7 +7526,7 @@ JINENG_LIST = {
         '85',
         '40',
         '让对手听摩擦金属般讨厌的声音。大幅降低对手的特防。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','2','down')",
+        '敌方削弱',{'sxinfo':'SPDEF','lvinfo':'2','typeinfo':'down'}
     ],
     '草笛': [
         '草',
@@ -7476,7 +7544,7 @@ JINENG_LIST = {
         '100',
         '20',
         '给对手挠痒，使其发笑，从而降低对手的攻击和防御。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF','1,1','down,down')",
+        '敌方削弱',{'sxinfo':'ATK,DEF','lvinfo':'1,1','typeinfo':'down,down'}
     ],
     '宇宙力量': [
         '超能力',
@@ -7485,7 +7553,7 @@ JINENG_LIST = {
         '—',
         '20',
         '吸血宇宙中神秘的力量，从而提高自己的防御和特防。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF,SPDEF','1,1','up,up')",
+        '自身强化',{'sxinfo':'DEF,SPDEF','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '喷水': [
         '水',
@@ -7494,7 +7562,7 @@ JINENG_LIST = {
         '100',
         '5',
         '掀起潮水进行攻击。自己的ＨＰ越少，招式的威力越小。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '信号光束': [
         '虫',
@@ -7503,7 +7571,8 @@ JINENG_LIST = {
         '100',
         '15',
         '发射神奇的光线进行攻击。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','10','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'10','zt_hh':5},
     ],
     '暗影拳': [
         '幽灵',
@@ -7512,7 +7581,7 @@ JINENG_LIST = {
         '100',
         '20',
         '使出混影之拳。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '神通力': [
         '超能力',
@@ -7521,7 +7590,7 @@ JINENG_LIST = {
         '100',
         '20',
         '发出看不见的神奇力量进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冲天拳': [
         '格斗',
@@ -7530,7 +7599,7 @@ JINENG_LIST = {
         '90',
         '15',
         '用冲向天空般高高的上勾拳顶起对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '流沙地狱': [
         '地面',
@@ -7539,7 +7608,7 @@ JINENG_LIST = {
         '85',
         '15',
         '将对手困在铺天盖地的沙暴中，在４～５回合内进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '绝对零度': [
         '冰',
@@ -7548,7 +7617,7 @@ JINENG_LIST = {
         '变化',
         '5',
         '给对手一击濒死。如果是冰属性以外的宝可梦使用，就会难以打中。',
-        'get_bisha(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '一击必杀','',
     ],
     '浊流': [
         '水',
@@ -7557,7 +7626,7 @@ JINENG_LIST = {
         '85',
         '10',
         '向对手喷射浑浊的水进行攻击。有时会降低对手的命中率。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '附加伤害',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '种子机关枪': [
         '草',
@@ -7566,7 +7635,7 @@ JINENG_LIST = {
         '100',
         '30',
         '向对手猛烈地发射种子进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '燕返': [
         '飞行',
@@ -7575,7 +7644,7 @@ JINENG_LIST = {
         '100',
         '20',
         '以敏捷的动作戏弄对手后进行切斩。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冰锥': [
         '冰',
@@ -7584,7 +7653,7 @@ JINENG_LIST = {
         '100',
         '30',
         '向对手发射锋利的冰柱进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '铁壁': [
         '钢',
@@ -7593,7 +7662,7 @@ JINENG_LIST = {
         '—',
         '15',
         '将皮肤变得坚硬如铁，从而大幅提高自己的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','2','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'2','typeinfo':'up'}
     ],
     '挡路': [
         '一般',
@@ -7611,7 +7680,7 @@ JINENG_LIST = {
         '—',
         '40',
         '大声吼叫提高气势，从而提高自己的攻击。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','up')",
+        '自身强化',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'up'}
     ],
     '龙爪': [
         '龙',
@@ -7620,7 +7689,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用尖锐的巨爪劈开对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '疯狂植物': [
         '草',
@@ -7629,7 +7698,7 @@ JINENG_LIST = {
         '90',
         '5',
         '用大树摔打对手进行攻击。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '健美': [
         '格斗',
@@ -7638,7 +7707,7 @@ JINENG_LIST = {
         '—',
         '20',
         '使出全身力气绷紧肌肉，从而提高自己的攻击和防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,DEF','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '弹跳': [
         '飞行',
@@ -7647,7 +7716,8 @@ JINENG_LIST = {
         '85',
         '5',
         '弹跳到高高的空中，第２回合攻击对手。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '泥巴射击': [
         '地面',
@@ -7656,7 +7726,7 @@ JINENG_LIST = {
         '95',
         '15',
         '向对手投掷泥块进行攻击。同时降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '毒尾': [
         '毒',
@@ -7665,7 +7735,8 @@ JINENG_LIST = {
         '100',
         '25',
         '用尾巴拍打。有时会让对手陷入中毒状态，也容易击中要害。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','10')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'10','zt_hh':99},
     ],
     '渴望': [
         '一般',
@@ -7674,7 +7745,7 @@ JINENG_LIST = {
         '100',
         '25',
         '一边可爱地撒娇，一边靠近对手进行攻击，还能夺取对手携带的道具。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '伏特攻击': [
         '电',
@@ -7683,7 +7754,8 @@ JINENG_LIST = {
         '100',
         '15',
         '让电流覆盖全身猛撞向对手。自己也会受到不小的伤害。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '魔法叶': [
         '草',
@@ -7692,7 +7764,7 @@ JINENG_LIST = {
         '100',
         '20',
         '散落可以追踪对手的神奇叶片。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '玩水': [
         '水',
@@ -7710,7 +7782,7 @@ JINENG_LIST = {
         '—',
         '20',
         '静心凝神，从而提高自己的特攻和特防。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK,SPDEF','1,1','up,up')",
+        '自身强化',{'sxinfo':'SPATK,SPDEF','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '叶刃': [
         '草',
@@ -7719,7 +7791,7 @@ JINENG_LIST = {
         '100',
         '15',
         '像用剑一般操纵叶片切斩对手进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '龙之舞': [
         '龙',
@@ -7728,7 +7800,7 @@ JINENG_LIST = {
         '—',
         '20',
         '激烈地跳起神秘且强有力的舞蹈。从而提高自己的攻击和速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPD','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,SPD','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '岩石爆击': [
         '岩石',
@@ -7737,7 +7809,7 @@ JINENG_LIST = {
         '90',
         '10',
         '向对手发射坚硬的岩石进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '电击波': [
         '电',
@@ -7746,7 +7818,7 @@ JINENG_LIST = {
         '100',
         '20',
         '向对手快速发出电击。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '水之波动': [
         '水',
@@ -7755,7 +7827,8 @@ JINENG_LIST = {
         '100',
         '20',
         '用水的震动攻击对手。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','10','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'10','zt_hh':5},
     ],
     '破灭之愿': [
         '钢',
@@ -7764,7 +7837,7 @@ JINENG_LIST = {
         '100',
         '5',
         '使用招式２回合后，会用无数道光束攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '精神突进': [
         '超能力',
@@ -7773,7 +7846,7 @@ JINENG_LIST = {
         '90',
         '5',
         '使出全部力量攻击对手。使用之后会因为反作用力，自己的特攻大幅降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','2','down')",
+        '强化伤害',{'sxinfo':'SPATK','lvinfo':'2','typeinfo':'down','bh_jl':100}
     ],
     '羽栖': [
         '飞行',
@@ -7782,7 +7855,7 @@ JINENG_LIST = {
         '—',
         '10',
         '降到地面，使身体休息。回复自己最大ＨＰ的一半。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '重力': [
         '超能力',
@@ -7809,7 +7882,7 @@ JINENG_LIST = {
         '100',
         '10',
         '给予睡眠状态下的对手较大的伤害。但相反对手会从睡眠中醒过来。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '臂锤': [
         '格斗',
@@ -7818,7 +7891,7 @@ JINENG_LIST = {
         '90',
         '10',
         '挥舞强力而沉重的拳头，给予对手伤害。自己的速度会降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '强化伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '陀螺球': [
         '钢',
@@ -7827,7 +7900,7 @@ JINENG_LIST = {
         '100',
         '5',
         '让身体高速旋转并撞击对手。速度比对手越慢，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '治愈之愿': [
         '超能力',
@@ -7845,7 +7918,7 @@ JINENG_LIST = {
         '100',
         '10',
         '当对手的ＨＰ负伤到一半左右时，招式威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '自然之恩': [
         '一般',
@@ -7854,7 +7927,7 @@ JINENG_LIST = {
         '100',
         '15',
         '从树果上获得力量进行攻击。根据携带的树果，招式属性和威力会改变。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '佯攻': [
         '一般',
@@ -7863,7 +7936,7 @@ JINENG_LIST = {
         '100',
         '10',
         '能够攻击正在使用守住或看穿等招式的对手。解除其守护效果。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '啄食': [
         '飞行',
@@ -7872,7 +7945,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用喙进行攻击。当对手携带树果时，可以食用并获得其效果。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '顺风': [
         '飞行',
@@ -7881,7 +7954,7 @@ JINENG_LIST = {
         '—',
         '15',
         '刮起猛烈的旋风，在４回合内提高我方全员的速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','up')",
+        '自身强化',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'up'}
     ],
     '点穴': [
         '一般',
@@ -7890,7 +7963,7 @@ JINENG_LIST = {
         '—',
         '30',
         '通过点穴让身体舒筋活络。大幅提高某１项能力。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','2','up')",
+        '自身强化',{'sxinfo':'ATK','lvinfo':'2','typeinfo':'up'}
     ],
     '金属爆炸': [
         '钢',
@@ -7899,7 +7972,7 @@ JINENG_LIST = {
         '100',
         '10',
         '使出招式前，将最后受到的招式的伤害大力返还给对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '急速折返': [
         '虫',
@@ -7908,7 +7981,7 @@ JINENG_LIST = {
         '100',
         '20',
         '在攻击之后急速返回，和后备宝可梦进行替换。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '近身战': [
         '格斗',
@@ -7917,7 +7990,7 @@ JINENG_LIST = {
         '100',
         '5',
         '放弃守护，向对手的怀里突击。自己的防御和特防会降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF,SPDEF','1,1','down,down')",
+        '强化伤害',{'sxinfo':'DEF,SPDEF','lvinfo':'1,1','typeinfo':'down,down','bh_jl':100}
     ],
     '以牙还牙': [
         '恶',
@@ -7926,7 +7999,7 @@ JINENG_LIST = {
         '100',
         '10',
         '蓄力攻击。如果能在对手之后攻击，招式的威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '恶意追击': [
         '恶',
@@ -7935,7 +8008,7 @@ JINENG_LIST = {
         '100',
         '10',
         '如果此回合内对手已经受到伤害的话，招式威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '查封': [
         '恶',
@@ -7953,7 +8026,7 @@ JINENG_LIST = {
         '100',
         '10',
         '快速投掷携带的道具进行攻击。根据道具不同，威力和效果会改变。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '精神转移': [
         '超能力',
@@ -7989,7 +8062,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用力勒紧对手进行攻击。对手的ＨＰ越多，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '力量戏法': [
         '超能力',
@@ -8061,7 +8134,7 @@ JINENG_LIST = {
         '100',
         '5',
         '根据能力变化，对手提高的力量越大，招式的威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '珍藏': [
         '一般',
@@ -8088,7 +8161,7 @@ JINENG_LIST = {
         '100',
         '5',
         '可以比对手先攻击。对手使出的招式如果不是攻击招式则会失败。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '毒菱': [
         '毒',
@@ -8133,7 +8206,8 @@ JINENG_LIST = {
         '100',
         '15',
         '让火焰覆盖全身猛撞向对手。自己也会受到不小的伤害。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '发劲': [
         '格斗',
@@ -8142,7 +8216,8 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手的身体发出冲击波进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '波导弹': [
         '格斗',
@@ -8151,7 +8226,7 @@ JINENG_LIST = {
         '100',
         '20',
         '从体内产生出波导之力，然后向对手发出。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '岩石打磨': [
         '岩石',
@@ -8160,7 +8235,7 @@ JINENG_LIST = {
         '—',
         '20',
         '打磨自己的身体，减少空气阻力。可以大幅提高自己的速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','2','up')",
+        '自身强化',{'sxinfo':'SPD','lvinfo':'2','typeinfo':'up'}
     ],
     '毒击': [
         '毒',
@@ -8169,7 +8244,8 @@ JINENG_LIST = {
         '100',
         '20',
         '用带毒的触手或手臂刺入对手。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','30')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'30','zt_hh':99},
     ],
     '恶之波动': [
         '恶',
@@ -8178,7 +8254,7 @@ JINENG_LIST = {
         '100',
         '15',
         '从体内发出充满恶意的恐怖气场。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '暗袭要害': [
         '恶',
@@ -8187,7 +8263,7 @@ JINENG_LIST = {
         '100',
         '15',
         '抓住瞬间的空隙切斩对手。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '水流尾': [
         '水',
@@ -8196,7 +8272,7 @@ JINENG_LIST = {
         '90',
         '10',
         '如惊涛骇浪般挥动大尾巴攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '种子炸弹': [
         '草',
@@ -8205,7 +8281,7 @@ JINENG_LIST = {
         '100',
         '15',
         '将外壳坚硬的大种子，从上方砸下攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '空气斩': [
         '飞行',
@@ -8214,7 +8290,7 @@ JINENG_LIST = {
         '95',
         '15',
         '用连天空也能劈开的空气斩进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '十字剪': [
         '虫',
@@ -8223,7 +8299,7 @@ JINENG_LIST = {
         '100',
         '15',
         '将镰刀或爪子像剪刀般地交叉，顺势劈开对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '虫鸣': [
         '虫',
@@ -8232,7 +8308,7 @@ JINENG_LIST = {
         '100',
         '10',
         '利用振动发出音波进行攻击。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '龙之波动': [
         '龙',
@@ -8241,7 +8317,7 @@ JINENG_LIST = {
         '100',
         '10',
         '从大大的口中掀起冲击波攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '龙之俯冲': [
         '龙',
@@ -8250,7 +8326,7 @@ JINENG_LIST = {
         '75',
         '10',
         '释放出骇人的杀气，一边威慑一边撞击对手。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '力量宝石': [
         '岩石',
@@ -8259,7 +8335,7 @@ JINENG_LIST = {
         '100',
         '20',
         '发射如宝石般闪耀的光芒攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '吸取拳': [
         '格斗',
@@ -8268,7 +8344,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用拳头吸取对手的力量。可以回复给予对手伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '真空波': [
         '格斗',
@@ -8277,7 +8353,7 @@ JINENG_LIST = {
         '100',
         '30',
         '挥动拳头，掀起真空波。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '真气弹': [
         '格斗',
@@ -8286,7 +8362,7 @@ JINENG_LIST = {
         '70',
         '5',
         '提高气势，释放出全部力量。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '能量球': [
         '草',
@@ -8295,7 +8371,7 @@ JINENG_LIST = {
         '100',
         '10',
         '发射从自然收集的生命力量。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '勇鸟猛攻': [
         '飞行',
@@ -8304,7 +8380,7 @@ JINENG_LIST = {
         '100',
         '15',
         '收拢翅膀，通过低空飞行突击对手。自己也会受到不小的伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '大地之力': [
         '地面',
@@ -8313,7 +8389,7 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手脚下释放出大地之力。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '掉包': [
         '恶',
@@ -8331,7 +8407,7 @@ JINENG_LIST = {
         '90',
         '5',
         '使出自己浑身力量突击对手。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '诡计': [
         '恶',
@@ -8340,7 +8416,7 @@ JINENG_LIST = {
         '—',
         '20',
         '谋划诡计，激活头脑。大幅提高自己的特攻。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','2','up')",
+        '自身强化',{'sxinfo':'SPATK','lvinfo':'2','typeinfo':'up'}
     ],
     '子弹拳': [
         '钢',
@@ -8349,7 +8425,7 @@ JINENG_LIST = {
         '100',
         '30',
         '向对手使出如子弹般快速而坚硬的拳头。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '雪崩': [
         '冰',
@@ -8358,7 +8434,7 @@ JINENG_LIST = {
         '100',
         '10',
         '如果受到对手的招式攻击，就能给予该对手２倍威力的攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冰砾': [
         '冰',
@@ -8367,7 +8443,7 @@ JINENG_LIST = {
         '100',
         '30',
         '瞬间制作冰块，快速地扔向对手。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '暗影爪': [
         '幽灵',
@@ -8376,7 +8452,7 @@ JINENG_LIST = {
         '100',
         '15',
         '以影子做成的锐爪，劈开对手。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '雷电牙': [
         '电',
@@ -8385,7 +8461,8 @@ JINENG_LIST = {
         '95',
         '15',
         '用蓄满电流的牙齿咬住对手。有时会使对手畏缩或陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '冰冻牙': [
         '冰',
@@ -8394,7 +8471,8 @@ JINENG_LIST = {
         '95',
         '15',
         '用藏有冷气的牙齿咬住对手。有时会使对手畏缩或陷入冰冻状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰冻','10')",
+        '状态伤害',
+        {'ztname':'冰冻','zt_jl':'10','zt_hh':99},
     ],
     '火焰牙': [
         '火',
@@ -8403,7 +8481,8 @@ JINENG_LIST = {
         '95',
         '15',
         '用覆盖着火焰的牙齿咬住对手。有时会使对手畏缩或陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '影子偷袭': [
         '幽灵',
@@ -8412,7 +8491,7 @@ JINENG_LIST = {
         '100',
         '30',
         '伸长影子，从对手的背后进行攻击。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '泥巴炸弹': [
         '地面',
@@ -8421,7 +8500,7 @@ JINENG_LIST = {
         '85',
         '10',
         '向对手发射坚硬的泥弹进行攻击。有时会降低对手的命中率。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '附加伤害',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '精神利刃': [
         '超能力',
@@ -8430,7 +8509,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用实体化的心之利刃劈开对手。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '意念头锤': [
         '超能力',
@@ -8439,7 +8518,7 @@ JINENG_LIST = {
         '90',
         '15',
         '将思念的力量集中在前额进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '镜光射击': [
         '钢',
@@ -8448,7 +8527,7 @@ JINENG_LIST = {
         '85',
         '10',
         '抛光自己的身体，向对手释放出闪光之力。有时会降低对手的命中率。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '附加伤害',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '加农光炮': [
         '钢',
@@ -8457,7 +8536,7 @@ JINENG_LIST = {
         '100',
         '10',
         '将身体的光芒聚集在一点释放出去。有时会降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '攀岩': [
         '一般',
@@ -8466,7 +8545,8 @@ JINENG_LIST = {
         '85',
         '20',
         '用尽全力扑向对手进行攻击。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','30','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'30','zt_hh':5},
     ],
     '清除浓雾': [
         '飞行',
@@ -8475,7 +8555,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用强风吹开对手的反射壁或光墙等。也会降低对手的闪避率。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ER','2','down')",
+        '敌方削弱',{'sxinfo':'ER','lvinfo':'1','typeinfo':'down'}
     ],
     '戏法空间': [
         '超能力',
@@ -8493,7 +8573,7 @@ JINENG_LIST = {
         '90',
         '5',
         '从天空中向对手落下陨石。使用之后因为反作用力，自己的特攻会大幅降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '强化伤害',{'sxinfo':'SPATK','lvinfo':'2','typeinfo':'down','bh_jl':100}
     ],
     '放电': [
         '电',
@@ -8502,7 +8582,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用耀眼的电击攻击自己周围所有的宝可梦。有时会陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '喷烟': [
         '火',
@@ -8511,7 +8592,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用熊熊烈火攻击自己周围所有的宝可梦。有时会陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '飞叶风暴': [
         '草',
@@ -8520,7 +8602,7 @@ JINENG_LIST = {
         '90',
         '5',
         '用尖尖的叶片向对手卷起风暴。使用之后因为反作用力自己的特攻会大幅降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '强化伤害',{'sxinfo':'SPATK','lvinfo':'2','typeinfo':'down','bh_jl':100}
     ],
     '强力鞭打': [
         '草',
@@ -8529,7 +8611,7 @@ JINENG_LIST = {
         '85',
         '10',
         '激烈地挥舞青藤或触手摔打对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '岩石炮': [
         '岩石',
@@ -8538,7 +8620,7 @@ JINENG_LIST = {
         '90',
         '5',
         '向对手发射巨大的岩石进行攻击。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '十字毒刃': [
         '毒',
@@ -8547,7 +8629,8 @@ JINENG_LIST = {
         '100',
         '20',
         '用毒刃劈开对手。有时会让对手陷入中毒状态，也容易击中要害。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','10')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'10','zt_hh':99},
     ],
     '垃圾射击': [
         '毒',
@@ -8556,7 +8639,8 @@ JINENG_LIST = {
         '80',
         '5',
         '用肮脏的垃圾撞向对手进行攻击。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','30')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'30','zt_hh':99},
     ],
     '铁头': [
         '钢',
@@ -8565,7 +8649,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用钢铁般坚硬的头部进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '磁铁炸弹': [
         '钢',
@@ -8574,7 +8658,7 @@ JINENG_LIST = {
         '100',
         '20',
         '发射吸住对手的钢铁炸弹。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '尖石攻击': [
         '岩石',
@@ -8583,7 +8667,7 @@ JINENG_LIST = {
         '80',
         '5',
         '用尖尖的岩石刺入对手进行攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '诱惑': [
         '一般',
@@ -8592,7 +8676,7 @@ JINENG_LIST = {
         '100',
         '20',
         '♂诱惑♀或♀诱惑♂，从而大幅降低对手的特攻。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','2','down')",
+        '敌方削弱',{'sxinfo':'SPATK','lvinfo':'2','typeinfo':'down'}
     ],
     '隐形岩': [
         '岩石',
@@ -8610,7 +8694,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用草缠住并绊倒对手。对手越重，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '喋喋不休': [
         '飞行',
@@ -8619,7 +8703,8 @@ JINENG_LIST = {
         '100',
         '20',
         '用非常烦人的，喋喋不休的音波攻击对手。使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','30','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'30','zt_hh':5},
     ],
     '制裁光砾': [
         '一般',
@@ -8628,7 +8713,7 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手放出无数的光弹。属性会根据自己携带的石板不同而改变。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '虫咬': [
         '虫',
@@ -8637,7 +8722,7 @@ JINENG_LIST = {
         '100',
         '20',
         '咬住进行攻击。当对手携带树果时，可以食用并获得其效果。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '充电光束': [
         '电',
@@ -8646,7 +8731,7 @@ JINENG_LIST = {
         '90',
         '10',
         '向对手发射电击光束。由于蓄满电流，有时会提高自己的特攻。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','up')",
+        '强化伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'up','bh_jl':20}
     ],
     '木槌': [
         '草',
@@ -8655,7 +8740,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用坚硬的躯体撞击对手进行攻击。自己也会受到不小的伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '水流喷射': [
         '水',
@@ -8664,7 +8749,7 @@ JINENG_LIST = {
         '100',
         '20',
         '以迅雷不及掩耳之势扑向对手。必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '攻击指令': [
         '虫',
@@ -8673,7 +8758,7 @@ JINENG_LIST = {
         '100',
         '15',
         '召唤手下，让其朝对手发起攻击。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '防御指令': [
         '虫',
@@ -8682,7 +8767,7 @@ JINENG_LIST = {
         '—',
         '10',
         '召唤手下，让其附在自己的身体上。可以提高自己的防御和特防。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF,SPDEF','1,1','up,up')",
+        '自身强化',{'sxinfo':'DEF,SPDEF','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '回复指令': [
         '虫',
@@ -8691,7 +8776,7 @@ JINENG_LIST = {
         '—',
         '10',
         '召唤手下疗伤。回复自己最大ＨＰ的一半。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '双刃头锤': [
         '岩石',
@@ -8700,7 +8785,7 @@ JINENG_LIST = {
         '80',
         '5',
         '拼命使出浑身力气，向对手进行头锤攻击。自己也会受到非常大的伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '二连击': [
         '一般',
@@ -8709,7 +8794,8 @@ JINENG_LIST = {
         '90',
         '10',
         '使用尾巴等拍打对手进行攻击。连续２次给予伤害。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,2)',
+        '连续伤害',
+        {'csmim':2,'csmax':2},
     ],
     '时光咆哮': [
         '龙',
@@ -8718,7 +8804,7 @@ JINENG_LIST = {
         '90',
         '5',
         '释放出扭曲时间般的强大力量攻击对手。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '亚空裂斩': [
         '龙',
@@ -8727,7 +8813,7 @@ JINENG_LIST = {
         '95',
         '5',
         '将对手连同周围的空间一起撕裂并给予伤害。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '新月舞': [
         '超能力',
@@ -8745,7 +8831,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用骇人的力量捏碎对手。对手的ＨＰ越多，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '熔岩风暴': [
         '火',
@@ -8754,7 +8840,7 @@ JINENG_LIST = {
         '75',
         '5',
         '将对手困在熊熊燃烧的火焰中，在４～５回合内进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '暗黑洞': [
         '恶',
@@ -8763,7 +8849,7 @@ JINENG_LIST = {
         '50',
         '10',
         '将对手强制拖入黑暗的世界，从而让对手陷入睡眠状态。',
-        "give_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'睡眠')",
+        '附加状态',{'ztname':'睡眠','hh_num':5}
     ],
     '种子闪光': [
         '草',
@@ -8772,7 +8858,7 @@ JINENG_LIST = {
         '85',
         '5',
         '从身体里产生冲击波。有时会大幅降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'2','typeinfo':'down','bh_jl':20}
     ],
     '奇异之风': [
         '幽灵',
@@ -8781,7 +8867,7 @@ JINENG_LIST = {
         '100',
         '5',
         '突然刮起毛骨悚然的暴风攻击对手。有时会提高自己的全部能力。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,SPATK,SPDEF,SPD','1,1,1,1,1','up,up,up,up,up','10')",
+        '强化伤害',{'sxinfo':'ATK,DEF,SPATK,SPDEF,SPD','lvinfo':'1,1,1,1,1','typeinfo':'up,up,up,up,up','bh_jl':10}
     ],
     '暗影潜袭': [
         '幽灵',
@@ -8790,7 +8876,7 @@ JINENG_LIST = {
         '100',
         '5',
         '第１回合消失踪影，第２回合攻击对手。即使对手正受保护，也能击中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '磨爪': [
         '恶',
@@ -8799,7 +8885,7 @@ JINENG_LIST = {
         '—',
         '15',
         '将爪子磨得更加锋利。提高自己的攻击和命中率。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,ACT','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,ACT','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '广域防守': [
         '岩石',
@@ -8844,7 +8930,7 @@ JINENG_LIST = {
         '100',
         '10',
         '将神奇的念波实体化攻击对手。给予物理伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '毒液冲击': [
         '毒',
@@ -8853,7 +8939,7 @@ JINENG_LIST = {
         '100',
         '10',
         '将特殊的毒液泼向对手。对处于中毒状态的对手，威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '身体轻量化': [
         '钢',
@@ -8862,7 +8948,7 @@ JINENG_LIST = {
         '—',
         '15',
         '削掉身体上没用的部分。大幅提高自己的速度，同时体重也会变轻。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','2','up')",
+        '自身强化',{'sxinfo':'SPD','lvinfo':'2','typeinfo':'up'}
     ],
     '愤怒粉': [
         '虫',
@@ -8907,7 +8993,8 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手使出强烈的一击。攻击必定会击中要害。',
-        'get_shanghai_pt_yh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '必中要害',''
+        
     ],
     '烈焰溅射': [
         '火',
@@ -8916,7 +9003,7 @@ JINENG_LIST = {
         '100',
         '15',
         '如果击中，爆裂的火焰会攻击到对手。爆裂出的火焰还会飞溅到旁边的对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '污泥波': [
         '毒',
@@ -8925,7 +9012,8 @@ JINENG_LIST = {
         '100',
         '10',
         '用污泥波攻击自己周围所有的宝可梦。有时会陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','10')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'10','zt_hh':99},
     ],
     '蝶舞': [
         '虫',
@@ -8934,7 +9022,7 @@ JINENG_LIST = {
         '—',
         '20',
         '轻巧地跳起神秘而又美丽的舞蹈。提高自己的特攻、特防和速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK,SPDEF,SPD','1,1,1','up,up,up')",
+        '自身强化',{'sxinfo':'SPATK,SPDEF,SPD','lvinfo':'1,1,1','typeinfo':'up,up,up'}
     ],
     '重磅冲撞': [
         '钢',
@@ -8943,7 +9031,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用沉重的身体撞向对手进行攻击。自己比对手越重，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '同步干扰': [
         '超能力',
@@ -8952,7 +9040,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用神奇电波对周围所有和自己属性相同的宝可梦给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '电球': [
         '电',
@@ -8961,7 +9049,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用电气团撞向对手。自己比对手速度越快，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '浸水': [
         '水',
@@ -8979,7 +9067,7 @@ JINENG_LIST = {
         '100',
         '20',
         '让火焰覆盖全身，攻击对手。积蓄力量并提高自己的速度。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','up')",
+        '强化伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'up','bh_jl':100}
     ],
     '盘蜷': [
         '毒',
@@ -8988,7 +9076,7 @@ JINENG_LIST = {
         '—',
         '20',
         '盘蜷着集中精神。提高自己的攻击、防御和命中率。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF,ACT','1,1,1','up,up,up')",
+        '自身强化',{'sxinfo':'ATK,DEF,ACT','lvinfo':'1,1,1','typeinfo':'up,up,up'}
     ],
     '下盘踢': [
         '格斗',
@@ -8997,7 +9085,7 @@ JINENG_LIST = {
         '100',
         '20',
         '以敏捷的动作瞄准对手的脚进行攻击。降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '酸液炸弹': [
         '毒',
@@ -9006,7 +9094,7 @@ JINENG_LIST = {
         '100',
         '20',
         '喷出能溶化对手的液体进行攻击。大幅降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'2','typeinfo':'down','bh_jl':100}
     ],
     '欺诈': [
         '恶',
@@ -9015,7 +9103,7 @@ JINENG_LIST = {
         '100',
         '15',
         '利用对手的力量进行攻击。正和自己战斗的对手，其攻击越高，伤害越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '单纯光束': [
         '一般',
@@ -9051,7 +9139,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用歌声攻击对手。同伴还可以接着使出轮唱招式，威力也会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '回声': [
         '一般',
@@ -9060,7 +9148,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用回声攻击对手。如果每回合都有宝可梦接着使用该招式，威力就会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '逐步击破': [
         '一般',
@@ -9069,7 +9157,7 @@ JINENG_LIST = {
         '100',
         '20',
         '看准机会稳步攻击。无视对手的能力变化，直接给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '清除之烟': [
         '毒',
@@ -9078,7 +9166,7 @@ JINENG_LIST = {
         '100',
         '15',
         '向对手投掷特殊的泥块进行攻击。使其能力变回原点。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '辅助力量': [
         '超能力',
@@ -9087,7 +9175,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用蓄积起来的力量攻击对手。自己的能力提高得越多，威力就越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '快速防守': [
         '格斗',
@@ -9114,7 +9202,8 @@ JINENG_LIST = {
         '100',
         '15',
         '向对手喷射煮得翻滚的开水进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','30')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'30','zt_hh':99},
     ],
     '破壳': [
         '一般',
@@ -9123,7 +9212,7 @@ JINENG_LIST = {
         '—',
         '15',
         '打破外壳，降低自己的防御和特防，但大幅提高攻击、特攻和速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF,SPDEF,ATK,SPATK,SPD','1,1,2,2,2','down,down,up,up,up')",
+        '自身强化',{'sxinfo':'DEF,SPDEF,ATK,SPATK,SPD','lvinfo':'1,1,2,2,2','typeinfo':'down,down,up,up,up'}
     ],
     '治愈波动': [
         '超能力',
@@ -9141,7 +9230,7 @@ JINENG_LIST = {
         '100',
         '10',
         '接二连三地进行攻击。对处于异常状态的对手给予较大的伤害。',
-        'get_sbshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '异常双倍',''
     ],
     '自由落体': [
         '飞行',
@@ -9150,7 +9239,7 @@ JINENG_LIST = {
         '100',
         '10',
         '第１回合将对手带到空中，第２回合将其摔下进行攻击。被带到空中的对手不能动弹。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '换挡': [
         '钢',
@@ -9159,7 +9248,7 @@ JINENG_LIST = {
         '—',
         '10',
         '转动齿轮，不仅提高自己的攻击，还会大幅提高速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPD','1,2','up,up')",
+        '自身强化',{'sxinfo':'ATK,SPD','lvinfo':'1,2','typeinfo':'up,up'}
     ],
     '巴投': [
         '格斗',
@@ -9168,7 +9257,7 @@ JINENG_LIST = {
         '90',
         '10',
         '扔飞对手，强制拉后备宝可梦上场。如果对手为野生宝可梦，战斗将直接结束。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '烧尽': [
         '火',
@@ -9177,7 +9266,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用火焰攻击对手。对手携带树果等时，会烧掉，使其不能使用。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '延后': [
         '恶',
@@ -9195,7 +9284,7 @@ JINENG_LIST = {
         '100',
         '15',
         '轻巧地攻击对手。自己没有携带道具时，会给予较大的伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '镜面属性': [
         '一般',
@@ -9213,7 +9302,7 @@ JINENG_LIST = {
         '100',
         '5',
         '为倒下的同伴报仇。如果上一回合有同伴倒下，威力就会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '搏命': [
         '格斗',
@@ -9240,7 +9329,8 @@ JINENG_LIST = {
         '50',
         '5',
         '用烈焰包裹住对手进行攻击。让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','100')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'100','zt_hh':99},
     ],
     '水之誓约': [
         '水',
@@ -9249,7 +9339,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用水柱进行攻击。如果和火组合，威力就会提高，天空中会挂上彩虹。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '火之誓约': [
         '火',
@@ -9258,7 +9348,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用火柱进行攻击。如果和草组合，威力就会提高，周围会变成火海。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '草之誓约': [
         '草',
@@ -9267,7 +9357,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用草柱进行攻击。如果和水组合，威力就会提高，周围会变成湿地。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '伏特替换': [
         '电',
@@ -9276,7 +9366,7 @@ JINENG_LIST = {
         '100',
         '20',
         '在攻击之后急速返回，和后备宝可梦进行替换。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '虫之抵抗': [
         '虫',
@@ -9285,7 +9375,7 @@ JINENG_LIST = {
         '100',
         '20',
         '抵抗并攻击对手。降低对手的特攻。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '附加伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '重踏': [
         '地面',
@@ -9294,7 +9384,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用力踩踏地面并攻击自己周围所有的宝可梦。降低对方的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '冰息': [
         '冰',
@@ -9303,7 +9393,7 @@ JINENG_LIST = {
         '90',
         '10',
         '将冰冷的气息吹向对手进行攻击。必定会击中要害。',
-        'get_shanghai_pt_yh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '必中要害','',
     ],
     '龙尾': [
         '龙',
@@ -9312,7 +9402,7 @@ JINENG_LIST = {
         '90',
         '10',
         '弹飞对手，强制拉后备宝可梦上场。如果对手为野生宝可梦，战斗将直接结束。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '自我激励': [
         '一般',
@@ -9321,7 +9411,7 @@ JINENG_LIST = {
         '—',
         '30',
         '激励自己，从而提高攻击和特攻。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPATK','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,SPATK','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '电网': [
         '电',
@@ -9330,7 +9420,7 @@ JINENG_LIST = {
         '95',
         '15',
         '用电网捉住对手进行攻击。降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '疯狂伏特': [
         '电',
@@ -9339,7 +9429,7 @@ JINENG_LIST = {
         '100',
         '15',
         '让电流覆盖全身撞向对手进行攻击。自己也会受到少许伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '直冲钻': [
         '地面',
@@ -9348,7 +9438,7 @@ JINENG_LIST = {
         '95',
         '10',
         '像钢钻一样，一边旋转身体一边撞击对手。容易击中要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '二连劈': [
         '龙',
@@ -9357,7 +9447,8 @@ JINENG_LIST = {
         '90',
         '15',
         '用身体坚硬的部分拍打对手进行攻击。连续２次给予伤害。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,2)',
+        '连续伤害',
+        {'csmim':2,'csmax':2},
     ],
     '爱心印章': [
         '超能力',
@@ -9366,7 +9457,7 @@ JINENG_LIST = {
         '100',
         '25',
         '以可爱的动作使对手疏忽，乘机给出强烈的一击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '木角': [
         '草',
@@ -9375,7 +9466,7 @@ JINENG_LIST = {
         '100',
         '10',
         '将角刺入，吸取对手的养分。可以回复给予对手伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '圣剑': [
         '格斗',
@@ -9384,7 +9475,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用长角切斩对手进行攻击。无视对手的能力变化，直接给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '贝壳刃': [
         '水',
@@ -9393,7 +9484,7 @@ JINENG_LIST = {
         '95',
         '10',
         '用锋利的贝壳切斩对手进行攻击。有时会降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '高温重压': [
         '火',
@@ -9402,7 +9493,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用燃烧的身体撞向对手进行攻击。自己比对手越重，威力越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '青草搅拌器': [
         '草',
@@ -9411,7 +9502,7 @@ JINENG_LIST = {
         '90',
         '10',
         '用锋利的叶片包裹住对手进行攻击。有时会降低对手的命中率。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '附加伤害',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '疯狂滚压': [
         '虫',
@@ -9420,7 +9511,7 @@ JINENG_LIST = {
         '100',
         '20',
         '旋转揉成团的身体压扁对手。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '棉花防守': [
         '草',
@@ -9429,7 +9520,7 @@ JINENG_LIST = {
         '—',
         '10',
         '用软绵绵的绒毛包裹住自己的身体进行守护。巨幅提高自己的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','3','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'3','typeinfo':'up'}
     ],
     '暗黑爆破': [
         '恶',
@@ -9438,7 +9529,7 @@ JINENG_LIST = {
         '95',
         '10',
         '放出黑暗的冲击波攻击对手。有时会降低对手的命中率。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ACT','1','down')",
+        '附加伤害',{'sxinfo':'ACT','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '精神击破': [
         '超能力',
@@ -9447,7 +9538,7 @@ JINENG_LIST = {
         '100',
         '10',
         '将神奇的念波实体化攻击对手。给予物理伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '扫尾拍打': [
         '一般',
@@ -9456,7 +9547,7 @@ JINENG_LIST = {
         '85',
         '10',
         '用坚硬的尾巴拍打对手进行攻击。连续攻击２～５次。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '暴风': [
         '飞行',
@@ -9465,7 +9556,8 @@ JINENG_LIST = {
         '70',
         '10',
         '用强烈的风席卷对手进行攻击。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','30','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'30','zt_hh':5},
     ],
     '爆炸头突击': [
         '一般',
@@ -9474,7 +9566,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用厉害的爆炸头猛撞向对手进行攻击。自己也会受到少许伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '齿轮飞盘': [
         '钢',
@@ -9492,7 +9584,8 @@ JINENG_LIST = {
         '100',
         '5',
         '用熊熊烈火攻击自己周围所有的宝可梦。有时会陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','30')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'30','zt_hh':99},
     ],
     '高科技光炮': [
         '一般',
@@ -9501,7 +9594,8 @@ JINENG_LIST = {
         '100',
         '5',
         '向对手放出光弹。属性会根据自己携带的卡带不同而改变。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,2)',
+        '普通伤害',
+        '',
     ],
     '古老之歌': [
         '一般',
@@ -9510,7 +9604,8 @@ JINENG_LIST = {
         '100',
         '10',
         '让对手听古老之歌，打动对手的内心进行攻击。有时会让对手陷入睡眠状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'睡眠','10')",
+        '状态伤害',
+        {'ztname':'睡眠','zt_jl':'10','zt_hh':5},
     ],
     '神秘之剑': [
         '格斗',
@@ -9519,7 +9614,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用长角切斩对手进行攻击。角上拥有的神奇力量将给予物理伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '冰封世界': [
         '冰',
@@ -9528,7 +9623,7 @@ JINENG_LIST = {
         '95',
         '10',
         '将冰冻的冷气吹向对手进行攻击。会降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down','100')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '雷击': [
         '电',
@@ -9537,7 +9632,8 @@ JINENG_LIST = {
         '85',
         '5',
         '让强大的电流覆盖全身，猛撞向对手进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','20')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'20','zt_hh':99},
     ],
     '青焰': [
         '火',
@@ -9546,7 +9642,8 @@ JINENG_LIST = {
         '85',
         '5',
         '用美丽而激烈的青焰包裹住对手进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','20')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'20','zt_hh':99},
     ],
     '火之舞': [
         '火',
@@ -9555,7 +9652,7 @@ JINENG_LIST = {
         '100',
         '10',
         '让火焰覆盖全身，振翅攻击对手。有时会提高自己的特攻。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','up')",
+        '强化伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'up','bh_jl':20}
     ],
     '冰冻伏特': [
         '冰',
@@ -9564,7 +9661,8 @@ JINENG_LIST = {
         '90',
         '5',
         '用覆盖着电流的冰块，在第２回合撞向对手。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '极寒冷焰': [
         '冰',
@@ -9573,7 +9671,8 @@ JINENG_LIST = {
         '90',
         '5',
         '用能够冻结一切的强烈冷气，在第２回合包裹住对手。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','30')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'30','zt_hh':99},
     ],
     '大声咆哮': [
         '恶',
@@ -9582,7 +9681,7 @@ JINENG_LIST = {
         '95',
         '15',
         '没完没了地大声斥责，从而降低对手的特攻。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down','100')",
+        '附加伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '冰柱坠击': [
         '冰',
@@ -9591,7 +9690,7 @@ JINENG_LIST = {
         '90',
         '10',
         '用大冰柱激烈地撞向对手进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     'V热焰': [
         '火',
@@ -9600,7 +9699,7 @@ JINENG_LIST = {
         '95',
         '5',
         '从前额产生灼热的火焰，舍身撞击对手。防御、特防和速度会降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF,,SPDEF,SPD','1,1,1','down,down,down')",
+        '强化伤害',{'sxinfo':'DEF,SPDEF,SPD','lvinfo':'1,1,1','typeinfo':'down,down,down','bh_jl':100}
     ],
     '交错火焰': [
         '火',
@@ -9609,7 +9708,7 @@ JINENG_LIST = {
         '100',
         '5',
         '释放出巨大的火焰。受到巨大的闪电影响时，招式威力会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '交错闪电': [
         '电',
@@ -9618,7 +9717,7 @@ JINENG_LIST = {
         '100',
         '5',
         '释放出巨大的闪电。受到巨大的火焰影响时，招式威力会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '飞身重压': [
         '格斗',
@@ -9627,7 +9726,7 @@ JINENG_LIST = {
         '95',
         '10',
         '从空中俯冲向对手。此招式同时带有格斗属性和飞行属性。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '掀榻榻米': [
         '格斗',
@@ -9645,7 +9744,7 @@ JINENG_LIST = {
         '90',
         '10',
         '朝着对手打嗝，并给予伤害。如果不吃树果则无法使出。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '耕地': [
         '地面',
@@ -9654,7 +9753,7 @@ JINENG_LIST = {
         '—',
         '10',
         '翻耕土地，使草木更容易成长。会提高草属性宝可梦的攻击和特攻。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPATK','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,SPATK','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '黏黏网': [
         '虫',
@@ -9672,7 +9771,7 @@ JINENG_LIST = {
         '100',
         '25',
         '如果使用此招式打倒对手，攻击会巨幅提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '潜灵奇袭': [
         '幽灵',
@@ -9681,7 +9780,7 @@ JINENG_LIST = {
         '100',
         '10',
         '第１回合消失在某处，第２回合攻击对手。可以无视守护进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '万圣夜': [
         '幽灵',
@@ -9699,7 +9798,7 @@ JINENG_LIST = {
         '100',
         '30',
         '发出战吼威吓对手，从而降低对手的攻击和特攻。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPATK','1,1','down,down')",
+        '敌方削弱',{'sxinfo':'ATK,SPATK','lvinfo':'1,1','typeinfo':'down,down'}
     ],
     '等离子浴': [
         '电',
@@ -9717,7 +9816,7 @@ JINENG_LIST = {
         '100',
         '20',
         '给周围全体宝可梦造成伤害。可以回复给予伤害的一半ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '森林诅咒': [
         '草',
@@ -9735,7 +9834,7 @@ JINENG_LIST = {
         '100',
         '15',
         '猛烈地刮起飞雪般的落花，攻击周围所有的宝可梦，并给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冷冻干燥': [
         '冰',
@@ -9744,7 +9843,8 @@ JINENG_LIST = {
         '100',
         '20',
         '急剧冷冻对手，有时会让对手陷入冰冻状态。对于水属性宝可梦也是效果绝佳。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰冻','10')",
+        '状态伤害',
+        {'ztname':'冰冻','zt_jl':'10','zt_hh':99},
     ],
     '魅惑之声': [
         '妖精',
@@ -9753,7 +9853,7 @@ JINENG_LIST = {
         '100',
         '15',
         '发出魅惑的叫声，给予对手精神上的伤害。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '抛下狠话': [
         '恶',
@@ -9780,7 +9880,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用一个吻吸取对手的ＨＰ。回复给予对手伤害的一半以上的ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '戏法防守': [
         '妖精',
@@ -9798,7 +9898,7 @@ JINENG_LIST = {
         '—',
         '10',
         '使用神奇的力量提高在场的所有草属性宝可梦的防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'up'}
     ],
     '青草场地': [
         '草',
@@ -9834,7 +9934,7 @@ JINENG_LIST = {
         '90',
         '10',
         '与对手嬉闹并攻击。有时会降低对手的攻击。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '附加伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '妖精之风': [
         '妖精',
@@ -9843,7 +9943,7 @@ JINENG_LIST = {
         '100',
         '30',
         '刮起妖精之风，吹向对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '月亮之力': [
         '妖精',
@@ -9852,7 +9952,7 @@ JINENG_LIST = {
         '100',
         '15',
         '借用月亮的力量攻击对手。有时会降低对手的特攻。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '附加伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '爆音波': [
         '一般',
@@ -9861,7 +9961,7 @@ JINENG_LIST = {
         '100',
         '10',
         '通过震耳欲聋的爆炸声产生的破坏力，攻击自己周围所有的宝可梦。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '妖精之锁': [
         '妖精',
@@ -9888,7 +9988,7 @@ JINENG_LIST = {
         '100',
         '20',
         '和对手和睦相处，使其失去战斗的气力，从而降低对手的攻击。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '敌方削弱',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down'}
     ],
     '密语': [
         '一般',
@@ -9897,7 +9997,7 @@ JINENG_LIST = {
         '100',
         '20',
         '和对手进行密语，使其失去集中力，从而降低对手的特攻。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '敌方削弱',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down'}
     ],
     '钻石风暴': [
         '岩石',
@@ -9906,7 +10006,7 @@ JINENG_LIST = {
         '95',
         '5',
         '掀起钻石风暴给予伤害。有时会大幅提高自己的防御。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','2','up')",
+        '强化伤害',{'sxinfo':'DEF','lvinfo':'2','typeinfo':'up','bh_jl':20}
     ],
     '蒸汽爆炸': [
         '水',
@@ -9915,7 +10015,8 @@ JINENG_LIST = {
         '95',
         '5',
         '将滚烫的蒸汽喷向对手。有时会让对手灼伤。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','30')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'30','zt_hh':99},
     ],
     '异次元洞': [
         '超能力',
@@ -9924,7 +10025,7 @@ JINENG_LIST = {
         '100',
         '5',
         '通过异次元洞，突然出现在对手的侧面进行攻击。还可以无视守住和看穿等招式。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '飞水手里剑': [
         '水',
@@ -9933,7 +10034,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用粘液制成的手里剑，连续攻击２～５次。必定能够先制攻击。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '魔法火焰': [
         '火',
@@ -9942,7 +10043,7 @@ JINENG_LIST = {
         '100',
         '10',
         '从口中喷出特别灼热的火焰进行攻击。降低对手的特攻。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '附加伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '尖刺防守': [
         '草',
@@ -9960,7 +10061,7 @@ JINENG_LIST = {
         '100',
         '20',
         '通过神奇的芳香，提高我方宝可梦的特防。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','up')",
+        '自身强化',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'up'}
     ],
     '怪异电波': [
         '电',
@@ -9969,7 +10070,7 @@ JINENG_LIST = {
         '100',
         '15',
         '从身体放射出怪异电波，让对手沐浴其中，从而大幅降低其特攻。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','2','down')"
+        '敌方削弱',{'sxinfo':'SPATK','lvinfo':'2','typeinfo':'down'}
     ],
     '毒液陷阱': [
         '毒',
@@ -9996,7 +10097,7 @@ JINENG_LIST = {
         '—',
         '10',
         '第１回合吸收能量，第２回合大幅提高特攻、特防和速度。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPATK,SPD','1,1,1','up,up,up')",
+        '自身强化',{'sxinfo':'ATK,SPATK,SPD','lvinfo':'1,1,1','typeinfo':'up,up,up'}
     ],
     '磁场操控': [
         '电',
@@ -10032,7 +10133,7 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手发射强光，并给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '庆祝': ['一般', '变化', '—', '—', '40', '宝可梦为十分开心的你庆祝。', ''],
     '牵手': [
@@ -10051,7 +10152,7 @@ JINENG_LIST = {
         '100',
         '30',
         '用圆瞳凝视对手，从而降低其攻击。必定能够先制攻击。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '敌方削弱',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down'}
     ],
     '蹭蹭脸颊': [
         '电',
@@ -10060,7 +10161,8 @@ JINENG_LIST = {
         '100',
         '20',
         '将带电的脸颊蹭蹭对手进行攻击。让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','100')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'100','zt_hh':99},
     ],
     '手下留情': [
         '一般',
@@ -10069,7 +10171,7 @@ JINENG_LIST = {
         '100',
         '40',
         '在攻击的时候手下留情，从而使对手的ＨＰ至少会留下１ＨＰ。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '死缠烂打': [
         '虫',
@@ -10078,7 +10180,7 @@ JINENG_LIST = {
         '100',
         '20',
         '在４～５回合内死缠烂打地进行攻击。在此期间对手将无法逃走。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '增强拳': [
         '格斗',
@@ -10087,7 +10189,7 @@ JINENG_LIST = {
         '100',
         '20',
         '通过反复击打对手，使自己的拳头慢慢变硬。打中对手攻击就会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '死亡之翼': [
         '飞行',
@@ -10096,7 +10198,7 @@ JINENG_LIST = {
         '100',
         '10',
         '从锁定的对手身上吸取ＨＰ。回复给予对手伤害的一半以上的ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '千箭齐发': [
         '地面',
@@ -10105,7 +10207,7 @@ JINENG_LIST = {
         '100',
         '10',
         '可以击中浮在空中的宝可梦。空中的对手被击落后，会掉到地面。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '千波激荡': [
         '地面',
@@ -10114,7 +10216,7 @@ JINENG_LIST = {
         '100',
         '10',
         '从地面掀起波浪进行攻击。被掀入波浪中的对手，将无法从战斗中逃走。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '大地神力': [
         '地面',
@@ -10123,7 +10225,7 @@ JINENG_LIST = {
         '100',
         '10',
         '聚集大地的力量，将此力量集中攻击对手，并给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '破灭之光': [
         '妖精',
@@ -10132,7 +10234,7 @@ JINENG_LIST = {
         '90',
         '5',
         '借用永恒之花的力量，发射出强力光线。自己也会受到不小的伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '根源波动': [
         '水',
@@ -10141,7 +10243,7 @@ JINENG_LIST = {
         '85',
         '10',
         '用无数青白色且闪耀的光线攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '断崖之剑': [
         '地面',
@@ -10150,7 +10252,7 @@ JINENG_LIST = {
         '85',
         '10',
         '将大地的力量变化为利刃攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '画龙点睛': [
         '飞行',
@@ -10159,7 +10261,7 @@ JINENG_LIST = {
         '100',
         '5',
         '从天空中急速下降攻击对手。自己的防御和特防会降低。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '异次元猛攻': [
         '恶',
@@ -10168,20 +10270,11 @@ JINENG_LIST = {
         '—',
         '5',
         '用许多手臂，无视对手的守住或看穿等招式进行连续攻击，自己的防御会降低。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '究极无敌大冲撞': [
         '一般',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量气势猛烈地全力撞上对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '究极无敌大冲撞': [
-        '一般',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10197,27 +10290,9 @@ JINENG_LIST = {
         '通过Ｚ力量制造出能量弹，全力撞向对手。威力会根据原来的招式而改变。',
         '',
     ],
-    '全力无双激烈拳': [
-        '格斗',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量制造出能量弹，全力撞向对手。威力会根据原来的招式而改变。',
-        '',
-    ],
     '极速俯冲轰烈撞': [
         '飞行',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量猛烈地飞向天空，朝对手全力落下。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '极速俯冲轰烈撞': [
-        '飞行',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10233,27 +10308,9 @@ JINENG_LIST = {
         '通过Ｚ力量使毒沼涌起，全力让对手沉下去。威力会根据原来的招式而改变。',
         '',
     ],
-    '强酸剧毒灭绝雨': [
-        '毒',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量使毒沼涌起，全力让对手沉下去。威力会根据原来的招式而改变。',
-        '',
-    ],
     '地隆啸天大终结': [
         '地面',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量潜入地里最深处，全力撞上对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '地隆啸天大终结': [
-        '地面',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10269,27 +10326,9 @@ JINENG_LIST = {
         '通过Ｚ力量召唤大大的岩山，全力撞向对手。威力会根据原来的招式而改变。',
         '',
     ],
-    '毁天灭地巨岩坠': [
-        '岩石',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量召唤大大的岩山，全力撞向对手。威力会根据原来的招式而改变。',
-        '',
-    ],
     '绝对捕食回旋斩': [
         '虫',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量将吐出的丝线全力束缚对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '绝对捕食回旋斩': [
-        '虫',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10305,27 +10344,9 @@ JINENG_LIST = {
         '通过Ｚ力量召唤强烈的怨念，全力降临到对手身上。威力会根据原来的招式而改变。',
         '',
     ],
-    '无尽暗夜之诱惑': [
-        '幽灵',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量召唤强烈的怨念，全力降临到对手身上。威力会根据原来的招式而改变。',
-        '',
-    ],
     '超绝螺旋连击': [
         '钢',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量进行高速旋转，全力撞上对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '超绝螺旋连击': [
-        '钢',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10341,27 +10362,9 @@ JINENG_LIST = {
         '通过Ｚ力量喷出熊熊烈火，全力撞向对手。威力会根据原来的招式而改变。',
         '',
     ],
-    '超强极限爆焰弹': [
-        '火',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量喷出熊熊烈火，全力撞向对手。威力会根据原来的招式而改变。',
-        '',
-    ],
     '超级水流大漩涡': [
         '水',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量制造大大的潮旋，全力吞没对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '超级水流大漩涡': [
-        '水',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10377,27 +10380,9 @@ JINENG_LIST = {
         '通过Ｚ力量借助花草的能量，全力攻击对手。威力会根据原来的招式而改变。',
         '',
     ],
-    '绚烂缤纷花怒放': [
-        '草',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量借助花草的能量，全力攻击对手。威力会根据原来的招式而改变。',
-        '',
-    ],
     '终极伏特狂雷闪': [
         '电',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量将蓄积的强大电流全力撞向对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '终极伏特狂雷闪': [
-        '电',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10413,27 +10398,9 @@ JINENG_LIST = {
         '通过Ｚ力量操纵对手，全力使其感受到痛苦。威力会根据原来的招式而改变。',
         '',
     ],
-    '至高精神破坏波': [
-        '超能力',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量操纵对手，全力使其感受到痛苦。威力会根据原来的招式而改变。',
-        '',
-    ],
     '激狂大地万里冰': [
         '冰',
         '物理',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量急剧降低气温，全力冰冻对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '激狂大地万里冰': [
-        '冰',
-        '特殊',
         '—',
         '—',
         '1',
@@ -10449,15 +10416,6 @@ JINENG_LIST = {
         '通过Ｚ力量将气场实体化，向对手全力发动袭击。威力会根据原来的招式而改变。',
         '',
     ],
-    '究极巨龙震天地': [
-        '龙',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量将气场实体化，向对手全力发动袭击。威力会根据原来的招式而改变。',
-        '',
-    ],
     '黑洞吞噬万物灭': [
         '恶',
         '物理',
@@ -10467,31 +10425,14 @@ JINENG_LIST = {
         '通过Ｚ力量收集恶能量，全力将对手吸入。威力会根据原来的招式而改变。',
         '',
     ],
-    '黑洞吞噬万物灭': [
-        '恶',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量收集恶能量，全力将对手吸入。威力会根据原来的招式而改变。',
-        '',
-    ],
     '可爱星星飞天撞': [
         '妖精',
         '物理',
-        '—',
-        '—',
+        '200',
+        '100',
         '1',
         '通过Ｚ力量制造魅惑空间，全力捉弄对手。威力会根据原来的招式而改变。',
-        '',
-    ],
-    '可爱星星飞天撞': [
-        '妖精',
-        '特殊',
-        '—',
-        '—',
-        '1',
-        '通过Ｚ力量制造魅惑空间，全力捉弄对手。威力会根据原来的招式而改变。',
+        '普通',
         '',
     ],
     '皮卡皮卡必杀击': [
@@ -10510,7 +10451,7 @@ JINENG_LIST = {
         '—',
         '10',
         '回复自己最大ＨＰ的一半。在沙暴中回复得更多。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '迎头一击': [
         '虫',
@@ -10519,7 +10460,7 @@ JINENG_LIST = {
         '100',
         '10',
         '威力很高的招式，但只有在出场战斗时，立刻使出才能成功。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '碉堡': [
         '毒',
@@ -10537,7 +10478,7 @@ JINENG_LIST = {
         '100',
         '10',
         '攻击的同时，缝住对手的影子，使其无法逃走。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     'DD金勾臂': [
         '恶',
@@ -10546,7 +10487,7 @@ JINENG_LIST = {
         '100',
         '10',
         '在不受到對手能力变化影響的情況下給予對手傷害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '泡影的咏叹调': [
         '水',
@@ -10555,7 +10496,7 @@ JINENG_LIST = {
         '100',
         '10',
         '受到這招式攻击的對手身上的灼傷狀態將會痊癒。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冰锤': [
         '冰',
@@ -10564,7 +10505,7 @@ JINENG_LIST = {
         '90',
         '10',
         '挥舞强力而沉重的拳头，给予对手伤害。自己的速度会降低。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '花疗': [
         '妖精',
@@ -10573,7 +10514,7 @@ JINENG_LIST = {
         '—',
         '10',
         '回复对手最大ＨＰ的一半。在青草场地时，效果会提高。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '生命回复',{'bh_bl':0.5},
     ],
     '十万马力': [
         '地面',
@@ -10582,7 +10523,7 @@ JINENG_LIST = {
         '95',
         '10',
         '使出全身力量，猛攻对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '吸取力量': [
         '草',
@@ -10591,7 +10532,7 @@ JINENG_LIST = {
         '100',
         '10',
         '给自己回复和对手攻击力相同数值的ＨＰ，然后降低对手的攻击。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '敌方削弱',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down'}
     ],
     '日光刃': [
         '草',
@@ -10609,7 +10550,7 @@ JINENG_LIST = {
         '100',
         '40',
         '将叶片打向对手，进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '聚光灯': [
         '一般',
@@ -10627,7 +10568,7 @@ JINENG_LIST = {
         '100',
         '20',
         '将混有毒的丝吐向对手。使其中毒，从而降低对手的速度。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '敌方削弱',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down'}
     ],
     '磨砺': [
         '一般',
@@ -10654,7 +10595,7 @@ JINENG_LIST = {
         '100',
         '15',
         '受到此招式攻击的对手，会因为地狱般的痛苦，在２回合内，变得无法使出声音类招式。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '花粉团': [
         '虫',
@@ -10663,7 +10604,7 @@ JINENG_LIST = {
         '100',
         '15',
         '对敌人使用是会爆炸的团子。对我方使用则是给予回复的团子。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '掷锚': [
         '钢',
@@ -10672,7 +10613,7 @@ JINENG_LIST = {
         '100',
         '20',
         '将锚缠住对手进行攻击。使对手无法逃走。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '精神场地': [
         '超能力',
@@ -10690,7 +10631,7 @@ JINENG_LIST = {
         '100',
         '15',
         '全力猛扑对手进行攻击。从而降低对手的攻击。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '附加伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '火焰鞭': [
         '火',
@@ -10699,7 +10640,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用燃烧的鞭子抽打对手。受到攻击的对手防御会降低。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '嚣张': [
         '恶',
@@ -10708,7 +10649,7 @@ JINENG_LIST = {
         '100',
         '10',
         '耀武扬威地攻击对手，自己的能力提高得越多，威力就越大。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '燃尽': [
         '火',
@@ -10717,7 +10658,7 @@ JINENG_LIST = {
         '100',
         '5',
         '将自己全身燃烧起火焰来，给予对手大大的伤害。自己的火属性将会消失。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '速度互换': [
         '超能力',
@@ -10735,7 +10676,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用尖尖的角刺入对手进行攻击。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '净化': [
         '毒',
@@ -10753,7 +10694,7 @@ JINENG_LIST = {
         '100',
         '15',
         '全力跳舞进行攻击。此招式的属性将变得和自己的属性相同。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '核心惩罚者': [
         '龙',
@@ -10762,7 +10703,7 @@ JINENG_LIST = {
         '100',
         '10',
         '使出后能夠消除已經在該回合使出招式的對手的特性。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '热带踢': [
         '草',
@@ -10771,7 +10712,7 @@ JINENG_LIST = {
         '100',
         '15',
         '向对手使出来自南国的火热脚踢。从而降低对手的攻击。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down')",
+        '附加伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '号令': [
         '超能力',
@@ -10789,7 +10730,7 @@ JINENG_LIST = {
         '100',
         '15',
         '先加热鸟嘴后再进行攻击。鸟嘴在加热时对手触碰的话，就会使其灼伤。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '鳞片噪音': [
         '龙',
@@ -10798,7 +10739,7 @@ JINENG_LIST = {
         '100',
         '5',
         '摩擦全身鳞片，发出响亮的声音进行攻击。攻击后自己的防御会降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '强化伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '龙锤': [
         '龙',
@@ -10807,7 +10748,7 @@ JINENG_LIST = {
         '100',
         '15',
         '将身体当作锤子，向对手发动袭击，给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '狂舞挥打': [
         '恶',
@@ -10816,7 +10757,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用自己的身体狂舞挥打，给予对手伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '极光幕': [
         '冰',
@@ -10876,10 +10817,11 @@ JINENG_LIST = {
         '电',
         '特殊',
         '175',
-        '—',
+        '100',
         '1',
         '得到Ｚ力量的阿罗拉地区的雷丘将全力进行攻击。从而让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','100')",
+        "状态",
+        {'ztname':'麻痹','zt_jl':'100','zt_hh':99},
     ],
     '认真起来大爆击': [
         '一般',
@@ -10915,7 +10857,7 @@ JINENG_LIST = {
         '100',
         '5',
         '回合開始時，設下陷阱，若該回合中受到來自對手的物理攻击， 可引起爆炸並給予對手重大的傷害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '花朵加农炮': [
         '妖精',
@@ -10924,7 +10866,7 @@ JINENG_LIST = {
         '90',
         '5',
         '放出强力光束后，自己的特攻会大幅降低。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '精神之牙': [
         '超能力',
@@ -10933,7 +10875,7 @@ JINENG_LIST = {
         '100',
         '10',
         '利用精神力量咬住对手进行攻击。还可以破坏光墙和反射壁等。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '跺脚': [
         '地面',
@@ -10942,7 +10884,7 @@ JINENG_LIST = {
         '100',
         '10',
         '化悔恨为力量进行攻击。如果上一回合招式没有打中，威力就会翻倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '暗影之骨': [
         '幽灵',
@@ -10951,7 +10893,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用附有灵魂的骨头殴打对手进行攻击。有时会降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '冲岩': [
         '岩石',
@@ -10960,7 +10902,7 @@ JINENG_LIST = {
         '100',
         '20',
         '透過敏捷的動作撞击對手，一定能先發制人進行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '水流裂破': [
         '水',
@@ -10969,7 +10911,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用水之力量撞向对手进行攻击。有时会降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':20}
     ],
     '棱镜镭射': [
         '超能力',
@@ -10978,7 +10920,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用棱镜的力量发射强烈光线。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '暗影偷盗': [
         '幽灵',
@@ -10987,7 +10929,7 @@ JINENG_LIST = {
         '100',
         '10',
         '潜入对手的影子进行攻击。会夺取对手的能力提升。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '流星闪冲': [
         '钢',
@@ -10996,7 +10938,7 @@ JINENG_LIST = {
         '100',
         '5',
         '以流星般的气势猛撞对手，可无视对手的特性并进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '暗影之光': [
         '幽灵',
@@ -11005,7 +10947,7 @@ JINENG_LIST = {
         '100',
         '5',
         '放出奇异的光线攻击对手，可无视对手的特性进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '泪眼汪汪': [
         '一般',
@@ -11014,7 +10956,7 @@ JINENG_LIST = {
         '100',
         '20',
         '变得泪眼汪汪，让对手丧失斗志。从而降低对手的攻击和特攻。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,SPATK','1,1','down,down')",
+        '敌方削弱',{'sxinfo':'ATK,SPATK','lvinfo':'1,1','typeinfo':'down,down'}
     ],
     '麻麻刺刺': [
         '电',
@@ -11023,7 +10965,7 @@ JINENG_LIST = {
         '100',
         '10',
         '撞向对手，并发出强电，使其感到麻麻刺刺的。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '自然之怒': [
         '妖精',
@@ -11032,7 +10974,7 @@ JINENG_LIST = {
         '90',
         '10',
         '向對手發洩自然之怒，使對手的ＨＰ減半。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '多属性攻击': [
         '一般',
@@ -11041,7 +10983,7 @@ JINENG_LIST = {
         '100',
         '10',
         '一边覆盖高能量，一边撞向对手进行攻击。根据存储碟不同，属性会改变。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '千万伏特': [
         '电',
@@ -11059,7 +11001,7 @@ JINENG_LIST = {
         '100',
         '5',
         '让自己的头爆炸，来攻击周围的一切。自己也会受到伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '等离子闪电拳': [
         '电',
@@ -11068,7 +11010,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用覆盖着电流的拳头进行攻击。使一般属性的招式变成电属性。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '光子喷涌': [
         '超能力',
@@ -11077,7 +11019,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用光柱来进行攻击。比较自己的攻击和特攻，用数值相对较高的一项给予对方伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '炽魂热舞烈音爆': [
         '龙',
@@ -11131,7 +11073,7 @@ JINENG_LIST = {
         '—',
         '1',
         '奈克洛兹玛会无视对手的特性效果，在攻击和特攻之间，用数值相对较高的一项给予对方伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '电电加速': [
         '电',
@@ -11140,7 +11082,7 @@ JINENG_LIST = {
         '100',
         '15',
         '迅猛无比的电击。必定能够先制攻击，击中对方的要害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '滔滔冲浪': [
         '水',
@@ -11149,7 +11091,8 @@ JINENG_LIST = {
         '100',
         '15',
         '往巨浪中注入电能后冲撞对手进行攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '飘飘坠落': [
         '飞行',
@@ -11158,7 +11101,7 @@ JINENG_LIST = {
         '95',
         '15',
         '轻飘飘地浮起来后，再猛地俯冲下去进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '闪闪雷光': [
         '电',
@@ -11167,7 +11110,7 @@ JINENG_LIST = {
         '100',
         '20',
         '皮卡丘越喜欢训练家，电击的威力就越强。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '活活气泡': [
         '水',
@@ -11176,7 +11119,7 @@ JINENG_LIST = {
         '100',
         '15',
         '投掷水球进行攻击。吸水后能回复等同于造成的伤害一半的ＨＰ。',
-        'get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)',
+        '回复伤害',{'xh_bl':0.5},
     ],
     '麻麻电击': [
         '电',
@@ -11185,7 +11128,8 @@ JINENG_LIST = {
         '100',
         '15',
         '放出电击攻击对手。让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','100')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'100','zt_hh':99},
     ],
     '熊熊火爆': [
         '火',
@@ -11194,7 +11138,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用燃起大火的身体猛烈地冲撞对手。让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','100')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'100','zt_hh':99},
     ],
     '哗哗气场': [
         '超能力',
@@ -11203,7 +11148,7 @@ JINENG_LIST = {
         '100',
         '15',
         '利用念力强攻，粉碎对方信心。制造一道能减弱对手特殊攻击的神奇墙壁。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '坏坏领域': [
         '恶',
@@ -11212,7 +11157,7 @@ JINENG_LIST = {
         '100',
         '15',
         '恶行恶相地进行攻击。制造一道能减弱对手物理攻击的神奇墙壁。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '茁茁轰炸': [
         '草',
@@ -11221,7 +11166,7 @@ JINENG_LIST = {
         '100',
         '15',
         '长出巨大的藤蔓，播撒种子进行攻击。种子每回合都会吸取对手的ＨＰ。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冰冰霜冻': [
         '冰',
@@ -11230,7 +11175,7 @@ JINENG_LIST = {
         '100',
         '15',
         '利用冰冷的黑雾结晶进行攻击。使全体宝可梦的能力变回原点。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '亮亮风暴': [
         '妖精',
@@ -11239,7 +11184,7 @@ JINENG_LIST = {
         '100',
         '15',
         '利用芬芳刺鼻的龙卷风吞噬对方。能治愈我方宝可梦的异常状态。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '砰砰击破': [
         '一般',
@@ -11248,7 +11193,7 @@ JINENG_LIST = {
         '100',
         '20',
         '伊布越喜欢训练家，冲撞的威力就越强。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '钢拳双击': [
         '钢',
@@ -11257,7 +11202,7 @@ JINENG_LIST = {
         '100',
         '5',
         '以胸口的螺帽为中心旋转，并连续２次挥动手臂打击对手。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '极巨防壁': [
         '一般',
@@ -11266,7 +11211,7 @@ JINENG_LIST = {
         '—',
         '—',
         '完全抵挡对手的攻击。连续使出则容易失败。',
-        'add_wudi(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '无敌','',
     ],
     '极巨炮': [
         '龙',
@@ -11275,7 +11220,7 @@ JINENG_LIST = {
         '100',
         '5',
         '从核心放出光束进行攻击。如果对手正处于极巨化状态，则造成的伤害会变为２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '狙击': [
         '水',
@@ -11284,7 +11229,7 @@ JINENG_LIST = {
         '100',
         '15',
         '能无视具有吸引对手招式效果的特性或招式的影响。可以向选定的对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '紧咬不放': [
         '恶',
@@ -11293,7 +11238,7 @@ JINENG_LIST = {
         '100',
         '10',
         '使双方直到一方濒死为止无法替换宝可梦。其中一方退场则可以解除效果。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '大快朵颐': [
         '一般',
@@ -11302,7 +11247,7 @@ JINENG_LIST = {
         '—',
         '10',
         '吃掉携带的树果，大幅提高防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','2','up')",
+        '自身强化',{'sxinfo':'DEF','lvinfo':'2','typeinfo':'up'}
     ],
     '背水一战': [
         '格斗',
@@ -11320,7 +11265,7 @@ JINENG_LIST = {
         '100',
         '15',
         '泼洒黏糊糊的沥青，降低对手的速度，并且使对手的弱点变为火。',
-        "up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '敌方削弱',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down'}
     ],
     '魔法粉': [
         '超能力',
@@ -11338,7 +11283,7 @@ JINENG_LIST = {
         '100',
         '10',
         '让多龙梅西亚进行２次攻击。如果对手有２只宝可梦，则对它们各进行１次攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '茶会': [
         '一般',
@@ -11365,7 +11310,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用带电的喙啄刺对手。如果比对手先出手攻击，招式的威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '鳃咬': [
         '水',
@@ -11374,7 +11319,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用坚硬的腮咬住对手。如果比对手先出手攻击，招式的威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '换场': [
         '一般',
@@ -11554,7 +11499,7 @@ JINENG_LIST = {
         '100',
         '5',
         '削减少许自己的ＨＰ，使所有能力都提高。',
-        'hwlyb(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '魂舞烈音爆',''
     ],
     '扑击': [
         '格斗',
@@ -11563,7 +11508,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用身体撞向对手进行攻击。防御越高，给予的伤害就越高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '装饰': [
         '妖精',
@@ -11581,7 +11526,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用鼓点来控制鼓的根部进行攻击，从而降低对手的速度。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down')",
+        '附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '捕兽夹': [
         '草',
@@ -11590,7 +11535,7 @@ JINENG_LIST = {
         '100',
         '15',
         '使用捕兽夹，在４～５回合内，夹住对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '火焰球': [
         '火',
@@ -11599,7 +11544,8 @@ JINENG_LIST = {
         '90',
         '5',
         '点燃小石子，形成火球攻击对手。有时会使对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','10')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'10','zt_hh':99},
     ],
     '巨兽斩': [
         '钢',
@@ -11608,7 +11554,7 @@ JINENG_LIST = {
         '100',
         '5',
         '变身为巨大的剑，挥斩对手。如果对手正处于极巨化状态，则造成的伤害会变为２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '巨兽弹': [
         '钢',
@@ -11617,7 +11563,7 @@ JINENG_LIST = {
         '100',
         '5',
         '变身为巨大的盾，撞击对手。如果对手正处于极巨化状态，则造成的伤害会变为２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '气场轮': [
         '电',
@@ -11626,7 +11572,7 @@ JINENG_LIST = {
         '100',
         '10',
         '用储存在颊囊里的能量进行攻击，并提高自己的速度。其属性会随着莫鲁贝可的样子而改变。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '广域破坏': [
         '龙',
@@ -11635,7 +11581,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用坚韧的尾巴猛扫对手进行攻击，从而降低对手的攻击。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down','100')",
+        '附加伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '木枝突刺': [
         '草',
@@ -11644,7 +11590,7 @@ JINENG_LIST = {
         '100',
         '40',
         '使用尖锐的树枝刺向对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '破音': [
         '电',
@@ -11653,7 +11599,7 @@ JINENG_LIST = {
         '100',
         '10',
         '奏响吉他和贝斯，释放出发出巨响的剧烈震动攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '苹果酸': [
         '草',
@@ -11662,7 +11608,7 @@ JINENG_LIST = {
         '100',
         '10',
         '使用从酸苹果中提取出来的酸性液体进行攻击。降低对手的特防。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','1','down','100')",
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '万有引力': [
         '草',
@@ -11671,7 +11617,7 @@ JINENG_LIST = {
         '100',
         '10',
         '从高处落下苹果，给予对手伤害。可降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '灵魂冲击': [
         '妖精',
@@ -11680,7 +11626,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用足以让对手一蹶不振的气势进行攻击。会降低对手的特攻。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '附加伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '神奇蒸汽': [
         '妖精',
@@ -11689,7 +11635,8 @@ JINENG_LIST = {
         '95',
         '10',
         '喷出烟雾攻击对手。有时会使对手混乱。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'混乱','30','5')",
+        '状态伤害',
+        {'ztname':'混乱','zt_jl':'30','zt_hh':5},
     ],
     '生命水滴': [
         '水',
@@ -11698,7 +11645,7 @@ JINENG_LIST = {
         '—',
         '10',
         '喷洒出神奇的水，回复自己和场上同伴的ＨＰ。',
-        'up_my_hp(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.25)',
+        '生命回复',{'bh_bl':0.25}
     ],
     '拦堵': [
         '恶',
@@ -11707,7 +11654,7 @@ JINENG_LIST = {
         '100',
         '10',
         '完全抵挡对手的攻击。连续使出则容易失败。一旦触碰，防御就会大幅降低。',
-        'add_wudi(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '无敌',''
     ],
     '假跪真撞': [
         '恶',
@@ -11716,7 +11663,7 @@ JINENG_LIST = {
         '100',
         '10',
         '装作低头认错的样子，用凌乱的头发进行突刺。攻击必定会命中。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '流星突击': [
         '格斗',
@@ -11725,7 +11672,7 @@ JINENG_LIST = {
         '100',
         '5',
         '大力挥舞粗壮的茎进行攻击。但同时自己也会被晃晕，下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '无极光束': [
         '龙',
@@ -11734,7 +11681,7 @@ JINENG_LIST = {
         '90',
         '5',
         '无极汰那变回原来的样子后，发动的最强攻击。下一回合自己将无法动弹。',
-        "get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'休息','100','2')",
+        '状态添加',{'ztname':'休息','zt_jl':'100','zt_hh':'2'}
     ],
     '铁蹄光线': [
         '钢',
@@ -11743,7 +11690,7 @@ JINENG_LIST = {
         '95',
         '5',
         '将从全身聚集的钢铁化为光束，激烈地发射出去。自己也会受到伤害。',
-        'get_shanghai_pt_fs(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '反伤伤害','',
     ],
     '超极巨地狱灭焰': [
         '火',
@@ -11986,7 +11933,7 @@ JINENG_LIST = {
         '100',
         '10',
         '利用精神力量攻击对手。在精神场地上威力会有所提高，能对所有对手造成伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '铁滚轮': [
         '钢',
@@ -11995,7 +11942,7 @@ JINENG_LIST = {
         '100',
         '5',
         '在破坏场地的同时攻击对手。如果脚下没有任何场地状态存在，使出此招式时便会失败。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '鳞射': [
         '龙',
@@ -12004,7 +11951,7 @@ JINENG_LIST = {
         '90',
         '20',
         '发射鳞片进行攻击。连续攻击２～５次。速度会提高但防御会降低。',
-        'get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,2,5)',
+        '连续伤害',{'csmim':2,'csmax':5},
     ],
     '流星光束': [
         '岩石',
@@ -12013,7 +11960,7 @@ JINENG_LIST = {
         '90',
         '10',
         '第１回合聚集宇宙之力提高特攻，第２回合攻击对手。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '臂贝武器': [
         '毒',
@@ -12022,7 +11969,8 @@ JINENG_LIST = {
         '100',
         '10',
         '从物理攻击和特殊攻击中选择可造成较多伤害的方式进行攻击。有时会让对手陷入中毒状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','20')",
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'20','zt_hh':99},
     ],
     '薄雾炸裂': [
         '妖精',
@@ -12031,7 +11979,7 @@ JINENG_LIST = {
         '100',
         '5',
         '对自己周围的所有宝可梦进行攻击，但使出后，自己会陷入濒死。在薄雾场地上，招式威力会提高。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '青草滑梯': [
         '草',
@@ -12040,7 +11988,7 @@ JINENG_LIST = {
         '100',
         '20',
         '仿佛在地面上滑行般地攻击对手。在青草场地上，必定能够先制攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '电力上升': [
         '电',
@@ -12049,7 +11997,7 @@ JINENG_LIST = {
         '100',
         '20',
         '用从地面升腾而起的电击进行攻击。当对手处于电气场地上时，招式威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '大地波动': [
         '一般',
@@ -12058,7 +12006,7 @@ JINENG_LIST = {
         '100',
         '10',
         '借助场地的力量进行攻击。视使出招式时场地状态不同，招式的属性和威力会有所变化。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '爬击': [
         '虫',
@@ -12067,7 +12015,7 @@ JINENG_LIST = {
         '90',
         '10',
         '从对手背后爬近后进行攻击。会降低对手的特攻。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')",
+        '附加伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '妒火': [
         '火',
@@ -12085,7 +12033,7 @@ JINENG_LIST = {
         '100',
         '5',
         '攻击对手以发泄对其感到的恼怒情绪。如果在该回合内自身能力遭到降低，招式的威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '灵骚': [
         '幽灵',
@@ -12094,7 +12042,7 @@ JINENG_LIST = {
         '90',
         '5',
         '操纵对手的持有物进行攻击。当对手没有携带道具时，使出此招式时便会失败。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '腐蚀气体': [
         '毒',
@@ -12112,7 +12060,7 @@ JINENG_LIST = {
         '—',
         '10',
         '通过进行正确合理的指导，提高我方全员的攻击和防御。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,DEF','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '快速折返': [
         '水',
@@ -12121,7 +12069,7 @@ JINENG_LIST = {
         '100',
         '20',
         '在攻击之后急速返回，和后备宝可梦进行替换。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '三旋击': [
         '冰',
@@ -12130,7 +12078,7 @@ JINENG_LIST = {
         '90',
         '10',
         '连续３次踢对手进行攻击。每踢中一次，威力就会提高。',
-        'get_shanghai_sxj(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '连续加伤',''
     ],
     '双翼': [
         '飞行',
@@ -12139,7 +12087,7 @@ JINENG_LIST = {
         '90',
         '10',
         '将翅膀撞向对手进行攻击。连续２次给予伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '热沙大地': [
         '地面',
@@ -12148,7 +12096,8 @@ JINENG_LIST = {
         '100',
         '10',
         '将滚烫的沙子砸向对手进行攻击。有时会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','30')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'30','zt_hh':99},
     ],
     '丛林治疗': [
         '草',
@@ -12166,7 +12115,7 @@ JINENG_LIST = {
         '100',
         '5',
         '将恶之流派修炼至大成的猛烈一击。必定会击中要害。',
-        'get_shanghai_pt_yh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '必中要害','',
     ],
     '水流连打': [
         '水',
@@ -12175,7 +12124,7 @@ JINENG_LIST = {
         '100',
         '5',
         '将水之流派修炼至大成的仿若行云流水般的３次连击。必定会击中要害。',
-        'get_shanghai_pt_yh_lx(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,3)',
+        '连续要害',{'cishu':3}
     ],
     '超极巨狂擂乱打': [
         '草',
@@ -12247,7 +12196,7 @@ JINENG_LIST = {
         '90',
         '15',
         '将对手困在电流四溅的囚笼中，在４～５回合内进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '巨龙威能': [
         '龙',
@@ -12256,7 +12205,7 @@ JINENG_LIST = {
         '100',
         '5',
         '把生命力转换为力量攻击对手。自己的ＨＰ越少，招式的威力越小。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冰冷视线': [
         '超能力',
@@ -12265,7 +12214,8 @@ JINENG_LIST = {
         '100',
         '10',
         '从双眼发射精神力量进行攻击。有时会让对手陷入冰冻状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'冰冻','10')",
+        '状态伤害',
+        {'ztname':'冰冻','zt_jl':'10','zt_hh':99},
     ],
     '怒火中烧': [
         '恶',
@@ -12274,7 +12224,7 @@ JINENG_LIST = {
         '100',
         '10',
         '将愤怒转化为火焰般的气场进行攻击。有时会使对手畏缩。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '雷鸣蹴击': [
         '格斗',
@@ -12283,7 +12233,7 @@ JINENG_LIST = {
         '100',
         '10',
         '以雷电般的动作戏耍对手的同时使出脚踢。可降低对手的防御。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down','100')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '雪矛': [
         '冰',
@@ -12292,7 +12242,7 @@ JINENG_LIST = {
         '100',
         '5',
         '向对手投掷掀起暴风雪的冰矛进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '星碎': [
         '幽灵',
@@ -12301,7 +12251,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用大量的小灵体向对手发起攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '诡异咒语': [
         '超能力',
@@ -12310,7 +12260,7 @@ JINENG_LIST = {
         '100',
         '5',
         '用强大的精神力量攻击。让对手最后使用的招式减少３ＰＰ。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '克命爪': [
         '毒',
@@ -12319,7 +12269,8 @@ JINENG_LIST = {
         '100',
         '15',
         '以破灭之爪瞄准要害进行攻击。有时还会让对手陷入中毒、麻痹、瞌睡之中的一种状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '屏障猛攻': [
         '超能力',
@@ -12328,7 +12279,7 @@ JINENG_LIST = {
         '90',
         '10',
         '让意念的能量覆盖全身，撞向对手进行攻击。有时还会提高自己的防守力。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','up')",
+        '强化伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'up','bh_jl':20}
     ],
     '力量转换': [
         '一般',
@@ -12346,7 +12297,7 @@ JINENG_LIST = {
         '90',
         '15',
         '用岩石之斧瞄准要害进行攻击。散落的岩石碎片可给予对手数次伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '阳春风暴': [
         '妖精',
@@ -12355,7 +12306,7 @@ JINENG_LIST = {
         '80',
         '5',
         '用交织着爱与恨的烈风席卷对手进行攻击。追加效果会依出招时的形态而改变。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '神秘之力': [
         '超能力',
@@ -12364,7 +12315,7 @@ JINENG_LIST = {
         '90',
         '10',
         '放出不可思议的力量攻击。会提高自己的特攻。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','up','100')",
+        '强化伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'up','bh_jl':100}
     ],
     '大愤慨': [
         '火',
@@ -12373,7 +12324,7 @@ JINENG_LIST = {
         '85',
         '10',
         '一边放出猛烈的火焰，一边疯狂乱打进行攻击。招式结束后自己会陷入热衷状态。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '波动冲': [
         '水',
@@ -12382,7 +12333,7 @@ JINENG_LIST = {
         '100',
         '10',
         '让水覆盖全身后撞向对手。自己也会受到伤害。能够让自己的行动顺序提前。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '叶绿爆震': [
         '草',
@@ -12391,7 +12342,7 @@ JINENG_LIST = {
         '95',
         '5',
         '将叶绿素凝聚起来后放出去进行攻击。自己也会受到伤害，且会让自己的行动顺序延后。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冰山风': [
         '冰',
@@ -12400,7 +12351,7 @@ JINENG_LIST = {
         '85',
         '5',
         '将冰山般巨大的冰块砸向对手进行攻击。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '胜利之舞': [
         '格斗',
@@ -12409,7 +12360,7 @@ JINENG_LIST = {
         '—',
         '10',
         '凭借唤来胜利的舞蹈提高自己的进攻力和防守力，并让招式给予的伤害变成１.５倍。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,DEF','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '突飞猛扑': [
         '地面',
@@ -12418,7 +12369,7 @@ JINENG_LIST = {
         '100',
         '5',
         '向对手使出灌注了全心全力的撞击。自己的防守力会降低。',
-        "up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down')",
+        '强化伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '毒千针': [
         '毒',
@@ -12427,7 +12378,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用无数的毒针进行攻击。有时还会让对手陷入中毒状态。攻击处于异常状态的对手时，威力会变成２倍。',
-        '',
+        '异常双倍',''
     ],
     '气场之翼': [
         '超能力',
@@ -12436,7 +12387,7 @@ JINENG_LIST = {
         '90',
         '10',
         '用经过气场强化的翅膀撕裂对手。容易击中要害。能够让自己的行动顺序提前。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '冤冤相报': [
         '幽灵',
@@ -12445,7 +12396,7 @@ JINENG_LIST = {
         '100',
         '15',
         '用令人毛骨悚然的怨念进行攻击。有时还会让对手陷入冻伤状态。攻击处于异常状态的对手时，威力会变成２倍。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '异常双倍',''
     ],
     '闭关': [
         '钢',
@@ -12454,7 +12405,7 @@ JINENG_LIST = {
         '—',
         '10',
         '让皮肤变得像铁盾般坚硬。会提高自己的防守力，且变得较容易闪避对手的招式。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF,ER','1,1','up,up')",
+        '自身强化',{'sxinfo':'DEF,ER','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '三连箭': [
         '格斗',
@@ -12463,7 +12414,7 @@ JINENG_LIST = {
         '100',
         '15',
         '使出一记下压踢后同时发射３箭。自己的攻击会变得容易击中要害。会降低对手的防守力。',
-        "dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF','1','down','100')",
+        '附加伤害',{'sxinfo':'DEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
     ],
     '群魔乱舞': [
         '幽灵',
@@ -12472,7 +12423,8 @@ JINENG_LIST = {
         '100',
         '15',
         '用无数的火球进行攻击。有时会让对手陷入灼伤状态。攻击处于异常状态的对手时，威力会变成２倍。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','30','5')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'30','zt_hh':99},
     ],
     '秘剑・千重涛': [
         '恶',
@@ -12481,7 +12433,7 @@ JINENG_LIST = {
         '90',
         '15',
         '用贝壳之剑瞄准要害进行攻击。散落的贝壳碎片可给予对手数次伤害。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '枯叶风暴': [
         '飞行',
@@ -12490,7 +12442,7 @@ JINENG_LIST = {
         '80',
         '5',
         '用足以让身心都止不住颤抖的冰冷狂风进行攻击。有时会让对手陷入冻伤状态。',
-        'get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)',
+        '普通伤害','',
     ],
     '鸣雷风暴': [
         '电',
@@ -12499,7 +12451,8 @@ JINENG_LIST = {
         '80',
         '5',
         '呼唤雷云引起风暴，用雷与风进行激烈的攻击。有时会让对手陷入麻痹状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'麻痹','10')",
+        '状态伤害',
+        {'ztname':'麻痹','zt_jl':'10','zt_hh':99},
     ],
     '热沙风暴': [
         '地面',
@@ -12508,7 +12461,8 @@ JINENG_LIST = {
         '80',
         '5',
         '用灼热的沙子和强烈的风席卷对手进行攻击。会让对手陷入灼伤状态。',
-        "get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'灼伤','30')",
+        '状态伤害',
+        {'ztname':'灼伤','zt_jl':'30','zt_hh':99},
     ],
     '新月祈祷': [
         '超能力',
@@ -12526,69 +12480,78 @@ JINENG_LIST = {
         '—',
         '10',
         '鼓起冲劲，治愈自己的异常状态，同时提高自己的进攻力和防守力。',
-        "up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF','1,1','up,up')",
+        '自身强化',{'sxinfo':'ATK,DEF','lvinfo':'1,1','typeinfo':'up,up'}
     ],
     '太晶爆发':['一般','特殊','80','100','10','太晶化时，会放出太晶属性的能量攻击。比较自己的攻击和特攻，用数值相对较高的一项给予对方伤害。',''],
     '线阱':['虫','变化','—','—','10','用丝设置陷阱。防住对方攻击的同时，能够降低所接触到的对手的速度。',''],
     '下压踢':['格斗','物理','120','90','10','将踢起的脚跟往下劈向对手进行攻击。有时会使对手混乱。如果劈偏则自己会受到伤害。',''],
     '扫墓':['幽灵','物理','50','100','10','为了化解伙伴的悔恨而进行攻击。被打倒的我方宝可梦越多，招式的威力越高。',''],
-    '琉光冲激':['超能力','特殊','80','100','10','放出连精神都能影响到的奇妙怪光进行攻击。会大幅降低对方的特防。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPDEF','2','down','100')"],
-    '上菜':['龙','物理','80','100','10','以潇洒的身手进行攻击。若口中有米立龙，会按其样子提高能力。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '喷射拳':['水','物理','60','100','15','将激流覆盖于拳头，以肉眼无法辨识的速度打出拳击。必定能够先制攻击。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '辣椒精华':['草','变化','—','100','15','放出极为辛辣的精华。对手的攻击会大幅提高，防御会大幅降低。',"up_shux_info_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK,DEF','2,2','up,down')"],
-    '疾速转轮':['钢','物理','100','100','5','通过往腿上增加负荷，以激烈的旋转给予对手伤害。自己的速度会大幅降低。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','2','down')"],
-    '鼠数儿':['一般','物理','20','90','10','伙伴们会纷纷赶来集合，以群体行动给予对手攻击。连续命中１～１０次。','get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,1,10)'],
-    '冰旋':['冰','物理','80','100','15','脚上覆盖薄冰，旋转着撞击对手。通过旋转的动作破坏场地。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '巨剑突击':['龙','物理','120','100','5','有勇无谋的舍身突击。使出招式后，对手的攻击必定会命中，且伤害会变成２倍。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
+    '琉光冲激':['超能力','特殊','80','100','10','放出连精神都能影响到的奇妙怪光进行攻击。会大幅降低对方的特防。','附加伤害',{'sxinfo':'SPDEF','lvinfo':'2','typeinfo':'down','bh_jl':100}],
+    '上菜':['龙','物理','80','100','10','以潇洒的身手进行攻击。若口中有米立龙，会按其样子提高能力。','普通伤害',''],
+    '喷射拳':['水','物理','60','100','15','将激流覆盖于拳头，以肉眼无法辨识的速度打出拳击。必定能够先制攻击。','普通伤害',''],
+    '辣椒精华':['草','变化','—','100','15','放出极为辛辣的精华。对手的攻击会大幅提高，防御会大幅降低。','敌方削弱',{'sxinfo':'ATK,DEF','lvinfo':'2,2','typeinfo':'up,down'}],
+    '疾速转轮':['钢','物理','100','100','5','通过往腿上增加负荷，以激烈的旋转给予对手伤害。自己的速度会大幅降低。','强化伤害',{'sxinfo':'SPD','lvinfo':'2','typeinfo':'down','bh_jl':100}],
+    '鼠数儿':['一般','物理','20','90','10','伙伴们会纷纷赶来集合，以群体行动给予对手攻击。连续命中１～１０次。','连续伤害',{'csmim':1,'csmax':10}],
+    '冰旋':['冰','物理','80','100','15','脚上覆盖薄冰，旋转着撞击对手。通过旋转的动作破坏场地。','普通伤害',''],
+    '巨剑突击':['龙','物理','120','100','5','有勇无谋的舍身突击。使出招式后，对手的攻击必定会命中，且伤害会变成２倍。','普通伤害',''],
     '复生祈祷':['一般','变化','—','—','1','通过以慈爱之心祈祷，让陷入昏厥的后备宝可梦以回复一半ＨＰ的状态复活。',''],
-    '盐腌':['岩石','物理','40','100','15','使对手陷入盐腌状态，每回合给予对手伤害。对手为钢或水属性时会更痛苦。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '三连钻':['水','物理','30','95','10','以默契的跳跃溅起水花击向对手。连续３次给予伤害。','get_lxshanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,3,3)'],
-    '晶光转转':['毒','物理','30','100','15','通过旋转来攻击对手。可以摆脱绑紧、紧束、寄生种子等招式。还能让对手陷入中毒状态。',"get_shanghai_zt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'中毒','30')"],
+    '盐腌':['岩石','物理','40','100','15','使对手陷入盐腌状态，每回合给予对手伤害。对手为钢或水属性时会更痛苦。','普通伤害',''],
+    '三连钻':['水','物理','30','95','10','以默契的跳跃溅起水花击向对手。连续３次给予伤害。','连续伤害',{'csmim':3,'csmax':3},],
+    '晶光转转':[
+        '毒',
+        '物理',
+        '30',
+        '100',
+        '15',
+        '通过旋转来攻击对手。可以摆脱绑紧、紧束、寄生种子等招式。还能让对手陷入中毒状态。',
+        '状态伤害',
+        {'ztname':'中毒','zt_jl':'30','zt_hh':99},
+    ],
     '描绘':['一般','变化','—','100','10','把握并映射出对手的本质，让自己和同伴宝可梦的特性变得和对手相同。',''],
     '甩肉':['一般','变化','—','—','10','削减自己的ＨＰ，大幅提高攻击和特攻以及速度。',''],
-    '仆刀':['恶','物理','85','100','10','下跪让对手大意后发起袭击劈向对手。攻击必定会命中。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '千变万花':['草','物理','70','100','10','将做了手脚的花束扔向对手进行攻击。必定会命中，且会击中要害。','get_shanghai_pt_yh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '闪焰高歌':['火','特殊','80','100','10','如唱歌一样喷出熊熊燃烧的火焰烧焦对手。会提高自己的特攻。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','up')"],
-    '流水旋舞':['水','物理','80','100','10','以盈盈欲滴的轻快步伐戏耍对手并给予其伤害。会提高自己的速度。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','up','100')"],
-    '怒牛':['一般','物理','90','100','10','狂怒暴牛的猛烈冲撞。招式的属性随形态改变，光墙和反射壁等招式也能破坏。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '淘金潮':['钢','特殊','120','100','5','扔出大量硬币攻击。自己的特攻会降低，战斗后还可以拿到钱。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPATK','1','down')"],
-    '精神剑':['超能力','物理','80','100','15','用无形的利刃劈开对手。处于电气场地时，招式威力会变成１.５倍。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '水蒸气':['水','特殊','80','100','15','将煮得翻滚的开水猛烈地喷向对手。日照强烈时，招式威力不但不会降低，还会变成１.５倍。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
+    '仆刀':['恶','物理','85','100','10','下跪让对手大意后发起袭击劈向对手。攻击必定会命中。','普通伤害',''],
+    '千变万花':['草','物理','70','100','10','将做了手脚的花束扔向对手进行攻击。必定会命中，且会击中要害。','必中要害',''],
+    '闪焰高歌':['火','特殊','80','100','10','如唱歌一样喷出熊熊燃烧的火焰烧焦对手。会提高自己的特攻。','强化伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'up','bh_jl':100}],
+    '流水旋舞':['水','物理','80','100','10','以盈盈欲滴的轻快步伐戏耍对手并给予其伤害。会提高自己的速度。','强化伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'up','bh_jl':100}],
+    '怒牛':['一般','物理','90','100','10','狂怒暴牛的猛烈冲撞。招式的属性随形态改变，光墙和反射壁等招式也能破坏。','普通伤害',''],
+    '淘金潮':['钢','特殊','120','100','5','扔出大量硬币攻击。自己的特攻会降低，战斗后还可以拿到钱。','强化伤害',{'sxinfo':'SPATK','lvinfo':'1','typeinfo':'down','bh_jl':100}],
+    '精神剑':['超能力','物理','80','100','15','用无形的利刃劈开对手。处于电气场地时，招式威力会变成１.５倍。','普通伤害',''],
+    '水蒸气':['水','特殊','80','100','15','将煮得翻滚的开水猛烈地喷向对手。日照强烈时，招式威力不但不会降低，还会变成１.５倍。','普通伤害',''],
     '大灾难':['恶','特殊','变化','90','10','引发毁灭性的灾厄，使对手的ＨＰ减半。',''],
-    '全开猛撞':['格斗','物理','100','100','5','边变形边凶暴地落下，并引发起古老的大爆炸。若针对到弱点，威力会进一步。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '闪电猛冲':['电','特殊','100','100','5','边变形边高速奔走，并以未知的电击贯穿对手。若针对到弱点，威力会进一步。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
+    '全开猛撞':['格斗','物理','100','100','5','边变形边凶暴地落下，并引发起古老的大爆炸。若针对到弱点，威力会进一步。','普通伤害',''],
+    '闪电猛冲':['电','特殊','100','100','5','边变形边高速奔走，并以未知的电击贯穿对手。若针对到弱点，威力会进一步。','普通伤害',''],
     '断尾':['一般','变化','—','—','10','削减自己的ＨＰ，制造分身后会返回，并和后备宝可梦进行替换。',''],
-    '冷笑话':['冰','变化','—','—','10','留下冷场的冷笑话后，和后备宝可梦进行替换。在５回合内会下雪。',"changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'下雪')"],
+    '冷笑话':['冰','变化','—','—','10','留下冷场的冷笑话后，和后备宝可梦进行替换。在５回合内会下雪。','天气',{'tqname':'下雪'}],
     '大扫除':['一般','变化','—','—','10','将撒菱、隐形岩、黏黏网、毒菱、替身全部扫除掉。自己的攻击和速度会提高。',''],
-    '雪景':['冰','变化','—','—','10','在５回合内会下雪。冰属性的防御会提高。',"changdi_change(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'下雪')"],
-    '虫扑':['虫','物理','50','100','20','飞扑向对手攻击。会降低对手的速度。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down','100')"],
-    '起草':['草','物理','50','100','20','跳出草丛进行攻击。通过轻快的步伐会提高自己的速度。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','up','100')"],
-    '泼冷水':['水','特殊','50','100','20','泼洒冰冷得足以让对手失去活力的水进行攻击。会降低对手的攻击。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'ATK','1','down','100')"],
-    '强力钻':['一般','物理','100','100','5','急速旋转尖锐的身体部位贯穿对手。可以无视守住和看穿等招式。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '双光束':['超能力','特殊','80','100','10','从两眼发射出神奇的光线攻击。连续２次给予伤害。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '愤怒之拳':['幽灵','物理','50','100','10','将愤怒化为力量攻击。受到攻击的次数越多，招式的威力越高。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '铠农炮':['火','特殊','120','100','5','熊熊燃烧自己的铠甲，将其做成炮弹射出攻击。自己的防御和特防会降低。',"up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'DEF,SPDEF','1,1','down,down')"],
-    '悔念剑':['火','物理','90','100','10','将对世间的留恋聚集于剑尖，并斩击对手。可以回复给予对手伤害的一半ＨＰ。','get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)'],
-    '电光双击':['电','物理','120','100','5','将全身所有的电力放出，给予对手大大的伤害。自己的电属性将会消失。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '巨力锤':['钢','物理','160','100','5','连同身体转起巨大的锤子进行攻击。这个招式无法连续使出２次。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '复仇':['恶','物理','70','100','10','使出招式前，将最后受到的招式的伤害大力返还给对手。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '水波刀':['水','物理','70','100','20','如刀刃般喷射出加压的水切开对手。容易击中要害。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '灼热暴冲':['火','物理','80','100','10','---','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '黑暗暴冲':['恶','物理','80','100','10','---','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '剧毒暴冲':['毒','物理','100','100','10','---','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '格斗暴冲':['格斗','物理','100','100','10','---','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '魔法暴冲':['妖精','物理','100','100','10','---','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '血月':['一般','特殊','140','100','5','从赤红如血的满月发射出全部的气势。这个招式无法连续使出２次。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '刷刷茶炮':['草','特殊','80','90','15','发射经搅拌的茶的大炮，可以回复给予对手伤害的一半ＨＰ，有时会让对手陷入灼伤状态。','get_shanghai_pt_xh(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,0.5)'],
-    '糖浆炸弹':['草','特殊','60','85','10','使粘稠的麦芽糖浆爆炸，让对手陷入满身糖状态，在３回合内持续降低其速度。',"dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'SPD','1','down','100')"],
-    '棘藤棒':['草','物理','100','100','10','用缠有藤蔓的棍棒殴打。属性会随所戴的面具而改变。容易击中要害。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '豁出去':['火','物理','75','100','10','以自暴自弃的气势进行攻击。如果上一回合招式没有命中，威力就会翻倍。。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '龙声鼓舞':['龙','变化','—','—','10','以龙之鼓舞提高士气，让我方的招式变得容易击中要害。对龙属性的鼓舞效果会更强。',"up_shux_info_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,'CT','1','up')"],
-    '魅诱之声':['妖精','特殊','80','100','10','用天使般的歌声攻击对手。会让此回合内能力有提高的宝可梦陷入混乱状态。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '快手还击':['格斗','物理','65','100','15','察觉到对手的动作后用掌根攻击，让对手畏缩。如果对手使出的招式不是先制攻击，则会失败。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '精神噪音':['超能力','特殊','75','100','10','用令对手不舒服的音波进行攻击。让对手在２回合内无法通过招式、特性或携带的道具回复ＨＰ。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '闪电强袭':['电','物理','100','95','10','让身体带电后压向对手。如果没有命中则自己会受到伤害。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
-    '硬压':['钢','物理','100','100','10','用手臂或钳子压迫对手。对手剩余的ＨＰ越多，威力越大。','get_shanghai_pt(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi)'],
+    '雪景':['冰','变化','—','—','10','在５回合内会下雪。冰属性的防御会提高。','天气',{'tqname':'下雪'}],
+    '虫扑':['虫','物理','50','100','20','飞扑向对手攻击。会降低对手的速度。','附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}],
+    '起草':['草','物理','50','100','20','跳出草丛进行攻击。通过轻快的步伐会提高自己的速度。','强化伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'up','bh_jl':100}],
+    '泼冷水':['水','特殊','50','100','20','泼洒冰冷得足以让对手失去活力的水进行攻击。会降低对手的攻击。','附加伤害',{'sxinfo':'ATK','lvinfo':'1','typeinfo':'down','bh_jl':100}],
+    '强力钻':['一般','物理','100','100','5','急速旋转尖锐的身体部位贯穿对手。可以无视守住和看穿等招式。','普通伤害',''],
+    '双光束':['超能力','特殊','80','100','10','从两眼发射出神奇的光线攻击。连续２次给予伤害。','普通伤害',''],
+    '愤怒之拳':['幽灵','物理','50','100','10','将愤怒化为力量攻击。受到攻击的次数越多，招式的威力越高。','普通伤害',''],
+    '铠农炮':['火','特殊','120','100','5','熊熊燃烧自己的铠甲，将其做成炮弹射出攻击。自己的防御和特防会降低。','强化伤害',{'sxinfo':'DEF,SPDEF','lvinfo':'1,1','typeinfo':'down,down','bh_jl':100}],
+    '悔念剑':['火','物理','90','100','10','将对世间的留恋聚集于剑尖，并斩击对手。可以回复给予对手伤害的一半ＨＰ。','回复伤害',{'xh_bl':0.5}],
+    '电光双击':['电','物理','120','100','5','将全身所有的电力放出，给予对手大大的伤害。自己的电属性将会消失。','普通伤害',''],
+    '巨力锤':['钢','物理','160','100','5','连同身体转起巨大的锤子进行攻击。这个招式无法连续使出２次。','普通伤害',''],
+    '复仇':['恶','物理','70','100','10','使出招式前，将最后受到的招式的伤害大力返还给对手。','普通伤害',''],
+    '水波刀':['水','物理','70','100','20','如刀刃般喷射出加压的水切开对手。容易击中要害。','普通伤害',''],
+    '灼热暴冲':['火','物理','80','100','10','---','普通伤害',''],
+    '黑暗暴冲':['恶','物理','80','100','10','---','普通伤害',''],
+    '剧毒暴冲':['毒','物理','100','100','10','---','普通伤害',''],
+    '格斗暴冲':['格斗','物理','100','100','10','---','普通伤害',''],
+    '魔法暴冲':['妖精','物理','100','100','10','---','普通伤害',''],
+    '血月':['一般','特殊','140','100','5','从赤红如血的满月发射出全部的气势。这个招式无法连续使出２次。','普通伤害',''],
+    '刷刷茶炮':['草','特殊','80','90','15','发射经搅拌的茶的大炮，可以回复给予对手伤害的一半ＨＰ，有时会让对手陷入灼伤状态。','回复伤害',{'xh_bl':0.5}],
+    '糖浆炸弹':['草','特殊','60','85','10','使粘稠的麦芽糖浆爆炸，让对手陷入满身糖状态，在３回合内持续降低其速度。','附加伤害',{'sxinfo':'SPD','lvinfo':'1','typeinfo':'down','bh_jl':100}],
+    '棘藤棒':['草','物理','100','100','10','用缠有藤蔓的棍棒殴打。属性会随所戴的面具而改变。容易击中要害。','普通伤害',''],
+    '豁出去':['火','物理','75','100','10','以自暴自弃的气势进行攻击。如果上一回合招式没有命中，威力就会翻倍。。','普通伤害',''],
+    '龙声鼓舞':['龙','变化','—','—','10','以龙之鼓舞提高士气，让我方的招式变得容易击中要害。对龙属性的鼓舞效果会更强。','自身强化',{'sxinfo':'CT','lvinfo':'1','typeinfo':'up'}],
+    '魅诱之声':['妖精','特殊','80','100','10','用天使般的歌声攻击对手。会让此回合内能力有提高的宝可梦陷入混乱状态。','普通伤害',''],
+    '快手还击':['格斗','物理','65','100','15','察觉到对手的动作后用掌根攻击，让对手畏缩。如果对手使出的招式不是先制攻击，则会失败。','普通伤害',''],
+    '精神噪音':['超能力','特殊','75','100','10','用令对手不舒服的音波进行攻击。让对手在２回合内无法通过招式、特性或携带的道具回复ＨＰ。','普通伤害',''],
+    '闪电强袭':['电','物理','100','95','10','让身体带电后压向对手。如果没有命中则自己会受到伤害。','普通伤害',''],
+    '硬压':['钢','物理','100','100','10','用手臂或钳子压迫对手。对手剩余的ＨＰ越多，威力越大。','普通伤害',''],
 }
 
 LEVEL_JINENG_LIST = {

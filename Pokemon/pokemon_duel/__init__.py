@@ -17,6 +17,7 @@ from .pokemon import *
 from .pokeconfg import *
 from .draw_image import draw_pokemon_info, draw_pokemon_info_tj
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH
+from .data_source import make_jineng_use, jinengfuncs
 
 sv_pokemon_duel = SV('宝可梦状态', priority=5)
 
@@ -124,6 +125,32 @@ async def pokemon_help_game(bot, ev: Event):
     ]
     await bot.send_option(msg, buttons)
 
+@sv_pokemon_duel.on_command(('技能测试', '测试技能'))
+async def get_jineng_use_text(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) != 2:
+        return await bot.send('请输入 技能测试+宝可梦名称+技能名称 中间用空格隔开。', at_sender=True)
+    pokename1 = args[0]
+    uid = ev.user_id
+    bianhao1 = await get_poke_bianhao(pokename1)
+    if bianhao1 == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    mypokemon_info = await get_pokeon_info(uid, bianhao1)
+    if mypokemon_info == 0:
+        return await bot.send(
+            f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
+        )
+    myzhuangtai = [['无', 0], ['无', 0]]
+    dizhuangtai = [['无', 0], ['无', 0]]
+    changdi = [['无天气', 99], ['', 0]]
+    myinfo = await new_pokemon_info(bianhao1, mypokemon_info)
+    bianhao2 = 20
+    dilevel = 100
+    dipokemon_info = await get_pokeon_info_sj(bianhao2, dilevel)
+    diinfo = await new_pokemon_info(bianhao2, dipokemon_info)
+    jineng = args[1]
+    mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
+    await bot.send(mes)
 
 @sv_pokemon_duel.on_command(('我的精灵列表', '我的宝可梦列表'))
 async def my_pokemon_list(bot, ev: Event):
@@ -269,7 +296,7 @@ async def get_chushi_pokemon(bot, ev: Event):
             at_sender=True,
         )
     startype = await get_pokemon_star(uid)
-    pokemon_info = add_pokemon(uid, bianhao, startype)
+    pokemon_info = await add_pokemon(uid, bianhao, startype)
     await POKE._add_pokemon_group(uid, bianhao)
 
     await POKE.update_pokemon_star(uid, bianhao, startype)
@@ -391,7 +418,7 @@ async def add_pokemon_jineng(bot, ev: Event):
             f'学习失败，您的精灵 {starlist[startype]}{CHARA_NAME[bianhao][0]}已学会4个技能，请先遗忘一个技能后再学习。',
             at_sender=True,
         )
-    jinengzu = get_level_jineng(pokemon_info[0], bianhao)
+    jinengzu = await get_level_jineng(pokemon_info[0], bianhao)
     xuexizu = POKEMON_XUEXI[bianhao]
     if jinengname not in jinengzu and jinengname not in xuexizu:
         return await bot.send(
@@ -971,7 +998,7 @@ async def get_pokemon_form_egg(bot, ev: Event):
     await POKE._add_pokemon_egg(uid, bianhao, -1)
 
     startype = await get_pokemon_star(uid)
-    pokemon_info = add_pokemon(uid, bianhao, startype)
+    pokemon_info = await add_pokemon(uid, bianhao, startype)
     await POKE.update_pokemon_star(uid, bianhao, startype)
     HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
         bianhao, pokemon_info
