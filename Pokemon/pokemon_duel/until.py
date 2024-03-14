@@ -1271,7 +1271,7 @@ async def up_my_hp(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **
 async def sleep(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
     myinfo[17] = myinfo[3]
     myzhuangtai[0][0] = '睡眠'
-    myzhuangtai[0][1] = 2
+    myzhuangtai[0][1] = 3
     mes = f'{myinfo[0]}睡觉了，身体得到了回复\n剩余血量{myinfo[17]}'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 

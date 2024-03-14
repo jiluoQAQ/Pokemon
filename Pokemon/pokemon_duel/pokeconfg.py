@@ -895,7 +895,7 @@ async def pokemon_fight(
                     if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = '\n' + di_mesg + mes
                 else:
                     if (
@@ -929,7 +929,7 @@ async def pokemon_fight(
                     if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -1342,7 +1342,7 @@ async def pokemon_fight_s(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -1391,7 +1391,7 @@ async def pokemon_fight_s(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -1838,7 +1838,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -1873,7 +1873,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -2324,7 +2324,7 @@ async def pokemon_fight_pk(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
@@ -2359,7 +2359,7 @@ async def pokemon_fight_pk(
                         di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         # 敌方攻击
-                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng1, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
                         di_mesg = di_mesg + mes
                 else:
                     if (
