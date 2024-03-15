@@ -89,7 +89,7 @@ async def pk_vs_daoguan(bot, ev: Event):
         mypokelist.append(bianhao)
 
     mapinfo = await POKE._get_map_now(uid)
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     if int(mapinfo[0]) > 7:
         if int(mapinfo[0]) == 8:
             return await bot.send('您已通过8个道馆的挑战，可以去[挑战天王]了 ', at_sender=True)
@@ -270,7 +270,7 @@ async def pk_vs_tianwang(bot, ev: Event):
         mypokelist.append(bianhao)
 
     mapinfo = await POKE._get_map_now(uid)
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     if int(mapinfo[0]) < 8:
         return await bot.send('请先挑战完8个道馆再向天王发起挑战哦', at_sender=True)
     if int(mapinfo[0]) > 8:
@@ -454,7 +454,7 @@ async def pk_vs_guanjun(bot, ev: Event):
         mypokelist.append(bianhao)
 
     mapinfo = await POKE._get_map_now(uid)
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     if int(mapinfo[0]) < 9:
         return await bot.send('请先成为【天王训练家】再向冠军发起挑战哦', at_sender=True)
     if int(mapinfo[0]) > 9:
@@ -727,8 +727,8 @@ async def pokemon_pk_wjb(bot, ev: Event):
         bianhao = int(bianhao)
         dipokelist.append(bianhao)
 
-    mychenghao, myhuizhang = get_chenghao(uid)
-    dichenghao, dihuizhang = get_chenghao(diuid)
+    mychenghao, myhuizhang = await get_chenghao(uid)
+    dichenghao, dihuizhang = await get_chenghao(diuid)
 
     name = str(name)[:10]
     diname = str(diname)[:10]
@@ -875,8 +875,8 @@ async def pokemon_pk_xzdj(bot, ev: Event):
         bianhao = int(bianhao)
         dipokelist.append(bianhao)
 
-    mychenghao, myhuizhang = get_chenghao(uid)
-    dichenghao, dihuizhang = get_chenghao(diuid)
+    mychenghao, myhuizhang = await get_chenghao(uid)
+    dichenghao, dihuizhang = await get_chenghao(diuid)
 
     name = str(name)[:10]
     diname = str(diname)[:10]

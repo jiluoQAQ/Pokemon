@@ -104,7 +104,7 @@ PS
 async def prop_shop_list(bot, ev: Event):
     uid = ev.user_id
 
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
 
     my_score = await SCORE.get_score(uid)
     mes = f'我的金币:{my_score}\n商品列表(商品随得到的徽章增多)\n'
@@ -151,7 +151,7 @@ async def prop_info(bot, ev: Event):
         return await bot.send('请输入 道具信息+道具名称', at_sender=True)
     propname = args[0]
     uid = ev.user_id
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     try:
         propinfo = proplist[propname]
         mes = f"名称：{propname}\n类型：{propinfo['type']}\n描述：{propinfo['content']}"
@@ -244,7 +244,7 @@ async def prop_buy(bot, ev: Event):
     uid = ev.user_id
     if propnum < 1:
         return await bot.send('请输入正确的道具数量', at_sender=True)
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     try:
         propinfo = proplist[propname]
         if propinfo['score'] == 0:

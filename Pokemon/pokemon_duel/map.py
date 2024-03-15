@@ -286,7 +286,7 @@ async def get_ts_info_pic(bot, ev: Event):
         )
 
     mapinfo = await POKE._get_map_now(uid)
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -835,7 +835,7 @@ async def get_cd_info_pic(bot, ev: Event):
         )
 
     mapinfo = await POKE._get_map_now(uid)
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -1039,7 +1039,7 @@ async def get_cd_info_wenzi(bot, ev: Event):
     buttons = [
         Button('🏝野外垂钓', '野外垂钓', '🏝野外垂钓', action=1),
     ]
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     mes = ''
     if didianlist[this_map]['type'] == '野外':
         # 遇怪
@@ -1150,7 +1150,7 @@ async def pokemon_pk_auto(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
 
-    mychenghao, myhuizhang = get_chenghao(uid)
+    mychenghao, myhuizhang = await get_chenghao(uid)
     nickname = args[0]
     dimapinfo = await POKE._get_map_info_nickname(nickname)
     if dimapinfo[2] == 0:
@@ -1162,7 +1162,7 @@ async def pokemon_pk_auto(bot, ev: Event):
     if name == diname:
         return await bot.send('不能自己打自己哦。', at_sender=True)
     diuid = dimapinfo[2]
-    dichenghao, dihuizhang = get_chenghao(diuid)
+    dichenghao, dihuizhang = await get_chenghao(diuid)
     dipokelist = await POKE._get_pokemon_list(diuid)
     if mypokelist == 0:
         return await bot.send(
