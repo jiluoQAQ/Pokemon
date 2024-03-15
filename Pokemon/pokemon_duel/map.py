@@ -95,7 +95,7 @@ async def show_poke_info(bot, ev: Event):
 async def map_my_score(bot, ev: Event):
     uid = ev.user_id
 
-    my_score = SCORE.get_score(uid)
+    my_score = await SCORE.get_score(uid)
     await bot.send(f'您的金钱为{my_score}', at_sender=True)
 
 
@@ -134,7 +134,7 @@ async def map_my_group(bot, ev: Event):
     buttons = [
         Button('🏝️野外探索', '野外探索', '🏝️野外探索', action=1),
     ]
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     huizhang = mapinfo[0]
     if int(huizhang) < 8:
         buttons.append(Button('挑战道馆', '挑战道馆', '挑战道馆', action=1))
@@ -150,17 +150,17 @@ async def map_my_info(bot, ev: Event):
     print(ev)
     uid = ev.user_id
 
-    my_score = SCORE.get_score(uid)
-    my_pokemon = POKE._get_pokemon_num(uid)
+    my_score = await SCORE.get_score(uid)
+    my_pokemon = await POKE._get_pokemon_num(uid)
     if my_pokemon == 0:
         return await bot.send(
             '您还没有领取初始精灵成为训练家哦', at_sender=True
         )
     my_team = await POKE.get_pokemon_group(uid)
     pokemon_list = my_team.split(',')
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
-    mychenghao, huizhang = get_chenghao(uid)
+    mychenghao, huizhang = await get_chenghao(uid)
     buttonlist = ['精灵状态', '我的精灵蛋', '查看地图']
     if name == uid:
         if ev.sender:
@@ -203,9 +203,9 @@ async def update_my_name(bot, ev: Event):
         return await bot.send('昵称长度不能超过10个字符。', at_sender=True)
     if name.isdigit():
         return await bot.send('昵称不能为纯数字。', at_sender=True)
-    mapinfo = POKE._get_map_info_nickname(name)
+    mapinfo = await POKE._get_map_info_nickname(name)
     if mapinfo[2] == 0:
-        POKE._update_map_name(uid, name)
+        await POKE._update_map_name(uid, name)
         await bot.send(f'修改成功，当前训练家名称为 {name}', at_sender=True)
     else:
         return await bot.send(
@@ -217,13 +217,13 @@ async def update_my_name(bot, ev: Event):
 async def map_work_test(bot, ev: Event):
     uid = ev.user_id
 
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if not daily_work_limiter.check(uid):
         return await bot.send(
@@ -232,7 +232,7 @@ async def map_work_test(bot, ev: Event):
     
     if didianlist[this_map]['type'] == '城镇':
         get_score = (int(mapinfo[0]) + 1) * 5000
-        SCORE.update_score(uid, get_score)
+        await SCORE.update_score(uid, get_score)
         daily_work_limiter.increase(uid)
         mes = f'您通过打工获得了{get_score}金钱'
         await bot.send(mes, at_sender=True)
@@ -257,13 +257,13 @@ async def map_ts_test_noauto_use(bot, ev: Event):
 
 async def get_ts_info_pic(bot, ev: Event):
     uid = ev.user_id
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -285,7 +285,7 @@ async def get_ts_info_pic(bot, ev: Event):
             '您当前所处的地点没有可探索的区域', at_sender=True
         )
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     mychenghao, huizhang = get_chenghao(uid)
     name = mapinfo[2]
     if name == uid:
@@ -604,7 +604,7 @@ async def get_ts_info_pic(bot, ev: Event):
                     )
 
                     get_score = (int(didianlist[this_map]['need']) + 1) * 300
-                    SCORE.update_score(uid, get_score)
+                    await SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
                     img_draw.text(
                         (125, img_height + 65),
@@ -629,13 +629,13 @@ async def get_ts_info_pic(bot, ev: Event):
 
 async def get_ts_info_wenzi(bot, ev: Event):
     uid = ev.user_id
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -779,7 +779,7 @@ async def get_ts_info_wenzi(bot, ev: Event):
                     mes += f'\n您打败了{diname}\n'
 
                     get_score = (int(didianlist[this_map]['need']) + 1) * 300
-                    SCORE.update_score(uid, get_score)
+                    await SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
                 await bot.send_option(mes, buttons)
             else:
@@ -806,13 +806,13 @@ async def map_ts_test_noauto_use_chuidiao(bot, ev: Event):
 async def get_cd_info_pic(bot, ev: Event):
     uid = ev.user_id
 
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -834,7 +834,7 @@ async def get_cd_info_pic(bot, ev: Event):
             '您当前所处的地点没有可探索的区域', at_sender=True
         )
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     mychenghao, huizhang = get_chenghao(uid)
     name = mapinfo[2]
     if name == uid:
@@ -1009,13 +1009,13 @@ async def get_cd_info_pic(bot, ev: Event):
 
 async def get_cd_info_wenzi(bot, ev: Event):
     uid = ev.user_id
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -1118,13 +1118,13 @@ async def pokemon_pk_auto(bot, ev: Event):
     if now_time - last_send_time <= TS_CD:
         return
     time_send.record_user_time(uid,now_time)
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -1142,7 +1142,7 @@ async def pokemon_pk_auto(bot, ev: Event):
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -1152,7 +1152,7 @@ async def pokemon_pk_auto(bot, ev: Event):
 
     mychenghao, myhuizhang = get_chenghao(uid)
     nickname = args[0]
-    dimapinfo = POKE._get_map_info_nickname(nickname)
+    dimapinfo = await POKE._get_map_info_nickname(nickname)
     if dimapinfo[2] == 0:
         return await bot.send(
             '没有找到该训练家，请输入 正确的对战训练家昵称。', at_sender=True
@@ -1163,7 +1163,7 @@ async def pokemon_pk_auto(bot, ev: Event):
         return await bot.send('不能自己打自己哦。', at_sender=True)
     diuid = dimapinfo[2]
     dichenghao, dihuizhang = get_chenghao(diuid)
-    dipokelist = POKE._get_pokemon_list(diuid)
+    dipokelist = await POKE._get_pokemon_list(diuid)
     if mypokelist == 0:
         return await bot.send(
             f'{diname}还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
@@ -1254,7 +1254,7 @@ async def pokemon_pk_auto(bot, ev: Event):
         )
         #
         # get_score = (int(mapinfo[0]) + 1) * 500
-        # SCORE.update_score(diuid, get_score)
+        # await SCORE.update_score(diuid, get_score)
         # mes += f'{diname}获得了{get_score}金钱'
         # img_draw.text(
         # (575, img_height + 65),
@@ -1277,7 +1277,7 @@ async def pokemon_pk_auto(bot, ev: Event):
         )
         #
         # get_score = (int(dimapinfo[0]) + 1) * 500
-        # SCORE.update_score(uid, get_score)
+        # await SCORE.update_score(uid, get_score)
         # mes += f'您获得了{get_score}金钱'
         # img_draw.text(
         # (125, img_height + 65),
@@ -1307,7 +1307,7 @@ async def pokemom_new_map(bot, ev: Event):
     go_map = args[0]
     uid = ev.user_id
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     my_hz = 0
     if this_map:
@@ -1327,7 +1327,7 @@ async def pokemom_new_map(bot, ev: Event):
             name = sender['card'] or sender['nickname']
         else:
             name = uid
-        POKE._new_map_info(uid, go_didian, name)
+        await POKE._new_map_info(uid, go_didian, name)
         await bot.send(
             f"您已成功选择初始地区{diqulist[go_map]['name']}\n当前所在地{go_didian}\n可输入[当前地点信息]查询",
             at_sender=True,
@@ -1343,7 +1343,7 @@ async def map_info_now(bot, ev: Event):
     gid = ev.group_id
     uid = ev.user_id
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -1356,7 +1356,7 @@ async def map_info_now(bot, ev: Event):
     mes += f'当前所在地为:{diquname}-{this_map}\n'
     if didianlist[this_map]['type'] == '城镇':
         get_score = (int(mapinfo[0]) + 1) * 5000
-        mychenghao, huizhang = get_chenghao(uid)
+        mychenghao, huizhang = await get_chenghao(uid)
         buttons.append(Button('打工', '打工', '打工', action=1))
         mes += f'根据您当前的训练家等级-{mychenghao}\n您打工可获得{get_score}金币\n'
     if didianlist[this_map]['type'] == '建筑':
@@ -1388,7 +1388,7 @@ async def show_map_info_now(bot, ev: Event):
     if len(args) < 1:
         uid = ev.user_id
 
-        mapinfo = POKE._get_map_now(uid)
+        mapinfo = await POKE._get_map_now(uid)
         this_map = mapinfo[1]
         if this_map == '':
             return await bot.send(
@@ -1485,7 +1485,7 @@ async def pokemom_go_map(bot, ev: Event):
     go_map = args[0]
     uid = ev.user_id
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -1506,7 +1506,7 @@ async def pokemom_go_map(bot, ev: Event):
         )
     if didianlist[go_map]['fname'] == didianlist[this_map]['fname']:
         if int(my_hz) >= int(didianlist[go_map]['need']):
-            POKE._add_map_now(uid, go_map)
+            await POKE._add_map_now(uid, go_map)
             mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
             await bot.send_option(mes, buttons)
         else:
@@ -1517,7 +1517,7 @@ async def pokemom_go_map(bot, ev: Event):
             return await bot.send(mes,at_sender=True)
     else:
         if int(my_hz) >= 8:
-            POKE._add_map_now(uid, go_map)
+            await POKE._add_map_now(uid, go_map)
             mes = f'您已到达{go_map},当前地址信息可点击下方按钮查询'
             await bot.send_option(mes, buttons)
         else:
@@ -1578,7 +1578,7 @@ async def give_prop_pokemon_info(bot, ev: Event):
         return await bot.send('请输入正确的类型 道具/精灵蛋/学习机。', at_sender=True)
     if ev.at is not None:
         suid = ev.at
-        smapinfo = POKE._get_map_now(suid)
+        smapinfo = await POKE._get_map_now(suid)
         if smapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请at需要发放奖励的对象/该人员未成为训练家。',
@@ -1594,7 +1594,7 @@ async def give_prop_pokemon_info(bot, ev: Event):
             if len(args) < 4:
                 return await bot.send('请输入正确的指令 发放奖励[道具/精灵蛋/学习机][名称][数量][昵称/at]。',at_sender=True)
             snickname = args[3]
-        smapinfo = POKE._get_map_info_nickname(snickname)
+        smapinfo = await POKE._get_map_info_nickname(snickname)
         if smapinfo[2] == 0:
             return await bot.send('没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',at_sender=True)
         suid = smapinfo[2]
@@ -1606,7 +1606,7 @@ async def give_prop_pokemon_info(bot, ev: Event):
         propnum = 1
     if proptype == '金币' or proptype == '金钱':
         propnum = int(args[1])
-        SCORE.update_score(suid, propnum)
+        await SCORE.update_score(suid, propnum)
         mes = f'奖励发放成功！{sname} 获得了金币x{propnum}。'
     if proptype == '道具':
         propkeylist = proplist.keys()
@@ -1649,7 +1649,7 @@ async def give_prop_pokemon_info_all(bot, ev: Event):
     if proptype == '金币' or proptype == '金钱':
         propnum = int(args[1])
         for uid in game_user_list:
-            SCORE.update_score(uid[0], propnum)
+            await SCORE.update_score(uid[0], propnum)
         mes = f'奖励发放成功！总计{game_user_num}名玩家(徽章1枚及以上)，获得了金币x{propnum}。'
     if proptype == '道具':
         propkeylist = proplist.keys()
@@ -1676,16 +1676,16 @@ async def update_pokemon_info(bot, ev: Event):
     newuid = args[0]
     olduid = args[1]
     await chongkai(newuid)
-    POKE._change_poke_info(newuid,olduid)
+    await POKE._change_poke_info(newuid,olduid)
     await POKE.change_pokemon_egg(newuid,olduid)
-    POKE.change_pokemon_map(newuid,olduid)
+    await POKE.change_pokemon_map(newuid,olduid)
     await POKE.change_pokemon_group(newuid,olduid)
     await POKE._change_poke_star(newuid,olduid)
     await POKE.change_pokemon_prop(newuid,olduid)
     await POKE.change_exchange_uid(newuid,olduid)
     await POKE.change_technical_uid(newuid,olduid)
     await POKE._change_poke_starrush_uid(newuid,olduid)
-    SCORE.change_score(newuid,olduid)
+    await SCORE.change_score(newuid,olduid)
     await bot.send('用户数据转移成功')
     
 @sv_pm_config.on_command(('查看状态', '状态查看'))
@@ -1699,7 +1699,7 @@ async def get_my_poke_info_sv(bot, ev: Event):
         uid = ev.at
     else:
         nickname = args[1]
-        mapinfo = POKE._get_map_info_nickname(nickname)
+        mapinfo = await POKE._get_map_info_nickname(nickname)
         if mapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',

@@ -106,7 +106,7 @@ async def prop_shop_list(bot, ev: Event):
 
     mychenghao, huizhang = get_chenghao(uid)
 
-    my_score = SCORE.get_score(uid)
+    my_score = await SCORE.get_score(uid)
     mes = f'我的金币:{my_score}\n商品列表(商品随得到的徽章增多)\n'
     propinfolist = ''
     for propinfo in proplist:
@@ -132,7 +132,7 @@ async def prop_shop_list(bot, ev: Event):
 async def prop_boss_list(bot, ev: Event):
     uid = ev.user_id
 
-    my_score = SCORE.get_shengwang(uid)
+    my_score = await SCORE.get_shengwang(uid)
     mes = f'我的首领币:{my_score}\n物品列表\n'
     propinfolist = ''
     for propinfo in bossproplist:
@@ -184,10 +184,10 @@ async def buy_random_egg(bot, ev: Event):
             '今天的购买次数已经超过上限了哦，明天再来吧。', at_sender=True
         )
     need_score = num * 100000
-    my_score = SCORE.get_score(uid)
+    my_score = await SCORE.get_score(uid)
     if my_score < need_score:
         return await bot.send(f'随机精灵蛋需要金币{need_score},您的金币不足',at_sender=True)
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     mes = f'{name}\n'
     chara_id_list = list(POKEMON_LIST.keys())
@@ -218,7 +218,7 @@ async def buy_random_egg(bot, ev: Event):
                 find_flag = 1
                 daily_random_egg.increase(uid)
                 eggid = await get_pokemon_eggid(pokemonid)
-                SCORE.update_score(uid, -100000)
+                await SCORE.update_score(uid, -100000)
                 await POKE._add_pokemon_egg(uid, eggid, 1)
         mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
     buttons = [
@@ -249,7 +249,7 @@ async def prop_buy(bot, ev: Event):
         propinfo = proplist[propname]
         if propinfo['score'] == 0:
             return await bot.send('无法购买该道具', at_sender=True)
-        my_score = SCORE.get_score(uid)
+        my_score = await SCORE.get_score(uid)
         use_score = propinfo['score'] * propnum
         if propinfo['huizhang'] > int(huizhang):
             return await bot.send(
@@ -261,7 +261,7 @@ async def prop_buy(bot, ev: Event):
                 f'购买{propnum}件{propname}需要金币{use_score},您的金币不足',
                 at_sender=True,
             )
-        SCORE.update_score(uid, 0 - use_score)
+        await SCORE.update_score(uid, 0 - use_score)
         await POKE._add_pokemon_prop(uid, propname, propnum)
         mes = f'恭喜！您花费了{use_score}金币成功购买了{propnum}件{propname}'
         if propinfo['type'] == '消耗品':
@@ -293,14 +293,14 @@ async def boss_prop_buy(bot, ev: Event):
     uid = ev.user_id
     try:
         propinfo = bossproplist[propname]
-        my_score = SCORE.get_shengwang(uid)
+        my_score = await SCORE.get_shengwang(uid)
         use_score = propinfo['score'] * propnum
         if use_score > my_score:
             return await bot.send(
                 f'购买{propnum}件{propname}需要首领币{use_score},您的首领币不足',
                 at_sender=True,
             )
-        SCORE.update_shengwang(uid, 0 - use_score)
+        await SCORE.update_shengwang(uid, 0 - use_score)
         if propinfo['type'] == '消耗品':
             await POKE._add_pokemon_prop(uid, propname, propnum)
             mes = f'恭喜！您花费了{use_score}首领币成功购买了{propnum}件{propname}'
@@ -380,7 +380,7 @@ async def prop_use(bot, ev: Event):
                 f'您的{CHARA_NAME[bianhao][0]}的性格已经是{pokemon_info[13]}了，使用失败。',
                 at_sender=True,
             )
-        POKE._add_pokemon_xingge(uid, bianhao, propinfo['use'][1])
+        await POKE._add_pokemon_xingge(uid, bianhao, propinfo['use'][1])
         await POKE._add_pokemon_prop(uid, propname, -1)
         mes = f"使用成功！您的{CHARA_NAME[bianhao][0]}的性格变成了{propinfo['use'][1]}。"
         await bot.send_option(mes, buttons)
@@ -423,7 +423,7 @@ async def prop_use(bot, ev: Event):
             pokemon_info = list(pokemon_info)
             pokemon_info[nl_index] = change_nl
 
-            POKE._add_pokemon_nuli(
+            await POKE._add_pokemon_nuli(
                 uid,
                 bianhao,
                 pokemon_info[7],
@@ -457,7 +457,7 @@ async def prop_use(bot, ev: Event):
             pokemon_info = list(pokemon_info)
             pokemon_info[nl_index] = change_nl
 
-            POKE._add_pokemon_nuli(
+            await POKE._add_pokemon_nuli(
                 uid,
                 bianhao,
                 pokemon_info[7],
@@ -487,7 +487,7 @@ async def prop_use(bot, ev: Event):
                 )
             add_level = use_peop_num * propinfo['use'][2]
             now_level = pokemon_info[0] + add_level
-            POKE._add_pokemon_level(uid, bianhao, now_level, 0)
+            await POKE._add_pokemon_level(uid, bianhao, now_level, 0)
             mes = (
                 f'使用成功！{CHARA_NAME[bianhao][0]}的等级提升了{add_level}'
             )
@@ -501,7 +501,7 @@ async def prop_use(bot, ev: Event):
                 my_pokemon_info.append(31)
             for num in range(7, 15):
                 my_pokemon_info.append(pokemon_info[num])
-            POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
+            await POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
             await POKE._add_pokemon_prop(uid, '金色王冠', -1)
             mes = (
                 f'使用成功！{CHARA_NAME[bianhao][0]}的个体值提升到极限了'
@@ -527,7 +527,7 @@ async def prop_use(bot, ev: Event):
                 my_pokemon_info.append(pokemon_info[num])
             my_pokemon_info[up_key_list[up_name]] = 31
             await POKE._add_pokemon_prop(uid, '银色王冠', -1)
-            POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
+            await POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
             mes = (
                 f'使用成功！{CHARA_NAME[bianhao][0]}的{up_name}个体值提升到极限了'
             )
@@ -772,7 +772,7 @@ async def exchange_buy_prop(bot, ev: Event):
     if buy_num > int(exchange_info[2]):
         return await bot.send(f'寄售中物品数量不足{buy_num}，请重新输入数量', at_sender=True)
     need_score = buy_num * int(exchange_info[4])
-    my_score = SCORE.get_score(uid)
+    my_score = await SCORE.get_score(uid)
     if need_score > my_score:
         if exchange_info[0] == '精灵蛋':
             return await bot.send(f'购买{buy_num}件{CHARA_NAME[int(exchange_info[1])][0]}{exchange_info[0]}需要金币{need_score}，您的金币不足', at_sender=True)
@@ -788,9 +788,9 @@ async def exchange_buy_prop(bot, ev: Event):
     if exchange_info[0] == '精灵蛋':
         await POKE._add_pokemon_egg(uid, int(exchange_info[1]), buy_num)
         mes = f'您花费了{need_score}金币，成功购买了{CHARA_NAME[int(exchange_info[1])][0]}{exchange_info[0]}x{buy_num}。'
-    SCORE.update_score(uid, 0 - need_score)
+    await SCORE.update_score(uid, 0 - need_score)
     get_score = math.ceil(need_score * 0.9)
-    SCORE.update_score(exchange_info[3], get_score)
+    await SCORE.update_score(exchange_info[3], get_score)
     buttons = [
         Button('💰寄售商品','交易所上架', '💰寄售商品', action=2),
         Button('💰购买商品','交易所购买', '💰购买商品', action=2),
@@ -858,14 +858,14 @@ async def mew_pm_hongbao(bot, ev: Event):
         return await bot.send('红包数量需要大于0', at_sender=True)
     if num > score:
         return await bot.send('红包数量需要大于红包金额', at_sender=True)
-    my_score = SCORE.get_score(uid)
+    my_score = await SCORE.get_score(uid)
     if score > my_score:
         return await bot.send(f'您的金币小于{score}，红包发放失败', at_sender=True)
     hbscore,use_score,hbnum,use_num,openuser = pmhongbao.get_hongbao(kouling)
     if hbscore > 0:
         return await bot.send(f'红包口令重复，红包发放失败', at_sender=True)
     pmhongbao.insert_hongbao(kouling,score,num)
-    SCORE.update_score(uid, 0 - score)
+    await SCORE.update_score(uid, 0 - score)
     mes = f'红包发放成功，红包口令：{kouling}'
     buttons = [
         Button('抢红包', f'pm抢红包{kouling}', '抢红包', action=1),
@@ -884,7 +884,7 @@ async def open_pm_hongbao(bot, ev: Event):
         return await bot.send('您已经抢过该红包', at_sender=True)
     if score == 0:
         return await bot.send('红包口令无效或该红包已被抢完', at_sender=True)
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     last_score = score - use_score
     last_num = int(num) - int(use_num)
@@ -895,7 +895,7 @@ async def open_pm_hongbao(bot, ev: Event):
         get_score = last_score
     else:
         get_score = int(math.floor(random.uniform(1, max_score)))
-    SCORE.update_score(uid, get_score)
+    await SCORE.update_score(uid, get_score)
     pmhongbao.open_hongbao(kouling,get_score,uid)
     if last_num == 1:
         pmhongbao.hongbao_off(kouling)

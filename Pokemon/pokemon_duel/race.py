@@ -30,7 +30,7 @@ async def start_race_dugou(bot, ev: Event):
     join_user = ['5755149']
     mes = '比赛开始！'
     for userid in join_user:
-        mapinfo = POKE._get_map_now(userid)
+        mapinfo = await POKE._get_map_now(userid)
         egg_num = await POKE.get_pokemon_egg(userid, bianhao)
         await POKE.update_pokemon_egg_bianhao(userid, bianhao, eggnum)
         mes += f'\n参赛选手{mapinfo[2]}的{pokename}精灵蛋已由{egg_num}重置为{eggnum}'
@@ -46,7 +46,7 @@ async def race_dugou_paiming(bot, ev: Event):
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
     userliist = []
-    pokemon_info_list = POKE._get_pokemon_info_list(bianhao)
+    pokemon_info_list = await POKE._get_pokemon_info_list(bianhao)
     if pokemon_info_list == 0:
         return await bot.send('这个宝可梦还没有人拥有哦~。', at_sender=True)
     join_user = ['334249888','288978994','320341442','346271201','199611561','279781856','148108580','338562604','192456894','361002310','229921200','391721206','326779266','332008428','257959967']
@@ -68,7 +68,7 @@ async def race_dugou_paiming(bot, ev: Event):
     for detail in userData:
         if int(detail[1]) < int(max_gt):
             shul += 1
-        mapinfo = POKE._get_map_now(detail[0])
+        mapinfo = await POKE._get_map_now(detail[0])
         mes += f'\n第{shul}名:{mapinfo[2]} 个体值:{detail[1]}'
     await bot.send(mes)
 
@@ -82,13 +82,13 @@ async def race_dugou_paim(bot, ev: Event):
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
     userliist = []
-    pokemon_info_list = POKE._get_pokemon_info_list(bianhao)
+    pokemon_info_list = await POKE._get_pokemon_info_list(bianhao)
     if pokemon_info_list == 0:
         return await bot.send('这个宝可梦还没有人拥有哦~。', at_sender=True)
     mes = f'{pokename}排名(只显示前50名)'
     shul = 1
     for detail in pokemon_info_list:
-        mapinfo = POKE._get_map_now(detail[0])
+        mapinfo = await POKE._get_map_now(detail[0])
         mes += f'\n第{shul}名:{mapinfo[2]} 个体值:{detail[1]}'
         shul += 1
     await bot.send(mes)
@@ -96,7 +96,7 @@ async def race_dugou_paim(bot, ev: Event):
 @sv_race_pokemon.on_command(['查看我的排名'])
 async def race_dugou_paim(bot, ev: Event):
     uid = ev.user_id
-    pokemon_info_list = POKE._get_pokemon_info_list_pm(uid)
+    pokemon_info_list = await POKE._get_pokemon_info_list_pm(uid)
     if pokemon_info_list == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
@@ -140,22 +140,22 @@ async def end_race_dugou(bot, ev: Event):
     for detail in userData:
         if int(detail[1]) < int(max_gt):
             shul += 1
-        mapinfo = POKE._get_map_now(detail[0])
+        mapinfo = await POKE._get_map_now(detail[0])
         mes += f'\n第{shul}名:{mapinfo[2]} 个体值:{detail[1]}'
         if shul == 1:
-            SCORE.update_score(detail[0], 18888888)
+            await SCORE.update_score(detail[0], 18888888)
             await POKE._add_pokemon_prop(detail[0], '神奇糖果', 888)
             mes += f'\n获得奖励金币18888888，神奇糖果888，指定精灵蛋888'
         elif shul == 2:
-            SCORE.update_score(detail[0], 8888888)
+            await SCORE.update_score(detail[0], 8888888)
             await POKE._add_pokemon_prop(detail[0], '神奇糖果', 666)
             mes += f'\n获得奖励金币8888888，神奇糖果666，指定精灵蛋666'
         elif shul == 3:
-            SCORE.update_score(detail[0], 6666666)
+            await SCORE.update_score(detail[0], 6666666)
             await POKE._add_pokemon_prop(detail[0], '神奇糖果', 333)
             mes += f'\n获得奖励金币6666666，神奇糖果333，指定精灵蛋333'
         else:
-            SCORE.update_score(detail[0], 666666)
+            await SCORE.update_score(detail[0], 666666)
             await POKE._add_pokemon_prop(detail[0], '神奇糖果', 66)
             mes += f'\n获得参与奖金币666666，神奇糖果66'
     mes += '\n固定奖励已发放完成，获得精灵蛋的冠亚季军请联系我领取需要的精灵\n比赛用精灵蛋已回收'

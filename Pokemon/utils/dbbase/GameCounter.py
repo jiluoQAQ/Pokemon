@@ -1,5 +1,7 @@
 import os
+import asyncio
 import sqlite3
+import aiosqlite
 from ..resource.RESOURCE_PATH import MAIN_PATH
 
 DB_PATH = os.path.expanduser(MAIN_PATH / 'pokemon.db')
@@ -12,7 +14,7 @@ class GAME_DB:
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
-
+    
     def _create_table(self):
         try:
             self._connect().execute(
@@ -25,36 +27,36 @@ class GAME_DB:
         except:
             raise Exception('创建表发生错误')
 
-    def _new_game_num(self, uid, gametype):
+    async def _new_game_num(self, uid, gametype):
         try:
-            with self._connect() as conn:
-                conn.execute(
-                    f"INSERT OR REPLACE INTO POKEMON_GAME (UID,TYPE,NUM) VALUES ('{uid}','{gametype}',0)"
-                ).fetchall()
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"INSERT OR REPLACE INTO POKEMON_GAME (UID,TYPE,NUM) VALUES ('{uid}','{gametype}',0)")
+            await connection.commit()
+            await connection.close()
         except:
             raise Exception('更新表发生错误')
 
-    def get_game_num(self, uid, gametype):
+    async def get_game_num(self, uid, gametype):
         try:
-            with self._connect() as conn:
-                r = conn.execute(
-                    f"SELECT NUM FROM POKEMON_GAME WHERE UID='{uid}' AND TYPE='{gametype}'"
-                ).fetchall()
-                if r:
-                    return r[0][0]
-                else:
-                    self._new_game_num(uid, gametype)
-                    return 0
+            connection = await aiosqlite.connect(DB_PATH)
+            cursor = await connection.execute(f"SELECT NUM FROM POKEMON_GAME WHERE UID='{uid}' AND TYPE='{gametype}'")
+            rows = await cursor.fetchall()
+            await connection.close()
+            if rows:
+                return rows[0][0]
+            else:
+                await self._new_game_num(uid, gametype)
+                return 0
         except:
             raise Exception('查找表发生错误')
 
-    def update_game_num(self, uid, gametype, num=1):
-        game_num = self.get_game_num(uid, gametype) + num
+    async def update_game_num(self, uid, gametype, num=1):
+        game_num = await self.get_game_num(uid, gametype) + num
         try:
-            with self._connect() as conn:
-                conn.execute(
-                    f"UPDATE POKEMON_GAME SET NUM = {game_num} WHERE UID='{uid}' AND TYPE='{gametype}'"
-                ).fetchall()
-                return game_num
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKEMON_GAME SET NUM = {game_num} WHERE UID='{uid}' AND TYPE='{gametype}'")
+            await connection.commit()
+            await connection.close()
+            return game_num
         except:
             raise Exception('更新表发生错误')

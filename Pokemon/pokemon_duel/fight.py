@@ -66,13 +66,13 @@ async def fight_help(bot, ev: Event):
 async def pk_vs_daoguan(bot, ev: Event):
     uid = ev.user_id
 
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
@@ -88,7 +88,7 @@ async def pk_vs_daoguan(bot, ev: Event):
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     mychenghao, huizhang = get_chenghao(uid)
     if int(mapinfo[0]) > 7:
         if int(mapinfo[0]) == 8:
@@ -208,7 +208,7 @@ async def pk_vs_daoguan(bot, ev: Event):
 
         new_huizhang = int(huizhang) + 1
         get_score = new_huizhang * 1000
-        SCORE.update_score(uid, get_score)
+        await SCORE.update_score(uid, get_score)
         mes += f'您获得了{get_score}金钱\n您获得了1枚徽章'
         img_draw.text(
             (125, img_height + 65),
@@ -217,7 +217,7 @@ async def pk_vs_daoguan(bot, ev: Event):
             sr_font_20,
             'lm',
         )
-        POKE._update_map_huizhang(uid, new_huizhang)
+        await POKE._update_map_huizhang(uid, new_huizhang)
         img_draw.text(
             (125, img_height + 100),
             '您获得了1枚徽章',
@@ -247,13 +247,13 @@ async def pk_vs_daoguan(bot, ev: Event):
 async def pk_vs_tianwang(bot, ev: Event):
     uid = ev.user_id
 
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
@@ -269,7 +269,7 @@ async def pk_vs_tianwang(bot, ev: Event):
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     mychenghao, huizhang = get_chenghao(uid)
     if int(mapinfo[0]) < 8:
         return await bot.send('请先挑战完8个道馆再向天王发起挑战哦', at_sender=True)
@@ -392,7 +392,7 @@ async def pk_vs_tianwang(bot, ev: Event):
 
         new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
-        SCORE.update_score(uid, get_score)
+        await SCORE.update_score(uid, get_score)
         mes += f'您获得了{get_score}金钱\n您成为了【天王训练家】'
         img_draw.text(
             (125, img_height + 65),
@@ -401,7 +401,7 @@ async def pk_vs_tianwang(bot, ev: Event):
             sr_font_20,
             'lm',
         )
-        POKE._update_map_huizhang(uid, new_huizhang)
+        await POKE._update_map_huizhang(uid, new_huizhang)
         img_draw.text(
             (125, img_height + 100),
             '您成为了【天王训练家】',
@@ -431,13 +431,13 @@ async def pk_vs_tianwang(bot, ev: Event):
 async def pk_vs_guanjun(bot, ev: Event):
     uid = ev.user_id
 
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
@@ -453,7 +453,7 @@ async def pk_vs_guanjun(bot, ev: Event):
         bianhao = int(bianhao)
         mypokelist.append(bianhao)
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     mychenghao, huizhang = get_chenghao(uid)
     if int(mapinfo[0]) < 9:
         return await bot.send('请先成为【天王训练家】再向冠军发起挑战哦', at_sender=True)
@@ -566,7 +566,7 @@ async def pk_vs_guanjun(bot, ev: Event):
 
         new_huizhang = int(mapinfo[0]) + 1
         get_score = new_huizhang * 1000
-        SCORE.update_score(uid, get_score)
+        await SCORE.update_score(uid, get_score)
         mes += f'您获得了{get_score}金钱\n您成为了【冠军训练家】'
         img_draw.text(
             (125, img_height + 65),
@@ -575,7 +575,7 @@ async def pk_vs_guanjun(bot, ev: Event):
             sr_font_20,
             'lm',
         )
-        POKE._update_map_huizhang(uid, new_huizhang)
+        await POKE._update_map_huizhang(uid, new_huizhang)
         img_draw.text(
             (125, img_height + 100),
             '您成为了【冠军训练家】',
@@ -607,7 +607,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
     # return await bot.send('当前平台不支持无级别对战。', at_sender=True)
     uid = ev.user_id
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -615,7 +615,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
 
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             f'{name} 还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
@@ -635,7 +635,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
 
     if ev.at is not None:
         diuid = ev.at
-        dimapinfo = POKE._get_map_now(diuid)
+        dimapinfo = await POKE._get_map_now(diuid)
         if dimapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请输入 正确的对战训练家昵称或at该名训练家。',
@@ -650,7 +650,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
                 at_sender=True,
             )
         nickname = args[0]
-        dimapinfo = POKE._get_map_info_nickname(nickname)
+        dimapinfo = await POKE._get_map_info_nickname(nickname)
         if dimapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请输入 正确的对战训练家昵称或at该名训练家。',
@@ -659,7 +659,7 @@ async def pokemon_pk_wjb(bot, ev: Event):
         diuid = dimapinfo[2]
         diname = nickname
 
-    dipokelist = POKE._get_pokemon_list(diuid)
+    dipokelist = await POKE._get_pokemon_list(diuid)
     if dipokelist == 0:
         return await bot.send(
             f'{diname} 还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
@@ -754,7 +754,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     # return await bot.send('当前平台不支持无级别对战。', at_sender=True)
     uid = ev.user_id
 
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -762,7 +762,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
 
-    mypokelist = POKE._get_pokemon_list(uid)
+    mypokelist = await POKE._get_pokemon_list(uid)
     if mypokelist == 0:
         return await bot.send(
             f'{name} 还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
@@ -782,7 +782,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
 
     if ev.at is not None:
         diuid = ev.at
-        dimapinfo = POKE._get_map_now(diuid)
+        dimapinfo = await POKE._get_map_now(diuid)
         if dimapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请输入 正确的对战训练家昵称或at该名训练家。',
@@ -797,7 +797,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
                 at_sender=True,
             )
         nickname = args[0]
-        dimapinfo = POKE._get_map_info_nickname(nickname)
+        dimapinfo = await POKE._get_map_info_nickname(nickname)
         if dimapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请输入 正确的对战训练家昵称或at该名训练家。',
@@ -806,7 +806,7 @@ async def pokemon_pk_xzdj(bot, ev: Event):
         diuid = dimapinfo[2]
         diname = nickname
 
-    dipokelist = POKE._get_pokemon_list(diuid)
+    dipokelist = await POKE._get_pokemon_list(diuid)
     if dipokelist == 0:
         return await bot.send(
             f'{diname} 还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
@@ -910,13 +910,13 @@ async def pokemon_pk_boss_list(bot, ev: Event):
 @sv_pokemon_pk.on_fullmatch(('boss信息', '周本boss信息', '首领信息'))
 async def pokemon_pk_boss_week_info(bot, ev: Event):
     uid = ev.user_id
-    mypoke = POKE._get_pokemon_list(uid)
+    mypoke = await POKE._get_pokemon_list(uid)
     if mypoke == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     this_map = mapinfo[1]
     diquname = didianlist[this_map]['fname']
     bosslist_diqu = list(weekbosslist.keys())
@@ -950,13 +950,13 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
 @sv_pokemon_pk.on_fullmatch(('boss挑战', '周本boss挑战', '首领挑战'))
 async def pokemon_pk_boss_week(bot, ev: Event):
     uid = ev.user_id
-    mypoke = POKE._get_pokemon_list(uid)
+    mypoke = await POKE._get_pokemon_list(uid)
     if mypoke == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     this_map = mapinfo[1]
     if not daily_boss.check_week(uid):
@@ -1007,7 +1007,7 @@ async def pokemon_pk_boss_week(bot, ev: Event):
                 await POKE._add_pokemon_egg(uid, eggid, 1)
             beilv = math.ceil((boss_level - 40)/20)
             get_score = BOSS_GOLD * beilv
-            SCORE.update_score(uid, get_score)
+            await SCORE.update_score(uid, get_score)
             mes += f'您获得了{get_score}金钱\n'
             get_tangguo = BOSS_TG * beilv
             await POKE._add_pokemon_prop(uid, "神奇糖果", get_tangguo)
@@ -1021,7 +1021,7 @@ async def pokemon_pk_boss_week(bot, ev: Event):
                 await POKE._add_pokemon_prop(uid, "银色王冠", 1)
                 mes += f'您获得了银色王冠x1\n'
             get_gold = BOSS_SCORE * beilv
-            SCORE.update_shengwang(uid, get_gold)
+            await SCORE.update_shengwang(uid, get_gold)
             mes += f'您获得了{get_gold}首领币'
             daily_boss.increase(uid)
     await bot.send(mes)
@@ -1055,13 +1055,13 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
 @sv_pokemon_pk.on_fullmatch(('世界boss挑战', '世界首领挑战'))
 async def pokemon_pk_boss_sj(bot, ev: Event):
     uid = ev.user_id
-    mypoke = POKE._get_pokemon_list(uid)
+    mypoke = await POKE._get_pokemon_list(uid)
     if mypoke == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
             at_sender=True,
         )
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     this_map = mapinfo[1]
     tz = pytz.timezone('Asia/Shanghai')
@@ -1121,7 +1121,7 @@ async def pokemon_pk_boss_sj_paiming(bot, ev: Event):
     bossinfo = sjbossinfo[str(week)]
     mes = f"{week_key}世界boss伤害排名【{POKEMON_LIST[bossinfo['bossid']][0]}】(只显示前50名)"
     for detail in shanghai_list:
-        mapinfo = POKE._get_map_now(detail[0])
+        mapinfo = await POKE._get_map_now(detail[0])
         mes += f'\n{mapinfo[2]} 伤害：{detail[1]}'
     
     buttons = [

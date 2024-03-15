@@ -101,7 +101,7 @@ async def add_pokemon(uid, bianhao, startype=0):
         jineng = jineng + jinengname
         shul = shul + 1
     pokemon_info.append(jineng)
-    POKE._add_pokemon_info(uid, bianhao, pokemon_info)
+    await POKE._add_pokemon_info(uid, bianhao, pokemon_info)
     return pokemon_info
 
 
@@ -123,7 +123,7 @@ async def new_pokemon_gt(uid, bianhao, startype=0):
         pokemon_info.append(gt_num)
     for num in range(7, 15):
         pokemon_info.append(my_pokemon_info[num])
-    POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
+    await POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
     return pokemon_info
 
 # 获取宝可梦，随机个体，随机努力，测试用
@@ -486,20 +486,20 @@ async def get_pokemon_shuxing_boss_sj(bianhao, pokemon_info, jieduan):
 
 # 重开，清除宝可梦列表个人信息
 async def chongkai(uid):
-    POKE._delete_poke_info(uid)
+    await POKE._delete_poke_info(uid)
     await POKE.delete_pokemon_egg(uid)
-    POKE.delete_pokemon_map(uid)
+    await POKE.delete_pokemon_map(uid)
     await POKE.delete_pokemon_group(uid)
     await POKE._delete_poke_star(uid)
     await POKE.delete_pokemon_prop(uid)
     await POKE.delete_exchange_uid(uid)
     await POKE.delete_technical_uid(uid)
     await POKE._delete_poke_starrush_uid(uid)
-    SCORE.delete_score(uid)
+    await SCORE.delete_score(uid)
 
 # 放生
 async def fangshen(uid, bianhao):
-    POKE._delete_poke_bianhao(uid, bianhao)
+    await POKE._delete_poke_bianhao(uid, bianhao)
     await POKE._delete_poke_star_bianhao(uid, bianhao)
 
 
@@ -701,8 +701,8 @@ async def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
         return random.sample(myjinenglist, 1)[0]
 
 
-def get_chenghao(uid):
-    mapinfo = POKE._get_map_now(uid)
+async def get_chenghao(uid):
+    mapinfo = await POKE._get_map_now(uid)
     huizhang = int(mapinfo[0])
     if huizhang == 9:
         chenghao = '天王训练家'
@@ -2671,7 +2671,7 @@ async def get_nl_info(uid, pokemonid, pokemon_info, zhongzhuid, nl_num):
         pokemon_info = list(pokemon_info)
         pokemon_info[nl_index] = change_nl
 
-        POKE._add_pokemon_nuli(
+        await POKE._add_pokemon_nuli(
             uid,
             pokemonid,
             pokemon_info[7],
@@ -2703,7 +2703,7 @@ async def get_need_exp(pokemonid, level):
 
 # 增加角色经验
 async def add_exp(uid, pokemonid, exp):
-    levelinfo = POKE._get_pokemon_level(uid, pokemonid)
+    levelinfo = await POKE._get_pokemon_level(uid, pokemonid)
     now_level = levelinfo[0]
     need_exp = await get_need_exp(pokemonid, now_level)
     now_exp = levelinfo[1] + exp
@@ -2726,11 +2726,11 @@ async def add_exp(uid, pokemonid, exp):
         msg += f'获得了经验{exp}\n'
         msg += f'等级提升到了{now_level}\n'
     if level_flag == 1:
-        POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
+        await POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
         # CE._add_exp_chizi(uid, last_exp)
         return msg
     else:
-        POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
+        await POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
         return msg
 
 

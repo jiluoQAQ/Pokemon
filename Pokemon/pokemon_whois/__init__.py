@@ -238,19 +238,19 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         and winner_judger.get_winner(ev.group_id) == ''
                     ):
                         GAME = GAME_DB()
-                        win_num = GAME.update_game_num(uid, 'whois')
+                        win_num = await GAME.update_game_num(uid, 'whois')
                         mesg_d = []
                         mesg = ''
                         if daily_whois_limiter.check(uid):
                             SCORE = SCORE_DB()
-                            SCORE.update_score(uid, 1000)
+                            await SCORE.update_score(uid, 1000)
                             daily_whois_limiter.increase(uid)
                             mesg = '获得1000金币\n'
                         winner_judger.record_winner(ev.group_id, ev.user_id)
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
                         POKE = PokeCounter()
-                        mapinfo = POKE._get_map_now(uid)
+                        mapinfo = await POKE._get_map_now(uid)
                         myname = mapinfo[2]
                         myname = str(myname)[:10]
                         mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'

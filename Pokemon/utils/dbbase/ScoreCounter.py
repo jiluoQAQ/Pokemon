@@ -1,5 +1,7 @@
 import os
+import asyncio
 import sqlite3
+import aiosqlite
 from ..resource.RESOURCE_PATH import MAIN_PATH
 
 DB_PATH = os.path.expanduser(MAIN_PATH / 'pokemon.db')
@@ -25,77 +27,75 @@ class SCORE_DB:
         except:
             raise Exception('创建表发生错误')
 
-    def _new_score(self, uid):
+    async def _new_score(self, uid):
         try:
-            with self._connect() as conn:
-                conn.execute(
-                    f"INSERT OR REPLACE INTO POKEMON_SCORE (UID,SCORE,SHENGWANG) VALUES ('{uid}',0,0)"
-                ).fetchall()
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"INSERT OR REPLACE INTO POKEMON_SCORE (UID,SCORE,SHENGWANG) VALUES ('{uid}',0,0)")
+            await connection.commit()
+            await connection.close()
         except:
             raise Exception('更新表发生错误')
     
-    def delete_score(self, uid):
+    async def delete_score(self, uid):
         try:
-            with self._connect() as conn:
-                conn.execute(
-                    f"DELETE FROM POKEMON_SCORE WHERE UID='{uid}'"
-                ).fetchall()
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"DELETE FROM POKEMON_SCORE WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
         except:
             raise Exception('更新表发生错误')
     
-    def change_score(self, newuid, olduid):
-        with self._connect() as conn:
-            conn.execute(
-                f"UPDATE POKEMON_SCORE SET UID='{newuid}' WHERE UID='{olduid}'"
-            ).fetchall()
+    async def change_score(self, newuid, olduid):
+        connection = await aiosqlite.connect(DB_PATH)
+        await connection.execute(f"UPDATE POKEMON_SCORE SET UID='{newuid}' WHERE UID='{olduid}'")
+        await connection.commit()
+        await connection.close()
     
-    def get_score(self, uid):
+    async def get_score(self, uid):
         try:
-            with self._connect() as conn:
-                r = conn.execute(
-                    f"SELECT SCORE FROM POKEMON_SCORE WHERE UID='{uid}'"
-                ).fetchall()
-                if r:
-                    return r[0][0]
-                else:
-                    self._new_score(uid)
-                    return 0
+            connection = await aiosqlite.connect(DB_PATH)
+            cursor = await connection.execute(f"SELECT SCORE FROM POKEMON_SCORE WHERE UID='{uid}'")
+            r = await cursor.fetchall()
+            await connection.close()
+            if r:
+                return r[0][0]
+            else:
+                self._new_score(uid)
+                return 0
         except:
             raise Exception('查找表发生错误')
 
-    def update_score(self, uid, score):
-        now_score = self.get_score(uid) + score
+    async def update_score(self, uid, score):
+        now_score = await self.get_score(uid) + score
         try:
-            with self._connect() as conn:
-                conn.execute(
-                    f"UPDATE POKEMON_SCORE SET SCORE = {now_score} WHERE UID='{uid}'"
-                ).fetchall()
-
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKEMON_SCORE SET SCORE = {now_score} WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
         except:
             raise Exception('更新表发生错误')
     
-    def get_shengwang(self, uid):
+    async def get_shengwang(self, uid):
         try:
-            with self._connect() as conn:
-                r = conn.execute(
-                    f"SELECT SHENGWANG FROM POKEMON_SCORE WHERE UID='{uid}'"
-                ).fetchall()
-                if r:
-                    return r[0][0]
-                else:
-                    self._new_score(uid)
-                    return 0
+            connection = await aiosqlite.connect(DB_PATH)
+            cursor = await connection.execute(f"SELECT SHENGWANG FROM POKEMON_SCORE WHERE UID='{uid}'")
+            r = await cursor.fetchall()
+            await connection.close()
+            if r:
+                return r[0][0]
+            else:
+                await self._new_score(uid)
+                return 0
         except:
             raise Exception('查找表发生错误')
 
-    def update_shengwang(self, uid, shengwang):
-        now_shengwang = self.get_shengwang(uid) + shengwang
+    async def update_shengwang(self, uid, shengwang):
+        now_shengwang = await self.get_shengwang(uid) + shengwang
         try:
-            with self._connect() as conn:
-                conn.execute(
-                    f"UPDATE POKEMON_SCORE SET SHENGWANG = {now_shengwang} WHERE UID='{uid}'"
-                ).fetchall()
-
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKEMON_SCORE SET SHENGWANG = {now_shengwang} WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
         except:
             raise Exception('更新表发生错误')
 

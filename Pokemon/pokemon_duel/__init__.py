@@ -161,7 +161,7 @@ async def my_pokemon_list(bot, ev: Event):
         page = int(page) - 1
     uid = ev.user_id
 
-    pokemon_num = POKE._get_pokemon_num(uid)
+    pokemon_num = await POKE._get_pokemon_num(uid)
     if pokemon_num == 0:
         return await bot.send(
             '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
@@ -169,7 +169,7 @@ async def my_pokemon_list(bot, ev: Event):
         )
 
     page_num = math.floor(pokemon_num / 30) + 1
-    mypokelist = POKE._get_pokemon_list(uid, page)
+    mypokelist = await POKE._get_pokemon_list(uid, page)
     mes = ''
     page = page + 1
     mes += '您的精灵信息为(按等级与编号排序一页30只):'
@@ -306,7 +306,7 @@ async def get_chushi_pokemon(bot, ev: Event):
     pokename = args[0]
     uid = ev.user_id
 
-    my_pokemon = POKE._get_pokemon_num(uid)
+    my_pokemon = await POKE._get_pokemon_num(uid)
     if my_pokemon > 0:
         return await bot.send('您已经有精灵了，无法领取初始精灵。', at_sender=True)
 
@@ -343,7 +343,7 @@ async def get_chushi_pokemon(bot, ev: Event):
         sender = ev.sender
         if sender.get('nickname', '') != '':
             name = sender['nickname']
-    POKE._new_map_info(uid, go_didian, name)
+    await POKE._new_map_info(uid, go_didian, name)
 
     HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
         bianhao, pokemon_info
@@ -392,7 +392,7 @@ async def fangsheng_pokemon(bot, ev: Event):
             f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
 
-    my_pokemon = POKE._get_pokemon_num(uid)
+    my_pokemon = await POKE._get_pokemon_num(uid)
     if my_pokemon == 1:
         return await bot.send('您就这么一只精灵了，无法放生。', at_sender=True)
     await fangshen(uid, bianhao)
@@ -461,7 +461,7 @@ async def add_pokemon_jineng(bot, ev: Event):
 
     jineng = pokemon_info[14] + ',' + jinengname
 
-    POKE._add_pokemon_jineng(uid, bianhao, jineng)
+    await POKE._add_pokemon_jineng(uid, bianhao, jineng)
     mes = f'恭喜，{mes_xh}您的精灵 {starlist[startype]}{CHARA_NAME[bianhao][0]}学会了技能{jinengname}'
     buttons = [
         Button('📖学习技能', f'学习技能 {pokename}', '📖学习技能', action=2),
@@ -509,7 +509,7 @@ async def del_pokemon_jineng(bot, ev: Event):
         jineng = jineng + name
         shul = shul + 1
 
-    POKE._add_pokemon_jineng(uid, bianhao, jineng)
+    await POKE._add_pokemon_jineng(uid, bianhao, jineng)
     mes = f'成功，您的精灵{starlist[startype]}{CHARA_NAME[bianhao][0]}遗忘了技能{jinengname}'
     buttons = [
         Button('📖学习技能', f'学习技能 {pokename}', '📖学习技能', action=2),
@@ -554,7 +554,7 @@ async def get_jineng_info(bot, ev: Event):
         return await bot.send('暂时没有该宝可梦的进化信息。', at_sender=True)
     use_flag = 0
 
-    my_pokemon_list = POKE._get_my_pokemon(uid)
+    my_pokemon_list = await POKE._get_my_pokemon(uid)
     for pokemonid in my_pokemon_list:
         if int(pokemonid[0]) == int(bianhao):
             use_flag = 1
@@ -580,7 +580,7 @@ async def get_jineng_info(bot, ev: Event):
         else:
             await POKE.update_pokemon_star(uid, bianhao, startype)
             await POKE._delete_poke_star_bianhao(uid, kid_poke_id)
-            POKE._add_pokemon_id(uid, kid_poke_id, bianhao)
+            await POKE._add_pokemon_id(uid, kid_poke_id, bianhao)
             my_team = await POKE.get_pokemon_group(uid)
             pokemon_list = my_team.split(',')
             if str(kid_poke_id) in pokemon_list:
@@ -600,7 +600,7 @@ async def get_jineng_info(bot, ev: Event):
             await bot.send_option(mes, buttons)
     else:
         if zhongzu[9] == '-':
-            return await bot.send(f'进化失败，进化成{CHARA_NAME[bianhao][0]}需要通过形态转换完成', at_sender=True)
+            return await bot.send(f'进化失败，进化成{CHARA_NAME[bianhao][0]}需要通过其他条件完成', at_sender=True)
         mypropnum = await POKE._get_pokemon_prop(uid, zhongzu[9])
         if mypropnum == 0:
             return await bot.send(
@@ -610,7 +610,7 @@ async def get_jineng_info(bot, ev: Event):
         else:
             await POKE.update_pokemon_star(uid, bianhao, startype)
             await POKE._delete_poke_star_bianhao(uid, kid_poke_id)
-            POKE._add_pokemon_id(uid, kid_poke_id, bianhao)
+            await POKE._add_pokemon_id(uid, kid_poke_id, bianhao)
             my_team = await POKE.get_pokemon_group(uid)
             pokemon_list = my_team.split(',')
             await POKE._add_pokemon_prop(uid, zhongzu[9], -1)
@@ -710,7 +710,7 @@ async def my_pokemon_gt_up(bot, ev: Event):
         return await bot.send('请输入 重置个体值+宝可梦名称。', at_sender=True)
     pokename = args[0]
     uid = ev.user_id
-    mapinfo = POKE._get_map_now(uid)
+    mapinfo = await POKE._get_map_now(uid)
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
         return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
@@ -826,7 +826,7 @@ async def my_pokemon_gt_up(bot, ev: Event):
         if rest_flag == 3:
             mes = f'[{mapinfo[2]}]您的个体值{jishu}次重置成功，您的精灵拥有了很高的潜力，重置后属性如下'
         await POKE._add_pokemon_egg(uid, kidid, 0 - jishu)
-        POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
+        await POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
         HP, W_atk, W_def, M_atk, M_def, speed = await get_pokemon_shuxing(
             bianhao, pokemon_info
         )
@@ -859,7 +859,7 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
     if my_pokemon_info[0] < 100:
         return await bot.send(f'您的{pokename}等级不足100，无法重生。', at_sender=True)
 
-    my_pokemon = POKE._get_pokemon_num(uid)
+    my_pokemon = await POKE._get_pokemon_num(uid)
     if my_pokemon == 1:
         return await bot.send('您就这么一只精灵了，无法重生。', at_sender=True)
 
@@ -897,7 +897,7 @@ async def give_prop_pokemon_egg(bot, ev: Event):
         return await bot.send('请输入正确的类型 道具/精灵蛋/金币/学习机。', at_sender=True)
     if ev.at is not None:
         suid = ev.at
-        smapinfo = POKE._get_map_now(suid)
+        smapinfo = await POKE._get_map_now(suid)
         if smapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请at需要发放奖励的对象/该人员未成为训练家。',
@@ -913,7 +913,7 @@ async def give_prop_pokemon_egg(bot, ev: Event):
             if len(args) < 4:
                 return await bot.send('请输入正确的指令 赠送物品[道具/精灵蛋/学习机][名称][数量][昵称/at]。',at_sender=True)
             snickname = args[3]
-        smapinfo = POKE._get_map_info_nickname(snickname)
+        smapinfo = await POKE._get_map_info_nickname(snickname)
         if smapinfo[2] == 0:
             return await bot.send(
                 '没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',
@@ -939,12 +939,12 @@ async def give_prop_pokemon_egg(bot, ev: Event):
         propnum = int(args[1])
         if propnum < 1:
             return await bot.send('赠送金币的数量需大于1。', at_sender=True)
-        my_score = SCORE.get_score(uid)
+        my_score = await SCORE.get_score(uid)
         if break_flag == 0:
             if my_score < propnum:
                 return await bot.send('您的金币不足',at_sender=True)
-            SCORE.update_score(uid, 0 - propnum)
-        SCORE.update_score(suid, propnum)
+            await SCORE.update_score(uid, 0 - propnum)
+        await SCORE.update_score(suid, propnum)
         mes = f'您赠送给了{sname} 金币x{propnum}。'
     if proptype == '道具':
         propkeylist = proplist.keys()
@@ -1011,7 +1011,7 @@ async def get_pokemon_form_egg(bot, ev: Event):
     if egg_num == 0:
         return await bot.send(f'您还没有{pokename}的精灵蛋哦。', at_sender=True)
     use_flag = 0
-    my_pokemon_list = POKE._get_my_pokemon(uid)
+    my_pokemon_list = await POKE._get_my_pokemon(uid)
     for pokemonid in my_pokemon_list:
         if int(pokemonid[0]) == int(bianhao):
             use_flag = 1
@@ -1052,8 +1052,10 @@ async def get_pokemon_xingtai_list(bot, ev: Event):
     mes = '下面为宝可梦可转换的形态:'
     for pokemonid in CHARA_NAME:
         if pokemonid > 10000:
-            fpokemonid = int(str(pokemonid)[0:-3])
-            mes += f"\n{CHARA_NAME[fpokemonid][0]}可转换为{CHARA_NAME[pokemonid][0]}"
+            xingtai_type = int(str(pokemonid)[-3:])
+            if xingtai_type < 100:
+                fpokemonid = int(str(pokemonid)[0:-3])
+                mes += f"\n{CHARA_NAME[fpokemonid][0]}可转换为{CHARA_NAME[pokemonid][0]}"
     buttons = [
         Button('🔄形态转换', '形态转换', '🔄形态转换', action=2),
         Button('🔍︎查看图鉴', '精灵图鉴', '🔍︎查看图鉴', action=2),
@@ -1078,23 +1080,28 @@ async def get_pokemon_form_xingtai(bot, ev: Event):
             f'您还没有{CHARA_NAME[oldbianhao][0]}。', at_sender=True
         )
     foldbianhao = oldbianhao
-    if foldbianhao > 1000:
+    xingtai_type = 0
+    if foldbianhao > 10000:
+        xingtai_type = int(str(foldbianhao)[-3:])
         foldbianhao = str(foldbianhao)[0:-3]
     fnewbianhao = newbianhao
     if fnewbianhao > 10000:
+        xingtai_type = int(str(fnewbianhao)[-3:])
         fnewbianhao = str(fnewbianhao)[0:-3]
+    if xingtai_type > 100:
+        return await bot.send(f'转换失败！', at_sender=True)
     if str(fnewbianhao) != str(foldbianhao):
         return await bot.send(f'转换失败！不同类型的宝可梦形态无法转换。', at_sender=True)
     pokemon_info = await POKE._get_pokemon_info(uid, newbianhao)
     if pokemon_info == 0:
-        my_score = SCORE.get_score(uid)
+        my_score = await SCORE.get_score(uid)
         if my_score < 50000:
             return await bot.send('转换形态需要金币50000,您的金币不足',at_sender=True)
-        SCORE.update_score(uid, -50000)
+        await SCORE.update_score(uid, -50000)
         startype = await POKE.get_pokemon_star(uid, oldbianhao)
         await POKE.update_pokemon_star(uid, newbianhao, startype)
         await POKE._delete_poke_star_bianhao(uid, oldbianhao)
-        POKE._add_pokemon_id(uid, oldbianhao, newbianhao)
+        await POKE._add_pokemon_id(uid, oldbianhao, newbianhao)
         my_team = await POKE.get_pokemon_group(uid)
         pokemon_list = my_team.split(',')
         if str(oldbianhao) in pokemon_list:
