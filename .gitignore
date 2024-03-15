@@ -1,5 +1,3 @@
-Pokemon\pokemon_duel\custom_poke.py
-
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,jetbrains+all,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,visualstudiocode,jetbrains+all,python
 
@@ -666,3 +664,4 @@ FodyWeavers.xsd
 ### CI ###
 result.txt
 upload_file.py
+Pokemon/pokemon_duel/custom_poke.py
