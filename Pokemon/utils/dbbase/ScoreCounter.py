@@ -60,7 +60,7 @@ class SCORE_DB:
             if r:
                 return r[0][0]
             else:
-                self._new_score(uid)
+                await self._new_score(uid)
                 return 0
         except:
             raise Exception('查找表发生错误')
