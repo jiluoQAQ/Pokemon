@@ -5,7 +5,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 from gsuid_core.utils.image.convert import convert_img
 from .pmconfig import *
-from .pokemon import *
 from .pokeconfg import *
 from ..utils.resource.RESOURCE_PATH import CHAR_ICON_PATH, CHAR_ICON_S_PATH
 from ..utils.fonts.starrail_fonts import sr_font_15, sr_font_28, sr_font_32, sr_font_40

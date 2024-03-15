@@ -7,7 +7,6 @@ import pytz
 import time
 from .pokeconfg import *
 from .pmconfig import *
-from .pokemon import *
 from .until import *
 from pathlib import Path
 from datetime import datetime

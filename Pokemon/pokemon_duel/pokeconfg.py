@@ -38,6 +38,15 @@ with Path.open(Excel_path / 'prop.json', encoding='utf-8') as f:
     prop_dict = json.load(f)
     proplist = prop_dict['proplist']
 
+if custom_flag == 1:
+    from .custom_poke import *
+    CHARA_NAME.update(CUSTOM_CHARA_NAME)
+    POKEMON_LIST.update(CUSTOM_POKEMON_LIST)
+    LEVEL_JINENG_LIST.update(CUSTOM_LEVEL_JINENG_LIST)
+    POKEMON_XUEXI.update(CUSTOM_POKEMON_XUEXI)
+    POKEMON_CONTENT.update(CUSTOM_POKEMON_CONTENT)
+        
+
 async def get_poke_bianhao(name):
     for bianhao in CHARA_NAME:
         if str(name) in CHARA_NAME[bianhao]:
@@ -47,6 +56,7 @@ async def get_poke_bianhao(name):
 daily_work_limiter = DailyAmountLimiter('work', WORK_NUM, RESET_HOUR)
 daily_random_egg = DailyAmountLimiter('random_egg', random_egg_buy, RESET_HOUR)
 daily_boss = DailyAmountLimiter('boss', boss_fight, RESET_HOUR)
+
 
 # 生成精灵初始技能
 async def add_new_pokemon_jineng(level, bianhao):

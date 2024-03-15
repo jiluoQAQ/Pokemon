@@ -16,7 +16,6 @@ from datetime import datetime
 import json
 from .pmconfig import *
 from .pokeconfg import *
-from .pokemon import *
 from .until import *
 from pathlib import Path
 from .nameconfig import First_Name, Last_Name, Call_Name

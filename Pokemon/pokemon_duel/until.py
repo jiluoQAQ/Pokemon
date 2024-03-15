@@ -1,7 +1,7 @@
 import re
 import random
 import math
-from .pokemon import *
+from .pokeconfg import *
 
 
 async def get_shuxing_xiuzheng(atkshux, myshux):
