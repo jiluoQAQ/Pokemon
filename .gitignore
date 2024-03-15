@@ -664,4 +664,4 @@ FodyWeavers.xsd
 ### CI ###
 result.txt
 upload_file.py
-Pokemon/pokemon_duel/custom_poke.py
+custom_poke.py
