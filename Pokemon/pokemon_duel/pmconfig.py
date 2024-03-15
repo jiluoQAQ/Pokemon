@@ -19,8 +19,6 @@ BOSS_WGY = 10   #boss掉落银色王冠基础概率
 BOSS_SCORE = 20 #boss掉落BOSS币基础概率
 button_action = 1
 
-custom_flag = 0 #是否加载自定义宝可梦
-
 # 造成伤害天气
 tq_kouxuelist = ['沙暴', '冰雹']
 # 损失血量异常状态
