@@ -19,6 +19,7 @@ from ..utils.dbbase.ScoreCounter import SCORE_DB
 from ..utils.dbbase.PokeCounter import PokeCounter
 from ..utils.convert import DailyAmountLimiter
 from .data_source import make_jineng_use
+from .custom_poke import *
 from ..utils.fonts.starrail_fonts import (
     sr_font_18,
     sr_font_20,
@@ -39,7 +40,6 @@ with Path.open(Excel_path / 'prop.json', encoding='utf-8') as f:
     proplist = prop_dict['proplist']
 
 if custom_flag == 1:
-    from .custom_poke import *
     CHARA_NAME.update(CUSTOM_CHARA_NAME)
     POKEMON_LIST.update(CUSTOM_POKEMON_LIST)
     LEVEL_JINENG_LIST.update(CUSTOM_LEVEL_JINENG_LIST)
