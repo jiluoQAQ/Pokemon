@@ -429,7 +429,8 @@ async def add_pokemon_jineng(bot, ev: Event):
     jinengname = args[1]
 
     startype = await POKE.get_pokemon_star(uid, bianhao)
-    if str(jinengname) in str(pokemon_info[14]):
+    myjinenglist = re.split(',', pokemon_info[14])
+    if jinengname in myjinenglist:
         return await bot.send(
             f'学习失败，您的精灵 {starlist[startype]}{CHARA_NAME[bianhao][0]}已学会{jinengname}。',
             at_sender=True,

@@ -48,6 +48,7 @@ async def fight_help(bot, ev: Event):
 7、首领挑战(挑战该地点的首领，获胜可获得大量奖励)
 8、世界boss挑战(挑战世界boss，一级神，测试用)
 9、世界boss伤害排名(查看boss的伤害排名)
+
  """
     buttons = [
         Button('首领列表', '首领列表', '首领列表', action=1),

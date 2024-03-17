@@ -667,7 +667,7 @@ async def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
         shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
         if shuxing_xz == 0:
             jinenglist.remove(jineng)
-    # 保留变化类招式与可以造成1/5伤害以上的招式
+    # 保留变化类招式与可以造成1/4伤害以上的招式
     jineng_use_list = []
     if len(jinenglist) > 0:
         for jineng in jinenglist:
@@ -699,7 +699,7 @@ async def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
                             benxi_xz,
                             tianqi_xz,
                         )
-                        if shanghai > diinfo[17] / 5:
+                        if shanghai > diinfo[17] / 4:
                             jineng_use_list.append(jineng)
 
     if len(jineng_use_list) > 0:

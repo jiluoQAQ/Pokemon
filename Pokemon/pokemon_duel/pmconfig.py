@@ -186,6 +186,11 @@ sjbossinfo = {
         "bossid": 382,
         "jinenglist":"十万伏特,原始之力,根源波动,冰冻光束",
         "xingge":"内敛"
+    },
+    "202412" :{
+        "bossid": 716,
+        "jinenglist":"月亮之力,冥想,精神强念,真气弹",
+        "xingge":"内敛"
     }
 }
 
