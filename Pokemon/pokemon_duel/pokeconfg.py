@@ -3408,6 +3408,7 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
         if len(diinfo) == 0:
             bianhao2 = random.sample(dipokelist, 1)[0]
             dilevel = int(math.floor(random.uniform(minlevel, maxlevel)))
+            dilevel = min(100,dilevel)
             dipokemon_info = await get_pokeon_info_sj(bianhao2, dilevel)
             diinfo = await new_pokemon_info(bianhao2, dipokemon_info)
         if myinfo[3] == myinfo[17]:
