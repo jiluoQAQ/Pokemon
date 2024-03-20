@@ -367,6 +367,10 @@ async def get_chushi_pokemon(bot, ev: Event):
 @sv_pokemon_duel.on_fullmatch(['宝可梦重开'])
 async def chongkai_pokemon(bot, ev: Event):
     uid = ev.user_id
+    my_score = await SCORE.get_score(uid)
+    mypropnum = await POKE._get_pokemon_prop(uid, propname)
+    if my_score < 0 or mypropnum < 0:
+        return await bot.send('负债中，重开失败')
     await chongkai(uid)
     mes = '重开成功，请重新领取初始精灵开局'
     buttons = [

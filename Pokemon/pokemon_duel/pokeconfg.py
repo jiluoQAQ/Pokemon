@@ -1714,6 +1714,8 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         if len(my_ues_jineng_list) == 0:
             my_ues_jineng_list.append('挣扎')
             myjinengbuttons = [Button('挣扎', '挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input)]
+        my_ues_jineng_list.append('逃跑')
+        myjinengbuttons.append(Button('逃跑', '逃跑', '逃跑', action=2, permisson=0, specify_user_ids=button_user_input))
         jineng1_use = 0
         puthmy = 0
         runmynum = 0
@@ -1744,9 +1746,17 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                                     jineng1 = mys
                                     jineng1_use = 1
         except asyncio.TimeoutError:
+            my_ues_jineng_list.remove('逃跑')
             jineng1 = await now_use_jineng(
                 myinfo, diinfo, my_ues_jineng_list, dijinenglist, changdi
             )
+        if jineng1 == '逃跑':
+            await bot.send(f'{myname}逃跑了')
+            myinfo[17] = 0
+            jieshu = 1
+            jineng_use.append('逃跑')
+            return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use
+        
         jinenginfo1 = JINENG_LIST[jineng1]
         jineng_use.append(jineng1)
 
@@ -3540,6 +3550,9 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
         await bot.send(mes)
         
         myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use)
+        if jineng_use[len(jineng_use) - 1] == '逃跑':
+            mypokelist = []
+            return mypokelist, dipokelist
         if myinfo[17] <= 0:
             mes = f'【首领】{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             await bot.send(mes)
@@ -3605,6 +3618,9 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
         myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use)
         if boss_hp > diinfo[17]:
             shanghai = shanghai + boss_hp - diinfo[17]
+        if jineng_use[len(jineng_use) - 1] == '逃跑':
+            mypokelist = []
+            return shanghai
         boss_hp = diinfo[17]
         if myinfo[17] <= 0:
             mes = f'【世界首领】{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
