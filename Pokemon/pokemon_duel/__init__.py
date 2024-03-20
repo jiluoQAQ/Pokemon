@@ -78,6 +78,13 @@ async def pokemon_help(bot, ev: Event):
 async def pokemon_gonggao(bot, ev: Event):
     msg = """
        宝可梦小游戏更新公告：
+2024-3-20
+1.添加帕底亚地区
+2.首领挑战添加退出按钮
+2024-3-18
+1.添加伽勒尔地区
+2024-3-15
+1.添加自定义宝可梦功能(管理员)
 2024-3-9
 1.添加阿罗拉地区
 2024-3-8
