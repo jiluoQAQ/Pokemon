@@ -265,7 +265,7 @@ class PokeCounter:
     async def get_boss_shanghai_list(self,week):
         try:
             connection = await aiosqlite.connect(DB_PATH)
-            cursor = await connection.execute(f"SELECT UID,SHANGHAI FROM BOSS_FIGHT WHERE TIME = {week} ORDER BY SHANGHAI DESC LIMIT 0,50")
+            cursor = await connection.execute(f"SELECT UID,SHANGHAI FROM BOSS_FIGHT WHERE TIME = {week} ORDER BY CAST(SHANGHAI AS NUMERIC) DESC LIMIT 0,50")
             r = await cursor.fetchall()
             await connection.close()
             if r:
