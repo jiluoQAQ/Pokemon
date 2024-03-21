@@ -1543,14 +1543,19 @@ async def new_pokemom_show(bot, ev: Event):
             didianname = random.sample(didianlistkey[diqu], 1)[0]
             sj_num = int(math.floor(random.uniform(0, 100)))
             if sj_num <= 15:
+                zx_min = 0
                 zx_max = 300
-            elif sj_num <= 35:
+            elif sj_num <= 45:
+                zx_min = 280
                 zx_max = 400
-            elif sj_num <= 65:
+            elif sj_num <= 75:
+                zx_min = 380
                 zx_max = 500
             elif sj_num <= 95:
+                zx_min = 480
                 zx_max = 550
             else:
+                zx_min = 520
                 zx_max = 999
             
             find_flag = 0
@@ -1558,7 +1563,7 @@ async def new_pokemom_show(bot, ev: Event):
                 random.shuffle(chara_id_list)
                 pokeminid = chara_id_list[0]
                 pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
-                if pokemon_zz <= zx_max:
+                if pokemon_zz <= zx_max and pokemon_zz >= zx_min:
                     await POKE.update_map_refresh(diqu,didianname,pokeminid)
                     mes += f"\n{diqu}地区-{didianname} 出现了大量的 {CHARA_NAME[pokeminid][0]}"
                     find_flag = 1
@@ -1776,14 +1781,19 @@ async def refresh_pokemon_day():
             didianname = random.sample(didianlistkey[diqu], 1)[0]
             sj_num = int(math.floor(random.uniform(0, 100)))
             if sj_num <= 15:
+                zx_min = 0
                 zx_max = 300
-            elif sj_num <= 35:
+            elif sj_num <= 45:
+                zx_min = 280
                 zx_max = 400
-            elif sj_num <= 65:
+            elif sj_num <= 75:
+                zx_min = 380
                 zx_max = 500
             elif sj_num <= 95:
+                zx_min = 480
                 zx_max = 550
             else:
+                zx_min = 520
                 zx_max = 999
             find_flag = 0
             
@@ -1791,7 +1801,7 @@ async def refresh_pokemon_day():
                 random.shuffle(chara_id_list)
                 pokeminid = chara_id_list[0]
                 pokemon_zz = int(POKEMON_LIST[pokeminid][1]) + int(POKEMON_LIST[pokeminid][2]) + int(POKEMON_LIST[pokeminid][3]) + int(POKEMON_LIST[pokeminid][4]) + int(POKEMON_LIST[pokeminid][5]) + int(POKEMON_LIST[pokeminid][6])
-                if pokemon_zz <= zx_max:
+                if pokemon_zz <= zx_max and pokemon_zz >= zx_min:
                     await POKE.update_map_refresh(diqu,didianname,pokeminid)
                     mes += f"\n{diqu}地区-{didianname} 出现了大量的 {CHARA_NAME[pokeminid][0]}"
                     find_flag = 1
