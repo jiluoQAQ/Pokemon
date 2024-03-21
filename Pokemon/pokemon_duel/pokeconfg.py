@@ -2742,8 +2742,9 @@ async def add_exp(uid, pokemonid, exp):
             now_exp = 0
             break
     msg = ''
+    if now_level < 100:
+        msg = f'获得了经验{exp}\n'
     if now_level > levelinfo[0]:
-        msg += f'获得了经验{exp}\n'
         msg += f'等级提升到了{now_level}\n'
     if level_flag == 1:
         await POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
