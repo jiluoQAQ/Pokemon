@@ -52,18 +52,15 @@ class SCORE_DB:
         await connection.close()
     
     async def get_score(self, uid):
-        try:
-            connection = await aiosqlite.connect(DB_PATH)
-            cursor = await connection.execute(f"SELECT SCORE FROM POKEMON_SCORE WHERE UID='{uid}'")
-            r = await cursor.fetchall()
-            await connection.close()
-            if r:
-                return r[0][0]
-            else:
-                await self._new_score(uid)
-                return 0
-        except:
-            raise Exception('查找表发生错误')
+        connection = await aiosqlite.connect(DB_PATH)
+        cursor = await connection.execute(f"SELECT SCORE FROM POKEMON_SCORE WHERE UID='{uid}'")
+        r = await cursor.fetchall()
+        await connection.close()
+        if r:
+            return r[0][0]
+        else:
+            await self._new_score(uid)
+            return 0
 
     async def update_score(self, uid, score):
         now_score = await self.get_score(uid) + score

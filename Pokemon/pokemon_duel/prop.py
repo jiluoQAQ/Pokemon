@@ -198,14 +198,19 @@ async def buy_random_egg(bot, ev: Event):
             break
         sj_num = int(math.floor(random.uniform(0, 100)))
         if sj_num <= 15:
+            zx_min = 0
             zx_max = 300
         elif sj_num <= 45:
+            zx_min = 300
             zx_max = 400
         elif sj_num <= 75:
+            zx_min = 400
             zx_max = 500
         elif sj_num <= 95:
+            zx_min = 500
             zx_max = 550
         else:
+            zx_min = 550
             zx_max = 999
         find_flag = 0
         
@@ -213,7 +218,7 @@ async def buy_random_egg(bot, ev: Event):
             random.shuffle(chara_id_list)
             pokemonid = chara_id_list[0]
             pokemon_zz = int(POKEMON_LIST[pokemonid][1]) + int(POKEMON_LIST[pokemonid][2]) + int(POKEMON_LIST[pokemonid][3]) + int(POKEMON_LIST[pokemonid][4]) + int(POKEMON_LIST[pokemonid][5]) + int(POKEMON_LIST[pokemonid][6])
-            if pokemon_zz <= zx_max:
+            if pokemon_zz <= zx_max and pokemon_zz >= zx_min:
                 find_flag = 1
                 daily_random_egg.increase(uid)
                 eggid = await get_pokemon_eggid(pokemonid)
