@@ -375,7 +375,7 @@ async def get_chushi_pokemon(bot, ev: Event):
 async def chongkai_pokemon(bot, ev: Event):
     uid = ev.user_id
     my_score = await SCORE.get_score(uid)
-    mypropnum = await POKE._get_pokemon_prop(uid, propname)
+    mypropnum = await POKE._get_pokemon_prop(uid, '神奇糖果')
     if my_score < 0 or mypropnum < 0:
         return await bot.send('负债中，重开失败')
     await chongkai(uid)
