@@ -78,6 +78,7 @@ async def pokemon_help_prop(bot, ev: Event):
 11、交易所购买【商品ID】【数量】(交易所购买商品，数量默认为1)
 12、我的寄售(查看我寄售在交易所的商品)
 13、赠送物品【类型】【名称】【数量】【赠送对象昵称/@xxx】(给予xxx对象物品道具/精灵蛋，数量默认为1)
+14、回收道具【道具名】【数量】(商店出售道具,数量默认为1)
 注：
 交易所寄售的商品出售成功会收取10%的手续费
 PS
@@ -92,6 +93,7 @@ PS
         Button('✅我的道具', '我的道具', '✅我的道具', action=1),
         Button('💰查看交易所', '查看交易所', '💰查看交易所', action=1),
         Button('✅购买道具', '购买道具', '✅购买道具', action=2),
+        Button('✅回收道具', '回收道具', '✅回收道具', action=2),
         Button('✅道具信息', '道具信息', '✅道具信息', action=2),
         Button('✅使用道具', '使用道具', '✅使用道具', action=2),
         Button('购买随机精灵蛋', '购买随机精灵蛋', '购买随机精灵蛋', action=1),
@@ -231,7 +233,36 @@ async def buy_random_egg(bot, ev: Event):
         Button('📖我的精灵蛋', '我的精灵蛋', '📖我的精灵蛋', action=1),
     ]
     await bot.send_option(mes, buttons)
-    
+
+@sv_pokemon_prop.on_command(['回收道具'])
+async def prop_send(bot, ev: Event):
+    args = ev.text.split()
+    if len(args) < 1:
+        return await bot.send(
+            '请输入 回收道具+道具名称+道具数量 用空格隔开', at_sender=True
+        )
+    propname = args[0]
+    if len(args) == 2:
+        propnum = int(args[1])
+    else:
+        propnum = 1
+    uid = ev.user_id
+    if propnum < 1:
+        return await bot.send('请输入正确的道具数量', at_sender=True)
+    mypropnum = await POKE._get_pokemon_prop(uid, propname)
+    if mypropnum < propnum:
+        return await bot.send('道具不足', at_sender=True)
+    mychenghao, huizhang = await get_chenghao(uid)
+    propinfo = proplist[propname]
+    if propinfo['score'] == 0:
+        pay_score = 100
+    else:
+        pay_score = int(propinfo['score'] * 0.3)
+    get_score = pay_score * propnum
+    await SCORE.update_score(uid, get_score)
+    await POKE._add_pokemon_prop(uid, propname, 0 - propnum)
+    mes = f'您回收了{propname}x{propnum}获得金币{get_score}'
+    await bot.send(mes)
     
 @sv_pokemon_prop.on_command(['购买道具'])
 async def prop_buy(bot, ev: Event):
