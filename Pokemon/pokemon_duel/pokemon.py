@@ -5510,7 +5510,7 @@ JINENG_LIST = {
         '100',
         '10',
         '向对手发送强大的念力进行攻击。有时会降低对手的特防。',
-        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':100}
+        '附加伤害',{'sxinfo':'SPDEF','lvinfo':'1','typeinfo':'down','bh_jl':30}
     ],
     '催眠术': [
         '超能力',

@@ -191,6 +191,11 @@ sjbossinfo = {
         "bossid": 716,
         "jinenglist":"月亮之力,冥想,精神强念,真气弹",
         "xingge":"内敛"
+    },
+    "202413" :{
+        "bossid": 791,
+        "jinenglist":"流星闪冲,意念头锤,地震,咬碎",
+        "xingge":"固执"
     }
 }
 

@@ -131,6 +131,13 @@ async def pokemon_help_game(bot, ev: Event):
     ]
     await bot.send_option(msg, buttons)
 
+@sv_pokemon_duel.on_command(('wsid', '虚拟id'))
+async def get_my_qqgroup_id(bot, ev: Event):
+    uid = ev.user_id
+    gid = ev.group_id
+    mes = f"群虚拟id为\n{gid}\n用户虚拟id为\n{uid}"
+    await bot.send(mes)
+
 @sv_pokemon_duel.on_command(('技能测试', '测试技能'))
 async def get_jineng_use_text(bot, ev: Event):
     args = ev.text.split()
