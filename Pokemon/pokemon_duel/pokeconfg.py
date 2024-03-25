@@ -144,15 +144,13 @@ async def get_pokeon_info_boss(bianhao, bossinfo, level=100):
         pokemon_info.append(31)
 
     for num in range(1, 6):
-        if num == 1:
-            pokemon_info.append(6)
-        elif num == 2 and bossinfo['xingge'] == '固执':
+        if num == 2:
             pokemon_info.append(252)
-        elif num == 4 and bossinfo['xingge'] == '内敛':
+        elif num == 4:
             pokemon_info.append(252)
         else:
             pokemon_info.append(0)
-    pokemon_info.append(252)
+    pokemon_info.append(6)
     pokemon_info.append(bossinfo['xingge'])
     pokemon_info.append(bossinfo['jinenglist'])
     return pokemon_info

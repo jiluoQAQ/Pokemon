@@ -59,172 +59,172 @@
 		"关东":{
 			"关东无人发电厂":{
 				"bossid":145,
-				"xingge":"内敛",
-				"jinenglist":"原始之力,放电,空气斩,热风"
+				"xingge":"认真",
+				"jinenglist":"放电,空气斩,雷鸣蹴击,健美,啄钻"
 			},
 			"关东冠军之路":{
 				"bossid":146,
-				"xingge":"内敛",
-				"jinenglist":"原始之力,热沙大地,空气斩,热风"
+				"xingge":"认真",
+				"jinenglist":"闪焰冲锋,热沙大地,空气斩,热风,诡计"
 			},
 			"双子岛":{
 				"bossid":144,
-				"xingge":"内敛",
-				"jinenglist":"原始之力,冰冻光束,空气斩,水之波动"
+				"xingge":"认真",
+				"jinenglist":"冰旋,冰冻光束,空气斩,勇鸟猛攻,冥想"
 			}
 		},
 		"城都":{
 			"愤怒之湖":{
 				"bossid":245,
-				"xingge":"内敛",
-				"jinenglist":"冲浪,冰冻光束,暗影球,空气斩"
+				"xingge":"认真",
+				"jinenglist":"冲浪,冰冻光束,暗影球,咬碎,冥想"
 			},
 			"断崖洞窟":{
 				"bossid":244,
-				"xingge":"固执",
-				"jinenglist":"咬碎,神圣之火,神速,铁头"
+				"xingge":"认真",
+				"jinenglist":"咬碎,神圣之火,喷射火焰,铁头,冥想"
 			},
 			"擂钵山":{
 				"bossid":243,
-				"xingge":"内敛",
-				"jinenglist":"放电,热水,暗影球,波导弹"
+				"xingge":"认真",
+				"jinenglist":"放电,咬碎,暗影球,波导弹,冥想"
 			}
 		},
 		"丰缘":{
 			"105号水路":{
 				"bossid":378,
-				"xingge":"内敛",
-				"jinenglist":"冰冻光束,原始之力,十万伏特,加农光炮"
+				"xingge":"认真",
+				"jinenglist":"冰冻光束,原始之力,十万伏特,加农光炮,睡觉"
 			},
 			"120号道路":{
 				"bossid":379,
-				"xingge":"固执",
-				"jinenglist":"铁头,臂锤,地震,冰旋"
+				"xingge":"认真",
+				"jinenglist":"铁头,臂锤,地震,冰旋,睡觉"
 			},
 			"丰缘沙漠":{
 				"bossid":377,
-				"xingge":"固执",
-				"jinenglist":"地震,铁头,吸取拳,雷电拳"
+				"xingge":"认真",
+				"jinenglist":"地震,铁头,吸取拳,雷电拳,睡觉"
 			}
 		},
 		"神奥":{
 			"心齐湖":{
 				"bossid":481,
-				"xingge":"内敛",
-				"jinenglist":"神秘之力,魔法闪耀,能量球,十万伏特"
+				"xingge":"认真",
+				"jinenglist":"精神强念,魔法闪耀,能量球,十万伏特,冥想"
 			},
 			"立志湖":{
 				"bossid":482,
-				"xingge":"固执",
-				"jinenglist":"嬉闹,吸取拳,意念头锤,火焰拳"
+				"xingge":"认真",
+				"jinenglist":"嬉闹,吸取拳,意念头锤,精神强念,冥想"
 			},
 			"睿智湖":{
 				"bossid":480,
-				"xingge":"固执",
-				"jinenglist":"意念头锤,欺诈,嬉闹,冰冻拳"
+				"xingge":"认真",
+				"jinenglist":"意念头锤,十万伏特,嬉闹,精神强念,冥想"
 			}
 		},
 		"合众":{
 			"吹寄洞穴":{
 				"bossid":638,
-				"xingge":"固执",
-				"jinenglist":"圣剑,铁头,十字剪,意念头锤"
+				"xingge":"认真",
+				"jinenglist":"圣剑,铁头,波导弹,意念头锤,剑舞"
 			},
 			"合众冠军之路":{
 				"bossid":639,
-				"xingge":"固执",
-				"jinenglist":"圣剑,岩崩,地震,铁头"
+				"xingge":"认真",
+				"jinenglist":"圣剑,波导弹,地震,铁头,剑舞"
 			},
 			"矢车森林":{
 				"bossid":640,
-				"xingge":"固执",
-				"jinenglist":"圣剑,叶刃,十字剪,泰山压顶"
+				"xingge":"认真",
+				"jinenglist":"圣剑,叶刃,十字剪,波导弹,剑舞"
 			},
 			"合众7号道路":{
 				"bossid":641,
-				"xingge":"内敛",
-				"jinenglist":"枯叶风暴,污泥波,精神强念,恶之波动"
+				"xingge":"认真",
+				"jinenglist":"枯叶风暴,热风,精神强念,劈瓦,健美"
 			},
 			"合众13号道路":{
 				"bossid":642,
-				"xingge":"内敛",
-				"jinenglist":"鸣雷风暴,加农光炮,污泥波,精神强念"
+				"xingge":"认真",
+				"jinenglist":"鸣雷风暴,劈瓦,疯狂伏特,精神强念,健美"
 			},
 			"丰饶之祠":{
 				"bossid":645,
-				"xingge":"内敛",
-				"jinenglist":"热沙风暴,污泥波,精神强念,冥想"
+				"xingge":"认真",
+				"jinenglist":"热沙风暴,逆鳞,地震,咬碎,剑舞"
 			}
 		},
 		"阿罗拉":{
 			"战争遗迹":{
 				"bossid":785,
-				"xingge":"固执",
-				"jinenglist":"疯狂伏特,勇鸟猛攻,铁头,自我激励"
+				"xingge":"认真",
+				"jinenglist":"疯狂伏特,勇鸟猛攻,铁头,魔法闪耀,自我激励"
 			},
 			"生命遗迹":{
 				"bossid":786,
-				"xingge":"内敛",
-				"jinenglist":"月亮之力,能量球,精神强念,冥想"
+				"xingge":"认真",
+				"jinenglist":"月亮之力,能量球,精神强念,嬉闹,冥想"
 			},
 			"丰收遗迹":{
 				"bossid":787,
-				"xingge":"固执",
-				"jinenglist":"木角,DD金勾臂,嬉闹,剑舞"
+				"xingge":"认真",
+				"jinenglist":"木角,DD金勾臂,嬉闹,终极吸取,剑舞"
 			},
 			"彼岸遗迹":{
 				"bossid":788,
-				"xingge":"内敛",
-				"jinenglist":"月亮之力,冲浪,暗影球,冥想"
+				"xingge":"认真",
+				"jinenglist":"月亮之力,冲浪,暗影球,攀瀑,冥想"
 			}
 		},
 		"伽勒尔":{
 			"抉择遗迹电":{
 				"bossid":894,
-				"xingge":"内敛",
-				"jinenglist":"十万伏特,原始之力,高速星星,怪异电波"
+				"xingge":"认真",
+				"jinenglist":"十万伏特,原始之力,高速星星,闪电强袭,泰山压顶"
 			},
 			"抉择遗迹龙":{
 				"bossid":895,
-				"xingge":"固执",
-				"jinenglist":"龙之舞,龙爪,咬碎,地震"
+				"xingge":"认真",
+				"jinenglist":"龙之舞,龙爪,咬碎,地震,大地之力"
 			}
 		},
 		"帕底亚":{
 			"朽木之祠":{
 				"bossid":1001,
-				"xingge":"内敛",
-				"jinenglist":"恶之波动,终极吸取,生长,求雨"
+				"xingge":"认真",
+				"jinenglist":"恶之波动,终极吸取,生长,种子炸弹,欺诈"
 			},
 			"冻裂之祠":{
 				"bossid":1002,
-				"xingge":"固执",
-				"jinenglist":"圣剑,地狱突刺,冰柱坠击,剑舞"
+				"xingge":"认真",
+				"jinenglist":"圣剑,地狱突刺,冰柱坠击,剑舞,恶之波动"
 			},
 			"尘土之祠":{
 				"bossid":1003,
-				"xingge":"固执",
-				"jinenglist":"地震,地狱突刺,岩崩,意念头锤"
+				"xingge":"认真",
+				"jinenglist":"地震,地狱突刺,岩崩,意念头锤,恶之波动"
 			},
 			"火难之祠":{
 				"bossid":1004,
-				"xingge":"内敛",
-				"jinenglist":"喷烟,恶之波动,诡计,精神强念"
+				"xingge":"认真",
+				"jinenglist":"喷烟,恶之波动,诡计,精神强念,闪焰冲锋"
 			},
 			"乐土荒地":{
 				"bossid":1014,
-				"xingge":"固执",
-				"jinenglist":"毒击,咬碎,健美,近身战"
+				"xingge":"认真",
+				"jinenglist":"毒击,咬碎,健美,近身战,暗影爪"
 			},
 			"鬼山":{
 				"bossid":1016,
-				"xingge":"内敛",
-				"jinenglist":"冥想,月亮之力,污泥炸弹,睡觉"
+				"xingge":"认真",
+				"jinenglist":"冥想,月亮之力,污泥炸弹,勇鸟猛攻,嬉闹"
 			},
 			"藤花原":{
 				"bossid":1015,
-				"xingge":"内敛",
-				"jinenglist":"污泥波,精神强念,诡计,暗影球"
+				"xingge":"认真",
+				"jinenglist":"污泥波,精神强念,诡计,暗影球,太晶爆发"
 			}
 		}
 	},

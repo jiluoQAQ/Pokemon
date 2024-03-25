@@ -933,15 +933,15 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
     bossbianhao = bossinfo['bossid']
     pokemon_info_boss = await get_pokeon_info_boss(bossbianhao, bossinfo, 100)
     HP_1, W_atk_1, W_def_1, M_atk_1, M_def_1, speed_1 = await get_pokemon_shuxing_boss(
-        bossbianhao, pokemon_info_boss, 1.1
+        bossbianhao, pokemon_info_boss, 1.2
     )
     HP_2, W_atk_2, W_def_2, M_atk_2, M_def_2, speed_2 = await get_pokemon_shuxing_boss(
-        bossbianhao, pokemon_info_boss, 1.3
+        bossbianhao, pokemon_info_boss, 1.5
     )
     HP_3, W_atk_3, W_def_3, M_atk_3, M_def_3, speed_3 = await get_pokemon_shuxing_boss(
-        bossbianhao, pokemon_info_boss, 1.6
+        bossbianhao, pokemon_info_boss, 1.8
     )
-    mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info_boss[0]}\n性格:{pokemon_info_boss[13]}\n技能:{pokemon_info_boss[14]}\n各阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}"
+    mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info_boss[0]}\n各阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}"
     buttons = [
         Button('首领挑战', '首领挑战', '首领挑战', action=1),
     ]
