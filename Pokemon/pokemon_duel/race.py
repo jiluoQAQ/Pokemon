@@ -12,7 +12,6 @@ from datetime import datetime
 from gsuid_core.gss import gss
 from gsuid_core.logger import logger
 from gsuid_core.aps import scheduler
-from .pmconfig import *
 sv_pokemon_race = SV('宝可梦比赛官方', pm=0)
 sv_race_pokemon = SV('宝可梦比赛', priority=5)
 

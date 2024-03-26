@@ -45,6 +45,10 @@ if custom_flag == 1:
     LEVEL_JINENG_LIST.update(CUSTOM_LEVEL_JINENG_LIST)
     POKEMON_XUEXI.update(CUSTOM_POKEMON_XUEXI)
     POKEMON_CONTENT.update(CUSTOM_POKEMON_CONTENT)
+    if len(custom_jinyong) > 0:
+        for pokeid in custom_jinyong:
+            jinyonglist.append(pokeid)
+            jinyonglist_random_egg.append(pokeid)
         
 
 async def get_poke_bianhao(name):

@@ -7,7 +7,6 @@ from gsuid_core.models import Event
 from gsuid_core.message_models import Button
 from gsuid_core.segment import MessageSegment
 from gsuid_core.utils.image.convert import convert_img
-from .pmconfig import *
 from .map import *
 from .prop import *
 from .race import *

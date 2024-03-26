@@ -14,7 +14,6 @@ from gsuid_core.message_models import Button
 from gsuid_core.aps import scheduler
 from datetime import datetime
 import json
-from .pmconfig import *
 from .pokeconfg import *
 from .until import *
 from pathlib import Path

@@ -10,6 +10,8 @@
 
 custom_flag = 0 #是否加载自定义宝可梦
 
+custom_jinyong = []
+
 #自定义宝可梦名称,别称
 #宝可梦的ID最好是5000以上，10000以内，10000以上设置的是其他形态的判断
 CUSTOM_CHARA_NAME = {
