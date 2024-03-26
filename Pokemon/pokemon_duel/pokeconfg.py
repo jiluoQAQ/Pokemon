@@ -647,10 +647,13 @@ async def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
         if dijisha == 1 and mysd > disd:
             for jineng in myjinenglist:
                 jinenginfo = JINENG_LIST[jineng]
-                if jinenginfo[2] == '变化' and '回复' in jinenginfo[5]:
+                if jinenginfo[1] == '变化' and '回复' in jinenginfo[5]:
                     return jineng
                 if jinenginfo[2].isdigit() and '回复' in jinenginfo[5]:
                     return jineng
+                if jinenginfo[1] == '变化':
+                    return jineng
+    
     # 双方都未造成击杀，且我方其中一个技能能对地方造成敌方当前生命一半以上时
     if max_shanghai > diinfo[17] / 2:
         return use_jineng
@@ -665,12 +668,13 @@ async def now_use_jineng(myinfo, diinfo, myjinenglist, dijinenglist, changdi):
         shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
         if shuxing_xz == 0:
             jinenglist.remove(jineng)
+    
     # 保留变化类招式与可以造成1/4伤害以上的招式
     jineng_use_list = []
     if len(jinenglist) > 0:
         for jineng in jinenglist:
             jinenginfo = JINENG_LIST[jineng]
-            if jinenginfo[2] == '变化':
+            if jinenginfo[1] == '变化':
                 jineng_use_list.append(jineng)
             if jinenginfo[2].isdigit():
                 tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
@@ -1759,7 +1763,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         jineng_use.append(jineng1)
 
         jineng2 = await now_use_jineng(
-            diinfo, myinfo, dijinenglist, myjinenglist, changdi
+            diinfo, myinfo, dijinenglist, my_ues_jineng_list, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
         mesg = f'\n回合：{shul}\n'
