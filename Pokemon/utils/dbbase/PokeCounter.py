@@ -23,6 +23,7 @@ class PokeCounter:
         self._create_table_technical()
         self._create_table_boss_fight()
         self._create_table_chongsheng_num()
+        self._create_table_pipei_table()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -199,6 +200,85 @@ class PokeCounter:
             )
         except:
             raise Exception('创建表发生错误')
+    
+    def _create_table_pipei_table(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS POKE_PIPEI
+                          (UID             TEXT   NOT NULL,
+                           FLAG            INT    NOT NULL,
+                           FIGHTID         TEXT   NOT NULL,
+                           DIUID           TEXT   NOT NULL,
+                           FIGHTTYPE       INT    NOT NULL,
+                           PRIMARY KEY(UID));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    async def _new_pipei_info(self, uid):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(
+                'INSERT OR REPLACE INTO POKE_PIPEI (UID,FLAG,FIGHTID,DIUID,FIGHTTYPE) VALUES (?,?,?,?,?)',
+                (uid, 0, 0, 0, 0),
+            )
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def update_pipei_flag(self,uid,diuid,fightid):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(
+                'INSERT OR REPLACE INTO POKE_PIPEI (UID,FLAG,FIGHTID,DIUID,FIGHTTYPE) VALUES (?,?,?,?,?)',
+                (uid, 1, fightid, diuid, 0),
+            )
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def update_pipei_fight(self,uid,fighttype):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKE_PIPEI SET FIGHTTYPE={fighttype} WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def delete_pipei_uid(self,uid):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"DELETE FROM POKE_PIPEI WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def get_pipei_list(self,uid):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            cursor = await connection.execute(f"SELECT UID FROM POKE_PIPEI WHERE FLAG=0 AND UID<>'{uid}'")
+            r = await cursor.fetchall()
+            await connection.close()
+            if r:
+                return r
+            else:
+                return 0
+        except:
+            raise Exception('查找表发生错误')
+    
+    async def get_pipei_info(self,uid):
+        connection = await aiosqlite.connect(DB_PATH)
+        cursor = await connection.execute(f"SELECT FLAG,FIGHTID,DIUID,FIGHTTYPE FROM POKE_PIPEI WHERE UID='{uid}'")
+        r = await cursor.fetchall()
+        await connection.close()
+        if r:
+            return r[0]
+        else:
+            return 0
     
     async def _new_chongsheng_num(self, uid, bianhao):
         try:

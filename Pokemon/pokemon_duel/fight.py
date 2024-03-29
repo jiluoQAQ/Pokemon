@@ -1131,3 +1131,124 @@ async def pokemon_pk_boss_sj_paiming(bot, ev: Event):
         Button('再次挑战', '世界boss挑战', '再次挑战', action=1),
     ]
     await bot.send_option(mes, buttons)
+    
+@sv_pokemon_pk.on_command(('匹配对战'))
+async def pokemon_pk_pipei(bot, ev: Event):
+    uid = ev.user_id
+    my_team = await POKE.get_pokemon_group(uid)
+    if my_team == '':
+        return await bot.send(f'您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',at_sender=True)
+    pipeilist = await POKE.get_pipei_list(uid)
+    fight_falg = 0
+    if pipeilist != 0:
+        await bot.send('开始匹配中，匹配时间30秒')  
+        uidlist = []
+        for uidinfo in pipeilist:
+            uidlist.append(uidinfo[0])
+        diuid = random.sample(uidlist, 1)[0]
+        string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        random_list = random.sample(list(string), 8)
+        fightid = ''.join(random_list)
+        await POKE.update_pipei_flag(diuid,uid,fightid)
+        await POKE.update_pipei_flag(uid,diuid,fightid)
+        fight_falg = 1
+    else:
+        await bot.send('开始匹配中，匹配时间30秒')  
+        await POKE._new_pipei_info(uid)
+        fight_falg = 0
+    
+    if fight_falg == 0:
+        try:
+            async with timeout(30):
+                while fight_falg == 0:
+                    pipeiinfo = await POKE.get_pipei_info(uid)
+                    if pipeiinfo[0] != 0:
+                        fightid = pipeiinfo[1]
+                        diuid = pipeiinfo[2]
+                        fight_falg = 1
+                    await asyncio.sleep(.5)
+        except asyncio.TimeoutError:
+            fight_falg = 3
+            await POKE.delete_pipei_uid(uid)
+            return await bot.send('匹配超时，匹配失败') 
+                
+    
+    if fight_falg == 1:
+        mymapinfo = await POKE._get_map_now(uid)
+        dimapinfo = await POKE._get_map_now(diuid)
+        name = mymapinfo[2]
+        diname = dimapinfo[2]
+        xuanzelist = ['同意对战', '取消对战']
+        xuanzeflag = 0
+        rundinum = 0
+        try:
+            async with timeout(30):
+                while xuanzeflag == 0:
+                    if rundinum == 0:
+                        resp = await bot.receive_resp(
+                            f'匹配成功，您的对手为{diname}，请在30秒内选择同意/取消!',
+                            xuanzelist,
+                            unsuported_platform=True,
+                            is_mutiply=True,
+                        )
+                        rundinum = 1
+                        if resp is not None:
+                            resps = resp.text
+                            respuid = resp.user_id
+                            if str(respuid) == str(uid):
+                                if resps in xuanzelist:
+                                    xuanze = resps
+                                    xuanzeflag = 1
+                    else:
+                        resp = await bot.receive_mutiply_resp()
+                        if resp is not None:
+                            resps = resp.text
+                            respuid = resp.user_id
+                            if str(respuid) == str(uid):
+                                if resps in xuanzelist:
+                                    xuanze = resps
+                                    xuanzeflag = 1
+        except asyncio.TimeoutError:
+            xuanze = '取消对战'
+            
+        if xuanze == '取消对战':
+            await POKE.update_pipei_fight(uid,-1)
+            return await bot.send('您取消了对战')
+        
+        if xuanze == '同意对战':
+            await POKE.update_pipei_fight(uid,1)
+            await bot.send('您同意了对战，等待对手确认中')
+        
+        start_flag = 0
+        try:
+            async with timeout(30):
+                while start_flag == 0:
+                    pipeiinfodi = await POKE.get_pipei_info(diuid)
+                    if pipeiinfodi[3] != 0:
+                        start_flag = pipeiinfodi[3]
+                    await asyncio.sleep(.5)
+        except asyncio.TimeoutError:
+            start_flag = -1
+        
+        if start_flag == -1:
+            await POKE.delete_pipei_uid(uid)
+            await POKE.delete_pipei_uid(diuid)
+            return await bot.send('对手取消了对战')
+        
+        if start_flag == 1:
+            pokemon_team = my_team.split(',')
+            mypokelist = []
+            for bianhao in pokemon_team:
+                bianhao = int(bianhao)
+                mypokelist.append(bianhao)
+            
+            di_team = await POKE.get_pokemon_group(diuid)
+            di_pokemon_team = di_team.split(',')
+            dipokelist = []
+            for bianhao in di_pokemon_team:
+                bianhao = int(bianhao)
+                dipokelist.append(bianhao)
+            await bot.send('对战开始，后面还没写')
+            # mypokelist, dipokelist = await fight_pk_pipei(bot, ev, uid, diuid, mypokelist, dipokelist, name, diname, fightid)
+            
+            
