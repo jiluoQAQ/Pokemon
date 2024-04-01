@@ -24,6 +24,7 @@ class PokeCounter:
         self._create_table_boss_fight()
         self._create_table_chongsheng_num()
         self._create_table_pipei_table()
+        self._truncate_table_pipei()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -214,6 +215,12 @@ class PokeCounter:
             )
         except:
             raise Exception('创建表发生错误')
+    
+    def _truncate_table_pipei(self):
+        with self._connect() as conn:
+            conn.execute(
+                "DELETE FROM POKE_PIPEI WHERE UID <>''"
+            )
     
     async def _new_pipei_info(self, uid):
         try:

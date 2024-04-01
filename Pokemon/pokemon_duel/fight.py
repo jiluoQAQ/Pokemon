@@ -13,6 +13,7 @@ from .until import *
 from .pokemon import *
 from .pokeconfg import *
 from ..utils.fonts.starrail_fonts import sr_font_20, sr_font_24
+from .fightconfig import *
 
 TS_FIGHT = 20
 TS_PROP = 0
@@ -1138,6 +1139,9 @@ async def pokemon_pk_pipei(bot, ev: Event):
     my_team = await POKE.get_pokemon_group(uid)
     if my_team == '':
         return await bot.send(f'您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',at_sender=True)
+    pipeiinfo = await POKE.get_pipei_info(uid)
+    if pipeiinfo != 0:
+        return await bot.send('您已经处于匹配状态')
     pipeilist = await POKE.get_pipei_list(uid)
     fight_falg = 0
     if pipeilist != 0:
@@ -1172,7 +1176,10 @@ async def pokemon_pk_pipei(bot, ev: Event):
             await POKE.delete_pipei_uid(uid)
             return await bot.send('匹配超时，匹配失败') 
                 
-    
+    pipeiinfo = await POKE.get_pipei_info(uid)
+    fightid = pipeiinfo[1]
+    changdi = [['无天气', 99], ['', 0]]
+    await FIGHT.new_fight(fightid, changdi)
     if fight_falg == 1:
         mymapinfo = await POKE._get_map_now(uid)
         dimapinfo = await POKE._get_map_now(diuid)
@@ -1248,7 +1255,17 @@ async def pokemon_pk_pipei(bot, ev: Event):
             for bianhao in di_pokemon_team:
                 bianhao = int(bianhao)
                 dipokelist.append(bianhao)
-            await bot.send('对战开始，后面还没写')
-            # mypokelist, dipokelist = await fight_pk_pipei(bot, ev, uid, diuid, mypokelist, dipokelist, name, diname, fightid)
+            mypokelist, dipokelist, mes = await fight_pk_pipei(bot, ev, uid, diuid, mypokelist, dipokelist, name, diname, fightid)
+            mypokenum = len(mypokelist)
+            dipokenum = len(dipokelist)
+            if mypokenum == 0 and dipokenum == 0:
+                mes += "\n双方同时失去战斗能力，平局"
+            if mypokenum > 0 and dipokenum == 0:
+                mes += f"\n{name}战胜了{diname}"
+            if mypokenum == 0 and dipokenum > 0:
+                mes += f"\n{diname}战胜了{name}"
+            await POKE.delete_pipei_uid(uid)
+            await POKE.delete_pipei_uid(diuid)
+            await bot.send(mes)
             
             
