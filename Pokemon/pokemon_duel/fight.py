@@ -1141,7 +1141,8 @@ async def pokemon_pk_pipei(bot, ev: Event):
         return await bot.send(f'您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',at_sender=True)
     pipeiinfo = await POKE.get_pipei_info(uid)
     if pipeiinfo != 0:
-        return await bot.send('您已经处于匹配状态')
+        if pipeiinfo[0] == 0:
+            return await bot.send('您已经处于匹配状态')
     pipeilist = await POKE.get_pipei_list(uid)
     fight_falg = 0
     if pipeilist != 0:

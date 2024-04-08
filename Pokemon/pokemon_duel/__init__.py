@@ -349,8 +349,14 @@ async def get_chushi_pokemon(bot, ev: Event):
         go_didian = '合众19号道路'
     elif bianhao in [650,653,656]:
         go_didian = '卡洛斯2号道路'
+    elif bianhao in [722,725,728]:
+        go_didian = '阿罗拉1号道路'
+    elif bianhao in [810,813,816]:
+        go_didian = '伽勒尔1号道路'
+    elif bianhao in [906,909,912]:
+        go_didian = '南1区'
     else:
-        csdidianlist = ['1号道路', '29号道路', '101号道路', '201号道路','合众19号道路','卡洛斯2号道路']
+        csdidianlist = ['1号道路', '29号道路', '101号道路', '201号道路','合众19号道路','卡洛斯2号道路','阿罗拉1号道路','伽勒尔1号道路','南1区']
         go_didian = random.sample(csdidianlist, 1)[0]
     name = uid
     if ev.sender:

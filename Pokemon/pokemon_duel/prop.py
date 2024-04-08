@@ -210,7 +210,7 @@ async def buy_random_egg(bot, ev: Event):
             zx_min = 480
             zx_max = 550
         else:
-            zx_min = 520
+            zx_min = 530
             zx_max = 999
         find_flag = 0
         
