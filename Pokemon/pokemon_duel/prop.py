@@ -193,8 +193,11 @@ async def buy_random_egg(bot, ev: Event):
     chara_id_list = list(POKEMON_LIST.keys())
     for jinyongid in jinyonglist_random_egg:
         chara_id_list.remove(jinyongid)
+    egg_num = daily_random_egg.get_num(uid)
+    add_egg_num = 0
     for i in range(0,num):
-        if not daily_random_egg.check(uid):
+        get_day_num = add_egg_num + int(egg_num)
+        if get_day_num >= 50:
             break
         sj_num = int(math.floor(random.uniform(0, 100)))
         if sj_num <= 15:
@@ -213,18 +216,18 @@ async def buy_random_egg(bot, ev: Event):
             zx_min = 530
             zx_max = 999
         find_flag = 0
-        
         while find_flag == 0:
             random.shuffle(chara_id_list)
             pokemonid = chara_id_list[0]
             pokemon_zz = int(POKEMON_LIST[pokemonid][1]) + int(POKEMON_LIST[pokemonid][2]) + int(POKEMON_LIST[pokemonid][3]) + int(POKEMON_LIST[pokemonid][4]) + int(POKEMON_LIST[pokemonid][5]) + int(POKEMON_LIST[pokemonid][6])
             if pokemon_zz <= zx_max and pokemon_zz >= zx_min:
                 find_flag = 1
-                daily_random_egg.increase(uid)
                 eggid = await get_pokemon_eggid(pokemonid)
                 await SCORE.update_score(uid, -100000)
                 await POKE._add_pokemon_egg(uid, eggid, 1)
+                add_egg_num = add_egg_num + 1
         mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
+    daily_random_egg.increase(uid, add_egg_num)
     buttons = [
         Button('✅再开一个', '购买随机精灵蛋', '✅再开一个', action=1),
         Button('📖宝可梦孵化', '宝可梦孵化', '📖宝可梦孵化', action=2),

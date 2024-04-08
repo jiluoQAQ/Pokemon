@@ -22,44 +22,28 @@ sv_pokemon_duel = SV('宝可梦状态', priority=5)
 
 @sv_pokemon_duel.on_fullmatch(('精灵帮助', '宝可梦帮助'))
 async def pokemon_help(bot, ev: Event):
-    msg = """
-             宝可梦帮助
-特别注意！！！
-野外探索有内置的2秒CD,使用连点器的建议点击间隔设置成3秒,减少负载。提升流畅性
-特别注意！！！
-
-进入游戏请先输入 领取初始精灵【精灵名】 开局，初始精灵有各个版本的御三家，如
-    领取初始精灵小火龙
-指令：
-1、初始精灵列表:查询可以领取的初始精灵
-2、领取初始精灵【精灵名】:领取初始精灵【精灵名】
-3、精灵状态【精灵名】:查询【精灵名】的属性信息
-4、我的精灵列表:查询我拥有的等级前20的精灵
-5、宝可梦重开:删除我所有的精灵信息
-6、放生精灵【精灵名】放生名为【精灵名】的精灵
-7、学习精灵技能【精灵名】 【技能名】:让精灵学习技能
-8、遗忘精灵技能【精灵名】 【技能名】:让精灵遗忘技能
-9、野外探索:在野外地区与野生宝可梦或训练师战斗获取精灵经验
-10、打工:在城镇地区打工进行打工赚取金币
-11、前往【地点名】:前往【地点名】的地点
-12、宝可梦进化【精灵名】:让你的宝可梦进化为【精灵名】，需要有前置进化型精灵
-13、修改训练家名称【昵称】:把你的训练家名称改为【昵称】，【昵称】有唯一性，作为对战识别符
-14、查看地图【地区名】:查询【地区名】的地点信息，【地区名】可留空，默认所在地区
-15、我的精灵蛋:查询我的精灵蛋信息
-16、重置个体值【精灵名】:消耗一枚【精灵名】初始形态的精灵蛋对【精灵名】的个体值进行重置,后面跟数量可以进行多次重置
-17、宝可梦孵化【精灵名】:消耗一枚【精灵名】的精灵蛋孵化出一只lv.5的【精灵名】
-18、更新队伍【精灵名】:更新手持队伍信息，不同的宝可梦用空格分隔，最多4只
-19、大量出现信息:查询当前随机出现的大量宝可梦消息
-20、宝可梦重生【精灵名】:让等级到100级的精灵重生为精灵蛋
-21、道具帮助:查看道具系统/交易所的使用说明
-22、战斗帮助:查看战斗系统的使用说明
-23、更新公告:查看最近更新内容
-注:
-同一类型的精灵只能拥有一只:进化型为不同类型
-后续功能在写了在写了 新建文件夹
-
-其他宝可梦相关小游戏可以点击小游戏帮助查询
- """
+    mes = "宝可梦帮助\n特别注意！！！\n野外探索有内置的2秒CD,使用连点器的建议点击间隔设置成3秒,减少负载。提升流畅性\n特别注意！！！\n"
+    mes += "进入游戏请先输入 领取初始精灵【精灵名】 开局，初始精灵有各个版本的御三家，如\n领取初始精灵小火龙\n"
+    mes += "[初始精灵列表] (mqqapi://aio/inlinecmd?command=初始精灵列表&reply=false&enter=true) 查看初始精灵列表\n"
+    mes += "[领取初始精灵 精灵名] (mqqapi://aio/inlinecmd?command=领取初始精灵&reply=false) 领取初始精灵\n"
+    mes += "[我的精灵列表] (mqqapi://aio/inlinecmd?command=我的精灵列表&reply=false&enter=true) 查询我拥有的等级前20的精灵\n"
+    mes += "[放生精灵 精灵名] (mqqapi://aio/inlinecmd?command=放生精灵&reply=false) 放生名为【精灵名】的精灵\n"
+    mes += "[学习技能 精灵名 技能名] (mqqapi://aio/inlinecmd?command=学习精灵技能&reply=false) 让精灵学习技能\n"
+    mes += "[遗忘技能 精灵名 技能名] (mqqapi://aio/inlinecmd?command=遗忘精灵技能&reply=false) 让精灵学习技能\n"
+    mes += "[野外探索] (mqqapi://aio/inlinecmd?command=野外探索&reply=false&enter=true) 在野外地区与野生宝可梦或训练师战斗获取精灵经验\n"
+    mes += "[打工] (mqqapi://aio/inlinecmd?command=打工&reply=false&enter=true) 在城镇地区打工进行打工赚取金币\n"
+    mes += "[前往 地点名] (mqqapi://aio/inlinecmd?command=前往&reply=false) 前往【地点名】的地点\n"
+    mes += "[宝可梦进化 精灵名] (mqqapi://aio/inlinecmd?command=前往&reply=false) 让你的宝可梦进化为【精灵名】，需要有前置进化型精灵\n"
+    mes += "[修改昵称 昵称] (mqqapi://aio/inlinecmd?command=修改训练家名称&reply=false) 把你的训练家名称改为【昵称】，【昵称】有唯一性，作为对战识别符\n"
+    mes += "查看地图[关东] (mqqapi://aio/inlinecmd?command=查看地图关东&reply=false&enter=true)|[成都] (mqqapi://aio/inlinecmd?command=查看地图成都&reply=false&enter=true)|[丰缘] (mqqapi://aio/inlinecmd?command=查看地图丰缘&reply=false&enter=true)|[神奥] (mqqapi://aio/inlinecmd?command=查看地图神奥&reply=false&enter=true)|[合众] (mqqapi://aio/inlinecmd?command=查看地图合众&reply=false&enter=true)|[卡洛斯] (mqqapi://aio/inlinecmd?command=查看地图卡洛斯&reply=false&enter=true)|[阿罗拉] (mqqapi://aio/inlinecmd?command=查看地图阿罗拉&reply=false&enter=true)|[伽勒尔] (mqqapi://aio/inlinecmd?command=查看地图伽勒尔&reply=false&enter=true)|[帕底亚] (mqqapi://aio/inlinecmd?command=查看地图帕底亚&reply=false&enter=true) 查看地图信息\n"
+    mes += "[我的精灵蛋] (mqqapi://aio/inlinecmd?command=我的精灵蛋&reply=false&enter=true) 查询我的精灵蛋信息\n"
+    mes += "[重置个体值 精灵名] (mqqapi://aio/inlinecmd?command=重置个体值&reply=false) 消耗一枚【精灵名】初始形态的精灵蛋对【精灵名】的个体值进行重置,后面跟数量可以进行多次重置\n"
+    mes += "[宝可梦孵化 精灵名] (mqqapi://aio/inlinecmd?command=宝可梦孵化&reply=false) 消耗一枚【精灵名】的精灵蛋孵化出一只lv.5的【精灵名】\n"
+    mes += "[更新队伍 精灵名] (mqqapi://aio/inlinecmd?command=更新队伍&reply=false) 更新手持队伍信息，不同的宝可梦用空格分隔，最多4只\n"
+    mes += "[大量出现信息] (mqqapi://aio/inlinecmd?command=大量出现信息&reply=false&enter=true) 查询当前随机出现的大量宝可梦消息\n"
+    mes += "[宝可梦重生] (mqqapi://aio/inlinecmd?command=宝可梦重生&reply=false) 让等级到100级的精灵重生为精灵蛋\n"
+    mes += "[更新公告] (mqqapi://aio/inlinecmd?command=更新公告&reply=false&enter=true) 查看最近更新内容"
+    mes += "注:\n同一类型的精灵只能拥有一只:进化型为不同类型\n后续功能在写了在写了 新建文件夹\n其他宝可梦相关小游戏可以点击小游戏帮助查询"
     buttons = [
         Button('✅道具帮助', '道具帮助', '✅道具帮助', action=1),
         Button('✅战斗帮助', '战斗帮助', '✅战斗帮助', action=1),
@@ -71,7 +55,7 @@ async def pokemon_help(bot, ev: Event):
         Button('✅大量出现信息', '大量出现信息','✅大量出现信息', action=1),
         Button('✅小游戏帮助', '小游戏帮助','✅小游戏帮助', action=1),
     ]
-    await bot.send_option(msg, buttons)
+    await bot.send_option(mes, buttons)
 
 @sv_pokemon_duel.on_fullmatch(('更新公告', '查看公告'))
 async def pokemon_gonggao(bot, ev: Event):
@@ -114,7 +98,11 @@ async def pokemon_gonggao(bot, ev: Event):
 4.修改连续战队只获取一次努力值的bug
 5.消息发送方式【图片/文字】可以指令替换
  """
-    await bot.send(msg, at_sender=True)
+    mes = "[回车指令](mqqapi://aio/inlinecmd?command=回车指令&reply=false&enter=true)"
+    buttons = [
+        Button('✅我是谁', '我是谁', '✅我是谁', action=1),
+    ]
+    await bot.send_option(mes, buttons)
     
     
 @sv_pokemon_duel.on_fullmatch(['小游戏帮助', '宝可梦小游戏帮助'])
@@ -189,7 +177,7 @@ async def my_pokemon_list(bot, ev: Event):
     mes += '您的精灵信息为(按等级与编号排序一页30只):'
     for pokemoninfo in mypokelist:
         startype = await POKE.get_pokemon_star(uid, pokemoninfo[0])
-        mes += f'\n {starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}({pokemoninfo[1]})'
+        mes += f"\n[{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{CHARA_NAME[pokemoninfo[0]][0]}&reply=false&enter=true) (Lv.{pokemoninfo[1]})"
     if page_num > 1:
         mes += f'\n第({page}/{page_num})页'
     buttons = [
@@ -301,7 +289,7 @@ async def get_chushi_list(bot, ev: Event):
     for bianhao in chushi_list:
         # img = CHAR_ICON_PATH / f'{POKEMON_LIST[bianhao][0]}.png'
         # img = await convert_img(img)
-        mes += f'\n{CHARA_NAME[bianhao][0]} 属性:{POKEMON_LIST[bianhao][7]}'
+        mes += f'\n{CHARA_NAME[bianhao][0]} 属性:{POKEMON_LIST[bianhao][7]} [领取] (mqqapi://aio/inlinecmd?command=领取初始精灵{CHARA_NAME[bianhao][0]}&reply=false&enter=true)|[图鉴] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[bianhao][0]}&reply=false&enter=true)'
     buttons = [
         Button('✅领取初始精灵', '领取初始精灵', '✅领取初始精灵', action=2),
     ]
@@ -674,7 +662,7 @@ async def my_pokemon_egg_list(bot, ev: Event):
     page = page + 1
     mes += '您的精灵蛋信息为(一页只显示30种按数量和编号排序):\n'
     for pokemoninfo in myegglist:
-        mes += f'{CHARA_NAME[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]}\n'
+        mes += f'{CHARA_NAME[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]} [孵化] (mqqapi://aio/inlinecmd?command=宝可梦孵化{CHARA_NAME[pokemoninfo[0]][0]}&reply=false&enter=true)|[图鉴] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[pokemoninfo[0]][0]}&reply=false&enter=true) \n'
     if page_num > 1:
         mes += f'第({page}/{page_num})页'
     buttons = [
@@ -1080,7 +1068,7 @@ async def get_pokemon_xingtai_list(bot, ev: Event):
             xingtai_type = int(str(pokemonid)[-3:])
             if xingtai_type < 100:
                 fpokemonid = int(str(pokemonid)[0:-3])
-                mes += f"\n{CHARA_NAME[fpokemonid][0]}可转换为{CHARA_NAME[pokemonid][0]}"
+                mes += f"\n[{CHARA_NAME[fpokemonid][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[fpokemonid][0]}&reply=false&enter=true)可转换为[{CHARA_NAME[pokemonid][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[pokemonid][0]}&reply=false&enter=true)"
     buttons = [
         Button('🔄形态转换', '形态转换', '🔄形态转换', action=2),
         Button('🔍︎查看图鉴', '精灵图鉴', '🔍︎查看图鉴', action=2),
