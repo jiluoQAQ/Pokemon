@@ -579,8 +579,8 @@ async def get_new_pokemon_id(bot, ev, uid, pokelist, myname, mes):
     button_user_input_my.append(uid)
     pokenamelist = []
     for pokeid in pokelist:
-        pokenamelist.append(POKEMON_LIST[pokeid][0])
-        pokebuttonlist.append(Button(f'{POKEMON_LIST[pokeid][0]}', f'{POKEMON_LIST[pokeid][0]}', f'{POKEMON_LIST[pokeid][0]}', action=1, permisson=0, specify_user_ids=button_user_input_my))
+        pokenamelist.append(CHARA_NAME[pokeid][0])
+        pokebuttonlist.append(Button(f'{CHARA_NAME[pokeid][0]}', f'{CHARA_NAME[pokeid][0]}', f'{CHARA_NAME[pokeid][0]}', action=1, permisson=0, specify_user_ids=button_user_input_my))
     button_use = 0
     runmynum = 0
     try:

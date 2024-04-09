@@ -165,9 +165,11 @@ async def map_my_info(bot, ev: Event):
             sender = ev.sender
             if sender.get('nickname', '') != '':
                 name = sender['nickname']
+    myduanwei = await get_now_duanwei(mapinfo[3])
     mes = ''
     mes += f'训练家名称:{name}\n'
     mes += f'训练家称号:{mychenghao}\n'
+    mes += f'当前段位:{myduanwei}\n'
     mes += f'拥有金钱:{my_score}\n'
     mes += f'拥有徽章:{huizhang}\n'
     if mapinfo[1]:
@@ -184,7 +186,7 @@ async def map_my_info(bot, ev: Event):
             pokename = CHARA_NAME[bianhao][0]
             if ')' in CHARA_NAME[bianhao][0]:
                 pokename = pokename.replace(')','\)')
-            mes += f'\n[{starlist[startype]}{CHARA_NAME[bianhao][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{pokename}&reply=false&enter=true) Lv.{pokemon_info[0]}'
+            mes += f'\n[{starlist[startype]}{CHARA_NAME[bianhao][0]}] (mqqapi://aio/inlinecmd?reply=false&enter=true&command=精灵状态{pokename}) Lv.{pokemon_info[0]}'
     buttons = [
         Button('📖精灵状态', '精灵状态', '📖精灵状态', action=2),
         Button('📖我的精灵蛋', '我的精灵蛋', '📖我的精灵蛋', action=1),

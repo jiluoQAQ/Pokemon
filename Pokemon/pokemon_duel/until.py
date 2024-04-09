@@ -1545,5 +1545,5 @@ async def changdi_change(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chang
     jinenginfo = JINENG_LIST[jineng]
     changdi[0][0] = kwargs['tqname']
     changdi[0][1] = 5
-    mes = f"\n{myinfo[0]}使用了技能{jineng}\n天气变成了{kwargs['tqname']}"
+    mes = f"{myinfo[0]}使用了技能{jineng}\n天气变成了{kwargs['tqname']}"
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi

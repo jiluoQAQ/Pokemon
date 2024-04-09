@@ -159,6 +159,12 @@ async def get_pokeon_info_boss(bianhao, bossinfo, level=100):
     pokemon_info.append(bossinfo['jinenglist'])
     return pokemon_info
 
+async def get_now_duanwei(duanweinum):
+    for duanwei in duanweilist.keys():
+        if duanweinum >= duanwei:
+            duanweiname = duanweilist[duanwei]
+    return duanweiname
+
 # 获取宝可梦，随机个体，随机努力，测试用
 async def get_pokeon_info_sj(bianhao, level=100):
     pokemon_info = []

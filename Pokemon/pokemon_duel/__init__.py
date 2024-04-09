@@ -177,7 +177,10 @@ async def my_pokemon_list(bot, ev: Event):
     mes += f'<@{uid}>您的精灵信息为(按等级与编号排序一页30只):'
     for pokemoninfo in mypokelist:
         startype = await POKE.get_pokemon_star(uid, pokemoninfo[0])
-        mes += f"\n[{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{CHARA_NAME[pokemoninfo[0]][1]}&reply=false&enter=true) (Lv.{pokemoninfo[1]})"
+        pokename = CHARA_NAME[pokemoninfo[0]][0]
+        if ')' in pokename:
+            pokename = pokename.replace(')','\)')
+        mes += f"\n[{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{pokename}&reply=false&enter=true) (Lv.{pokemoninfo[1]})"
     if page_num > 1:
         mes += f'\n第({page}/{page_num})页'
     buttons = [
@@ -1066,9 +1069,12 @@ async def get_pokemon_xingtai_list(bot, ev: Event):
     for pokemonid in CHARA_NAME:
         if pokemonid > 10000:
             xingtai_type = int(str(pokemonid)[-3:])
-            if xingtai_type < 100:
+            if xingtai_type < 500:
                 fpokemonid = int(str(pokemonid)[0:-3])
-                mes += f"\n[{CHARA_NAME[fpokemonid][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[fpokemonid][0]}&reply=false&enter=true)可转换为[{CHARA_NAME[pokemonid][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[pokemonid][0]}&reply=false&enter=true)"
+                pokename2 = CHARA_NAME[pokemonid][0]
+                if ')' in pokename2:
+                    pokename2 = pokename2.replace(')','\)')
+                mes += f"\n[{CHARA_NAME[fpokemonid][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[fpokemonid][0]}&reply=false&enter=true)可转换为[{CHARA_NAME[pokemonid][0]}] (mqqapi://aio/inlinecmd?reply=false&enter=true&command=精灵图鉴{pokename2})"
     buttons = [
         Button('🔄形态转换', '形态转换', '🔄形态转换', action=2),
         Button('🔍︎查看图鉴', '精灵图鉴', '🔍︎查看图鉴', action=2),
@@ -1101,7 +1107,7 @@ async def get_pokemon_form_xingtai(bot, ev: Event):
     if fnewbianhao > 10000:
         xingtai_type = int(str(fnewbianhao)[-3:])
         fnewbianhao = str(fnewbianhao)[0:-3]
-    if xingtai_type > 100:
+    if xingtai_type > 500:
         return await bot.send(f'转换失败！', at_sender=True)
     if str(fnewbianhao) != str(foldbianhao):
         return await bot.send(f'转换失败！不同类型的宝可梦形态无法转换。', at_sender=True)

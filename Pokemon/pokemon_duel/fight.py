@@ -1145,11 +1145,17 @@ async def pokemon_pk_pipei(bot, ev: Event):
             return await bot.send('您已经处于匹配状态')
     pipeilist = await POKE.get_pipei_list(uid)
     fight_falg = 0
+    mymapinfo = await POKE._get_map_now(uid)
+    mypipeinum = mymapinfo[3]
+    uidlist = []
     if pipeilist != 0:
-        await bot.send('开始匹配中，匹配时间30秒')  
-        uidlist = []
         for uidinfo in pipeilist:
-            uidlist.append(uidinfo[0])
+            dimap = await POKE._get_map_now(uidinfo[0])
+            pipei_cb = int(mypipeinum) - int(dimap[3])
+            if pipei_cb <= 300 and pipei_cb >= -300:
+                uidlist.append(uidinfo[0])
+    if len(uidlist) > 0:
+        await bot.send('开始匹配中，匹配时间30秒')  
         diuid = random.sample(uidlist, 1)[0]
         string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         random_list = random.sample(list(string), 8)
@@ -1182,11 +1188,18 @@ async def pokemon_pk_pipei(bot, ev: Event):
     changdi = [['无天气', 99], ['', 0]]
     await FIGHT.new_fight(fightid, changdi)
     if fight_falg == 1:
-        mymapinfo = await POKE._get_map_now(uid)
         dimapinfo = await POKE._get_map_now(diuid)
         name = mymapinfo[2]
         diname = dimapinfo[2]
-        xuanzelist = ['同意对战', '取消对战']
+        myduanwei = await get_now_duanwei(mypipeinum)
+        diduanwei = await get_now_duanwei(dimapinfo[3])
+        xuanzelistname = ['同意对战', '取消对战']
+        button_user_input_my = []
+        button_user_input_my.append(uid)
+        xuanzelist = [
+            Button('同意对战', '同意对战', '同意对战', action=1, permisson=0, specify_user_ids=button_user_input_my),
+            Button('取消对战', '取消对战', '取消对战', action=1, permisson=0, specify_user_ids=button_user_input_my),
+        ]
         xuanzeflag = 0
         rundinum = 0
         try:
@@ -1194,7 +1207,7 @@ async def pokemon_pk_pipei(bot, ev: Event):
                 while xuanzeflag == 0:
                     if rundinum == 0:
                         resp = await bot.receive_resp(
-                            f'匹配成功，您的对手为{diname}，请在30秒内选择同意/取消!',
+                            f'匹配成功，您的对手为{diname}({diduanwei})，请在30秒内选择同意/取消!',
                             xuanzelist,
                             unsuported_platform=True,
                             is_mutiply=True,
@@ -1204,7 +1217,7 @@ async def pokemon_pk_pipei(bot, ev: Event):
                             resps = resp.text
                             respuid = resp.user_id
                             if str(respuid) == str(uid):
-                                if resps in xuanzelist:
+                                if resps in xuanzelistname:
                                     xuanze = resps
                                     xuanzeflag = 1
                     else:
@@ -1213,7 +1226,7 @@ async def pokemon_pk_pipei(bot, ev: Event):
                             resps = resp.text
                             respuid = resp.user_id
                             if str(respuid) == str(uid):
-                                if resps in xuanzelist:
+                                if resps in xuanzelistname:
                                     xuanze = resps
                                     xuanzeflag = 1
         except asyncio.TimeoutError:
@@ -1259,12 +1272,18 @@ async def pokemon_pk_pipei(bot, ev: Event):
             mypokelist, dipokelist, mes = await fight_pk_pipei(bot, ev, uid, diuid, mypokelist, dipokelist, name, diname, fightid)
             mypokenum = len(mypokelist)
             dipokenum = len(dipokelist)
+            if str(myduanwei) == str(diduanwei):
+                add_pipei_num = 20
+            else:
+                add_pipei_num = 30
             if mypokenum == 0 and dipokenum == 0:
                 mes += "\n双方同时失去战斗能力，平局"
             if mypokenum > 0 and dipokenum == 0:
-                mes += f"\n{name}战胜了{diname}"
+                await POKE.update_map_pipei_num(uid,add_pipei_num)
+                mes += f"\n{name}战胜了{diname}\n您获得了赛季积分{add_pipei_num}"
             if mypokenum == 0 and dipokenum > 0:
-                mes += f"\n{diname}战胜了{name}"
+                await POKE.update_map_pipei_num(uid,0-add_pipei_num)
+                mes += f"\n{diname}战胜了{name}\n您失去了赛季积分{add_pipei_num}"
             await POKE.delete_pipei_uid(uid)
             await POKE.delete_pipei_uid(diuid)
             await bot.send(mes)
