@@ -1528,7 +1528,7 @@ async def give_info_di(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
-    mes = f'{myinfo[0]}使用了技能{jineng}\n'
+    mes = f'{myinfo[0]}使用了技能{jineng}'
     zt_mingzhong = 0
     if dizhuangtai[0][0] == '无' or int(dizhuangtai[0][1]) == 0:
         zt_mingzhong = await get_teshu_zt(100, kwargs['ztname'], diinfo[1])

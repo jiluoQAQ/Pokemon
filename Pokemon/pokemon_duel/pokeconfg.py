@@ -825,8 +825,9 @@ async def pokemon_fight(
             diinfo, myinfo, dijinenglist, myjinenglist, changdi
         )
         jinenginfo2 = JINENG_LIST[jineng2]
-
-        mesg = mesg + f'\n回合：{shul}\n'
+        if shul > 1:
+            mesg = mesg + '\n'
+        mesg = mesg + f'>回合：{shul}'
         shul = shul + 1
         mysd = await get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
         if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
@@ -867,10 +868,11 @@ async def pokemon_fight(
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
                     if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
-                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                        my_mesg = my_mesg + f'\n>{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
                         mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
-                        my_mesg = my_mesg + mes
+                        mes = mes.replace('\n','\n>')
+                        my_mesg = my_mesg + "\n>" + mes
                 else:
                     if (
                         myzhuangtai[0][0] == '混乱'
@@ -886,7 +888,8 @@ async def pokemon_fight(
                         ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
-                        my_mesg = my_mesg + '\n' + mes
+                        mes = mes.replace('\n','\n>')
+                        my_mesg = my_mesg + '\n>' + mes
                     else:
                         my_mesg = (
                             my_mesg
@@ -900,10 +903,11 @@ async def pokemon_fight(
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
                     if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
-                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                        di_mesg = di_mesg + f'\n>{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
-                        di_mesg = '\n' + di_mesg + mes
+                        mes = mes.replace('\n','\n>')
+                        di_mesg = di_mesg + "\n>" + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -919,11 +923,12 @@ async def pokemon_fight(
                         ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
-                        di_mesg = '\n' + di_mesg + '\n' + mes
+                        mes = mes.replace('\n','\n>')
+                        di_mesg = di_mesg + '\n>' + mes
                     else:
                         di_mesg = (
                             di_mesg
-                            + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
+                            + f'\n>{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
                 if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
@@ -934,10 +939,11 @@ async def pokemon_fight(
                 dichushou = await get_chushou_flag(dizhuangtai)
                 if dichushou == 1:
                     if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
-                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                        di_mesg = di_mesg + f'\n>{diinfo[0]}使用了技能{jineng2}，技能发动失败'
                     else:
                         mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
-                        di_mesg = di_mesg + mes
+                        mes = mes.replace('\n','\n>')
+                        di_mesg = di_mesg + "\n>" + mes
                 else:
                     if (
                         dizhuangtai[0][0] == '混乱'
@@ -953,7 +959,8 @@ async def pokemon_fight(
                         ) = await get_hunluan_sh(
                             diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
                         )
-                        di_mesg = di_mesg + '\n' + mes
+                        mes = mes.replace('\n','\n>')
+                        di_mesg = di_mesg + '\n>' + mes
                     else:
                         di_mesg = (
                             di_mesg
@@ -967,10 +974,11 @@ async def pokemon_fight(
                 mychushou = await get_chushou_flag(myzhuangtai)
                 if mychushou == 1:
                     if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
-                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                        my_mesg = my_mesg + f'\n>{myinfo[0]}使用了技能{jineng1}，技能发动失败'
                     else:
                         mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
-                        my_mesg = '\n' + my_mesg + mes
+                        mes = mes.replace('\n','\n>')
+                        my_mesg = my_mesg + "\n>" + mes
                 else:
                     if (
                         myzhuangtai[0][0] == '混乱'
@@ -986,11 +994,11 @@ async def pokemon_fight(
                         ) = await get_hunluan_sh(
                             myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
                         )
-                        my_mesg = '\n' + my_mesg + '\n' + mes
+                        my_mesg = my_mesg + '\n>' + mes
                     else:
                         my_mesg = (
                             my_mesg
-                            + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
+                            + f'\n>{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
                 if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
@@ -1013,7 +1021,8 @@ async def pokemon_fight(
             ) = await get_zhuangtai_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
-            changdi_mesg = changdi_mesg + mes + '\n'
+            mes = mes.replace('\n','\n>')
+            changdi_mesg = changdi_mesg + "\n>" + mes
         if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
@@ -1032,7 +1041,8 @@ async def pokemon_fight(
             ) = await get_zhuangtai_sh(
                 diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
             )
-            changdi_mesg = changdi_mesg + mes + '\n'
+            mes = mes.replace('\n','\n>')
+            changdi_mesg = changdi_mesg + "\n>" + mes
         if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
@@ -1051,7 +1061,8 @@ async def pokemon_fight(
             ) = await get_tianqi_sh(
                 myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
             )
-            changdi_mesg = changdi_mesg + mes + '\n'
+            mes = mes.replace('\n','\n>')
+            changdi_mesg = changdi_mesg + "\n>" + mes
         if myinfo[17] <= 0 or diinfo[17] <= 0:
             jieshu = 1
 
@@ -1064,7 +1075,7 @@ async def pokemon_fight(
             if myshengyuyc == 0:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n'
+                    + f'\n>{myinfo[0]}的{myzhuangtai[0][0]}状态解除了'
                 )
                 myzhuangtai[0][0] = '无'
                 myzhuangtai[0][1] = 0
@@ -1080,7 +1091,7 @@ async def pokemon_fight(
             if dishengyuyc == 0:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n'
+                    + f'\n>{diinfo[0]}的{dizhuangtai[0][0]}状态解除了'
                 )
                 dizhuangtai[0][0] = '无'
                 dizhuangtai[0][1] = 0
@@ -1096,7 +1107,7 @@ async def pokemon_fight(
             if myshengyuyc == 0:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n'
+                    + f'\n>{myinfo[0]}的{myzhuangtai[0][0]}状态解除了'
                 )
                 myzhuangtai[1][0] = '无'
                 myzhuangtai[1][1] = 0
@@ -1112,7 +1123,7 @@ async def pokemon_fight(
             if dishengyuyc == 0:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n'
+                    + f'\n>{diinfo[0]}的{dizhuangtai[0][0]}状态解除了'
                 )
                 dizhuangtai[1][0] = '无'
                 dizhuangtai[1][1] = 0
@@ -1128,7 +1139,7 @@ async def pokemon_fight(
             if suiji <= 20:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n'
+                    + f'\n>{myinfo[0]}的{myzhuangtai[0][0]}状态解除了'
                 )
                 myzhuangtai[0][0] = '无'
                 myzhuangtai[0][1] = 0
@@ -1142,7 +1153,7 @@ async def pokemon_fight(
             if suiji <= 20:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n'
+                    + f'\n>{diinfo[0]}的{dizhuangtai[0][0]}状态解除了'
                 )
                 dizhuangtai[0][0] = '无'
                 dizhuangtai[0][1] = 0
@@ -1151,25 +1162,25 @@ async def pokemon_fight(
             shengyutianqi = int(changdi[0][1]) - 1
             if shengyutianqi == 0:
                 changdi_mesg = (
-                    changdi_mesg + f'{changdi[0][0]}停止了，天气影响消失了\n'
+                    changdi_mesg + f'\n>{changdi[0][0]}停止了，天气影响消失了'
                 )
                 changdi[0][0] = '无天气'
                 changdi[0][1] = 99
             else:
                 changdi[0][1] = shengyutianqi
-                changdi_mesg = changdi_mesg + f'{changdi[0][0]}持续中\n'
+                changdi_mesg = changdi_mesg + f'\n>{changdi[0][0]}持续中'
         if shul > 10:
             jieshu = 1
             if diinfo[17] > myinfo[17]:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'战斗超时，{diinfo[0]}剩余血量大于{myinfo[0]}\n{diinfo[0]}获得了胜利'
+                    + f'\n>战斗超时，{diinfo[0]}剩余血量大于{myinfo[0]}\n>{diinfo[0]}获得了胜利'
                 )
                 myinfo[17] = 0
             else:
                 changdi_mesg = (
                     changdi_mesg
-                    + f'战斗超时，{myinfo[0]}剩余血量大于{diinfo[0]}\n{myinfo[0]}获得了胜利'
+                    + f'\n>战斗超时，{myinfo[0]}剩余血量大于{diinfo[0]}\n>{myinfo[0]}获得了胜利'
                 )
                 diinfo[17] = 0
         mesg = mesg + changdi_mesg
@@ -2751,9 +2762,9 @@ async def add_exp(uid, pokemonid, exp):
             break
     msg = ''
     if now_level < 100:
-        msg = f'获得了经验{exp}\n'
+        msg = f'\n获得了经验{exp}'
     if now_level > levelinfo[0]:
-        msg += f'等级提升到了{now_level}\n'
+        msg += f'\n等级提升到了{now_level}'
     if level_flag == 1:
         await POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
         # CE._add_exp_chizi(uid, last_exp)
@@ -3406,6 +3417,8 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
     while len(mypokelist) > 0 and len(dipokelist) > 0:
+        if changci > 1:
+            mesg += '\n'
         mesg += f'第{changci}场\n'
         changci += 1
         if len(myinfo) == 0:
@@ -3447,9 +3460,9 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
         mesg += mes
 
         if myinfo[17] <= 0:
-            mesg += f'\n{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            mesg += f'\n>{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
         if diinfo[17] <= 0:
-            mesg += f'\n{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
+            mesg += f'\n>{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             # 我方获得经验/努力值奖励
             mes, myinfo, mypokemon_info = await get_win_reward(
                 uid,
@@ -3459,7 +3472,9 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
                 bianhao2,
                 dipokemon_info[0],
             )
-            mesg += f'\n{mes}\n'
+            if mes != '':
+                mes = mes.replace('\n','\n>')
+                mesg += f'{mes}'
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
@@ -3537,7 +3552,7 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
     while len(mypokelist) > 0 and len(dipokelist) > 0:
-        mes = f'第{changci}场\n'
+        mes = f'\n第{changci}场\n'
         mes += f'{myname}剩余精灵{len(mypokelist)}只\n【首领】{POKEMON_LIST[dipokelist[0]][0]}剩余生命{len(dipokelist)}条\n'
         changci += 1
         if len(myinfo) == 0:

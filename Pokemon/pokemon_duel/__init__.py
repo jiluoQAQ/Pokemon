@@ -174,10 +174,10 @@ async def my_pokemon_list(bot, ev: Event):
     mypokelist = await POKE._get_pokemon_list(uid, page)
     mes = ''
     page = page + 1
-    mes += '您的精灵信息为(按等级与编号排序一页30只):'
+    mes += f'<@{uid}>您的精灵信息为(按等级与编号排序一页30只):'
     for pokemoninfo in mypokelist:
         startype = await POKE.get_pokemon_star(uid, pokemoninfo[0])
-        mes += f"\n[{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{CHARA_NAME[pokemoninfo[0]][0]}&reply=false&enter=true) (Lv.{pokemoninfo[1]})"
+        mes += f"\n[{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{CHARA_NAME[pokemoninfo[0]][1]}&reply=false&enter=true) (Lv.{pokemoninfo[1]})"
     if page_num > 1:
         mes += f'\n第({page}/{page_num})页'
     buttons = [
@@ -660,7 +660,7 @@ async def my_pokemon_egg_list(bot, ev: Event):
     page_num = math.floor(egg_num / 30) + 1
     mes = ''
     page = page + 1
-    mes += '您的精灵蛋信息为(一页只显示30种按数量和编号排序):\n'
+    mes += f"<@{uid}>您的精灵蛋信息为(一页只显示30种按数量和编号排序):\n"
     for pokemoninfo in myegglist:
         mes += f'{CHARA_NAME[pokemoninfo[0]][0]} 数量 {pokemoninfo[1]} [孵化] (mqqapi://aio/inlinecmd?command=宝可梦孵化{CHARA_NAME[pokemoninfo[0]][0]}&reply=false&enter=true)|[图鉴] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[pokemoninfo[0]][0]}&reply=false&enter=true) \n'
     if page_num > 1:

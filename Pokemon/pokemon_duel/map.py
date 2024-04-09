@@ -70,7 +70,7 @@ async def get_day_pokemon_refresh(bot, ev: Event):
     refresh_list = await POKE.get_map_refresh_list()
     mes = "当前大量出现信息"
     for refresh in refresh_list:
-        mes += f'\n[{CHARA_NAME[int(refresh[2])][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[int(refresh[2])][0]}&reply=false&enter=true) 在 [{refresh[0]}地区-{refresh[1]}] (mqqapi://aio/inlinecmd?command=前往{refresh[1]}&reply=false&enter=true) 大量出现了'
+        mes += f'\n[{CHARA_NAME[int(refresh[2])][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[int(refresh[2])][1]}&reply=false&enter=true) 在 [{refresh[0]}地区-{refresh[1]}] (mqqapi://aio/inlinecmd?command=前往{refresh[1]}&reply=false&enter=true) 大量出现了'
     mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
     buttons = [
         Button('前往', '前往', '前往', action=2),
@@ -181,7 +181,10 @@ async def map_my_info(bot, ev: Event):
             bianhao = int(bianhao)
             pokemon_info = await get_pokeon_info(uid, bianhao)
             startype = await POKE.get_pokemon_star(uid, bianhao)
-            mes += f'\n[{starlist[startype]}{CHARA_NAME[bianhao][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{CHARA_NAME[bianhao][0]}&reply=false&enter=true) Lv.{pokemon_info[0]}'
+            pokename = CHARA_NAME[bianhao][0]
+            if ')' in CHARA_NAME[bianhao][0]:
+                pokename = pokename.replace(')','\)')
+            mes += f'\n[{starlist[startype]}{CHARA_NAME[bianhao][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{pokename}&reply=false&enter=true) Lv.{pokemon_info[0]}'
     buttons = [
         Button('📖精灵状态', '精灵状态', '📖精灵状态', action=2),
         Button('📖我的精灵蛋', '我的精灵蛋', '📖我的精灵蛋', action=1),
