@@ -899,7 +899,7 @@ async def pokemon_fight(
                     else:
                         my_mesg = (
                             my_mesg
-                            + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
+                            + f'\n>{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
                         )
                 if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1
@@ -970,7 +970,7 @@ async def pokemon_fight(
                     else:
                         di_mesg = (
                             di_mesg
-                            + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
+                            + f'\n>{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
                         )
                 if myinfo[17] <= 0 or diinfo[17] <= 0:
                     jieshu = 1

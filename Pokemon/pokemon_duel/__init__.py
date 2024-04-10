@@ -61,6 +61,10 @@ async def pokemon_help(bot, ev: Event):
 async def pokemon_gonggao(bot, ev: Event):
     msg = """
        宝可梦小游戏更新公告：
+2024-4-10
+1.匹配对战中可以替换精灵
+2024-4-9
+1.完成匹配对战段位体系
 2024-4-1
 1.完成匹配对战
 2024-3-20
@@ -80,29 +84,8 @@ async def pokemon_gonggao(bot, ev: Event):
 1.添加部分天气的属性值加成
 2.添加神奥地区
 3.添加合众地区
-2024-3-1
-1.增加部分小彩蛋
-2024-2-26
-1.添加世界boss(测试用)
-2024-2-25
-1.添加平台数据转移功能(管理员)
-2.可以发红包了(pm发红包【红包口令】【红包金额】【红包数量】)
-2024-2-23
-1.完成首领挑战(周本)
-2.添加首领商店(货币为首领挑战掉落的首领币)
-3.添加金色王冠、银色王冠道具
-2024-2-21
-1.添加部分回复类技能效果
-2.宝可梦重开添加道具、学习机的重置
-3.修改打工获取的金币为根据自身训练家等级获取
-4.修改连续战队只获取一次努力值的bug
-5.消息发送方式【图片/文字】可以指令替换
  """
-    mes = "[回车指令](mqqapi://aio/inlinecmd?command=回车指令&reply=false&enter=true)"
-    buttons = [
-        Button('✅我是谁', '我是谁', '✅我是谁', action=1),
-    ]
-    await bot.send_option(mes, buttons)
+    await bot.send(msg)
     
     
 @sv_pokemon_duel.on_fullmatch(['小游戏帮助', '宝可梦小游戏帮助'])

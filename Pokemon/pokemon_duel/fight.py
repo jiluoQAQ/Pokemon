@@ -49,6 +49,7 @@ async def fight_help(bot, ev: Event):
 7、首领挑战(挑战该地点的首领，获胜可获得大量奖励)
 8、世界boss挑战(挑战世界boss，一级神，测试用)
 9、世界boss伤害排名(查看boss的伤害排名)
+10、匹配对战：与别的群的训练家对战
 
  """
     buttons = [
@@ -60,6 +61,7 @@ async def fight_help(bot, ev: Event):
         Button('训练家对战', '训练家对战', '训练家对战', action=2),
         Button('无级别对战', '无级别对战', '无级别对战', action=2),
         Button('限制级对战', '限制级对战', '限制级对战', action=2),
+        Button('匹配对战', '匹配对战', '匹配对战', action=2),
     ]
     await bot.send_option(msg, buttons)
 
@@ -1164,13 +1166,13 @@ async def pokemon_pk_pipei(bot, ev: Event):
         await POKE.update_pipei_flag(uid,diuid,fightid)
         fight_falg = 1
     else:
-        await bot.send('开始匹配中，匹配时间30秒')  
+        await bot.send('开始匹配中，匹配时间60秒')  
         await POKE._new_pipei_info(uid)
         fight_falg = 0
     
     if fight_falg == 0:
         try:
-            async with timeout(30):
+            async with timeout(60):
                 while fight_falg == 0:
                     pipeiinfo = await POKE.get_pipei_info(uid)
                     if pipeiinfo[0] != 0:

@@ -727,6 +727,9 @@ async def pokemon_fight_pipei(
             dipokenum = len(dipokelist)
             if diinfo[17] <= 0 and len(dipokelist) > 1:
                 await bot.send(f'{mes}\n等待{diname}更换精灵中')
+                mes = ''
+            else:
+                mes = mes + '\n'
             while dipokehp <= 0 and dipokenum > 0:
                 await asyncio.sleep(.5)
                 diinfo,dizhuangtai,jineng_use2 = await FIGHT.get_fight_info(fightid,diuid)
@@ -737,7 +740,7 @@ async def pokemon_fight_pipei(
                 return myinfo,mes
             diusepokeid = await get_poke_bianhao(diinfo[0])
             distartype = await POKE.get_pokemon_star(diuid, diusepokeid)
-            mes = f"{diname}派出了{starlist[distartype]}{diinfo[0]} Lv.{diinfo[2]}"
+            mes = f"{mes}{diname}派出了{starlist[distartype]}{diinfo[0]} Lv.{diinfo[2]}"
     return myinfo,mes
 
 async def fight_pk_pipei(
@@ -761,7 +764,6 @@ async def fight_pk_pipei(
                 if len(mypokelist) > 1:
                     bianhao1 = await get_new_pokemon_id(bot, ev, myuid, mypokelist, myname, mes)
                 else:
-                    await asyncio.sleep(.5)
                     bianhao1 = mypokelist[0]
             newpokeinfo = await FIGHT.get_fight_info_pokeid(fightid,myuid,bianhao1)
             if len(newpokeinfo) > 0:
