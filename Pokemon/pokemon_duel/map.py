@@ -169,7 +169,7 @@ async def map_my_info(bot, ev: Event):
     mes = ''
     mes += f'训练家名称:{name}\n'
     mes += f'训练家称号:{mychenghao}\n'
-    mes += f'当前段位:{myduanwei}\n'
+    mes += f'当前段位:{myduanwei}({mapinfo[3]})\n'
     mes += f'拥有金钱:{my_score}\n'
     mes += f'拥有徽章:{huizhang}\n'
     if mapinfo[1]:

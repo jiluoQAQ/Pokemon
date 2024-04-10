@@ -188,7 +188,7 @@ async def get_shanghai_zt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -207,11 +207,7 @@ async def get_shanghai_zt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -271,7 +267,7 @@ async def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -290,11 +286,7 @@ async def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -344,7 +336,7 @@ async def get_shanghai_pt_yh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = 1.5
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -363,11 +355,7 @@ async def get_shanghai_pt_yh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -416,7 +404,7 @@ async def get_shanghai_pt_yh_lx(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = 1.5
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -435,11 +423,7 @@ async def get_shanghai_pt_yh_lx(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
     shanghai = shanghai * int(kwargs['cishu'])
     
@@ -497,7 +481,7 @@ async def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -516,11 +500,7 @@ async def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -571,7 +551,7 @@ async def get_shanghai_pt_bh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -591,11 +571,7 @@ async def get_shanghai_pt_bh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -632,20 +608,39 @@ async def get_shanghai_pt_fs(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
     # print(myinfo)
     # print(diinfo)
+    mymaxhp = myinfo[3]
+    down_my_hp = math.ceil(myinfo[3] * 0.1)
+    if jineng == '挣扎':
+        now_my_hp = myinfo[17] - down_my_hp
+    else:
+        now_my_hp = max(1, myinfo[17] - down_my_hp)
+    last_my_hp = myinfo[17] - now_my_hp
     if ismingzhong == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
+        myinfo[17] = now_my_hp
+        mes = mes + f'{myinfo[0]}因为反作用力损伤了{last_my_hp}点血量'
+        if myinfo[17] < 0:
+            mes = mes + f'\n{myinfo[0]}失去了战斗能力'
+        else:
+            mes = mes + f'\n剩余血量{myinfo[17]}'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
     shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
+        myinfo[17] = now_my_hp
+        mes = mes + f'{myinfo[0]}因为反作用力损伤了{last_my_hp}点血量'
+        if myinfo[17] < 0:
+            mes = mes + f'\n{myinfo[0]}失去了战斗能力'
+        else:
+            mes = mes + f'\n剩余血量{myinfo[17]}'
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
     benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -664,11 +659,7 @@ async def get_shanghai_pt_fs(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -682,15 +673,12 @@ async def get_shanghai_pt_fs(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     if yaohai_xz > 1:
         mes = mes + '命中要害，'
     mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
-    mymaxhp = myinfo[3]
-    down_my_hp = math.ceil(myinfo[3] * 0.1)
-    now_my_hp = max(1, myinfo[17] - down_my_hp)
-    last_my_hp = myinfo[17] - now_my_hp
     myinfo[17] = now_my_hp
-    mes = (
-        mes
-        + f'{myinfo[0]}因为反作用力损伤了{last_my_hp}点血量\n剩余血量{myinfo[17]}'
-    )
+    mes = mes + f'{myinfo[0]}因为反作用力损伤了{last_my_hp}点血量'
+    if myinfo[17] < 0:
+        mes = mes + f'\n{myinfo[0]}失去了战斗能力'
+    else:
+        mes = mes + f'\n剩余血量{myinfo[17]}'
     if diinfo[17] > 0:
         mes = mes + f'\n{diinfo[0]}剩余血量{diinfo[17]}'
     else:
@@ -727,7 +715,7 @@ async def get_shanghai_pt_xh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -746,11 +734,7 @@ async def get_shanghai_pt_xh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -807,13 +791,15 @@ async def get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     # print('shuxing_xz:' + str(shuxing_xz))
     if shuxing_xz == 0:
         mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
+        if zt_mingzhong == 1:
+            mes = mes + f"\n{myinfo[0]}{kwargs['ztname']}了"
         return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
     benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
 
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -832,11 +818,7 @@ async def get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -889,7 +871,7 @@ async def get_sbshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, ch
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -911,11 +893,7 @@ async def get_sbshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, ch
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][0] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -964,7 +942,7 @@ async def get_lxshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, ch
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -983,11 +961,7 @@ async def get_lxshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, ch
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][0] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     cishu = int(math.floor(random.uniform(kwargs['csmim'], kwargs['csmax'] + 1)))
@@ -1038,7 +1012,7 @@ async def get_shanghai_sxj(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, cha
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -1078,11 +1052,7 @@ async def get_shanghai_sxj(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, cha
     )
     shanghai = shanghai1 + shanghai2 + shanghai3
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][0] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -1331,7 +1301,7 @@ async def up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -1350,11 +1320,7 @@ async def up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -1418,7 +1384,7 @@ async def dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,chan
     # print('benxi_xz:' + str(benxi_xz))
     yaohai_xz = await get_yaohai(myinfo[14])
     # print('yaohai_xz:' + str(yaohai_xz))
-    if jinenginfo[1] == '物理':
+    if str(jinenginfo[1]) == '物理':
         myatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
         didef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
     else:
@@ -1437,11 +1403,7 @@ async def dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if (
-        myzhuangtai[0][1] > 0
-        and myzhuangtai[0][1] == '灼伤'
-        and jinenginfo[1] == '物理'
-    ):
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai

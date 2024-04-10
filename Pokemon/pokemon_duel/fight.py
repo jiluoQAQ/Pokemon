@@ -1152,7 +1152,7 @@ async def pokemon_pk_pipei(bot, ev: Event):
         for uidinfo in pipeilist:
             dimap = await POKE._get_map_now(uidinfo[0])
             pipei_cb = int(mypipeinum) - int(dimap[3])
-            if pipei_cb <= 300 and pipei_cb >= -300:
+            if pipei_cb < 250 and pipei_cb > -250:
                 uidlist.append(uidinfo[0])
     if len(uidlist) > 0:
         await bot.send('开始匹配中，匹配时间30秒')  
@@ -1237,6 +1237,7 @@ async def pokemon_pk_pipei(bot, ev: Event):
             return await bot.send('您取消了对战')
         
         if xuanze == '同意对战':
+            await FIGHT.new_fight_uid(fightid, uid)
             await POKE.update_pipei_fight(uid,1)
             await bot.send('您同意了对战，等待对手确认中')
         
@@ -1275,7 +1276,10 @@ async def pokemon_pk_pipei(bot, ev: Event):
             if str(myduanwei) == str(diduanwei):
                 add_pipei_num = 20
             else:
-                add_pipei_num = 30
+                if mymapinfo[3] > dimapinfo[3]:
+                    add_pipei_num = 15
+                else:
+                    add_pipei_num = 25
             if mypokenum == 0 and dipokenum == 0:
                 mes += "\n双方同时失去战斗能力，平局"
             if mypokenum > 0 and dipokenum == 0:
