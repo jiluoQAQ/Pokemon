@@ -1008,6 +1008,25 @@ class PokeCounter:
         else:
             return 0
     
+    async def get_map_pipei_list(self):
+        connection = await aiosqlite.connect(DB_PATH)
+        cursor = await connection.execute(f"SELECT UID,PIPEI FROM POKEMON_MAP WHERE PIPEI>0")
+        r = await cursor.fetchall()
+        await connection.close()
+        if r:
+            return r
+        else:
+            return 0
+    
+    async def update_map_pipei(self, uid, pipei_num):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKEMON_MAP SET PIPEI = {pipei_num} WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
     async def update_map_pipei_num(self, uid, pipei):
         pipei_num = await self.get_map_pipei_num(uid) + pipei
         pipei_num = max(0, pipei_num)

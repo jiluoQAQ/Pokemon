@@ -70,7 +70,9 @@ async def get_day_pokemon_refresh(bot, ev: Event):
     refresh_list = await POKE.get_map_refresh_list()
     mes = "当前大量出现信息"
     for refresh in refresh_list:
-        mes += f'\n[{CHARA_NAME[int(refresh[2])][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[int(refresh[2])][1]}&reply=false&enter=true) 在 [{refresh[0]}地区-{refresh[1]}] (mqqapi://aio/inlinecmd?command=前往{refresh[1]}&reply=false&enter=true) 大量出现了'
+        pokename = CHARA_NAME[int(refresh[2])][1]
+        pokename = pokename.replace(')','）')
+        mes += f'\n[{CHARA_NAME[int(refresh[2])][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{pokename}&reply=false&enter=true) 在 [{refresh[0]}地区-{refresh[1]}] (mqqapi://aio/inlinecmd?command=前往{refresh[1]}&reply=false&enter=true) 大量出现了'
     mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
     buttons = [
         Button('前往', '前往', '前往', action=2),
@@ -185,7 +187,8 @@ async def map_my_info(bot, ev: Event):
             startype = await POKE.get_pokemon_star(uid, bianhao)
             pokename = CHARA_NAME[bianhao][0]
             if ')' in CHARA_NAME[bianhao][0]:
-                pokename = pokename.replace(')','\)')
+                pokename = CHARA_NAME[int(refresh[2])][1]
+                pokename = pokename.replace(')','）')
             mes += f'\n[{starlist[startype]}{CHARA_NAME[bianhao][0]}] (mqqapi://aio/inlinecmd?reply=false&enter=true&command=精灵状态{pokename}) Lv.{pokemon_info[0]}'
     buttons = [
         Button('📖精灵状态', '精灵状态', '📖精灵状态', action=2),
@@ -1764,6 +1767,29 @@ async def get_day_pokemon_refresh_send(bot, ev: Event):
         except Exception as e:
             logger.warning(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
 
+@scheduler.scheduled_job('cron', day_of_week ='6', hour='23', minute='59',second='0')
+async def pokemon_every_week():
+    pipeilist = await POKE.get_map_pipei_list()
+    for detail in pipeilist:
+        diduanwei = await get_now_duanwei(detail[1])
+        if diduanwei == '新手级':
+            add_score = 1000000
+            new_pipei_num = 0
+        elif diduanwei == '精灵球级':
+            add_score = 2000000
+            new_pipei_num = 0
+        elif diduanwei == '超级球级':
+            add_score = 3000000
+            new_pipei_num = 200
+        elif diduanwei == '高级球级':
+            add_score = 4000000
+            new_pipei_num = 400
+        elif diduanwei == '大师球级':
+            add_score = 5000000
+            new_pipei_num = 600
+        await SCORE.update_score(detail[0], add_score)
+        await POKE.update_map_pipei(detail[0], new_pipei_num)
+        
 # 每日定点执行每日大量出现精灵刷新
 @scheduler.scheduled_job('cron', hour ='*')
 async def refresh_pokemon_day():

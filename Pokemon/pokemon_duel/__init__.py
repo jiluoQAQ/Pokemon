@@ -162,7 +162,8 @@ async def my_pokemon_list(bot, ev: Event):
         startype = await POKE.get_pokemon_star(uid, pokemoninfo[0])
         pokename = CHARA_NAME[pokemoninfo[0]][0]
         if ')' in pokename:
-            pokename = pokename.replace(')','\)')
+            pokename = CHARA_NAME[int(refresh[2])][1]
+            pokename = pokename.replace(')','）')
         mes += f"\n[{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{pokename}&reply=false&enter=true) (Lv.{pokemoninfo[1]})"
     if page_num > 1:
         mes += f'\n第({page}/{page_num})页'
@@ -187,6 +188,7 @@ async def show_poke_info(bot, ev: Event):
     if len(args) != 1:
         return await bot.send('请输入 精灵图鉴+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
+    pokename = pokename.replace('）',')').replace('（','(')
     uid = ev.user_id
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
@@ -211,6 +213,7 @@ async def show_poke_info_star(bot, ev: Event):
     if len(args) != 1:
         return await bot.send('请输入 闪光图鉴+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
+    pokename = pokename.replace('）',')').replace('（','(')
     uid = ev.user_id
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
@@ -235,6 +238,7 @@ async def get_my_poke_info_t(bot, ev: Event):
     if len(args) != 1:
         return await bot.send('请输入 精灵状态+宝可梦名称 中间用空格隔开。', at_sender=True)
     pokename = args[0]
+    pokename = pokename.replace('）',')').replace('（','(')
     uid = ev.user_id
     bianhao = await get_poke_bianhao(pokename)
     if bianhao == 0:
@@ -1056,7 +1060,7 @@ async def get_pokemon_xingtai_list(bot, ev: Event):
                 fpokemonid = int(str(pokemonid)[0:-3])
                 pokename2 = CHARA_NAME[pokemonid][0]
                 if ')' in pokename2:
-                    pokename2 = pokename2.replace(')','\)')
+                    pokename2 = pokename.replace(')','）')
                 mes += f"\n[{CHARA_NAME[fpokemonid][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{CHARA_NAME[fpokemonid][0]}&reply=false&enter=true)可转换为[{CHARA_NAME[pokemonid][0]}] (mqqapi://aio/inlinecmd?reply=false&enter=true&command=精灵图鉴{pokename2})"
     buttons = [
         Button('🔄形态转换', '形态转换', '🔄形态转换', action=2),
