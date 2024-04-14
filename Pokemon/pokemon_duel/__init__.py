@@ -162,7 +162,6 @@ async def my_pokemon_list(bot, ev: Event):
         startype = await POKE.get_pokemon_star(uid, pokemoninfo[0])
         pokename = CHARA_NAME[pokemoninfo[0]][0]
         if ')' in pokename:
-            pokename = CHARA_NAME[int(refresh[2])][1]
             pokename = pokename.replace(')','）')
         mes += f"\n[{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]}] (mqqapi://aio/inlinecmd?command=精灵状态{pokename}&reply=false&enter=true) (Lv.{pokemoninfo[1]})"
     if page_num > 1:
