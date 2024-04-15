@@ -187,7 +187,6 @@ async def map_my_info(bot, ev: Event):
             startype = await POKE.get_pokemon_star(uid, bianhao)
             pokename = CHARA_NAME[bianhao][0]
             if ')' in CHARA_NAME[bianhao][0]:
-                pokename = CHARA_NAME[int(refresh[2])][1]
                 pokename = pokename.replace(')','）')
             mes += f'\n[{starlist[startype]}{CHARA_NAME[bianhao][0]}] (mqqapi://aio/inlinecmd?reply=false&enter=true&command=精灵状态{pokename}) Lv.{pokemon_info[0]}'
     buttons = [
