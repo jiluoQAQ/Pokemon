@@ -70,7 +70,7 @@ async def get_day_pokemon_refresh(bot, ev: Event):
     refresh_list = await POKE.get_map_refresh_list()
     mes = "当前大量出现信息"
     for refresh in refresh_list:
-        pokename = CHARA_NAME[int(refresh[2])][1]
+        pokename = CHARA_NAME[int(refresh[2])][0]
         pokename = pokename.replace(')','）')
         mes += f'\n[{CHARA_NAME[int(refresh[2])][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{pokename}&reply=false&enter=true) 在 [{refresh[0]}地区-{refresh[1]}] (mqqapi://aio/inlinecmd?command=前往{refresh[1]}&reply=false&enter=true) 大量出现了'
     mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
