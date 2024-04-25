@@ -72,8 +72,7 @@ async def get_day_pokemon_refresh(bot, ev: Event):
     for refresh in refresh_list:
         pokename = CHARA_NAME[int(refresh[2])][0]
         pokename = pokename.replace(')','）')
-        mes += f'\n[{CHARA_NAME[int(refresh[2])][0]}] (mqqapi://aio/inlinecmd?command=精灵图鉴{pokename}&reply=false&enter=true) 在 [{refresh[0]}地区-{refresh[1]}] (mqqapi://aio/inlinecmd?command=前往{refresh[1]}&reply=false&enter=true) 大量出现了'
-    mes += '\n可输入[标记消息推送]每次刷新会自动推送宝可梦大量出现信息'
+        mes += f'\n{CHARA_NAME[int(refresh[2])][0]} 在 {refresh[0]}地区-{refresh[1]}大量出现了'
     buttons = [
         Button('前往', '前往', '前往', action=2),
     ]
@@ -188,7 +187,7 @@ async def map_my_info(bot, ev: Event):
             pokename = CHARA_NAME[bianhao][0]
             if ')' in CHARA_NAME[bianhao][0]:
                 pokename = pokename.replace(')','）')
-            mes += f'\n[{starlist[startype]}{CHARA_NAME[bianhao][0]}] (mqqapi://aio/inlinecmd?reply=false&enter=true&command=精灵状态{pokename}) Lv.{pokemon_info[0]}'
+            mes += f'\n{starlist[startype]}{CHARA_NAME[bianhao][0]} Lv.{pokemon_info[0]}'
     buttons = [
         Button('📖精灵状态', '精灵状态', '📖精灵状态', action=2),
         Button('📖我的精灵蛋', '我的精灵蛋', '📖我的精灵蛋', action=1),
@@ -1417,7 +1416,8 @@ async def show_map_info_now(bot, ev: Event):
     for didianname in didianlist:
         didianinfo = didianlist[didianname]
         if didianinfo['fname'] == diquname:
-            mes += f"\n[{didianname}] (mqqapi://aio/inlinecmd?command=前往{didianname}&reply=false&enter=true)"
+            # mes += f"\n[{didianname}] (mqqapi://aio/inlinecmd?command=前往{didianname}&reply=false&enter=true)"
+            mes += f"\n{didianname}"
             if didianinfo['type'] == '城镇':
                 mes += f" {didianinfo['type']}"
                 if int(didianinfo['need']) >= 10:
@@ -1456,7 +1456,8 @@ async def pokemom_map_info_have(bot, ev: Event):
         didianinfo = didianlist[didianname]
         if didianinfo['type'] == '野外':
             if bianhao in didianinfo['pokemon']:
-                mes += f"\n[{didianinfo['fname']}-{didianname}] (mqqapi://aio/inlinecmd?command=前往{didianname}&reply=false&enter=true)"
+                # mes += f"\n[{didianinfo['fname']}-{didianname}] (mqqapi://aio/inlinecmd?command=前往{didianname}&reply=false&enter=true)"
+                mes += f"\n{didianinfo['fname']}-{didianname}"
                 if int(didianinfo['need']) >= 10:
                     mes += f" 成为冠军后"
                 else:
@@ -1848,4 +1849,4 @@ async def refresh_pokemon_day():
                     '',
                 )
         except Exception as e:
-            logger.warning(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
+            print(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
