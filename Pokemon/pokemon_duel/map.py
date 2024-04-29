@@ -1770,23 +1770,49 @@ async def get_day_pokemon_refresh_send(bot, ev: Event):
 @scheduler.scheduled_job('cron', day_of_week ='6', hour='23', minute='59',second='0')
 async def pokemon_every_week():
     pipeilist = await POKE.get_map_pipei_list()
+    now = datetime.now(pytz.timezone('Asia/Shanghai'))
+    nowday = now.day
+    monthflag = 0
+    if now.day <= 7: #每月1号结算
+        monthflag = 1
     for detail in pipeilist:
         diduanwei = await get_now_duanwei(detail[1])
         if diduanwei == '新手级':
             add_score = 1000000
             new_pipei_num = 0
+            if monthflag == 1:
+                add_score = 10000000
+                new_pipei_num = 0
         elif diduanwei == '精灵球级':
             add_score = 2000000
             new_pipei_num = 0
+            if monthflag == 1:
+                add_score = 20000000
+                new_pipei_num = 0
+                await POKE._add_pokemon_prop(detail[0], '银色王冠', 1)
         elif diduanwei == '超级球级':
             add_score = 3000000
             new_pipei_num = 200
+            if monthflag == 1:
+                add_score = 30000000
+                new_pipei_num = 0
+                await POKE._add_pokemon_prop(detail[0], '银色王冠', 2)
         elif diduanwei == '高级球级':
             add_score = 4000000
             new_pipei_num = 400
+            if monthflag == 1:
+                add_score = 40000000
+                new_pipei_num = 0
+                await POKE._add_pokemon_prop(detail[0], '金色王冠', 1)
+                await POKE._add_pokemon_prop(detail[0], '银色王冠', 1)
         elif diduanwei == '大师球级':
             add_score = 5000000
             new_pipei_num = 600
+            if monthflag == 1:
+                add_score = 50000000
+                new_pipei_num = 0
+                await POKE._add_pokemon_prop(detail[0], '金色王冠', 2)
+                await POKE._add_pokemon_prop(detail[0], '银色王冠', 2)
         await SCORE.update_score(detail[0], add_score)
         await POKE.update_map_pipei(detail[0], new_pipei_num)
         
