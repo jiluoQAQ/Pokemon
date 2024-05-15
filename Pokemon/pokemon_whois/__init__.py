@@ -217,11 +217,18 @@ async def get_pokemon_ts(name, cc_type):
     if cc_type == '等级技能':
         len_dengji_jn = LEVEL_JINENG_LIST[pokeid]
         jn_num = len(len_dengji_jn)
-        if jn_num > 2:
-            dengji_jn_list = random.sample(len_dengji_jn, 3)
-            mes = '精灵'
+        if jn_num > 3:
+            dengji_jn_list = random.sample(len_dengji_jn, 4)
+            mes = '精灵通过升级可以学习的其中4个技能为：'
             for jn_info in dengji_jn_list:
-                mes += f'{jn_info[0]}级可学技能{jn_info[1]} '
+                mes += f'{jn_info[1]} '
+        else:
+            if jn_num == 0:
+                mes = '精灵没有通过升级可以学习的技能'
+            else:
+                mes = f'精灵通过升级可以学习的{jn_num}个技能为：'
+                for jn_info in len_dengji_jn:
+                    mes += f'{jn_info[1]} 
     if cc_type == '特性':
         tx_list = POKETX_LIST[pokeid][0]
         tx_name = random.sample(tx_list, 1)[0]
@@ -246,7 +253,7 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
     winner_judger_cc.set_correct_win_pic(ev.group_id, win_mes)
     print(name)
     cc_list = ['属性','种族高','种族低','名字','等级技能','特性']
-    mes = '下面每隔10秒会提示精灵的信息，总共6条，猜测这是哪只精灵'
+    mes = '下面每隔15秒会提示精灵的信息，总共6条，猜测这是哪只精灵'
     await bot.send(mes)
     cc_flag = 0
     buttons_a = [
@@ -262,7 +269,7 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
         mes = f'提示{index}：{ts_mes}'
         await bot.send_option(mes, buttons_a)
         try:
-            async with timeout(10):
+            async with timeout(15):
                 while True:
                     resp = await bot.receive_mutiply_resp()
                     if resp is not None:
