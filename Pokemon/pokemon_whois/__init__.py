@@ -228,7 +228,7 @@ async def get_pokemon_ts(name, cc_type):
             else:
                 mes = f'精灵通过升级可以学习的{jn_num}个技能为：'
                 for jn_info in len_dengji_jn:
-                    mes += f'{jn_info[1]} 
+                    mes += f'{jn_info[1]} '
     if cc_type == '特性':
         tx_list = POKETX_LIST[pokeid][0]
         tx_name = random.sample(tx_list, 1)[0]
