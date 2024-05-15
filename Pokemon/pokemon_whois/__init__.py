@@ -256,7 +256,7 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
         Button('✅再来一局', '猜精灵', action=1),
         Button('📖查看图鉴', f'精灵图鉴{name}', action=1),
     ]
-    for index in range(1,6):
+    for index in range(1,7):
         cc_type = random.sample(cc_list, 1)[0]
         ts_mes = await get_pokemon_ts(name,cc_type)
         mes = f'提示{index}：{ts_mes}'
