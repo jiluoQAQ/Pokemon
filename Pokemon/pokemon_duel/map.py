@@ -1680,6 +1680,39 @@ async def give_prop_pokemon_info_all(bot, ev: Event):
         mes = f'奖励发放成功！总计{game_user_num}名玩家(徽章1枚及以上)，获得了 {propname}精灵蛋x{propnum}。'
     await bot.send(mes)
 
+@sv_pm_config.on_command(['发放精灵'])
+async def give_pokemon_gm(bot, ev: Event):
+    args = ev.text.split()
+    snickname = args[0]
+    smapinfo = await POKE._get_map_info_nickname(snickname)
+    if smapinfo[2] == 0:
+        return await bot.send('没有找到该训练家，请输入 正确的训练家昵称或at该名训练家。',at_sender=True)
+    suid = smapinfo[2]
+    sname = snickname
+    propname = args[1]
+    bianhao = await get_poke_bianhao(propname)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    pokemon_info = []
+    pokemon_info.append(args[2])
+    pokemon_info.append(args[3])
+    pokemon_info.append(args[4])
+    pokemon_info.append(args[5])
+    pokemon_info.append(args[6])
+    pokemon_info.append(args[7])
+    pokemon_info.append(args[8])
+    pokemon_info.append(args[9])
+    pokemon_info.append(args[10])
+    pokemon_info.append(args[11])
+    pokemon_info.append(args[12])
+    pokemon_info.append(args[13])
+    pokemon_info.append(args[14])
+    pokemon_info.append(args[15])
+    pokemon_info.append(args[16])
+    await POKE._add_pokemon_info(suid, bianhao, pokemon_info)
+    mes = f"精灵发放成功，{sname}获得了{propname} Lv.{args[2]}"
+    await bot.send(mes)
+
 @sv_pm_config.on_command(['数据转移'])
 async def update_pokemon_info(bot, ev: Event):
     args = ev.text.split()
@@ -1781,27 +1814,27 @@ async def pokemon_every_week():
             add_score = 1000000
             new_pipei_num = 0
             if monthflag == 1:
-                add_score = 10000000
+                add_score = 11000000
                 new_pipei_num = 0
         elif diduanwei == '精灵球级':
             add_score = 2000000
             new_pipei_num = 0
             if monthflag == 1:
-                add_score = 20000000
+                add_score = 22000000
                 new_pipei_num = 0
                 await POKE._add_pokemon_prop(detail[0], '银色王冠', 1)
         elif diduanwei == '超级球级':
             add_score = 3000000
             new_pipei_num = 200
             if monthflag == 1:
-                add_score = 30000000
+                add_score = 33000000
                 new_pipei_num = 0
                 await POKE._add_pokemon_prop(detail[0], '银色王冠', 2)
         elif diduanwei == '高级球级':
             add_score = 4000000
             new_pipei_num = 400
             if monthflag == 1:
-                add_score = 40000000
+                add_score = 44000000
                 new_pipei_num = 0
                 await POKE._add_pokemon_prop(detail[0], '金色王冠', 1)
                 await POKE._add_pokemon_prop(detail[0], '银色王冠', 1)
@@ -1809,7 +1842,7 @@ async def pokemon_every_week():
             add_score = 5000000
             new_pipei_num = 600
             if monthflag == 1:
-                add_score = 50000000
+                add_score = 55000000
                 new_pipei_num = 0
                 await POKE._add_pokemon_prop(detail[0], '金色王冠', 2)
                 await POKE._add_pokemon_prop(detail[0], '银色王冠', 2)
