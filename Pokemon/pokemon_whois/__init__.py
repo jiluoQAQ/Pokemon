@@ -231,7 +231,7 @@ async def get_pokemon_ts(name, cc_type):
                     mes += f'{jn_info[1]} '
     if cc_type == '特性':
         tx_list = POKETX_LIST[pokeid]
-        if len(tx_list[1]) is not None:
+        if len(tx_list[1]) > 0:
             catch_num = int(math.floor(random.uniform(0, 100)))
             if catch_num <= 50:
                 tx_name = random.sample(tx_list[1], 1)[0]
