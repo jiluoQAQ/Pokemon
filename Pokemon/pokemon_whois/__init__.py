@@ -2,7 +2,7 @@ import random
 import asyncio
 import importlib
 from os import path
-
+import math
 import pygtrie
 from gsuid_core.sv import SV
 from gsuid_core.bot import Bot
@@ -230,9 +230,18 @@ async def get_pokemon_ts(name, cc_type):
                 for jn_info in len_dengji_jn:
                     mes += f'{jn_info[1]} '
     if cc_type == '特性':
-        tx_list = POKETX_LIST[pokeid][0]
-        tx_name = random.sample(tx_list, 1)[0]
-        mes = f'精灵其中一个普通特性有{tx_name}'
+        tx_list = POKETX_LIST[pokeid]
+        if len(tx_list[1]) is not None:
+            catch_num = int(math.floor(random.uniform(0, 100)))
+            if catch_num <= 50:
+                tx_name = random.sample(tx_list[1], 1)[0]
+                mes = f'精灵的隐藏特性为{tx_name}'
+            else:
+                tx_name = random.sample(tx_list[0], 1)[0]
+                mes = f'精灵其中一个普通特性为{tx_name}'
+        else:
+            tx_name = random.sample(tx_list[0], 1)[0]
+            mes = f'精灵其中一个普通特性为{tx_name}'
     return mes
     
 @sv_pokemon_whois.on_fullmatch('猜精灵')
@@ -285,7 +294,7 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
                             and winner_judger_cc.get_winner(ev.group_id) == ''
                         ):
                             GAME = GAME_DB()
-                            win_num = await GAME.update_game_num(uid, 'whoiscc')
+                            win_num = await GAME.update_game_num(uid, 'whocc')
                             mesg_d = []
                             mesg = ''
                             if daily_whois_limiter.check(uid):
@@ -301,12 +310,12 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
                             mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
-                            chongsheng_num = await POKE.get_chongsheng_num(uid,150)
-                            if chongsheng_num >= 999:
-                                await POKE._add_pokemon_egg(uid, 150, 1)
-                                mes += f'\n{myname}获得了超梦精灵蛋x1'
-                                await POKE._new_chongsheng_num(uid,150)
-                            await POKE.update_chongsheng(uid,150,1)
+                            chongsheng_num = await POKE.get_chongsheng_num(uid,151)
+                            if chongsheng_num >= 233:
+                                await POKE._add_pokemon_egg(uid, 151, 1)
+                                mes += f'\n{myname}获得了梦幻精灵蛋x1'
+                                await POKE._new_chongsheng_num(uid,151)
+                            await POKE.update_chongsheng(uid,151,1)
                             mesg_d.append(MessageSegment.text(mes))
                             mesg_d.append(MessageSegment.image(win_mes))
                             await bot.send_option(mesg_d, buttons_d)
@@ -477,3 +486,11 @@ async def cz_pokemon_whois(bot: Bot, ev: Event):
         Button('✅我是谁', '我是谁'),
     ]
     await bot.send_option('重置成功，请重新发送我是谁开始新一轮游戏', buttons)
+
+@sv_pokemon_whois.on_fullmatch('重置猜精灵')
+async def cz_pokemon_whoiscc(bot: Bot, ev: Event):
+    winner_judger_cc.turn_off(ev.group_id)
+    buttons = [
+        Button('✅猜精灵', '猜精灵'),
+    ]
+    await bot.send_option('重置成功，请重新发送猜精灵开始新一轮游戏', buttons)
