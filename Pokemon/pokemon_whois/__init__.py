@@ -222,12 +222,21 @@ listshuxing = ['一般','飞行','火','超能力','水','虫','电','岩石','�
 
 huanshoulist = ['梦幻','时拉比','基拉祈','霏欧纳','	代欧奇希斯','达克莱伊','谢米','比克提尼','凯路迪欧','美洛耶塔','盖诺赛克特','蒂安希','波尔凯尼恩','玛机雅娜','玛夏多','捷拉奥拉','美录坦','萨戮德','桃歹郎']
 
-async def get_pokemon_tssx(atkshux, sxlist):
-    kezhilist = SHUXING_LIST[atkshux]
-    beilv = 1
-    for shuxing in sxlist:
-        beilv = beilv * float(kezhilist[shuxing])
-
+async def get_pokemon_tssx(sxlist, cc_list):
+    shux_flag = 0
+    while shux_flag == 0 and len(cc_list) > 0:
+        atkshux = random.sample(cc_list, 1)[0]
+        kezhilist = SHUXING_LIST[atkshux]
+        beilv = 1
+        kezhi_flag = 0
+        for shuxing in sxlist:
+            if float(kezhilist[shuxing]) > 1 or float(kezhilist[shuxing]) < 1:
+                kezhi_flag = 1
+            beilv = beilv * float(kezhilist[shuxing])
+        if kezhi_flag == 1:
+            shux_flag = 1
+        cc_list.remove(atkshux)
+    
     if beilv > 1:
         mes = f"被{atkshux}属性攻击{beilv}倍克制"
     if beilv == 1:
@@ -236,7 +245,7 @@ async def get_pokemon_tssx(atkshux, sxlist):
         mes = f"只承受{atkshux}属性攻击{beilv}倍伤害"
     if beilv == 0:
         mes = f"受到{atkshux}属性攻击无效果"
-    return mes
+    return cc_list,mes
 
 async def get_pokemon_ts(name, cc_type):
     pokeid = roster.get_id(name)
@@ -312,8 +321,8 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
         name_shux += f'{sxname} '
     winner_judger_sx.set_correct_shuxlist(ev.group_id, sxlist)
     print(sxlist)
-    cc_list = random.sample(listshuxing, 5)
-    mes = '下面每隔15秒会提示克制倍率，总共5条，猜测这是哪种属性组合'
+    cc_list = ['一般','飞行','火','超能力','水','虫','电','岩石','草','幽灵','冰','龙','格斗','恶','毒','钢','地面','妖精']
+    mes = '下面每隔15秒会提示克制倍率，最多5条，猜测这是哪种属性组合'
     await bot.send(mes)
     cc_flag = 0
     buttons_a = [
@@ -322,10 +331,10 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
     buttons_d = [
         Button('✅再来一局', '猜属性', action=1),
     ]
-    for index in range(1,6):
-        cc_type = random.sample(cc_list, 1)[0]
-        ts_mes = await get_pokemon_tssx(cc_type,sxlist)
-        mes = f'提示{index}：{ts_mes}'
+    index_num = 1
+    while index_num < 6 and len(cc_list) > 0:
+        cc_list, ts_mes = await get_pokemon_tssx(sxlist,cc_list)
+        mes = f'提示{index_num}：{ts_mes}'
         await bot.send_option(mes, buttons_a)
         try:
             async with timeout(15):
@@ -369,7 +378,7 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                             return
         except asyncio.TimeoutError:
             pass
-        cc_list.remove(cc_type)
+        index_num = index_num + 1
     if winner_judger_sx.get_winner(ev.group_id) != '':
         winner_judger_sx.turn_off(ev.group_id)
         return
