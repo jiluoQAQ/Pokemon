@@ -306,19 +306,14 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
         await bot.send('此轮游戏还没结束，请勿重复使用指令')
         return
     winner_judger_sx.turn_on(ev.group_id)
-    catch_num = int(math.floor(random.uniform(0, 100)))
-    if catch_num < 50:
-        shux_num = 1
-    else:
-        shux_num = 2
-    sxlist = random.sample(listshuxing, shux_num)
+    sxlist = random.sample(listshuxing, 2)
     name_shux = ''
     for sxname in sxlist:
         name_shux += f'{sxname} '
     winner_judger_sx.set_correct_shuxlist(ev.group_id, sxlist)
     print(sxlist)
     cc_list = random.sample(listshuxing, 5)
-    mes = '下面每隔15秒会提示克制倍率，总共5条，猜测这是哪种属性或属性组合'
+    mes = '下面每隔15秒会提示克制倍率，总共5条，猜测这是哪种属性组合'
     await bot.send(mes)
     cc_flag = 0
     buttons_a = [
@@ -345,7 +340,7 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                         for sxname in sxlist:
                             if str(sxname) in str(sxcc) or str(sxname) == str(sxcc):
                                 sxcc_flag = sxcc_flag + 1
-                        if (int(sxcc_flag) == int(shux_num) and winner_judger_sx.get_winner(ev.group_id) == ''):
+                        if (int(sxcc_flag) == 2 and winner_judger_sx.get_winner(ev.group_id) == ''):
                             GAME = GAME_DB()
                             win_num = await GAME.update_game_num(uid, 'whosx')
                             mesg_d = []
