@@ -154,6 +154,42 @@ class WinnerJudgerSX:
 
 winner_judger_sx = WinnerJudgerSX()
 
+class WinnerJudgerJN:
+    def __init__(self):
+        self.on = {}
+        self.winner = {}
+        self.correct_jineng = {}
+
+    def record_winner(self, gid, uid):
+        self.winner[gid] = str(uid)
+
+    def get_winner(self, gid):
+        return self.winner[gid] if self.winner.get(gid) is not None else ''
+
+    def get_on_off_status(self, gid):
+        return self.on[gid] if self.on.get(gid) is not None else False
+
+    def set_correct_jineng(self, gid, jinengname):
+        self.correct_jineng[gid] = jinengname
+
+    def get_correct_jineng(self, gid):
+        return (
+            self.correct_jineng[gid]
+            if self.correct_jineng.get(gid) is not None
+            else ''
+        )
+
+    def turn_on(self, gid):
+        self.on[gid] = True
+
+    def turn_off(self, gid):
+        self.on[gid] = False
+        self.winner[gid] = ''
+        self.correct_jineng[gid] = ''
+
+
+winner_judger_jn = WinnerJudgerJN()
+
 class Roster:
     def __init__(self):
         self._roster = pygtrie.CharTrie()
@@ -308,6 +344,104 @@ async def get_pokemon_ts(name, cc_type):
             tx_name = random.sample(tx_list[0], 1)[0]
             mes = f'精灵其中一个普通特性为{tx_name}'
     return mes
+
+async def get_jineng_ts(name, cc_type):
+    pokeid = roster.get_id(name)
+    jinenginfo = JINENG_LIST[name]
+    if cc_type == '属性':
+        mes = f'技能的属性为 {jinenginfo[0]}'
+    if cc_type == '类型':
+        mes = f'技能的类型为 {jinenginfo[1]}'
+    if cc_type == '威力':
+        mes = f'技能的威力为 {jinenginfo[2]}'
+    if cc_type == '命中':
+        mes = f'技能的命中率为 {jinenginfo[3]}'
+    if cc_type == 'PP':
+        mes = f'技能的初始PP值为 {jinenginfo[4]}'
+    if cc_type == '名字':
+        name_len = len(name)
+        mes = f'技能名字{name_len}个字'
+    return mes
+
+@sv_pokemon_whois.on_fullmatch('猜技能')
+async def pokemon_whois_jn(bot: Bot, ev: Event):
+    if winner_judger_jn.get_on_off_status(ev.group_id):
+        await bot.send('此轮游戏还没结束，请勿重复使用指令')
+        return
+    winner_judger_jn.turn_on(ev.group_id)
+    jineng_name_list = list(JINENG_LIST.keys())
+    find_flag = 0
+    while find_flag == 0:
+        name = random.sample(jineng_name_list, 1)[0]
+        if JINENG_LIST[name][1] != '变化':
+            find_flag = 1
+    winner_judger_jn.set_correct_jineng(ev.group_id, name)
+    # print(chara_id_list[0])
+    print(name)
+    cc_list = ['属性','类型','威力','命中','PP','名字']
+    mes = '下面每隔15秒会提示技能的信息，总共6条，猜测这是哪个技能'
+    await bot.send(mes)
+    cc_flag = 0
+    buttons_a = [
+        Button('猜一下', '/'),
+    ]
+    buttons_d = [
+        Button('✅再来一局', '猜技能', action=1),
+        Button('📖查看信息', f'精灵技能信息{name}', action=1),
+    ]
+    for index in range(1,7):
+        cc_type = random.sample(cc_list, 1)[0]
+        ts_mes = await get_jineng_ts(name,cc_type)
+        mes = f'提示{index}：{ts_mes}'
+        await bot.send_option(mes, buttons_a)
+        try:
+            async with timeout(15):
+                while True:
+                    resp = await bot.receive_mutiply_resp()
+                    if resp is not None:
+                        s = resp.text.strip()
+                        gid = resp.group_id
+                        uid = resp.user_id
+                        jncc = resp.text
+                        # await bot.send(f'你说的是 {resp.text} 吧？')
+                        if (
+                            jncc == name and winner_judger_jn.get_winner(ev.group_id) == ''
+                        ):
+                            GAME = GAME_DB()
+                            win_num = await GAME.update_game_num(uid, 'whojn')
+                            mesg_d = []
+                            mesg = ''
+                            if daily_whois_limiter.check(uid):
+                                SCORE = SCORE_DB()
+                                await SCORE.update_score(uid, 1000)
+                                daily_whois_limiter.increase(uid)
+                                mesg = '获得1000金币\n'
+                            winner_judger_jn.record_winner(ev.group_id, ev.user_id)
+                            winner_judger_jn.turn_off(ev.group_id)
+                            POKE = PokeCounter()
+                            mapinfo = await POKE._get_map_now(uid)
+                            myname = mapinfo[2]
+                            myname = str(myname)[:10]
+                            mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                            chongsheng_num = await POKE.get_chongsheng_num(uid,9998)
+                            if chongsheng_num >= 233:
+                                huanshouname = random.sample(huanshoulist, 1)[0]
+                                huanshouid = roster.get_id(huanshouname)
+                                await POKE._add_pokemon_egg(uid, huanshouid, 1)
+                                mes += f'\n{myname}获得了{huanshouname}精灵蛋x1'
+                                await POKE._new_chongsheng_num(uid,9998)
+                            await POKE.update_chongsheng(uid,9998,1)
+                            await bot.send_option(mes, buttons_d)
+                            return
+        except asyncio.TimeoutError:
+            pass
+        cc_list.remove(cc_type)
+    if winner_judger_jn.get_winner(ev.group_id) != '':
+        winner_judger_jn.turn_off(ev.group_id)
+        return
+    winner_judger_jn.turn_off(ev.group_id)
+    mes = f'很遗憾，没有人答对~\n正确答案是:{name}'
+    await bot.send_option(mes, buttons_d)
 
 @sv_pokemon_whois.on_fullmatch('猜属性')
 async def pokemon_shux_this(bot: Bot, ev: Event):
