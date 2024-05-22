@@ -108,6 +108,7 @@ async def pokemon_help_game(bot, ev: Event):
         Button('✅我是谁', '我是谁', '✅我是谁', action=1),
         Button('✅猜精灵', '猜精灵', '✅猜精灵', action=1),
         Button('✅猜属性', '猜属性', '✅猜属性', action=1),
+        Button('✅猜技能', '猜技能', '✅猜技能', action=1),
     ]
     await bot.send_option(msg, buttons)
 

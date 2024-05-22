@@ -422,7 +422,7 @@ async def pokemon_whois_jn(bot: Bot, ev: Event):
                             mapinfo = await POKE._get_map_now(uid)
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
-                            mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                            mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                             chongsheng_num = await POKE.get_chongsheng_num(uid,9998)
                             if chongsheng_num >= 233:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
@@ -499,7 +499,7 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                             mapinfo = await POKE._get_map_now(uid)
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
-                            mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name_shux}'
+                            mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name_shux}'
                             chongsheng_num = await POKE.get_chongsheng_num(uid,9999)
                             if chongsheng_num >= 666:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
@@ -585,7 +585,7 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
                             mapinfo = await POKE._get_map_now(uid)
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
-                            mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                            mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                             chongsheng_num = await POKE.get_chongsheng_num(uid,151)
                             if chongsheng_num >= 233:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
@@ -733,7 +733,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         mapinfo = await POKE._get_map_now(uid)
                         myname = mapinfo[2]
                         myname = str(myname)[:10]
-                        mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                        mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                         chongsheng_num = await POKE.get_chongsheng_num(uid,150)
                         if chongsheng_num >= 999:
                             await POKE._add_pokemon_egg(uid, 150, 1)
@@ -757,18 +757,18 @@ async def pokemon_whois(bot: Bot, ev: Event):
     await bot.send_option(mesg_c, buttons_d)
 
 
-@sv_pokemon_whois.on_fullmatch('重置我是谁')
+@sv_pokemon_whois.on_fullmatch('重置小游戏')
 async def cz_pokemon_whois(bot: Bot, ev: Event):
+    print(ev)
     winner_judger.turn_off(ev.group_id)
-    buttons = [
-        Button('✅我是谁', '我是谁'),
-    ]
-    await bot.send_option('重置成功，请重新发送我是谁开始新一轮游戏', buttons)
-
-@sv_pokemon_whois.on_fullmatch('重置猜精灵')
-async def cz_pokemon_whoiscc(bot: Bot, ev: Event):
     winner_judger_cc.turn_off(ev.group_id)
+    winner_judger_sx.turn_off(ev.group_id)
+    winner_judger_jn.turn_off(ev.group_id)
     buttons = [
-        Button('✅猜精灵', '猜精灵'),
+        Button('✅我是谁', '我是谁', '✅我是谁', action=1),
+        Button('✅猜精灵', '猜精灵', '✅猜精灵', action=1),
+        Button('✅猜属性', '猜属性', '✅猜属性', action=1),
+        Button('✅猜技能', '猜技能', '✅猜技能', action=1),
     ]
-    await bot.send_option('重置成功，请重新发送猜精灵开始新一轮游戏', buttons)
+    await bot.send_option('重置成功，请重新发送指令开始新一轮游戏', buttons)
+
