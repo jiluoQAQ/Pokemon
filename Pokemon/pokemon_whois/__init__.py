@@ -300,18 +300,12 @@ async def get_pokemon_ts(name, cc_type):
                     max_sx = pokeinfo[shuzhi]
                     max_sx_name = shuxinglist[shuzhi]
         mes = f'精灵最高的种族为{max_sx_name},数值为{max_sx}'
-    if cc_type == '种族低':
+    if cc_type == '种族':
         pokeinfo = POKEMON_LIST[pokeid]
-        min_sx = 999
-        min_sx_name = ''
+        zz_num = 0
         for shuzhi in range(1,7):
-            if int(pokeinfo[shuzhi]) <= int(min_sx):
-                if int(pokeinfo[shuzhi]) == int(min_sx):
-                    min_sx_name = min_sx_name + f' {shuxinglist[shuzhi]}'
-                else:
-                    min_sx = pokeinfo[shuzhi]
-                    min_sx_name = shuxinglist[shuzhi]
-        mes = f'精灵最低的种族为{min_sx_name},数值为{min_sx}'
+            zz_num = zz_num + int(pokeinfo[shuzhi])
+        mes = f'精灵种族值为{zz_num}'
     if cc_type == '名字':
         name_len = len(name)
         mes = f'精灵名字{name_len}个字'
@@ -383,7 +377,7 @@ async def pokemon_whois_jn(bot: Bot, ev: Event):
     await bot.send(mes)
     cc_flag = 0
     buttons_a = [
-        Button('猜一下', '/'),
+        Button('猜一下', ' ', '猜一下', action=2),
     ]
     buttons_d = [
         Button('✅再来一局', '猜技能', action=1),
@@ -460,7 +454,7 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
     await bot.send(mes)
     cc_flag = 0
     buttons_a = [
-        Button('猜一下', '/'),
+        Button('猜一下', ' ', '猜一下', action=2),
     ]
     buttons_d = [
         Button('✅再来一局', '猜属性', action=1),
@@ -537,12 +531,12 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
     win_mes = await get_win_pic(name, enname)
     winner_judger_cc.set_correct_win_pic(ev.group_id, win_mes)
     print(name)
-    cc_list = ['属性','种族高','种族低','名字','等级技能','特性']
+    cc_list = ['属性','种族高','种族','名字','等级技能','特性']
     mes = '下面每隔15秒会提示精灵的信息，总共6条，猜测这是哪只精灵'
     await bot.send(mes)
     cc_flag = 0
     buttons_a = [
-        Button('猜一下', '/'),
+        Button('猜一下', ' ', '猜一下', action=2),
     ]
     buttons_d = [
         Button('✅再来一局', '猜精灵', action=1),
@@ -698,7 +692,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
         Button('📖查看图鉴', f'精灵图鉴{name}', action=1),
     ]
     buttons_a = [
-        Button('猜一下', '/'),
+        Button('猜一下', ' ', '猜一下', action=2),
     ]
     await bot.send_option(mesg_a, buttons_a)
     try:
