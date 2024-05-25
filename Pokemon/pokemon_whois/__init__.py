@@ -12,7 +12,6 @@ from PIL import Image, ImageDraw, ImageFont
 from gsuid_core.message_models import Button
 from gsuid_core.utils.image.convert import convert_img
 from gsuid_core.segment import MessageSegment
-from . import poke_data
 from ..utils.convert import DailyAmountLimiter
 from ..utils.dbbase.GameCounter import GAME_DB
 from ..utils.dbbase.ScoreCounter import SCORE_DB
@@ -196,9 +195,8 @@ class Roster:
         self.update()
 
     def update(self):
-        importlib.reload(poke_data)
         self._roster.clear()
-        for idx, names in poke_data.CHARA_NAME.items():
+        for idx, names in CHARA_NAME.items():
             for n in names:
                 if n not in self._roster:
                     self._roster[n] = idx
@@ -520,8 +518,8 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
         await bot.send('此轮游戏还没结束，请勿重复使用指令')
         return
     winner_judger_cc.turn_on(ev.group_id)
-    chara_id_list = list(poke_data.CHARA_NAME.keys())
-    poke_list = poke_data.CHARA_NAME
+    chara_id_list = list(CHARA_NAME.keys())
+    poke_list = CHARA_NAME
     random.shuffle(chara_id_list)
     winner_judger_cc.set_correct_chara_id(ev.group_id, chara_id_list[0])
     # print(chara_id_list[0])
@@ -611,8 +609,8 @@ async def pokemon_whois(bot: Bot, ev: Event):
         await bot.send('此轮游戏还没结束，请勿重复使用指令')
         return
     winner_judger.turn_on(ev.group_id)
-    chara_id_list = list(poke_data.CHARA_NAME.keys())
-    poke_list = poke_data.CHARA_NAME
+    chara_id_list = list(CHARA_NAME.keys())
+    poke_list = CHARA_NAME
     random.shuffle(chara_id_list)
     winner_judger.set_correct_chara_id(ev.group_id, chara_id_list[0])
     # print(chara_id_list[0])
