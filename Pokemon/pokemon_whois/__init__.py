@@ -851,8 +851,8 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         myname = str(myname)[:10]
                         mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                         chongsheng_num = await POKE.update_chongsheng(uid,150,1)
-                        mes += f'\n{chongsheng_num}/198'
-                        if chongsheng_num >= 999:
+                        mes += f'\n{chongsheng_num}/1000'
+                        if chongsheng_num >= 1000:
                             await POKE._add_pokemon_egg(uid, 150, 1)
                             mes += f'\n{myname}获得了超梦精灵蛋x1'
                             await POKE._new_chongsheng_num(uid,150)
