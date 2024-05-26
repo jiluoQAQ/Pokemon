@@ -189,6 +189,49 @@ class WinnerJudgerJN:
 
 winner_judger_jn = WinnerJudgerJN()
 
+class WinnerJudgerTJ:
+    def __init__(self):
+        self.on = {}
+        self.winner = {}
+        self.correct_chara_id = {}
+        self.correct_win_pic = {}
+
+    def record_winner(self, gid, uid):
+        self.winner[gid] = str(uid)
+
+    def get_winner(self, gid):
+        return self.winner[gid] if self.winner.get(gid) is not None else ''
+
+    def get_on_off_status(self, gid):
+        return self.on[gid] if self.on.get(gid) is not None else False
+
+    def set_correct_win_pic(self, gid, pic):
+        self.correct_win_pic[gid] = pic
+
+    def get_correct_win_pic(self, gid):
+        return self.correct_win_pic[gid]
+
+    def set_correct_chara_id(self, gid, cid):
+        self.correct_chara_id[gid] = cid
+
+    def get_correct_chara_id(self, gid):
+        return (
+            self.correct_chara_id[gid]
+            if self.correct_chara_id.get(gid) is not None
+            else 9999
+        )
+
+    def turn_on(self, gid):
+        self.on[gid] = True
+
+    def turn_off(self, gid):
+        self.on[gid] = False
+        self.winner[gid] = ''
+        self.correct_chara_id[gid] = 9999
+
+
+winner_judger_tj = WinnerJudgerTJ()
+
 class Roster:
     def __init__(self):
         self._roster = pygtrie.CharTrie()
@@ -355,6 +398,89 @@ async def get_jineng_ts(name, cc_type):
         mes = f'技能名字{name_len}个字'
     return mes
 
+@sv_pokemon_whois.on_fullmatch('猜图鉴')
+async def pokemon_whois_tj(bot: Bot, ev: Event):
+    if winner_judger_tj.get_on_off_status(ev.group_id):
+        await bot.send('此轮游戏还没结束，请勿重复使用指令')
+        return
+    winner_judger_tj.turn_on(ev.group_id)
+    chara_id_list = list(CHARA_NAME.keys())
+    poke_list = CHARA_NAME
+    random.shuffle(chara_id_list)
+    winner_judger_tj.set_correct_chara_id(ev.group_id, chara_id_list[0])
+    # print(chara_id_list[0])
+
+    name = poke_list[chara_id_list[0]][0]
+    enname = poke_list[chara_id_list[0]][1]
+    win_mes = await get_win_pic(name, enname)
+    winner_judger_tj.set_correct_win_pic(ev.group_id, win_mes)
+    print(name)
+    mes = '下面这条描述是图鉴里描述哪个宝可梦的'
+    mes += f'\n{POKEMON_CONTENT[chara_id_list[0]][0]}'
+    buttons_a = [
+        Button('猜一下', ' ', '猜一下', action=2),
+    ]
+    buttons_d = [
+        Button('✅再来一局', '猜图鉴', action=1),
+        Button('📖查看信息', f'精灵技能信息{name}', action=1),
+    ]
+    await bot.send_option(mes, buttons_a)
+    try:
+        async with timeout(20):
+            while True:
+                resp = await bot.receive_mutiply_resp()
+                if resp is not None:
+                    s = resp.text.strip()
+                    gid = resp.group_id
+                    uid = resp.user_id
+                    cid = roster.get_id(s)
+                    # await bot.send(f'你说的是 {resp.text} 吧？')
+                    if (
+                        cid != 9999
+                        and cid
+                        == winner_judger_tj.get_correct_chara_id(ev.group_id)
+                        and winner_judger_tj.get_winner(ev.group_id) == ''
+                    ):
+                        GAME = GAME_DB()
+                        win_num = await GAME.update_game_num(uid, 'whotj')
+                        mesg_d = []
+                        mesg = ''
+                        if daily_whois_limiter.check(uid):
+                            SCORE = SCORE_DB()
+                            await SCORE.update_score(uid, 1000)
+                            daily_whois_limiter.increase(uid)
+                            mesg = '获得1000金币\n'
+                        winner_judger_tj.record_winner(ev.group_id, ev.user_id)
+                        winner_judger_tj.turn_off(ev.group_id)
+                        POKE = PokeCounter()
+                        mapinfo = await POKE._get_map_now(uid)
+                        myname = mapinfo[2]
+                        myname = str(myname)[:10]
+                        mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                        chongsheng_num = await POKE.update_chongsheng(uid,9997,1)
+                        mes += f'\n{chongsheng_num}/233'
+                        if chongsheng_num >= 233:
+                            huanshouname = random.sample(huanshoulist, 1)[0]
+                            huanshouid = roster.get_id(huanshouname)
+                            await POKE._add_pokemon_egg(uid, huanshouid, 1)
+                            mes += f'\n{myname}获得了{huanshouname}精灵蛋x1'
+                            await POKE._new_chongsheng_num(uid,9997)
+                        mesg_d.append(MessageSegment.text(mes))
+                        mesg_d.append(MessageSegment.image(win_mes))
+                        await bot.send_option(mesg_d, buttons_d)
+                        return
+    except asyncio.TimeoutError:
+        pass
+    if winner_judger_tj.get_winner(ev.group_id) != '':
+        winner_judger_tj.turn_off(ev.group_id)
+        return
+    winner_judger_tj.turn_off(ev.group_id)
+    mes = f'很遗憾，没有人答对~\n正确答案是:{name}'
+    mesg_c = []
+    mesg_c.append(MessageSegment.text(mes))
+    mesg_c.append(MessageSegment.image(win_mes))
+    await bot.send_option(mesg_c, buttons_d)
+
 @sv_pokemon_whois.on_fullmatch('猜技能')
 async def pokemon_whois_jn(bot: Bot, ev: Event):
     if winner_judger_jn.get_on_off_status(ev.group_id):
@@ -401,7 +527,6 @@ async def pokemon_whois_jn(bot: Bot, ev: Event):
                         ):
                             GAME = GAME_DB()
                             win_num = await GAME.update_game_num(uid, 'whojn')
-                            mesg_d = []
                             mesg = ''
                             if daily_whois_limiter.check(uid):
                                 SCORE = SCORE_DB()
@@ -415,7 +540,7 @@ async def pokemon_whois_jn(bot: Bot, ev: Event):
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
                             mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
-                            chongsheng_num = await POKE.get_chongsheng_num(uid,9998)
+                            chongsheng_num = await POKE.update_chongsheng(uid,9998,1)
                             mes += f'\n{chongsheng_num}/198'
                             if chongsheng_num >= 198:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
@@ -423,7 +548,6 @@ async def pokemon_whois_jn(bot: Bot, ev: Event):
                                 await POKE._add_pokemon_egg(uid, huanshouid, 1)
                                 mes += f'\n{myname}获得了{huanshouname}精灵蛋x1'
                                 await POKE._new_chongsheng_num(uid,9998)
-                            await POKE.update_chongsheng(uid,9998,1)
                             await bot.send_option(mes, buttons_d)
                             return
         except asyncio.TimeoutError:
@@ -479,7 +603,6 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                         if (int(sxcc_flag) == 2 and winner_judger_sx.get_winner(ev.group_id) == ''):
                             GAME = GAME_DB()
                             win_num = await GAME.update_game_num(uid, 'whosx')
-                            mesg_d = []
                             mesg = ''
                             if daily_whois_limiter.check(uid):
                                 SCORE = SCORE_DB()
@@ -493,7 +616,7 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
                             mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name_shux}'
-                            chongsheng_num = await POKE.get_chongsheng_num(uid,9999)
+                            chongsheng_num = await POKE.update_chongsheng(uid,9999,1)
                             mes += f'\n{chongsheng_num}/198'
                             if chongsheng_num >= 198:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
@@ -501,7 +624,6 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                                 await POKE._add_pokemon_egg(uid, huanshouid, 1)
                                 mes += f'\n{myname}获得了{huanshouname}精灵蛋x1'
                                 await POKE._new_chongsheng_num(uid,9999)
-                            await POKE.update_chongsheng(uid,9999,1)
                             await bot.send_option(mes, buttons_d)
                             return
         except asyncio.TimeoutError:
@@ -580,7 +702,7 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
                             mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
-                            chongsheng_num = await POKE.get_chongsheng_num(uid,151)
+                            chongsheng_num = await POKE.update_chongsheng(uid,151,1)
                             mes += f'\n{chongsheng_num}/198'
                             if chongsheng_num >= 198:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
@@ -588,7 +710,6 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
                                 await POKE._add_pokemon_egg(uid, huanshouid, 1)
                                 mes += f'\n{myname}获得了{huanshouname}精灵蛋x1'
                                 await POKE._new_chongsheng_num(uid,151)
-                            await POKE.update_chongsheng(uid,151,1)
                             mesg_d.append(MessageSegment.text(mes))
                             mesg_d.append(MessageSegment.image(win_mes))
                             await bot.send_option(mesg_d, buttons_d)
@@ -729,13 +850,12 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         myname = mapinfo[2]
                         myname = str(myname)[:10]
                         mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
-                        chongsheng_num = await POKE.get_chongsheng_num(uid,150)
+                        chongsheng_num = await POKE.update_chongsheng(uid,150,1)
                         mes += f'\n{chongsheng_num}/198'
                         if chongsheng_num >= 999:
                             await POKE._add_pokemon_egg(uid, 150, 1)
                             mes += f'\n{myname}获得了超梦精灵蛋x1'
                             await POKE._new_chongsheng_num(uid,150)
-                        await POKE.update_chongsheng(uid,150,1)
                         mesg_d.append(MessageSegment.text(mes))
                         mesg_d.append(MessageSegment.image(win_mes))
                         await bot.send_option(mesg_d, buttons_d)
@@ -760,11 +880,13 @@ async def cz_pokemon_whois(bot: Bot, ev: Event):
     winner_judger_cc.turn_off(ev.group_id)
     winner_judger_sx.turn_off(ev.group_id)
     winner_judger_jn.turn_off(ev.group_id)
+    winner_judger_tj.turn_off(ev.group_id)
     buttons = [
         Button('✅我是谁', '我是谁', '✅我是谁', action=1),
         Button('✅猜精灵', '猜精灵', '✅猜精灵', action=1),
         Button('✅猜属性', '猜属性', '✅猜属性', action=1),
         Button('✅猜技能', '猜技能', '✅猜技能', action=1),
+        Button('✅猜图鉴', '猜图鉴', '✅猜图鉴', action=1),
     ]
     await bot.send_option('重置成功，请重新发送指令开始新一轮游戏', buttons)
 

@@ -329,6 +329,7 @@ class PokeCounter:
             await connection.execute(f"UPDATE CHONGSHENG SET NUM={now_num} WHERE UID='{uid}' AND BIANHAO = {bianhao}")
             await connection.commit()
             await connection.close()
+            return now_num
         except:
             raise Exception('更新表发生错误')
     

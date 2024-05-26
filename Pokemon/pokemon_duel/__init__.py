@@ -99,7 +99,7 @@ async def pokemon_help_game(bot, ev: Event):
 （给出宝可梦的6条信息，猜猜是哪只宝可梦）
 3、猜属性：宝可梦属性猜测
 （给出5条属性的克制关系信息，猜猜是哪种属性组合）
-3、猜技能：宝可梦技能猜测
+4、猜技能：宝可梦技能猜测
 （给给出技能的6条信息，猜猜是哪个技能）
 注:
 其他的宝可梦小游戏正在火速开发中(新建文件夹)
@@ -109,6 +109,7 @@ async def pokemon_help_game(bot, ev: Event):
         Button('✅猜精灵', '猜精灵', '✅猜精灵', action=1),
         Button('✅猜属性', '猜属性', '✅猜属性', action=1),
         Button('✅猜技能', '猜技能', '✅猜技能', action=1),
+        Button('✅猜图鉴', '猜图鉴', '✅猜图鉴', action=1),
     ]
     await bot.send_option(msg, buttons)
 
