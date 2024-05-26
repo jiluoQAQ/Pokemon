@@ -416,7 +416,8 @@ async def pokemon_whois_jn(bot: Bot, ev: Event):
                             myname = str(myname)[:10]
                             mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                             chongsheng_num = await POKE.get_chongsheng_num(uid,9998)
-                            if chongsheng_num >= 233:
+                            mes += f'\n{chongsheng_num}/198'
+                            if chongsheng_num >= 198:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
                                 huanshouid = roster.get_id(huanshouname)
                                 await POKE._add_pokemon_egg(uid, huanshouid, 1)
@@ -493,7 +494,8 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                             myname = str(myname)[:10]
                             mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name_shux}'
                             chongsheng_num = await POKE.get_chongsheng_num(uid,9999)
-                            if chongsheng_num >= 666:
+                            mes += f'\n{chongsheng_num}/198'
+                            if chongsheng_num >= 198:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
                                 huanshouid = roster.get_id(huanshouname)
                                 await POKE._add_pokemon_egg(uid, huanshouid, 1)
@@ -579,7 +581,8 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
                             myname = str(myname)[:10]
                             mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                             chongsheng_num = await POKE.get_chongsheng_num(uid,151)
-                            if chongsheng_num >= 233:
+                            mes += f'\n{chongsheng_num}/198'
+                            if chongsheng_num >= 198:
                                 huanshouname = random.sample(huanshoulist, 1)[0]
                                 huanshouid = roster.get_id(huanshouname)
                                 await POKE._add_pokemon_egg(uid, huanshouid, 1)
@@ -727,6 +730,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         myname = str(myname)[:10]
                         mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                         chongsheng_num = await POKE.get_chongsheng_num(uid,150)
+                        mes += f'\n{chongsheng_num}/198'
                         if chongsheng_num >= 999:
                             await POKE._add_pokemon_egg(uid, 150, 1)
                             mes += f'\n{myname}获得了超梦精灵蛋x1'
