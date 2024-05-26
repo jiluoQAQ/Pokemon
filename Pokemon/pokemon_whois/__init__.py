@@ -426,7 +426,7 @@ async def pokemon_whois_tj(bot: Bot, ev: Event):
     ]
     await bot.send_option(mes, buttons_a)
     try:
-        async with timeout(20):
+        async with timeout(35):
             while True:
                 resp = await bot.receive_mutiply_resp()
                 if resp is not None:
