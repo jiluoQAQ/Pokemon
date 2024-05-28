@@ -422,7 +422,7 @@ async def pokemon_whois_tj(bot: Bot, ev: Event):
     ]
     buttons_d = [
         Button('✅再来一局', '猜图鉴', action=1),
-        Button('📖查看信息', f'精灵技能信息{name}', action=1),
+        Button('📖查看信息', f'精灵图鉴{name}', action=1),
     ]
     await bot.send_option(mes, buttons_a)
     try:
