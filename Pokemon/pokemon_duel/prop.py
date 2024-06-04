@@ -23,6 +23,7 @@ with Path.open(Excel_path / 'prop.json', encoding='utf-8') as f:
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 
 sv_pokemon_prop = SV('宝可梦道具', priority=5)
+sv_pokemon_prop_sp = SV('宝可梦道具管理', pm=0)
 
 class PM_HONGBAO:
     def __init__(self):
@@ -879,7 +880,7 @@ async def show_exchange_list_my(bot, ev: Event):
         buttons.append(Button('下一页',f'{downbutton}', '下一页', action=2))
     await bot.send_option(mes, buttons)
 
-@sv_pokemon_prop.on_command(['pm发红包'])
+@sv_pokemon_prop_sp.on_command(['pm发红包'])
 async def mew_pm_hongbao(bot, ev: Event):
     uid = ev.user_id
     args = ev.text.split()
@@ -920,6 +921,7 @@ async def open_pm_hongbao(bot, ev: Event):
         return await bot.send('您已经抢过该红包', at_sender=True)
     if score == 0:
         return await bot.send('红包口令无效或该红包已被抢完', at_sender=True)
+    
     mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     last_score = score - use_score
