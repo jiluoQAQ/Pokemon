@@ -30,6 +30,7 @@ with Path.open(Excel_path / 'map.json', encoding='utf-8') as f:
     tianwanglist = map_dict['tianwanglist']
     guanjunlist = map_dict['guanjunlist']
     weekbosslist = map_dict['weekbosslist']
+    dungeonlist = map_dict['dungeon']
 
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 
@@ -44,19 +45,17 @@ async def fight_help(bot, ev: Event):
 2.训练家对战【昵称】:与昵称为【昵称】的训练家进行对战(自动战斗)
 3.无级别对战【昵称/at对方】:与其他训练家进行一场无等级限制的手动对战
 4.限制级对战【昵称/at对方】:与其他训练家进行一场等级限制为50的手动对战
-5.首领列表(查看所有的首领信息与地点)
-6.首领信息(查看当前地点的首领信息)
-7.首领挑战(挑战该地点的首领，获胜可获得大量奖励)
+5.首领列表：查看所有的首领信息与地点
+6.首领信息：查看当前地点的首领信息
+7.首领挑战：挑战该地点的首领，获胜可获得大量奖励
 8.匹配对战：与别的群的训练家对战
-9.世界boss挑战(挑战世界boss，一级神，测试用)~~
-10。世界boss伤害排名(查看boss的伤害排名)~~
  """
     buttons = [
         Button('首领列表', '首领列表', '首领列表', action=1),
         Button('首领信息', '首领信息', '首领信息', action=1),
         Button('首领挑战', '首领挑战', '首领挑战', action=1),
-        Button('世界boss挑战', '世界boss挑战', '世界boss挑战', action=1),
-        Button('世界boss排名', '世界boss伤害排名', '世界boss排名', action=1),
+        # Button('世界boss挑战', '世界boss挑战', '世界boss挑战', action=1),
+        # Button('世界boss排名', '世界boss伤害排名', '世界boss排名', action=1),
         Button('训练家对战', '训练家对战', '训练家对战', action=2),
         Button('无级别对战', '无级别对战', '无级别对战', action=2),
         Button('限制级对战', '限制级对战', '限制级对战', action=2),
@@ -1097,6 +1096,86 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
+@sv_pokemon_pk.on_fullmatch(('挑战试炼塔', '挑战精灵塔'))
+async def pokemon_pk_dungeon(bot, ev: Event):
+    uid = ev.user_id
+    mypoke = await POKE._get_pokemon_list(uid)
+    if mypoke == 0:
+        return await bot.send(
+            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
+            at_sender=True,
+        )
+    mapinfo = await POKE._get_map_now(uid)
+    name = mapinfo[2]
+    my_dungeon_num = await POKE.get_dungeon_info(uid)
+    if my_dungeon_num >= dungeon_max_num:
+        return await bot.send('您已经通过最高难度的精灵塔了，等之后再来挑战吧', at_sender=True,)
+    my_team = await POKE.get_pokemon_group(uid)
+    pokemon_list = my_team.split(',')
+    mypokelist = []
+    for bianhao in pokemon_list:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+    dungeon_str = str(my_dungeon_num + 1)
+    dungeoninfo = dungeonlist[dungeon_str]
+    dungeonpoke = dungeoninfo['pokelist']
+    dungeonlevel = dungeoninfo['pokelevel']
+    dipokelist = []
+    for pokeid in dungeonpoke:
+        dipokelist.append(int(pokeid))
+    await bot.send(f"您开始了试炼塔第{dungeon_str}层的挑战")
+    mypokelist, dipokelist = await fight_dungeon(bot, ev, uid, mypokelist, dipokelist, dungeonlevel, name, dungeonpoke)
+    if len(mypokelist) == 0:
+        mes = f"您挑战试炼塔第{dungeon_str}层挑战失败"
+    
+    if len(dipokelist) == 0:
+        mes = f"您通过了试炼塔第{dungeon_str}层的挑战\n"
+        await POKE.update_dungeon(uid,int(dungeon_str))
+        addscore = dungeoninfo['firstreward']['score']
+        await SCORE.update_score(uid, addscore)
+        mes += f"您获得了奖励\n金币+{addscore}"
+        for reward in dungeoninfo['firstreward']['prop']:
+            mes += f"\n{reward['name']}+{reward['num']}"
+            await POKE._add_pokemon_prop(uid, reward['name'], reward['num'])
+    buttons = [
+        Button('挑战下一层', '挑战精灵塔', '挑战下一层', action=1),
+        Button('扫荡最高层', '扫荡精灵塔', '扫荡最高层', action=1),
+    ]
+    await bot.send_option(mes, buttons)
+
+@sv_pokemon_pk.on_fullmatch(('扫荡试炼塔', '扫荡精灵塔'))
+async def pokemon_sd_dungeon(bot, ev: Event):
+    uid = ev.user_id
+    uid = ev.user_id
+    mypoke = await POKE._get_pokemon_list(uid)
+    if mypoke == 0:
+        return await bot.send(
+            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。',
+            at_sender=True,
+        )
+    if not daily_dungeon.check(uid):
+        return await bot.send(
+            '今天的试炼塔扫荡次数已经超过上限了哦，明天再来吧。', at_sender=True
+        )
+    mapinfo = await POKE._get_map_now(uid)
+    name = mapinfo[2]
+    my_dungeon_num = await POKE.get_dungeon_info(uid)
+    if my_dungeon_num == 0:
+        return await bot.send(
+            '您还没有通过试炼塔的挑战哦，请挑战成功后再来扫荡吧', at_sender=True
+        )
+    dungeon_str = str(my_dungeon_num)
+    dungeoninfo = dungeonlist[dungeon_str]
+    mes = f"试炼塔{dungeon_str}层扫荡成功！"
+    addscore = dungeoninfo['reward']['score']
+    await SCORE.update_score(uid, addscore)
+    mes += f"\n您获得了奖励\n金币+{addscore}"
+    daily_dungeon.increase(uid)
+    for reward in dungeoninfo['reward']['prop']:
+        mes += f"\n{reward['name']}+{reward['num']}"
+        await POKE._add_pokemon_prop(uid, reward['name'], reward['num'])
+    await bot.send(mes)
+
 @sv_pokemon_pk.on_command(('世界boss伤害排名'))
 async def pokemon_pk_boss_sj_paiming(bot, ev: Event):
     args = ev.text.split()
@@ -1292,5 +1371,4 @@ async def pokemon_pk_pipei(bot, ev: Event):
             await POKE.delete_pipei_uid(uid)
             await POKE.delete_pipei_uid(diuid)
             await bot.send(mes)
-            
             

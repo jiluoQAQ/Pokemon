@@ -60,6 +60,7 @@ async def get_poke_bianhao(name):
 daily_work_limiter = DailyAmountLimiter('work', WORK_NUM, RESET_HOUR)
 daily_random_egg = DailyAmountLimiter('random_egg', random_egg_buy, RESET_HOUR)
 daily_boss = DailyAmountLimiter('boss', boss_fight, RESET_HOUR)
+daily_dungeon = DailyAmountLimiter('dungeon', dungeon_sd, RESET_HOUR)
 
 
 # 生成精灵初始技能
@@ -2142,6 +2143,430 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     await bot.send(mesg)
     return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use
 
+async def fight_dungeon_now(myinfo,diinfo,myzhuangtai,dizhuangtai,jineng1,jineng2,changdi,jineng_use1,name1):
+    jieshu = 0
+    mesg = ''
+    if len(jineng_use1) > 1:
+        last_jineng1 = jineng_use1[len(jineng_use1) - 2]
+    else:
+        last_jineng1 = ''
+    last_jineng2 = ''
+    mysd = await get_nowshuxing(myinfo[8], myinfo[13], '速度', myinfo[1], changdi[0][0])
+    if myzhuangtai[0][0] == '麻痹' and int(myzhuangtai[0][1]) > 0:
+        mysd = int(mysd * 0.5)
+    disd = await get_nowshuxing(diinfo[8], diinfo[13], '速度', diinfo[1], changdi[0][0])
+    if dizhuangtai[0][0] == '麻痹' and int(dizhuangtai[0][1]) > 0:
+        disd = int(mysd * 0.5)
+    # 先手判断
+    myxianshou = 1
+    if jineng1 in xianzhi or jineng2 in xianzhi:
+        if jineng1 in xianzhi and jineng2 in xianzhi:
+            if mysd < disd:
+                myxianshou = 0
+        else:
+            if jineng1 in xianzhi:
+                myxianshou = 1
+            if jineng2 in xianzhi:
+                myxianshou = 0
+    elif jineng1 in youxian or jineng2 in youxian:
+        if jineng1 in youxian and jineng2 in youxian:
+            if mysd < disd:
+                myxianshou = 0
+        else:
+            if jineng1 in youxian:
+                myxianshou = 1
+            if jineng2 in youxian:
+                myxianshou = 0
+    else:
+        if mysd < disd:
+            myxianshou = 0
+    
+    # 双方出手
+    my_mesg = ''
+    di_mesg = ''
+    
+    if jineng1 == '替换精灵' or jineng2 == '替换精灵':
+        if jineng1 == '替换精灵' and jineng2 != '替换精灵':
+            my_mesg = f"{name1}替换了精灵{myinfo[0]}"
+            mesg = mesg + '\n' + my_mesg
+            dichushou = await get_chushou_flag(dizhuangtai)
+            if dichushou == 1:
+                if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                    di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                else:
+                    # 敌方攻击
+                    mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                    di_mesg = di_mesg + mes
+            else:
+                if (
+                    dizhuangtai[0][0] == '混乱'
+                    and int(dizhuangtai[0][1]) > 0
+                ):
+                    (
+                        mes,
+                        diinfo,
+                        myinfo,
+                        dizhuangtai,
+                        myzhuangtai,
+                        changdi,
+                    ) = await get_hunluan_sh(
+                        diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
+                    )
+                    di_mesg = di_mesg + '\n' + mes
+                else:
+                    di_mesg = (
+                        di_mesg
+                        + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
+                    )
+            if myinfo[17] <= 0 or diinfo[17] <= 0:
+                jieshu = 1
+            mesg = mesg + '\n' + di_mesg
+        elif jineng1 != '替换精灵' and jineng2 == '替换精灵':
+            di_mesg = f"{name2}替换了精灵{diinfo[0]}"
+            mesg = mesg + '\n' + di_mesg
+            mychushou = await get_chushou_flag(myzhuangtai)
+            if mychushou == 1:
+                if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                    my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                else:
+                    # 我方攻击
+                    mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
+                    my_mesg = my_mesg + mes
+
+            else:
+                if (
+                    myzhuangtai[0][0] == '混乱'
+                    and int(myzhuangtai[0][1]) > 0
+                ):
+                    (
+                        mes,
+                        myinfo,
+                        diinfo,
+                        myzhuangtai,
+                        dizhuangtai,
+                        changdi,
+                    ) = await get_hunluan_sh(
+                        myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+                    )
+                    my_mesg = my_mesg + '\n' + mes
+                else:
+                    my_mesg = (
+                        my_mesg
+                        + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
+                    )
+            if myinfo[17] <= 0 or diinfo[17] <= 0:
+                jieshu = 1
+            mesg = mesg + my_mesg
+        else:
+            my_mesg = f"{name1}替换了精灵{myinfo[0]}"
+            mesg = mesg + '\n' + my_mesg
+            di_mesg = f"{name2}替换了精灵{diinfo[0]}"
+            mesg = mesg + '\n' + di_mesg
+    else:
+        if myxianshou == 1:
+            if jieshu == 0:
+                mychushou = await get_chushou_flag(myzhuangtai)
+                if mychushou == 1:
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
+                        my_mesg = my_mesg + mes
+
+                else:
+                    if (
+                        myzhuangtai[0][0] == '混乱'
+                        and int(myzhuangtai[0][1]) > 0
+                    ):
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = await get_hunluan_sh(
+                            myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+                        )
+                        my_mesg = my_mesg + '\n' + mes
+                    else:
+                        my_mesg = (
+                            my_mesg
+                            + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
+                        )
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
+                    jieshu = 1
+                mesg = mesg + my_mesg
+
+            if jieshu == 0:
+                dichushou = await get_chushou_flag(dizhuangtai)
+                if dichushou == 1:
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        di_mesg = di_mesg + mes
+                else:
+                    if (
+                        dizhuangtai[0][0] == '混乱'
+                        and int(dizhuangtai[0][1]) > 0
+                    ):
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = await get_hunluan_sh(
+                            diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
+                        )
+                        di_mesg = di_mesg + '\n' + mes
+                    else:
+                        di_mesg = (
+                            di_mesg
+                            + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
+                        )
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
+                    jieshu = 1
+                mesg = mesg + '\n' + di_mesg
+
+        else:
+            if jieshu == 0:
+                dichushou = await get_chushou_flag(dizhuangtai)
+                if dichushou == 1:
+                    if jineng2 in lianxu_shibai and jineng2 == last_jineng2:
+                        di_mesg = di_mesg + f'\n{diinfo[0]}使用了技能{jineng2}，技能发动失败'
+                    else:
+                        # 敌方攻击
+                        mes,diinfo,myinfo,dizhuangtai,myzhuangtai,changdi = await make_jineng_use(jineng2, diinfo, myinfo, dizhuangtai, myzhuangtai, changdi)
+                        di_mesg = di_mesg + mes
+                else:
+                    if (
+                        dizhuangtai[0][0] == '混乱'
+                        and int(dizhuangtai[0][1]) > 0
+                    ):
+                        (
+                            mes,
+                            diinfo,
+                            myinfo,
+                            dizhuangtai,
+                            myzhuangtai,
+                            changdi,
+                        ) = await get_hunluan_sh(
+                            diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
+                        )
+                        di_mesg = di_mesg + '\n' + mes
+                    else:
+                        di_mesg = (
+                            di_mesg
+                            + f'\n{diinfo[0]}{dizhuangtai[0][0]}中，技能发动失败'
+                        )
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
+                    jieshu = 1
+                mesg = mesg + di_mesg
+
+            if jieshu == 0:
+                mychushou = await get_chushou_flag(myzhuangtai)
+                if mychushou == 1:
+                    if jineng1 in lianxu_shibai and jineng1 == last_jineng1:
+                        my_mesg = my_mesg + f'\n{myinfo[0]}使用了技能{jineng1}，技能发动失败'
+                    else:
+                        # 我方攻击
+                        mes,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi = await make_jineng_use(jineng1, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi)
+                        my_mesg = my_mesg + mes
+                else:
+                    if (
+                        myzhuangtai[0][0] == '混乱'
+                        and int(myzhuangtai[0][1]) > 0
+                    ):
+                        (
+                            mes,
+                            myinfo,
+                            diinfo,
+                            myzhuangtai,
+                            dizhuangtai,
+                            changdi,
+                        ) = await get_hunluan_sh(
+                            myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+                        )
+                        my_mesg = my_mesg + '\n' + mes
+                    else:
+                        my_mesg = (
+                            my_mesg
+                            + f'\n{myinfo[0]}{myzhuangtai[0][0]}中，技能发动失败'
+                        )
+                if myinfo[17] <= 0 or diinfo[17] <= 0:
+                    jieshu = 1
+                mesg = mesg + '\n' + my_mesg
+    
+    # 回合结束天气与状态伤害计算
+    changdi_mesg = ''
+    if (
+        myzhuangtai[0][0] in kouxuelist
+        and int(myzhuangtai[0][1]) > 0
+        and myinfo[17] > 0
+    ):
+        (
+            mes,
+            myinfo,
+            diinfo,
+            myzhuangtai,
+            dizhuangtai,
+            changdi,
+        ) = await get_zhuangtai_sh(
+            myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+        )
+        changdi_mesg = changdi_mesg + mes + '\n'
+    if myinfo[17] <= 0 or diinfo[17] <= 0:
+        jieshu = 1
+
+    if (
+        dizhuangtai[0][0] in kouxuelist
+        and int(dizhuangtai[0][1]) > 0
+        and diinfo[17] > 0
+    ):
+        (
+            mes,
+            diinfo,
+            myinfo,
+            dizhuangtai,
+            myzhuangtai,
+            changdi,
+        ) = await get_zhuangtai_sh(
+            diinfo, myinfo, dizhuangtai, myzhuangtai, changdi
+        )
+        changdi_mesg = changdi_mesg + mes + '\n'
+    if myinfo[17] <= 0 or diinfo[17] <= 0:
+        jieshu = 1
+
+    if (
+        changdi[0][0] in tq_kouxuelist
+        and int(changdi[0][1]) > 0
+        and jieshu == 0
+    ):
+        (
+            mes,
+            myinfo,
+            diinfo,
+            myzhuangtai,
+            dizhuangtai,
+            changdi,
+        ) = await get_tianqi_sh(
+            myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+        )
+        changdi_mesg = changdi_mesg + mes + '\n'
+    if myinfo[17] <= 0 or diinfo[17] <= 0:
+        jieshu = 1
+
+    if (
+        myzhuangtai[0][0] in hh_yichanglist
+        and int(myzhuangtai[0][1]) > 0
+        and myinfo[17] > 0
+    ):
+        myshengyuyc = int(myzhuangtai[0][1]) - 1
+        if myshengyuyc == 0:
+            changdi_mesg = (
+                changdi_mesg
+                + f'{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n'
+            )
+            myzhuangtai[0][0] = '无'
+            myzhuangtai[0][1] = 0
+        else:
+            myzhuangtai[0][1] = myshengyuyc
+
+    if (
+        dizhuangtai[0][0] in hh_yichanglist
+        and int(dizhuangtai[0][1]) > 0
+        and diinfo[17] > 0
+    ):
+        dishengyuyc = int(dizhuangtai[0][1]) - 1
+        if dishengyuyc == 0:
+            changdi_mesg = (
+                changdi_mesg
+                + f'{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n'
+            )
+            dizhuangtai[0][0] = '无'
+            dizhuangtai[0][1] = 0
+        else:
+            dizhuangtai[0][1] = dishengyuyc
+
+    if (
+        myzhuangtai[1][0] in hh_yichanglist
+        and int(myzhuangtai[1][1]) > 0
+        and myinfo[17] > 0
+    ):
+        myshengyuyc = int(myzhuangtai[1][1]) - 1
+        if myshengyuyc == 0:
+            changdi_mesg = (
+                changdi_mesg
+                + f'{myinfo[0]}的{myzhuangtai[1][0]}状态解除了\n'
+            )
+            myzhuangtai[1][0] = '无'
+            myzhuangtai[1][1] = 0
+        else:
+            myzhuangtai[1][1] = myshengyuyc
+
+    if (
+        dizhuangtai[1][0] in hh_yichanglist
+        and int(dizhuangtai[1][1]) > 0
+        and diinfo[17] > 0
+    ):
+        dishengyuyc = int(dizhuangtai[1][1]) - 1
+        if dishengyuyc == 0:
+            changdi_mesg = (
+                changdi_mesg
+                + f'{diinfo[0]}的{dizhuangtai[1][0]}状态解除了\n'
+            )
+            dizhuangtai[1][0] = '无'
+            dizhuangtai[1][1] = 0
+        else:
+            dizhuangtai[1][1] = dishengyuyc
+
+    if (
+        myzhuangtai[0][0] in jiechulist
+        and int(myzhuangtai[0][1]) > 0
+        and myinfo[17] > 0
+    ):
+        suiji = int(math.floor(random.uniform(0, 100)))
+        if suiji <= 20:
+            changdi_mesg = (
+                changdi_mesg
+                + f'{myinfo[0]}的{myzhuangtai[0][0]}状态解除了\n'
+            )
+            myzhuangtai[0][0] = '无'
+            myzhuangtai[0][1] = 0
+
+    if (
+        dizhuangtai[0][0] in jiechulist
+        and int(dizhuangtai[0][1]) > 0
+        and diinfo[17] > 0
+    ):
+        suiji = int(math.floor(random.uniform(0, 100)))
+        if suiji <= 20:
+            changdi_mesg = (
+                changdi_mesg
+                + f'{diinfo[0]}的{dizhuangtai[0][0]}状态解除了\n'
+            )
+            dizhuangtai[0][0] = '无'
+            dizhuangtai[0][1] = 0
+
+    if int(changdi[0][1]) > 0 and changdi[0][0] != '无天气':
+        shengyutianqi = int(changdi[0][1]) - 1
+        if shengyutianqi == 0:
+            changdi_mesg = (
+                changdi_mesg + f'{changdi[0][0]}停止了，天气影响消失了\n'
+            )
+            changdi[0][0] = '无天气'
+            changdi[0][1] = 99
+        else:
+            changdi[0][1] = shengyutianqi
+            changdi_mesg = changdi_mesg + f'{changdi[0][0]}持续中\n'
+    mesg = mesg + changdi_mesg
+    return myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mesg
+
 async def pokemon_fight_pk(
     bot,
     ev,
@@ -2797,7 +3222,7 @@ async def get_win_reward(
             max_zhongzuid = index
         zhongzu_num += int(num)
     # 获得经验值
-    level_xz = level - myinfo[2]
+    level_xz = level - int(myinfo[2])
     if myinfo[2] > level:
         level_xz = max((0 - level) / 2, level_xz)
     get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.5)

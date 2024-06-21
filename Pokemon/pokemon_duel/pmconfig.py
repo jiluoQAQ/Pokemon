@@ -18,6 +18,8 @@ BOSS_WGJ = 5    #boss掉落金色王冠基础概率
 BOSS_WGY = 10   #boss掉落银色王冠基础概率
 BOSS_SCORE = 20 #boss掉落BOSS币基础概率
 button_action = 1
+dungeon_max_num = 3
+dungeon_sd = 1 #精灵塔每天的扫荡次数
 
 # 造成伤害天气
 tq_kouxuelist = ['沙暴', '冰雹']

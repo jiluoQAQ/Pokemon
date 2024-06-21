@@ -26,6 +26,7 @@ class PokeCounter:
         self._create_table_pipei_table()
         self._truncate_table_pipei()
         self._create_map_pipei_add()
+        self._create_table_dungeon()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -217,6 +218,18 @@ class PokeCounter:
         except:
             raise Exception('创建表发生错误')
     
+    def _create_table_dungeon(self):
+        try:
+            self._connect().execute(
+                """CREATE TABLE IF NOT EXISTS POKE_DUNGEON
+                          (UID             TEXT   NOT NULL,
+                           NUM             INT    NOT NULL,
+                           PRIMARY KEY(UID));"""
+            )
+        except:
+            raise Exception('创建表发生错误')
+    
+    
     def _create_map_pipei_add(self):
         with self._connect() as conn:
             r = conn.execute("select sql from sqlite_master where type='table' and name='POKEMON_MAP';").fetchall()
@@ -229,6 +242,38 @@ class PokeCounter:
             conn.execute(
                 "DELETE FROM POKE_PIPEI WHERE UID <>''"
             )
+    
+    async def _new_dungeon_info(self, uid):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(
+                'INSERT OR REPLACE INTO POKE_DUNGEON (UID,NUM) VALUES (?,?)',
+                (uid, 0),
+            )
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def update_dungeon(self,uid,dungeonnum):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKE_DUNGEON SET NUM={dungeonnum} WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def get_dungeon_info(self,uid):
+        connection = await aiosqlite.connect(DB_PATH)
+        cursor = await connection.execute(f"SELECT NUM FROM POKE_DUNGEON WHERE UID='{uid}'")
+        r = await cursor.fetchall()
+        await connection.close()
+        if r:
+            return r[0][0]
+        else:
+            await self._new_dungeon_info(uid)
+            return 0
     
     async def _new_pipei_info(self, uid):
         try:
