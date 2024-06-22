@@ -573,6 +573,17 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
         await FIGHT.update_fight_flag(fightid,uid2,2)
         await FIGHT.update_fight_mes(fightid,mesg)
 
+async def poke_info_new(pokeinfo):
+    pokeinfo[9] = 0
+    pokeinfo[10] = 0
+    pokeinfo[11] = 0
+    pokeinfo[12] = 0
+    pokeinfo[13] = 0
+    pokeinfo[14] = 0
+    pokeinfo[15] = 0
+    pokeinfo[16] = 0
+    return pokeinfo
+    
 
 async def get_new_pokemon_id(bot, ev, uid, pokelist, myname, mes):
     pokebuttonlist = []
@@ -699,7 +710,10 @@ async def pokemon_fight_pipei(
             pipeipokelist = copy.deepcopy(mypokelist)
             nowpokeid = await FIGHT.get_new_pokeid(fightid,myuid)
             pipeipokelist.remove(nowpokeid)
+            oldmyinfo,oldmyzhuangtai,oldjineng_use1 = await FIGHT.get_fight_info(fightid,myuid)
             newpokeid = await get_new_pokemon_id(bot, ev, myuid, pipeipokelist, myname, f'{myname}替换了精灵')
+            oldmyinfo = await poke_info_new(oldmyinfo)
+            await FIGHT.update_fight_info(fightid,myuid,oldmyinfo,oldmyzhuangtai)
             newpokeinfo = await FIGHT.get_fight_info_pokeid(fightid,myuid,newpokeid)
             if len(newpokeinfo) > 0:
                 await FIGHT.update_fight_pokeid(fightid,myuid,newpokeid)
@@ -757,10 +771,10 @@ async def pokemon_fight_dungeon(
     last_jineng2 = ''
     button_user_input_my = []
     button_user_input_my.append(myuid)
-    jineng_use = jinenguseinfo[pokeid]
     while fight_flag == 0:
         jieshu = 0
         mypokemon_info = await get_pokeon_info(myuid, pokeid)
+        jineng_use = jinenguseinfo[pokeid]
         myjinenglist = re.split(',', mypokemon_info[14])
         dijinenglist = re.split(',', dipokemon_info[14])
         myjinengbuttons = []
@@ -822,8 +836,9 @@ async def pokemon_fight_dungeon(
         if jineng1 == '替换精灵':
             pipeipokelist = copy.deepcopy(mypokelist)
             pipeipokelist.remove(pokeid)
+            nowpokeid = pokeid
             newpokeid = await get_new_pokemon_id(bot, ev, myuid, pipeipokelist, myname, f'{myname}替换了精灵')
-            
+            pokeinfo[nowpokeid] = await poke_info_new(pokeinfo[nowpokeid])
             if pokeinfo.get(newpokeid,0) == 0:
                 mypokemon_info = await get_pokeon_info(myuid, newpokeid)
                 myinfo = await new_pokemon_info(newpokeid, mypokemon_info, 0)
@@ -873,7 +888,10 @@ async def fight_pk_pipei(
                 bianhao1 = mypokelist[0]
             else:
                 if len(mypokelist) > 1:
+                    oldmyinfo,oldmyzhuangtai,oldjineng_use1 = await FIGHT.get_fight_info(fightid,myuid)
                     bianhao1 = await get_new_pokemon_id(bot, ev, myuid, mypokelist, myname, mes)
+                    oldmyinfo = await poke_info_new(oldmyinfo)
+                    await FIGHT.update_fight_info(fightid,myuid,oldmyinfo,oldmyzhuangtai)
                 else:
                     bianhao1 = mypokelist[0]
             newpokeinfo = await FIGHT.get_fight_info_pokeid(fightid,myuid,bianhao1)
@@ -918,6 +936,7 @@ async def fight_dungeon(bot, ev, myuid, mypokelist, dipokelist, dungeonlevel, my
     jineng_use = []
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
+    mesg = ''
     while len(mypokelist) > 0 and len(dipokelist) > 0:
         mes = f'\n第{changci}场\n'
         mes += f'{myname}剩余精灵{len(mypokelist)}只\n敌方剩余精灵{len(dipokelist)}只\n'
@@ -927,7 +946,9 @@ async def fight_dungeon(bot, ev, myuid, mypokelist, dipokelist, dungeonlevel, my
                 pokeid = mypokelist[0]
             else:
                 if len(mypokelist) > 1:
+                    oldpokeid = pokeid
                     pokeid = await get_new_pokemon_id(bot, ev, myuid, mypokelist, myname, mes)
+                    pokeinfo[oldpokeid] = await poke_info_new(pokeinfo[oldpokeid])
                 else:
                     pokeid = mypokelist[0]
             if pokeinfo.get(pokeid,0) == 0:
@@ -942,10 +963,13 @@ async def fight_dungeon(bot, ev, myuid, mypokelist, dipokelist, dungeonlevel, my
             else:
                 newpokeinfo = pokeinfo[pokeid]
         if len(diinfo) == 0:
-            bianhao2 = random.sample(dipokelist, 1)[0]
+            if max_di_num == len(dipokelist):
+                bianhao2 = dipokelist[0]
+            else:
+                bianhao2 = random.sample(dipokelist, 1)[0]
             bossinfo = dungeonpoke[str(bianhao2)]
             dipokemon_info = await get_pokeon_info_boss(bianhao2, bossinfo, dungeonlevel)
-            diinfo = await new_pokemon_info(bianhao2, dipokemon_info, 0)
+            diinfo = await new_pokemon_info(bianhao2, dipokemon_info, dungeonlevel)
         mes = ''
         mes += f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[pokeid][0]} Lv.{mypokemon_info[0]}\n'
         mes += f'试炼精灵{POKEMON_LIST[bianhao2][0]}·Lv.{dipokemon_info[0]}出现了\n'
