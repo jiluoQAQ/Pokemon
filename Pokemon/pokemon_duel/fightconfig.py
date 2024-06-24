@@ -793,6 +793,8 @@ async def pokemon_fight_dungeon(
         if len(mypokelist) > 1:
             my_ues_jineng_list.append('替换精灵')
             myjinengbuttons.append(Button('替换精灵', '替换精灵', '替换精灵', action=1, permisson=0, specify_user_ids=button_user_input_my))
+            my_ues_jineng_list.append('试炼逃跑')
+            myjinengbuttons.append(Button('试炼逃跑', '试炼逃跑', '试炼逃跑', action=1, permisson=0, specify_user_ids=button_user_input_my))
             
         if len(my_ues_jineng_list) == 0:
             my_ues_jineng_list.append('挣扎')
@@ -829,9 +831,14 @@ async def pokemon_fight_dungeon(
         except asyncio.TimeoutError:
             myinfo = pokeinfo[pokeid]
             my_ues_jineng_list.remove('替换精灵')
+            my_ues_jineng_list.remove('试炼逃跑')
             jineng1 = await now_use_jineng(
                 myinfo, diinfo, my_ues_jineng_list, dijinenglist, changdi
             )
+        
+        if jineng1 == '试炼逃跑':
+            jinenguseinfo[pokeid].append(jineng1)
+            return pokeinfo,diinfo,zhuangtaiinfo,dizhuangtai,changdi,jinenguseinfo,pokeid,mesg
         
         if jineng1 == '替换精灵':
             pipeipokelist = copy.deepcopy(mypokelist)
@@ -974,6 +981,9 @@ async def fight_dungeon(bot, ev, myuid, mypokelist, dipokelist, dungeonlevel, my
         mes += f'{myname}派出了精灵\n{starlist[mystartype]}{POKEMON_LIST[pokeid][0]} Lv.{mypokemon_info[0]}\n'
         mes += f'试炼精灵{POKEMON_LIST[bianhao2][0]}·Lv.{dipokemon_info[0]}出现了\n'
         pokeinfo,diinfo,zhuangtaiinfo,dizhuangtai,changdi,jinenguseinfo,pokeid,mesg = await pokemon_fight_dungeon(bot,ev,pokeinfo,diinfo,zhuangtaiinfo,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,myuid,jinenguseinfo,pokeid,mypokelist,mes)
+        if jinenguseinfo[pokeid][len(jinenguseinfo[pokeid]) - 1] == '试炼逃跑':
+            mypokelist = []
+            return [],dipokelist
         if pokeinfo[pokeid][17] <= 0:
             mesg += f'\n{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[pokeid][0]}'
             await bot.send(mesg)
