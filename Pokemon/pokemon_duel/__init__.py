@@ -54,6 +54,7 @@ async def pokemon_help(bot, ev: Event):
         Button('🗺查看地图', '查看地图','🗺查看地图', action=1),
         Button('✅大量出现信息', '大量出现信息','✅大量出现信息', action=1),
         Button('✅小游戏帮助', '小游戏帮助','✅小游戏帮助', action=1),
+        Button('✅支持作者', 'https://afdian.net/a/556186aa','✅支持作者', action=0),
     ]
     await bot.send_option(mes, buttons)
 
