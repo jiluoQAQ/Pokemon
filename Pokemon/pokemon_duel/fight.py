@@ -1146,7 +1146,6 @@ async def pokemon_pk_dungeon(bot, ev: Event):
 @sv_pokemon_pk.on_fullmatch(('扫荡试炼塔', '扫荡精灵塔'))
 async def pokemon_sd_dungeon(bot, ev: Event):
     uid = ev.user_id
-    uid = ev.user_id
     mypoke = await POKE._get_pokemon_list(uid)
     if mypoke == 0:
         return await bot.send(
@@ -1175,6 +1174,19 @@ async def pokemon_sd_dungeon(bot, ev: Event):
         mes += f"\n{reward['name']}+{reward['num']}"
         await POKE._add_pokemon_prop(uid, reward['name'], reward['num'])
     await bot.send(mes)
+
+@sv_pokemon_pk.on_fullmatch(('试炼塔排名', '精灵塔排名'))
+async def pokemon_dungeon_paiming(bot, ev: Event):
+    uid = ev.user_id
+    dungeon_list = await POKE.get_dungeon_list()
+    if dungeon_list == 0:
+        return bot.send('目前还没有人挑战过精灵塔哦')
+    mesg = "精灵塔排名（只显示前30名）"
+    for detail in dungeon_list:
+        mapinfo = await POKE._get_map_now(detail[0])
+        name = mapinfo[2]
+        mesg += f'\n{name} 已通过{detail[1]}层'
+    await bot.send(mesg)
 
 @sv_pokemon_pk.on_command(('世界boss伤害排名'))
 async def pokemon_pk_boss_sj_paiming(bot, ev: Event):

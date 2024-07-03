@@ -275,6 +275,17 @@ class PokeCounter:
             await self._new_dungeon_info(uid)
             return 0
     
+    async def get_dungeon_list(self):
+        connection = await aiosqlite.connect(DB_PATH)
+        cursor = await connection.execute(f"SELECT UID,NUM FROM POKE_DUNGEON WHERE NUM > 0 ORDER BY NUM DESC LIMIT 0,30")
+        r = await cursor.fetchall()
+        await connection.close()
+        if r:
+            return r
+        else:
+            await self._new_dungeon_info(uid)
+            return 0
+    
     async def _new_pipei_info(self, uid):
         try:
             connection = await aiosqlite.connect(DB_PATH)
