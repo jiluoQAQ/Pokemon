@@ -1896,16 +1896,17 @@ async def refresh_pokemon_day():
                     mes += f"\n{diqu}地区-{didianname} 出现了大量的 {CHARA_NAME[pokeminid][0]}"
                     find_flag = 1
     refresh_send_list = await POKE.get_refresh_send_list()
-    for refresh in refresh_send_list:
-        try:
-            for bot_id in gss.active_bot:
-                await gss.active_bot[bot_id].target_send(
-                    mes,
-                    'group',
-                    refresh[0],
-                    refresh[1],
-                    '',
-                    '',
-                )
-        except Exception as e:
-            print(f'[每日大量出现推送]群 14559-188477 推送失败!错误信息:{e}')
+    if refresh_send_list != 0:
+        for refresh in refresh_send_list:
+            try:
+                for bot_id in gss.active_bot:
+                    await gss.active_bot[bot_id].target_send(
+                        mes,
+                        'group',
+                        refresh[0],
+                        refresh[1],
+                        '',
+                        '',
+                    )
+            except Exception as e:
+                print(f'[每日大量出现推送]群 {refresh[0]} 推送失败!错误信息:{e}')

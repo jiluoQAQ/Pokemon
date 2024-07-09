@@ -865,6 +865,8 @@ async def pokemon_fight_dungeon(
         jineng_use = jinenguseinfo[pokeid]
         if '替换精灵' in my_ues_jineng_list:
             my_ues_jineng_list.remove('替换精灵')
+        if '试炼逃跑' in my_ues_jineng_list:
+            my_ues_jineng_list.remove('试炼逃跑')
         jineng2 = await now_use_jineng(
             diinfo, myinfo, dijinenglist, my_ues_jineng_list, changdi
         )
