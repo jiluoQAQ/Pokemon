@@ -3443,16 +3443,17 @@ async def fight_yw_ys_s(
             # mesg.append(MessageSegment.text(mes))
             # await bot.send(mes, at_sender=True)
             # 我方获得经验/努力值奖励
-            mes, myinfo, mypokemon_info = await get_win_reward(
-                uid,
-                bianhao1,
-                myinfo,
-                mypokemon_info,
-                bianhao2,
-                dipokemon_info[0],
-            )
-            win_mesg += mes
-            mesg += f'\n{mes}'
+            if myinfo[17] > 0:
+                mes, myinfo, mypokemon_info = await get_win_reward(
+                    uid,
+                    bianhao1,
+                    myinfo,
+                    mypokemon_info,
+                    bianhao2,
+                    dipokemon_info[0],
+                )
+                win_mesg += mes
+                mesg += f'\n{mes}'
             win_para = await get_text_line(win_mesg, 30)
             win_mes_h = 0
             for line in win_para:
@@ -3571,32 +3572,34 @@ async def fight_pk_s(
             jiesuan_msg = (
                 f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             )
-            mes, diinfo, dipokemon_info = await get_win_reward(
-                diuid,
-                bianhao2,
-                diinfo,
-                dipokemon_info,
-                bianhao1,
-                mypokemon_info[0],
-                level,
-            )
-            jiesuan_msg += mes
+            if diinfo[17] > 0:
+                mes, diinfo, dipokemon_info = await get_win_reward(
+                    diuid,
+                    bianhao2,
+                    diinfo,
+                    dipokemon_info,
+                    bianhao1,
+                    mypokemon_info[0],
+                    level,
+                )
+                jiesuan_msg += mes
 
         if diinfo[17] <= 0:
             jiesuan_msg = (
                 f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             )
-            # 我方获得经验/努力值奖励
-            mes, myinfo, mypokemon_info = await get_win_reward(
-                myuid,
-                bianhao1,
-                myinfo,
-                mypokemon_info,
-                bianhao2,
-                dipokemon_info[0],
-                level,
-            )
-            jiesuan_msg += mes
+            if myinfo[17] > 0:
+                # 我方获得经验/努力值奖励
+                mes, myinfo, mypokemon_info = await get_win_reward(
+                    myuid,
+                    bianhao1,
+                    myinfo,
+                    mypokemon_info,
+                    bianhao2,
+                    dipokemon_info[0],
+                    level,
+                )
+                jiesuan_msg += mes
 
         if myinfo[17] <= 0:
             myinfo = []
@@ -3775,16 +3778,17 @@ async def fight_pk(
             lose_msg = (
                 f'{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
             )
-            mes, diinfo, dipokemon_info = await get_win_reward(
-                diuid,
-                bianhao2,
-                diinfo,
-                dipokemon_info,
-                bianhao1,
-                mypokemon_info[0],
-            )
-            lose_msg += mes
-            mesg += f'\n{mes}'
+            if diinfo[17] > 0:
+                mes, diinfo, dipokemon_info = await get_win_reward(
+                    diuid,
+                    bianhao2,
+                    diinfo,
+                    dipokemon_info,
+                    bianhao1,
+                    mypokemon_info[0],
+                )
+                lose_msg += mes
+                mesg += f'\n{mes}'
             lose_para = await get_text_line(lose_msg, 30)
             lose_mes_h = 0
             for line in lose_para:
@@ -3801,17 +3805,18 @@ async def fight_pk(
             win_mesg = (
                 f'{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
             )
-            # 我方获得经验/努力值奖励
-            mes, myinfo, mypokemon_info = await get_win_reward(
-                myuid,
-                bianhao1,
-                myinfo,
-                mypokemon_info,
-                bianhao2,
-                dipokemon_info[0],
-            )
-            win_mesg += mes
-            mesg += f'\n{mes}'
+            if myinfo[17] > 0:
+                # 我方获得经验/努力值奖励
+                mes, myinfo, mypokemon_info = await get_win_reward(
+                    myuid,
+                    bianhao1,
+                    myinfo,
+                    mypokemon_info,
+                    bianhao2,
+                    dipokemon_info[0],
+                )
+                win_mesg += mes
+                mesg += f'\n{mes}'
             win_para = await get_text_line(win_mesg, 30)
             win_mes_h = 0
             for line in win_para:
@@ -3894,18 +3899,19 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
             mesg += f'\n>{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
         if diinfo[17] <= 0:
             mesg += f'\n>{POKEMON_LIST[bianhao1][0]}战胜了{POKEMON_LIST[bianhao2][0]}'
-            # 我方获得经验/努力值奖励
-            mes, myinfo, mypokemon_info = await get_win_reward(
-                uid,
-                bianhao1,
-                myinfo,
-                mypokemon_info,
-                bianhao2,
-                dipokemon_info[0],
-            )
-            if mes != '':
-                mes = mes.replace('\n','\n>')
-                mesg += f'{mes}'
+            if myinfo[17] > 0:
+                # 我方获得经验/努力值奖励
+                mes, myinfo, mypokemon_info = await get_win_reward(
+                    uid,
+                    bianhao1,
+                    myinfo,
+                    mypokemon_info,
+                    bianhao2,
+                    dipokemon_info[0],
+                )
+                if mes != '':
+                    mes = mes.replace('\n','\n>')
+                    mesg += f'{mes}'
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
@@ -4015,16 +4021,17 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
         if diinfo[17] <= 0:
             mesg = f'{POKEMON_LIST[bianhao1][0]}战胜了【首领】{POKEMON_LIST[bianhao2][0]}'
             # 我方获得经验/努力值奖励
-            mes, myinfo, mypokemon_info = await get_win_reward(
-                uid,
-                bianhao1,
-                myinfo,
-                mypokemon_info,
-                bianhao2,
-                dipokemon_info[0],
-            )
-            mesg += f'\n{mes}'
-            await bot.send(mes)
+            if myinfo[17] > 0:
+                mes, myinfo, mypokemon_info = await get_win_reward(
+                    uid,
+                    bianhao1,
+                    myinfo,
+                    mypokemon_info,
+                    bianhao2,
+                    dipokemon_info[0],
+                )
+                mesg += f'\n{mes}'
+                await bot.send(mes)
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
@@ -4084,16 +4091,17 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
         if diinfo[17] <= 0:
             mesg = f'{POKEMON_LIST[bianhao1][0]}战胜了【世界首领】{POKEMON_LIST[bianhao2][0]}'
             # 我方获得经验/努力值奖励
-            mes, myinfo, mypokemon_info = await get_win_reward(
-                uid,
-                bianhao1,
-                myinfo,
-                mypokemon_info,
-                bianhao2,
-                dipokemon_info[0],
-            )
-            mesg += f'\n{mes}'
-            await bot.send(mes)
+            if myinfo[17] > 0:
+                mes, myinfo, mypokemon_info = await get_win_reward(
+                    uid,
+                    bianhao1,
+                    myinfo,
+                    mypokemon_info,
+                    bianhao2,
+                    dipokemon_info[0],
+                )
+                mesg += f'\n{mes}'
+                await bot.send(mes)
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
