@@ -3193,7 +3193,7 @@ async def add_exp(uid, pokemonid, exp):
             break
     msg = ''
     if now_level < 100:
-        msg = f'\n获得了经验{exp}'
+        msg = f'\n{POKEMON_LIST[pokemonid][0]}获得了经验{exp}'
     if now_level > levelinfo[0]:
         msg += f'\n等级提升到了{now_level}'
     if level_flag == 1:
@@ -3241,7 +3241,7 @@ async def get_win_reward(
         uid, mypokemonid, pokemon_info, max_zhongzuid, nl_num
     )
     if mesg:
-        mes += mesg
+        mes += '\n' + mesg
     newinfo = await new_pokemon_info(mypokemonid, pokemon_info, returnlevel)
     newinfo[9] = myinfo[9]
     newinfo[10] = myinfo[10]
@@ -3254,6 +3254,33 @@ async def get_win_reward(
     newinfo[17] = myinfo[17]
     return mes, newinfo, pokemon_info
 
+async def get_win_exp(uid, mypokemonid, level, pokemonid, pokelist):
+    mes = ''
+    zhongzu = POKEMON_LIST[pokemonid]
+    zhongzu_info = []
+    for item in [1, 2, 3, 4, 5, 6]:
+        zhongzu_info.append(int(zhongzu[item]))
+    zhongzu_num = 0
+    max_zhongzu = 0
+    max_zhongzuid = 0
+    for index, num in enumerate(zhongzu_info):
+        if int(num) >= int(max_zhongzu):
+            max_zhongzu = int(num)
+            max_zhongzuid = index
+        zhongzu_num += int(num)
+    for pokeid in pokelist:
+        if mypokemonid != pokeid:
+            pokeinfo = await get_pokeon_info(uid, pokeid)
+            mylevel = pokeinfo[0]
+            # 获得经验值
+            level_xz = level - int(mylevel)
+            if mylevel > level:
+                level_xz = max((0 - level) / 2, level_xz)
+            level_xz = min(20, level_xz)
+            get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.25)
+            mesg = await add_exp(uid, pokeid, get_exp)
+            mes += mesg
+    return mes
 
 async def fight_yw_ys_s(
     bg_img, bot, ev, uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0
@@ -3454,6 +3481,10 @@ async def fight_yw_ys_s(
                 )
                 win_mesg += mes
                 mesg += f'\n{mes}'
+                if len(mypokelist) > 1:
+                    expmes = await get_win_exp(uid, bianhao1, dipokemon_info[0], bianhao2, mypokelist)
+                    mesg += f'\n{expmes}'
+                
             win_para = await get_text_line(win_mesg, 30)
             win_mes_h = 0
             for line in win_para:
@@ -3583,6 +3614,9 @@ async def fight_pk_s(
                     level,
                 )
                 jiesuan_msg += mes
+                if len(dipokelist) > 1:
+                    expmes = await get_win_exp(diuid, bianhao2, mypokemon_info[0], bianhao1, dipokelist)
+                    jiesuan_msg += f'\n{expmes}'
 
         if diinfo[17] <= 0:
             jiesuan_msg = (
@@ -3600,6 +3634,9 @@ async def fight_pk_s(
                     level,
                 )
                 jiesuan_msg += mes
+                if len(mypokelist) > 1:
+                    expmes = await get_win_exp(myuid, bianhao1, dipokemon_info[0], bianhao2, mypokelist)
+                    jiesuan_msg += f'\n{expmes}'
 
         if myinfo[17] <= 0:
             myinfo = []
@@ -3789,6 +3826,10 @@ async def fight_pk(
                 )
                 lose_msg += mes
                 mesg += f'\n{mes}'
+                if len(dipokelist) > 1:
+                    expmes = await get_win_exp(diuid, bianhao2, mypokemon_info[0], bianhao1, dipokelist)
+                    lose_msg += expmes
+                    mesg += f'\n{expmes}'
             lose_para = await get_text_line(lose_msg, 30)
             lose_mes_h = 0
             for line in lose_para:
@@ -3817,6 +3858,10 @@ async def fight_pk(
                 )
                 win_mesg += mes
                 mesg += f'\n{mes}'
+                if len(mypokelist) > 1:
+                    expmes = await get_win_exp(myuid, bianhao1, dipokemon_info[0], bianhao2, mypokelist)
+                    win_mesg += expmes
+                    mesg += f'\n{expmes}'
             win_para = await get_text_line(win_mesg, 30)
             win_mes_h = 0
             for line in win_para:
@@ -3912,6 +3957,9 @@ async def fight_yw_ys(uid, mypokelist, dipokelist, minlevel, maxlevel, ys=0):
                 if mes != '':
                     mes = mes.replace('\n','\n>')
                     mesg += f'{mes}'
+                if len(mypokelist) > 1:
+                    expmes = await get_win_exp(uid, bianhao1, dipokemon_info[0], bianhao2, mypokelist)
+                    mesg += f'\n{expmes}'
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
@@ -4101,7 +4149,10 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
                     dipokemon_info[0],
                 )
                 mesg += f'\n{mes}'
-                await bot.send(mes)
+                if len(mypokelist) > 1:
+                    expmes = await get_win_exp(uid, bianhao1, dipokemon_info[0], bianhao2, mypokelist)
+                    mesg += f'\n{expmes}'
+                await bot.send(mesg)
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
