@@ -1734,7 +1734,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
             myjn_name = myjn
             if int(jn_use_num_my) < int(jineng_info1[4]):
                 my_ues_jineng_list.append(myjn)
-                myjinengbuttons.append(Button(myjn_but, myjn_name, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input))
+                myjinengbuttons.append(Button(myjn_but, myjn_but, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input))
         if len(my_ues_jineng_list) == 0:
             my_ues_jineng_list.append('挣扎')
             myjinengbuttons = [Button('挣扎', '挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input)]
@@ -2608,7 +2608,7 @@ async def pokemon_fight_pk(
             myjn_name = myjn
             if int(jn_use_num_my) < int(jineng_info1[4]):
                 my_ues_jineng_list.append(myjn)
-                myjinengbuttons.append(Button(myjn_but, myjn_name, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input_my))
+                myjinengbuttons.append(Button(myjn_but, myjn_but, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input_my))
             
         for dijn in dijinenglist:
             jn_use_num_di = jineng_use2.count(dijn)
@@ -2617,7 +2617,7 @@ async def pokemon_fight_pk(
             dijn_name = dijn
             if int(jn_use_num_di) < int(jineng_info2[4]):
                 di_ues_jineng_list.append(dijn)
-                dijinengbuttons.append(Button(dijn_but, dijn_name, dijn_but, action=1, permisson=0, specify_user_ids=button_user_input_di))
+                dijinengbuttons.append(Button(dijn_but, dijn_but, dijn_but, action=1, permisson=0, specify_user_ids=button_user_input_di))
             
         if len(my_ues_jineng_list) == 0:
             my_ues_jineng_list.append('挣扎')
@@ -3174,6 +3174,7 @@ async def get_need_exp(pokemonid, level):
 # 增加角色经验
 async def add_exp(uid, pokemonid, exp):
     levelinfo = await POKE._get_pokemon_level(uid, pokemonid)
+    old_level = levelinfo[0]
     now_level = levelinfo[0]
     need_exp = await get_need_exp(pokemonid, now_level)
     now_exp = levelinfo[1] + exp
@@ -3192,7 +3193,7 @@ async def add_exp(uid, pokemonid, exp):
             now_exp = 0
             break
     msg = ''
-    if now_level < 100:
+    if old_level < 100:
         msg = f'\n{POKEMON_LIST[pokemonid][0]}获得了经验{exp}'
     if now_level > levelinfo[0]:
         msg += f'\n等级提升到了{now_level}'
@@ -3253,6 +3254,26 @@ async def get_win_reward(
     newinfo[16] = myinfo[16]
     newinfo[17] = myinfo[17]
     return mes, newinfo, pokemon_info
+
+async def get_auto_win_exp(level, pokemonid, pokelist, pokelevellist, pokeexplist, num):
+    mes = ''
+    zhongzu = POKEMON_LIST[pokemonid]
+    zhongzu_info = []
+    for item in [1, 2, 3, 4, 5, 6]:
+        zhongzu_info.append(int(zhongzu[item]))
+    zhongzu_num = 0
+    for index, num in enumerate(zhongzu_info):
+        zhongzu_num += int(num)
+    for pokeid in pokelist:
+        mylevel = pokelevellist[pokeid]
+        # 获得经验值
+        level_xz = level - int(mylevel)
+        if mylevel > level:
+            level_xz = max((0 - level) / 2, level_xz)
+        level_xz = min(20, level_xz)
+        get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.25) * num
+        pokeexplist[pokeid] += get_exp
+    return pokeexplist
 
 async def get_win_exp(uid, mypokemonid, level, pokemonid, pokelist):
     mes = ''

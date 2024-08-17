@@ -42,8 +42,13 @@ async def pokemon_help(bot, ev: Event):
     mes += "更新队伍 精灵名 更新手持队伍信息，不同的宝可梦用空格分隔，最多4只\n"
     mes += "大量出现信息 查询当前随机出现的大量宝可梦消息\n"
     mes += "宝可梦重生 让等级到100级的精灵重生为精灵蛋\n"
-    mes += "更新公告 查看最近更新内容"
-    mes += "注:\n同一类型的精灵只能拥有一只:进化型为不同类型\n后续功能在写了在写了 新建文件夹\n其他宝可梦相关小游戏可以点击小游戏帮助查询"
+    mes += "更新公告 查看最近更新内容\n"
+    mes += "道具帮助 查看道具相关帮助\n"
+    mes += "战斗帮助 查看战斗相关帮助\n"
+    mes += "注:\n同一类型的精灵只能拥有一只:进化型为不同类型\n后续功能在写了在写了 新建文件夹\n其他宝可梦相关小游戏可以点击[小游戏帮助]查询"
+    #mes += "\n欢迎加入交流群：684118798"
+    
+    #await bot.send(mes)
     buttons = [
         Button('✅道具帮助', '道具帮助', '✅道具帮助', action=1),
         Button('✅战斗帮助', '战斗帮助', '✅战斗帮助', action=1),
@@ -79,20 +84,8 @@ async def pokemon_gonggao(bot, ev: Event):
     
 @sv_pokemon_duel.on_fullmatch(['小游戏帮助', '宝可梦小游戏帮助'])
 async def pokemon_help_game(bot, ev: Event):
-    msg = """
-             宝可梦小游戏帮助
-游戏名：
-1、我是谁：宝可梦猜猜我是谁
-（给出宝可梦剪影，猜猜是哪只宝可梦）
-2、猜精灵：宝可梦信息猜猜
-（给出宝可梦的6条信息，猜猜是哪只宝可梦）
-3、猜属性：宝可梦属性猜测
-（给出5条属性的克制关系信息，猜猜是哪种属性组合）
-4、猜技能：宝可梦技能猜测
-（给给出技能的6条信息，猜猜是哪个技能）
-注:
-其他的宝可梦小游戏正在火速开发中(新建文件夹)
- """
+    msg = '宝可梦小游戏帮助\n游戏名：\n1、我是谁：宝可梦猜猜我是谁\n（给出宝可梦剪影，猜猜是哪只宝可梦）\n2、猜精灵：宝可梦信息猜猜\n（给出宝可梦的6条信息，猜猜是哪只宝可梦）\n3、猜属性：宝可梦属性猜测\n（给出5条属性的克制关系信息，猜猜是哪种属性组合）\n4、猜技能：宝可梦技能猜测\n（给给出技能的6条信息，猜猜是哪个技能）\n5、猜图鉴：根据图鉴猜精灵\n（给出图鉴信息，猜测使哪只精灵）\n注:\n其他的宝可梦小游戏正在火速开发中(新建文件夹)'
+    mes = '宝可梦小游戏帮助\r<qqbot-cmd-input text="我是谁" show="我是谁" reference="false" />'
     buttons = [
         Button('✅我是谁', '我是谁', '✅我是谁', action=1),
         Button('✅猜精灵', '猜精灵', '✅猜精灵', action=1),
@@ -163,6 +156,7 @@ async def my_pokemon_list(bot, ev: Event):
         if ')' in pokename:
             pokename = pokename.replace(')','）')
         mes += f"\n{starlist[startype]}{CHARA_NAME[pokemoninfo[0]][0]} (Lv.{pokemoninfo[1]})"
+        #mes += f" [状态] (mqqapi://aio/inlinecmd?command=精灵状态{pokename})"
     if page_num > 1:
         mes += f'\n第({page}/{page_num})页'
     buttons = [
@@ -874,7 +868,7 @@ async def get_pokemon_form_chongsheng(bot, ev: Event):
         await POKE._add_pokemon_group(uid, pokemon_str)
     if eggid == 10:
         chongsheng_num = await POKE.get_chongsheng_num(uid,384)
-        if chongsheng_num >= 999:
+        if chongsheng_num >= 233:
             eggid = 384
             await POKE._new_chongsheng_num(uid,384)
         else:

@@ -655,7 +655,7 @@ async def pokemon_fight_pipei(
             myjn_name = myjn
             if int(jn_use_num_my) < int(jineng_info1[4]):
                 my_ues_jineng_list.append(myjn)
-                myjinengbuttons.append(Button(myjn_but, myjn_name, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input_my))
+                myjinengbuttons.append(Button(myjn_but, myjn_but, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input_my))
         
         mypokelist = await FIGHT.get_pokelist(fightid,myuid)
         if len(mypokelist) > 1:
@@ -788,7 +788,7 @@ async def pokemon_fight_dungeon(
             myjn_name = myjn
             if int(jn_use_num_my) < int(jineng_info1[4]):
                 my_ues_jineng_list.append(myjn)
-                myjinengbuttons.append(Button(myjn_but, myjn_name, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input_my))
+                myjinengbuttons.append(Button(myjn_but, myjn_but, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input_my))
         
         if len(mypokelist) > 1:
             my_ues_jineng_list.append('替换精灵')

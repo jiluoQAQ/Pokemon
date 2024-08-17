@@ -27,6 +27,7 @@ class PokeCounter:
         self._truncate_table_pipei()
         self._create_map_pipei_add()
         self._create_table_dungeon()
+        self._create_mapauto_add()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -229,6 +230,12 @@ class PokeCounter:
         except:
             raise Exception('创建表发生错误')
     
+    def _create_mapauto_add(self):
+        with self._connect() as conn:
+            r = conn.execute("select sql from sqlite_master where type='table' and name='POKEMON_MAP';").fetchall()
+            if 'AUTOFLAG' not in str(r):
+                conn.execute("ALTER TABLE POKEMON_MAP ADD AUTOFLAG INT DEFAULT 0;").fetchall()
+                conn.execute("ALTER TABLE POKEMON_MAP ADD AUTOTIME INT DEFAULT 0;").fetchall()
     
     def _create_map_pipei_add(self):
         with self._connect() as conn:
@@ -1014,7 +1021,7 @@ class PokeCounter:
     async def _get_map_now(self, uid):
         try:
             connection = await aiosqlite.connect(DB_PATH)
-            cursor = await connection.execute(f"SELECT HUIZHANG,MAP_NAME,NICKNAME,PIPEI FROM POKEMON_MAP WHERE UID='{uid}'")
+            cursor = await connection.execute(f"SELECT HUIZHANG,MAP_NAME,NICKNAME,PIPEI,AUTOFLAG,AUTOTIME FROM POKEMON_MAP WHERE UID='{uid}'")
             r = await cursor.fetchall()
             await connection.close()
             if r:
@@ -1027,7 +1034,7 @@ class PokeCounter:
     async def _get_map_info_nickname(self, nickname):
         try:
             connection = await aiosqlite.connect(DB_PATH)
-            cursor = await connection.execute(f"SELECT HUIZHANG,MAP_NAME,UID,PIPEI FROM POKEMON_MAP WHERE NICKNAME='{nickname}'")
+            cursor = await connection.execute(f"SELECT HUIZHANG,MAP_NAME,UID,PIPEI,AUTOFLAG,AUTOTIME FROM POKEMON_MAP WHERE NICKNAME='{nickname}'")
             r = await cursor.fetchall()
             await connection.close()
             if r:
@@ -1047,8 +1054,8 @@ class PokeCounter:
         try:
             connection = await aiosqlite.connect(DB_PATH)
             await connection.execute(
-                'INSERT OR REPLACE INTO POKEMON_MAP (UID,HUIZHANG,MAP_NAME,NICKNAME,PIPEI) VALUES (?,?,?,?,?)',
-                (uid, 0, map_name, nickname, 0),
+                'INSERT OR REPLACE INTO POKEMON_MAP (UID,HUIZHANG,MAP_NAME,NICKNAME,PIPEI,AUTOFLAG,AUTOTIME) VALUES (?,?,?,?,?,?,?)',
+                (uid, 0, map_name, nickname, 0, 0, 0),
             )
             await connection.commit()
             await connection.close()
@@ -1090,6 +1097,15 @@ class PokeCounter:
         try:
             connection = await aiosqlite.connect(DB_PATH)
             await connection.execute(f"UPDATE POKEMON_MAP SET PIPEI = {pipei_num} WHERE UID='{uid}'")
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
+    async def update_map_autoinfo(self, uid, autoflag, autotime):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKEMON_MAP SET AUTOFLAG = {autoflag}, AUTOTIME = {autotime} WHERE UID='{uid}'")
             await connection.commit()
             await connection.close()
         except:

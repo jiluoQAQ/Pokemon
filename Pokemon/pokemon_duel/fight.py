@@ -43,8 +43,8 @@ async def fight_help(bot, ev: Event):
 #指令：
 1.挑战【道馆/天王/四天王冠军】:通过战胜【道馆/天王/四天王冠军】获得徽章称号，进一步解锁功能
 2.训练家对战【昵称】:与昵称为【昵称】的训练家进行对战(自动战斗)
-3.无级别对战【昵称/at对方】:与其他训练家进行一场无等级限制的手动对战
-4.限制级对战【昵称/at对方】:与其他训练家进行一场等级限制为50的手动对战
+3.无级别对战【昵称】:与其他训练家进行一场无等级限制的手动对战
+4.限制级对战【昵称】:与其他训练家进行一场等级限制为50的手动对战
 5.首领列表：查看所有的首领信息与地点
 6.首领信息：查看当前地点的首领信息
 7.首领挑战：挑战该地点的首领，获胜可获得大量奖励
@@ -74,6 +74,8 @@ async def pk_vs_daoguan(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('正在自动探索中，无法挑战，请关闭自动探索后再试吧', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
@@ -255,6 +257,8 @@ async def pk_vs_tianwang(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('正在自动探索中，无法挑战，请关闭自动探索后再试吧', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
@@ -439,6 +443,8 @@ async def pk_vs_guanjun(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('正在自动探索中，无法挑战，请关闭自动探索后再试吧', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send('您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True)
@@ -609,6 +615,8 @@ async def pokemon_pk_wjb(bot, ev: Event):
     uid = ev.user_id
 
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('正在自动探索中，无法对战，请关闭自动探索后再试吧', at_sender=True)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -659,7 +667,8 @@ async def pokemon_pk_wjb(bot, ev: Event):
             )
         diuid = dimapinfo[2]
         diname = nickname
-
+    if dimapinfo[4] == 1:
+        return await bot.send(f'{nickname}正在自动探索中，无法对战，请关闭自动探索后再试吧', at_sender=True)
     dipokelist = await POKE._get_pokemon_list(diuid)
     if dipokelist == 0:
         return await bot.send(
@@ -756,6 +765,8 @@ async def pokemon_pk_xzdj(bot, ev: Event):
     uid = ev.user_id
 
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('正在自动探索中，无法对战，请关闭自动探索后再试吧', at_sender=True)
     name = mapinfo[2]
     if name == uid:
         if ev.sender:
@@ -806,7 +817,8 @@ async def pokemon_pk_xzdj(bot, ev: Event):
             )
         diuid = dimapinfo[2]
         diname = nickname
-
+    if dimapinfo[4] == 1:
+        return await bot.send(f'{nickname}正在自动探索中，无法对战，请关闭自动探索后再试吧', at_sender=True)
     dipokelist = await POKE._get_pokemon_list(diuid)
     if dipokelist == 0:
         return await bot.send(
@@ -1238,6 +1250,8 @@ async def pokemon_pk_pipei(bot, ev: Event):
     pipeilist = await POKE.get_pipei_list(uid)
     fight_falg = 0
     mymapinfo = await POKE._get_map_now(uid)
+    if mymapinfo[4] == 1:
+        return await bot.send('正在自动探索中，无法对战，请关闭自动探索后再试吧', at_sender=True)
     mypipeinum = mymapinfo[3]
     uidlist = []
     if pipeilist != 0:

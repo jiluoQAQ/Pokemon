@@ -1,6 +1,7 @@
 import re
 import random
 import math
+import copy
 import time
 from PIL import Image, ImageDraw
 from gsuid_core.sv import SV
@@ -243,6 +244,153 @@ async def map_work_test(bot, ev: Event):
     else:
         return await bot.send('该区域无法打工，请返回城镇哦', at_sender=True)
 
+@sv_pokemon_map.on_fullmatch(['开启自动探索'])
+async def map_ts_auto_start(bot, ev: Event):
+    uid = ev.user_id
+    mypokelist = await POKE._get_pokemon_list(uid)
+    if mypokelist == 0:
+        return await bot.send(
+            '您还没有精灵，请输入 领取初始精灵+初始精灵名称 开局。\n初始精灵列表可输入[初始精灵列表]查询',
+            at_sender=True,
+        )
+    mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('您已经处于自动探索中了哦~', at_sender=True)
+    this_map = mapinfo[1]
+    if this_map == '':
+        return await bot.send(
+            '您还选择初始地区，请输入 选择初始地区+地区名称。', at_sender=True
+        )
+    my_team = await POKE.get_pokemon_group(uid)
+    if my_team == '':
+        return await bot.send(
+            '您还没有创建队伍，请输入 创建队伍+宝可梦名称(中间用空格分隔)。',
+            at_sender=True,
+        )
+    if didianlist[this_map]['type'] == '城镇' or didianlist[this_map]['type'] == '建筑':
+        return await bot.send(
+            '您当前所处的地点没有可探索的区域', at_sender=True
+        )
+    now_time = time.time()
+    now_time = math.ceil(now_time)
+    await POKE.update_map_autoinfo(uid, 1, now_time)
+    return await bot.send('您开始了自动野外探索，自动探索最长时间为24小时哦~', at_sender=True)
+    
+@sv_pokemon_map.on_fullmatch(('结束自动探索','关闭自动探索'))
+async def map_ts_auto_end(bot, ev: Event):
+    uid = ev.user_id
+    now_time = time.time()
+    now_time = math.ceil(now_time)
+    mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 0:
+        return await bot.send('您没有处于探索中哦~', at_sender=True)
+    starttime = mapinfo[5]
+    
+    this_map = mapinfo[1]
+    jiangetime = now_time - starttime
+    if jiangetime < 900:
+        return await bot.send('自动探索时间小于15分钟，无法获得奖励~', at_sender=True)
+    msg = ''
+    ts_min_time = math.ceil(jiangetime/60)
+    msg += f"探索时长{ts_min_time}分钟\n"
+    if jiangetime > 86400:
+        msg += f"由于超出24小时，按照24小时结算\n"
+        jiangetime = 86400
+    
+    jiangenum = math.ceil(jiangetime/AUTO_TS_JS)
+    
+    my_team = await POKE.get_pokemon_group(uid)
+    pokemon_team = my_team.split(',')
+    mypokelevellist = {}
+    mypokelist = []
+    mypokeexplist = {}
+    for bianhao in pokemon_team:
+        bianhao = int(bianhao)
+        mypokelist.append(bianhao)
+        pokeinfo = await get_pokeon_info(uid, bianhao)
+        mypokelevellist[bianhao] = pokeinfo[0]
+        mypokeexplist[bianhao] = 0
+    msg += "探索结算成功\n"
+    ts_z = TS_FIGHT + TS_PROP + TS_POKEMON
+    #结算野生训练家战斗
+    ts_fight_num = int(jiangenum * TS_FIGHT/ts_z)
+    msg += f"遭遇野生训练家{ts_fight_num}次\n"
+    pokelist = didianlist[this_map]['pokemon']
+    pokenum_fight = 0
+    maxnum = min(5, int(didianlist[this_map]['need']) + 1)
+    min_level = didianlist[this_map]['level'][0] / 2 + didianlist[this_map]['level'][0]
+    max_level = didianlist[this_map]['level'][0] / 2 + didianlist[this_map]['level'][1]
+    pokelevel_fight = 0
+    for pokename in pokelist:
+        pokenum_fight = pokenum_fight + int(math.floor(random.uniform(1, maxnum)))
+        pokelevel_fight = pokelevel_fight + int(math.floor(random.uniform(min_level, max_level)))
+    fight_num = int(pokenum_fight/len(pokelist)) * ts_fight_num
+    fight_level = int(pokelevel_fight/len(pokelist))
+    fight_poke_list = copy.deepcopy(pokelist)
+    while fight_num > 0:
+        if len(fight_poke_list) > 1:
+            fight_num_run = int(math.floor( random.uniform(1, fight_num/2) ))
+        else:
+            fight_num_run = fight_num
+        fight_pokeid = random.sample(fight_poke_list, 1)[0]
+        await get_auto_win_exp(fight_level, fight_pokeid, mypokelist, mypokelevellist, mypokeexplist, fight_num_run)
+        fight_poke_list.remove(fight_pokeid)
+        fight_num = fight_num - fight_num_run
+    get_score = (int(didianlist[this_map]['need']) + 1) * 300 * ts_fight_num
+    await SCORE.update_score(uid, get_score)
+    msg += f"获得金币{get_score}\n"
+    
+    #结算道具拾取
+    ts_prop_num = int(jiangenum * TS_PROP/ts_z)
+    msg += f"\n拾取了{ts_prop_num}件道具\n"
+    prop_list_ts = copy.deepcopy(ts_prop_list)
+    
+    while ts_prop_num > 0:
+        if len(prop_list_ts) > 1:
+            prop_num_run = int(math.floor( random.uniform(1, ts_prop_num/2) ))
+        else:
+            prop_num_run = ts_prop_num
+        addpropname = random.sample(prop_list_ts, 1)[0]
+        msg += f"获得了{addpropname}x{prop_num_run}\n"
+        prop_list_ts.remove(addpropname)
+        await POKE._add_pokemon_prop(uid, addpropname, prop_num_run)
+        ts_prop_num = ts_prop_num - prop_num_run
+    
+    #结算野生精灵遭遇
+    ts_pokemon_num = int(jiangenum * TS_POKEMON/ts_z)
+    msg += f"\n遭遇野生精灵{ts_pokemon_num}次\n"
+    level_min = didianlist[this_map]['level'][0]
+    level_max = didianlist[this_map]['level'][1]
+    pokelevel_ys = 0
+    pokeqj_num = 0
+    for pokename in pokelist:
+        pokeqj_num = pokeqj_num + int(math.floor(random.uniform(3, 6)))
+        pokelevel_ys = pokelevel_ys + int(math.floor(random.uniform(level_min, level_max)))
+    qunju_num = ts_pokemon_num * int(QUN_POKE/100)
+    pokefight_num = int(pokenum_fight/len(pokelist)) * qunju_num + (ts_pokemon_num - qunju_num)
+    pokefight_level = int(pokelevel_ys/len(pokelist))
+    poke_fight_list = copy.deepcopy(pokelist)
+    while pokefight_num > 0:
+        if len(poke_fight_list) > 1:
+            fightnum_run = int(math.floor( random.uniform(1, pokefight_num/2) ))
+        else:
+            fightnum_run = pokefight_num
+        fight_poke_id = random.sample(poke_fight_list, 1)[0]
+        await get_auto_win_exp(pokefight_level, fight_poke_id, mypokelist, mypokelevellist, mypokeexplist, fightnum_run)
+        poke_fight_list.remove(fight_poke_id)
+        get_egg_num = math.ceil(fightnum_run * (WIN_EGG/100))
+        poke_eggid = await get_pokemon_eggid(int(fight_poke_id))
+        msg += f'获得了{CHARA_NAME[poke_eggid][0]}精灵蛋x{get_egg_num}\n'
+        await POKE._add_pokemon_egg(uid, poke_eggid, get_egg_num)
+        pokefight_num = pokefight_num - fightnum_run
+    exp_mes = ''
+    for pokeid in mypokelist:
+        exp_mes += await add_exp(uid, pokeid, mypokeexplist[pokeid])
+    if exp_mes:
+        msg += f"\n经验结算{exp_mes}"
+    await POKE.update_map_autoinfo(uid, 0, 0)
+    await bot.send(msg, at_sender=True)
+
 @sv_pokemon_tansuo.on_fullmatch(['野外探索'])
 async def map_ts_test_noauto_use(bot, ev: Event):
     uid = ev.user_id
@@ -268,6 +416,8 @@ async def get_ts_info_pic(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('您已经处于自动探索中了哦~', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -441,7 +591,7 @@ async def get_ts_info_pic(bot, ev: Event):
                     )
                 if pokemonid == 22 and '火' in POKEMON_LIST[mypokelist[0]][7]:
                     chongsheng_num = await POKE.get_chongsheng_num(uid,250)
-                    if chongsheng_num >= 9999:
+                    if chongsheng_num >= 6666:
                         await POKE._add_pokemon_egg(uid, 250, 1)
                         mes += f'\n您获得了{CHARA_NAME[250][0]}精灵蛋x1'
                         await POKE._new_chongsheng_num(uid,250)
@@ -640,6 +790,8 @@ async def get_ts_info_wenzi(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('您已经处于自动探索中了哦~', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -715,7 +867,7 @@ async def get_ts_info_wenzi(bot, ev: Event):
                 egg_num = 0
                 if pokemonid == 22 and '火' in POKEMON_LIST[mypokelist[0]][7]:
                     chongsheng_num = await POKE.get_chongsheng_num(uid,250)
-                    if chongsheng_num >= 9999:
+                    if chongsheng_num >= 6666:
                         await POKE._add_pokemon_egg(uid, 250, 1)
                         mes += f'\n您获得了{CHARA_NAME[250][0]}精灵蛋x1'
                         await POKE._new_chongsheng_num(uid,250)
@@ -817,6 +969,8 @@ async def get_cd_info_pic(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('您已经处于自动探索中了哦~', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -1020,6 +1174,8 @@ async def get_cd_info_wenzi(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('您已经处于自动探索中了哦~', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -1129,6 +1285,8 @@ async def pokemon_pk_auto(bot, ev: Event):
             at_sender=True,
         )
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('自动探索中无法进行对战', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(
@@ -1157,6 +1315,8 @@ async def pokemon_pk_auto(bot, ev: Event):
     mychenghao, myhuizhang = await get_chenghao(uid)
     nickname = args[0]
     dimapinfo = await POKE._get_map_info_nickname(nickname)
+    if dimapinfo[4] == 1:
+        return await bot.send(f'{nickname}处于自动探索中，无法进行对战', at_sender=True)
     if dimapinfo[2] == 0:
         return await bot.send(
             '没有找到该训练家，请输入 正确的对战训练家昵称。', at_sender=True
@@ -1493,6 +1653,8 @@ async def pokemom_go_map(bot, ev: Event):
     uid = ev.user_id
 
     mapinfo = await POKE._get_map_now(uid)
+    if mapinfo[4] == 1:
+        return await bot.send('自动探索中，无法切换地图，请结束自动探索后再更换吧', at_sender=True)
     this_map = mapinfo[1]
     if this_map == '':
         return await bot.send(

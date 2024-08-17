@@ -29,6 +29,7 @@ FONTS_PATH = path.join(FILE_PATH, 'font')
 FONTS_PATH = path.join(FONTS_PATH, 'sakura.ttf')
 
 sv_pokemon_whois = SV('我是谁', priority=5)
+POKE = PokeCounter()
 
 
 class WinnerJudger:
@@ -452,11 +453,11 @@ async def pokemon_whois_tj(bot: Bot, ev: Event):
                             mesg = '获得1000金币\n'
                         winner_judger_tj.record_winner(ev.group_id, ev.user_id)
                         winner_judger_tj.turn_off(ev.group_id)
-                        POKE = PokeCounter()
+                        
                         mapinfo = await POKE._get_map_now(uid)
                         myname = mapinfo[2]
                         myname = str(myname)[:10]
-                        mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                        mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                         chongsheng_num = await POKE.update_chongsheng(uid,9997,1)
                         mes += f'\n{chongsheng_num}/233'
                         if chongsheng_num >= 233:
@@ -535,11 +536,10 @@ async def pokemon_whois_jn(bot: Bot, ev: Event):
                                 mesg = '获得1000金币\n'
                             winner_judger_jn.record_winner(ev.group_id, ev.user_id)
                             winner_judger_jn.turn_off(ev.group_id)
-                            POKE = PokeCounter()
                             mapinfo = await POKE._get_map_now(uid)
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
-                            mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                            mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                             chongsheng_num = await POKE.update_chongsheng(uid,9998,1)
                             mes += f'\n{chongsheng_num}/198'
                             if chongsheng_num >= 198:
@@ -611,11 +611,10 @@ async def pokemon_shux_this(bot: Bot, ev: Event):
                                 mesg = '获得1000金币\n'
                             winner_judger_sx.record_winner(ev.group_id, ev.user_id)
                             winner_judger_sx.turn_off(ev.group_id)
-                            POKE = PokeCounter()
                             mapinfo = await POKE._get_map_now(uid)
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
-                            mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name_shux}'
+                            mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name_shux}'
                             chongsheng_num = await POKE.update_chongsheng(uid,9999,1)
                             mes += f'\n{chongsheng_num}/198'
                             if chongsheng_num >= 198:
@@ -697,11 +696,10 @@ async def pokemon_whois_cc(bot: Bot, ev: Event):
                             winner_judger_cc.record_winner(ev.group_id, ev.user_id)
                             win_mes = winner_judger_cc.get_correct_win_pic(gid)
                             winner_judger_cc.turn_off(ev.group_id)
-                            POKE = PokeCounter()
                             mapinfo = await POKE._get_map_now(uid)
                             myname = mapinfo[2]
                             myname = str(myname)[:10]
-                            mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                            mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                             chongsheng_num = await POKE.update_chongsheng(uid,151,1)
                             mes += f'\n{chongsheng_num}/198'
                             if chongsheng_num >= 198:
@@ -845,11 +843,10 @@ async def pokemon_whois(bot: Bot, ev: Event):
                         winner_judger.record_winner(ev.group_id, ev.user_id)
                         win_mes = winner_judger.get_correct_win_pic(gid)
                         winner_judger.turn_off(ev.group_id)
-                        POKE = PokeCounter()
                         mapinfo = await POKE._get_map_now(uid)
                         myname = mapinfo[2]
                         myname = str(myname)[:10]
-                        mes = f'<@{uid}>猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
+                        mes = f'{myname}猜对了，真厉害！\n{mesg}TA已经猜对{win_num}次了\n正确答案是:{name}'
                         chongsheng_num = await POKE.update_chongsheng(uid,150,1)
                         mes += f'\n{chongsheng_num}/1000'
                         if chongsheng_num >= 1000:

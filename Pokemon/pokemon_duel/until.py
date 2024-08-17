@@ -207,7 +207,7 @@ async def get_shanghai_zt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -286,7 +286,7 @@ async def get_shanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -355,7 +355,7 @@ async def get_shanghai_pt_yh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -423,7 +423,7 @@ async def get_shanghai_pt_yh_lx(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
     shanghai = shanghai * int(kwargs['cishu'])
     
@@ -500,7 +500,7 @@ async def get_shanghai_zb(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -571,7 +571,7 @@ async def get_shanghai_pt_bh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -659,7 +659,7 @@ async def get_shanghai_pt_fs(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -734,7 +734,7 @@ async def get_shanghai_pt_xh(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, c
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -818,7 +818,7 @@ async def get_shanghai_zt_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -893,7 +893,7 @@ async def get_sbshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, ch
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -961,7 +961,7 @@ async def get_lxshanghai_pt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, ch
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     cishu = int(math.floor(random.uniform(kwargs['csmim'], kwargs['csmax'] + 1)))
@@ -1052,7 +1052,7 @@ async def get_shanghai_sxj(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, cha
     )
     shanghai = shanghai1 + shanghai2 + shanghai3
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -1320,7 +1320,7 @@ async def up_shuxshanghai_my(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
@@ -1403,7 +1403,7 @@ async def dowm_shuxshanghai_di(jineng,myinfo,diinfo,myzhuangtai,dizhuangtai,chan
     )
 
     # 灼伤状态我方物理伤害减半
-    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][1]) == '灼伤' and str(jinenginfo[1]) == '物理':
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
         shanghai = int(shanghai * 0.5)
 
     lasthp = diinfo[17] - shanghai
