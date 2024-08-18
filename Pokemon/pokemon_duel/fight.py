@@ -1099,6 +1099,25 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
     mes = f"【世界首领】挑战完成，本次造成伤害{shanghai}"
     if int(shanghai) > int(old_shanghai):
         await POKE._new_boss_shanghai(uid, shanghai, week)
+        if shanghai >= 5000:
+            new_num = int(shanghai/5000)
+            old_num = int(old_shanghai/5000)
+            get_num = new_num - old_num
+            if get_num > 0:
+                get_score = 200000 * get_num
+                get_tangguo = 15 * get_num
+                await SCORE.update_score(uid, get_score)
+                await POKE._add_pokemon_prop(uid, "神奇糖果", get_tangguo)
+                mes += f"\n获得了金币x{get_score}"
+                mes += f"\n获得了神奇糖果x{get_tangguo}"
+        if shanghai >= 40000 and old_shanghai < 40000:
+            get_poke_id = random.sample(boss_poke_get_list, 1)[0]
+            await POKE._add_pokemon_egg(uid, get_poke_id, 1)
+            mes += f"\n获得了{CHARA_NAME[get_poke_id][0]}精灵蛋x1"
+        if shanghai >= 50000 and old_shanghai < 50000:
+            get_egg_id = await get_pokemon_eggid(int(bossinfo['bossid']))
+            await POKE._add_pokemon_egg(uid, get_egg_id, 1)
+            mes += f"\n获得了{CHARA_NAME[get_egg_id][0]}精灵蛋x1"
         old_shanghai = shanghai
     mes += f"\n本周最高伤害{old_shanghai}"
     buttons = [
@@ -1250,8 +1269,6 @@ async def pokemon_pk_pipei(bot, ev: Event):
     pipeilist = await POKE.get_pipei_list(uid)
     fight_falg = 0
     mymapinfo = await POKE._get_map_now(uid)
-    if mymapinfo[4] == 1:
-        return await bot.send('正在自动探索中，无法对战，请关闭自动探索后再试吧', at_sender=True)
     mypipeinum = mymapinfo[3]
     uidlist = []
     if pipeilist != 0:
