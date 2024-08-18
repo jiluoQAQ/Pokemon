@@ -3181,7 +3181,6 @@ async def add_exp(uid, pokemonid, exp):
     level_flag = 0
     if now_level >= 100:
         level_flag = 1
-        last_exp = now_exp * 0.1
         now_exp = 0
     while now_exp >= need_exp:
         now_level = now_level + 1
@@ -3189,7 +3188,6 @@ async def add_exp(uid, pokemonid, exp):
         need_exp = await get_need_exp(pokemonid, now_level)
         if now_level >= 100:
             level_flag = 1
-            last_exp = now_exp * 0.1
             now_exp = 0
             break
     msg = ''
@@ -3199,12 +3197,45 @@ async def add_exp(uid, pokemonid, exp):
         msg += f'\n等级提升到了{now_level}'
     if level_flag == 1:
         await POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
-        # CE._add_exp_chizi(uid, last_exp)
         return msg
     else:
         await POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
         return msg
 
+async def get_auto_win_exp(level, pokemonid, pokelist, pokelevellist, pokeexplist, num):
+    mes = ''
+    zhongzu = POKEMON_LIST[pokemonid]
+    zhongzu_info = []
+    for item in [1, 2, 3, 4, 5, 6]:
+        zhongzu_info.append(int(zhongzu[item]))
+    zhongzu_num = 0
+    for index, num in enumerate(zhongzu_info):
+        zhongzu_num += int(num)
+    for pokeid in pokelist:
+        mylevel = pokelevellist[pokeid]
+        now_exp = pokeexplist[pokeid]
+        need_exp = await get_need_exp(pokeid, mylevel)
+        level_flag = 0
+        if mylevel >= 100:
+            level_flag = 1
+            now_exp = 0
+        while now_exp >= need_exp:
+            mylevel = mylevel + 1
+            now_exp = now_exp - need_exp
+            need_exp = await get_need_exp(pokemonid, mylevel)
+            if mylevel >= 100:
+                level_flag = 1
+                now_exp = 0
+                break
+        
+        # 获得经验值
+        level_xz = level - int(mylevel)
+        if mylevel > level:
+            level_xz = max((0 - level) / 2, level_xz)
+        level_xz = min(20, level_xz)
+        get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.25) * num
+        pokeexplist[pokeid] += get_exp
+    return pokeexplist
 
 async def get_win_reward(
     uid, mypokemonid, myinfo, pokemon_info, pokemonid, level, returnlevel=0
@@ -3254,26 +3285,6 @@ async def get_win_reward(
     newinfo[16] = myinfo[16]
     newinfo[17] = myinfo[17]
     return mes, newinfo, pokemon_info
-
-async def get_auto_win_exp(level, pokemonid, pokelist, pokelevellist, pokeexplist, num):
-    mes = ''
-    zhongzu = POKEMON_LIST[pokemonid]
-    zhongzu_info = []
-    for item in [1, 2, 3, 4, 5, 6]:
-        zhongzu_info.append(int(zhongzu[item]))
-    zhongzu_num = 0
-    for index, num in enumerate(zhongzu_info):
-        zhongzu_num += int(num)
-    for pokeid in pokelist:
-        mylevel = pokelevellist[pokeid]
-        # 获得经验值
-        level_xz = level - int(mylevel)
-        if mylevel > level:
-            level_xz = max((0 - level) / 2, level_xz)
-        level_xz = min(20, level_xz)
-        get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.25) * num
-        pokeexplist[pokeid] += get_exp
-    return pokeexplist
 
 async def get_win_exp(uid, mypokemonid, level, pokemonid, pokelist):
     mes = ''

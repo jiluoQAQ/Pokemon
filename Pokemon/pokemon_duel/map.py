@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw
 from gsuid_core.sv import SV
 from gsuid_core.models import Event
 import pytz
+from collections import Counter
 from gsuid_core.segment import MessageSegment
 from gsuid_core.gss import gss
 from gsuid_core.utils.image.convert import convert_img
@@ -289,6 +290,7 @@ async def map_ts_auto_end(bot, ev: Event):
     this_map = mapinfo[1]
     jiangetime = now_time - starttime
     if jiangetime < 900:
+        await POKE.update_map_autoinfo(uid, 0, 0)
         return await bot.send('自动探索时间小于15分钟，无法获得奖励~', at_sender=True)
     msg = ''
     ts_min_time = math.ceil(jiangetime/60)
@@ -327,15 +329,12 @@ async def map_ts_auto_end(bot, ev: Event):
     fight_num = int(pokenum_fight/len(pokelist)) * ts_fight_num
     fight_level = int(pokelevel_fight/len(pokelist))
     fight_poke_list = copy.deepcopy(pokelist)
-    while fight_num > 0:
-        if len(fight_poke_list) > 1:
-            fight_num_run = int(math.floor( random.uniform(1, fight_num/2) ))
-        else:
-            fight_num_run = fight_num
-        fight_pokeid = random.sample(fight_poke_list, 1)[0]
-        await get_auto_win_exp(fight_level, fight_pokeid, mypokelist, mypokelevellist, mypokeexplist, fight_num_run)
-        fight_poke_list.remove(fight_pokeid)
-        fight_num = fight_num - fight_num_run
+    
+    sampled_data_fight= random.choices(fight_poke_list, k=fight_num)
+    sampled_fight_list = list(sampled_data_fight)
+    fight_count = Counter(sampled_fight_list)
+    for fight_pokeid in fight_count:
+        mypokeexplist = await get_auto_win_exp(fight_level, fight_pokeid, mypokelist, mypokelevellist, mypokeexplist, fight_count[fight_pokeid])
     get_score = (int(didianlist[this_map]['need']) + 1) * 300 * ts_fight_num
     await SCORE.update_score(uid, get_score)
     msg += f"获得金币{get_score}\n"
@@ -345,16 +344,12 @@ async def map_ts_auto_end(bot, ev: Event):
     msg += f"\n拾取了{ts_prop_num}件道具\n"
     prop_list_ts = copy.deepcopy(ts_prop_list)
     
-    while ts_prop_num > 0:
-        if len(prop_list_ts) > 1:
-            prop_num_run = int(math.floor( random.uniform(1, ts_prop_num/2) ))
-        else:
-            prop_num_run = ts_prop_num
-        addpropname = random.sample(prop_list_ts, 1)[0]
-        msg += f"获得了{addpropname}x{prop_num_run}\n"
-        prop_list_ts.remove(addpropname)
-        await POKE._add_pokemon_prop(uid, addpropname, prop_num_run)
-        ts_prop_num = ts_prop_num - prop_num_run
+    sampled_data_prop = random.choices(prop_list_ts, k=ts_prop_num)
+    sampled_prop_list = list(sampled_data_prop)
+    prop_count = Counter(sampled_prop_list)
+    for prop_name in prop_count:
+        msg += f"获得了{prop_name}x{prop_count[prop_name]}\n"
+        await POKE._add_pokemon_prop(uid, prop_name, prop_count[prop_name])
     
     #结算野生精灵遭遇
     ts_pokemon_num = int(jiangenum * TS_POKEMON/ts_z)
@@ -370,19 +365,39 @@ async def map_ts_auto_end(bot, ev: Event):
     pokefight_num = int(pokenum_fight/len(pokelist)) * qunju_num + (ts_pokemon_num - qunju_num)
     pokefight_level = int(pokelevel_ys/len(pokelist))
     poke_fight_list = copy.deepcopy(pokelist)
-    while pokefight_num > 0:
-        if len(poke_fight_list) > 1:
-            fightnum_run = int(math.floor( random.uniform(1, pokefight_num/2) ))
-        else:
-            fightnum_run = pokefight_num
-        fight_poke_id = random.sample(poke_fight_list, 1)[0]
-        await get_auto_win_exp(pokefight_level, fight_poke_id, mypokelist, mypokelevellist, mypokeexplist, fightnum_run)
-        poke_fight_list.remove(fight_poke_id)
-        get_egg_num = math.ceil(fightnum_run * (WIN_EGG/100))
+    
+    sampled_data_poke= random.choices(fight_poke_list, k=pokefight_num)
+    sampled_poke_list = list(sampled_data_poke)
+    poke_count = Counter(sampled_poke_list)
+    get_egg_list = {}
+    xuexi_all_list = []
+    for fight_poke_id in poke_count:
+        xuexi_list = POKEMON_XUEXI[fight_poke_id]
+        xuexi_all_list.extend(xuexi_list)
+        mypokeexplist = await get_auto_win_exp(pokefight_level, fight_poke_id, mypokelist, mypokelevellist, mypokeexplist, poke_count[fight_poke_id])
+        # print(f"{CHARA_NAME[fight_poke_id][0]}:{poke_count[fight_poke_id]}")
+        get_egg_num = math.ceil(int(poke_count[fight_poke_id]) * (WIN_EGG/100))
         poke_eggid = await get_pokemon_eggid(int(fight_poke_id))
-        msg += f'获得了{CHARA_NAME[poke_eggid][0]}精灵蛋x{get_egg_num}\n'
-        await POKE._add_pokemon_egg(uid, poke_eggid, get_egg_num)
-        pokefight_num = pokefight_num - fightnum_run
+        get_egg_list[poke_eggid] = get_egg_list.get(poke_eggid, 0) + get_egg_num
+    
+    for poke_eggid in get_egg_list:
+        msg += f'获得了{CHARA_NAME[poke_eggid][0]}精灵蛋x{get_egg_list[poke_eggid]}\n'
+        # print(f"{CHARA_NAME[poke_eggid][0]}:{get_egg_list[poke_eggid]}")
+        await POKE._add_pokemon_egg(uid, poke_eggid, get_egg_list[poke_eggid])
+    
+    #获取学习机
+    xuexi_num = math.ceil(pokefight_num * (WIN_PROP/100))
+    if xuexi_num > 0:
+        msg += "\n"
+        xuexi_add_list = list(set(xuexi_all_list))
+        sampled_data_xuexi= random.choices(xuexi_add_list, k=xuexi_num)
+        sampled_xuexi_list = list(sampled_data_xuexi)
+        xuexi_count = Counter(sampled_xuexi_list)
+        msg += f'获得了招式学习机x{xuexi_num}\n(具体种类数量请自行查看背包)\n'
+        for xuexi_name in xuexi_count:
+            #print(f"{xuexi_name}:{xuexi_count[xuexi_name]}")
+            await POKE._add_pokemon_technical(uid,xuexi_name,xuexi_count[xuexi_name])
+    
     exp_mes = ''
     for pokeid in mypokelist:
         exp_mes += await add_exp(uid, pokeid, mypokeexplist[pokeid])
