@@ -3202,7 +3202,7 @@ async def add_exp(uid, pokemonid, exp):
         await POKE._add_pokemon_level(uid, pokemonid, now_level, now_exp)
         return msg
 
-async def get_auto_win_exp(level, pokemonid, pokelist, pokelevellist, pokeexplist, num):
+async def get_auto_win_exp(level, pokemonid, pokelist, pokelevellist, pokeexplist, pokenum):
     mes = ''
     zhongzu = POKEMON_LIST[pokemonid]
     zhongzu_info = []
@@ -3233,7 +3233,7 @@ async def get_auto_win_exp(level, pokemonid, pokelist, pokelevellist, pokeexplis
         if mylevel > level:
             level_xz = max((0 - level) / 2, level_xz)
         level_xz = min(20, level_xz)
-        get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.25) * num
+        get_exp = math.ceil((zhongzu_num * (level + level_xz) / 10) * 0.25) * pokenum
         pokeexplist[pokeid] += get_exp
     return pokeexplist
 
