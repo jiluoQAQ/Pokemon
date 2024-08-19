@@ -26,7 +26,7 @@ async def get_yaohai(yaohai):
     if int(yaohai) > 3:
         return 1.5
     suiji = int(math.floor(random.uniform(0, 1000)))
-    if yaohailist[int(yaohai)] >= suiji:
+    if yaohailist[int(yaohai)] * 2 >= suiji:
         return 1.5
     else:
         return 1
