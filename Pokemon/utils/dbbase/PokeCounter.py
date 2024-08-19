@@ -249,7 +249,7 @@ class PokeCounter:
         with self._connect() as conn:
             r = conn.execute("select sql from sqlite_master where type='table' and name='POKEMON_TABLE';").fetchall()
             if 'XIEDAI' not in str(r):
-                conn.execute("ALTER TABLE POKEMON_TABLE ADD XIEDAI TEXT;").fetchall()
+                conn.execute("ALTER TABLE POKEMON_TABLE ADD XIEDAI TEXT DEFAULT '';").fetchall()
     
     def _truncate_table_pipei(self):
         with self._connect() as conn:

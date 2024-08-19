@@ -394,7 +394,7 @@ async def prop_xiedai(bot, ev: Event):
             f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
     mes = f"您的宝可梦{CHARA_NAME[bianhao][0]}"
-    if pokemon_info[16] is not None:
+    if pokemon_info[16] is not None or pokemon_info[16] != '':
         mes += f"\n取下了道具{pokemon_info[16]}"
         await POKE._add_pokemon_prop(uid, pokemon_info[16] , 1)
     mes += f"\n携带了道具{propname}"
@@ -417,7 +417,7 @@ async def prop_xiedai_del(bot, ev: Event):
         return await bot.send(
             f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
-    if pokemon_info[16] is None:
+    if pokemon_info[16] is None or pokemon_info[16] == '':
         return await bot.send('您的宝可梦没有携带道具哦。', at_sender=True)
     mes = f"您的宝可梦{CHARA_NAME[bianhao][0]}"
     mes += f"\n取下了道具{pokemon_info[16]}"
