@@ -1059,7 +1059,7 @@ async def pokemon_pk_boss_week_info(bot, ev: Event):
         bossbianhao, pokemon_info_boss, 1.4
     )
     mes = f"boss信息\n名称:{POKEMON_LIST[bossinfo['bossid']][0]}\n等级:{pokemon_info_boss[0]}\n性格:{pokemon_info_boss[13]}\n技能:{pokemon_info_boss[14]}\n前三阶段属性\n血量:{HP_1}-{HP_2}-{HP_3}\n物攻:{W_atk_1}-{W_atk_2}-{W_atk_3}\n物防:{W_def_1}-{W_def_2}-{W_def_3}\n特攻:{M_atk_1}-{M_atk_2}-{M_atk_3}\n特防:{M_def_1}-{M_def_2}-{M_def_3}\n速度:{speed_1}-{speed_2}-{speed_3}\n"
-    mes += f"世界boss奖励：\n超过10人最高伤害10000以上，第一名100首领币，第二名80首领币，第三名60首领币，4-10名30首领币，其他参与者(伤害>0)10首领币\n超过20人最高伤害10000以上，追加第一名奖励当期世界boss精灵蛋\n超过30人最高伤害10000以上追加第二名奖励当期世界boss精灵蛋\n超过50人最高伤害10000以上追加第三名奖励当期世界boss精灵蛋"
+    mes += f"世界boss奖励：\n伤害超过35000，奖励随机异兽或悖谬精灵蛋\n伤害超过45000，奖励当期世界boss蛋\n伤害每超过5000，奖励20万金币+15糖果"
     buttons = [
         Button('世界boss挑战', '世界boss挑战', '世界boss挑战', action=1),
     ]
@@ -1110,11 +1110,11 @@ async def pokemon_pk_boss_sj(bot, ev: Event):
                 await POKE._add_pokemon_prop(uid, "神奇糖果", get_tangguo)
                 mes += f"\n获得了金币x{get_score}"
                 mes += f"\n获得了神奇糖果x{get_tangguo}"
-        if shanghai >= 40000 and old_shanghai < 40000:
+        if shanghai >= 35000 and old_shanghai < 35000:
             get_poke_id = random.sample(boss_poke_get_list, 1)[0]
             await POKE._add_pokemon_egg(uid, get_poke_id, 1)
             mes += f"\n获得了{CHARA_NAME[get_poke_id][0]}精灵蛋x1"
-        if shanghai >= 50000 and old_shanghai < 50000:
+        if shanghai >= 45000 and old_shanghai < 45000:
             get_egg_id = await get_pokemon_eggid(int(bossinfo['bossid']))
             await POKE._add_pokemon_egg(uid, get_egg_id, 1)
             mes += f"\n获得了{CHARA_NAME[get_egg_id][0]}精灵蛋x1"
