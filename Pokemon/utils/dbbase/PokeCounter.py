@@ -28,6 +28,7 @@ class PokeCounter:
         self._create_map_pipei_add()
         self._create_table_dungeon()
         self._create_mapauto_add()
+        self._create_poketable_add()
 
     def _connect(self):
         return sqlite3.connect(DB_PATH)
@@ -243,6 +244,12 @@ class PokeCounter:
             if 'PIPEI' not in str(r):
                 period = 0
                 conn.execute(f"ALTER TABLE POKEMON_MAP ADD PIPEI INT DEFAULT {period};").fetchall()
+    
+    def _create_poketable_add(self):
+        with self._connect() as conn:
+            r = conn.execute("select sql from sqlite_master where type='table' and name='POKEMON_TABLE';").fetchall()
+            if 'XIEDAI' not in str(r):
+                conn.execute("ALTER TABLE POKEMON_TABLE ADD XIEDAI TEXT;").fetchall()
     
     def _truncate_table_pipei(self):
         with self._connect() as conn:
@@ -1167,13 +1174,14 @@ class PokeCounter:
             nl_spd,
             xingge,
             jineng,
+            xiedai,
         ) = pokemon_info
         # print(pokemon_info)
         try:
             connection = await aiosqlite.connect(DB_PATH)
             await connection.execute(
-                'INSERT OR REPLACE INTO POKEMON_TABLE (UID,BIANHAO,LEVEL,EXP,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG) \
-                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                'INSERT OR REPLACE INTO POKEMON_TABLE (UID,BIANHAO,LEVEL,EXP,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG,XIEDAI) \
+                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                 (
                     uid,
                     bianhao,
@@ -1193,6 +1201,7 @@ class PokeCounter:
                     nl_spd,
                     xingge,
                     jineng,
+                    xiedai,
                 ),
             )
             await connection.commit()
@@ -1211,7 +1220,7 @@ class PokeCounter:
             await connection.close()
         except:
             raise Exception('更新表发生错误')
-
+    
     async def _add_pokemon_nuli(
         self, uid, bianhao, nl_hp, nl_atk, nl_def, nl_stk, nl_sef, nl_spd
     ):
@@ -1234,7 +1243,16 @@ class PokeCounter:
             await connection.close()
         except:
             raise Exception('更新表发生错误')
-
+    
+    async def _add_pokemon_xiedai(self, uid, bianhao, xiedai):
+        try:
+            connection = await aiosqlite.connect(DB_PATH)
+            await connection.execute(f"UPDATE POKEMON_TABLE SET XIEDAI='{xiedai}' WHERE UID='{uid}' AND BIANHAO={bianhao}")
+            await connection.commit()
+            await connection.close()
+        except:
+            raise Exception('更新表发生错误')
+    
     async def _add_pokemon_xingge(self, uid, bianhao, xingge):
         try:
             connection = await aiosqlite.connect(DB_PATH)
@@ -1256,7 +1274,7 @@ class PokeCounter:
     async def _get_pokemon_info(self, uid, bianhao):
         try:
             connection = await aiosqlite.connect(DB_PATH)
-            cursor = await connection.execute(f"SELECT LEVEL,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG,EXP FROM POKEMON_TABLE WHERE UID='{uid}' AND BIANHAO={bianhao}")
+            cursor = await connection.execute(f"SELECT LEVEL,GT_HP,GT_ATK,GT_DEF,GT_STK,GT_SEF,GT_SPD,NL_HP,NL_ATK,NL_DEF,NL_STK,NL_SEF,NL_SPD,XINGGE,JINENG,EXP,XIEDAI FROM POKEMON_TABLE WHERE UID='{uid}' AND BIANHAO={bianhao}")
             r = await cursor.fetchall()
             await connection.close()
             if r:

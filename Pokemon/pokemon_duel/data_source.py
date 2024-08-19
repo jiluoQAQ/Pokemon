@@ -27,6 +27,7 @@ jinengfuncs = [
     Jinengfunc(("睡觉",), sleep),
     Jinengfunc(("魂舞烈音爆",), hwlyb),
     Jinengfunc(("天气",), changdi_change),
+    Jinengfunc(("Z招式",), get_shanghai_z),
 ]
 
 async def make_jineng_use(

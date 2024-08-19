@@ -87,6 +87,14 @@ async def get_level_jineng(level, bianhao):
     return kexuelist
 
 
+async def get_use_jineng_list(jinenglist, pokemonid, xiedai = ''):
+    if xiedai == '':
+        return jinenglist
+    if proplist[xiedai]['type'] == 'Z纯晶':
+        if int(proplist[xiedai]['use'][0]) == 0 or int(proplist[xiedai]['use'][0]) == int(pokemonid):
+            jinenglist.append(proplist[xiedai]['use'][1])
+    return jinenglist
+
 # 添加宝可梦，随机生成个体值
 async def add_pokemon(uid, bianhao, startype=0):
     pokemon_info = []
@@ -116,6 +124,7 @@ async def add_pokemon(uid, bianhao, startype=0):
         jineng = jineng + jinengname
         shul = shul + 1
     pokemon_info.append(jineng)
+    pokemon_info.append('')
     await POKE._add_pokemon_info(uid, bianhao, pokemon_info)
     return pokemon_info
 
@@ -204,6 +213,8 @@ async def get_pokeon_info_sj(bianhao, level=100):
         jineng = jineng + jinengname
         shul = shul + 1
     pokemon_info.append(jineng)
+    pokemon_info.append(0)
+    pokemon_info.append('')
     return pokemon_info
 
 
@@ -1721,6 +1732,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     while fight_flag == 0:
         jieshu = 0
         myjinenglist = re.split(',', mypokemon_info[14])
+        myjinenglist = await get_use_jineng_list(myjinenglist,myinfo[18],mypokemon_info[16])
         dijinenglist = re.split(',', dipokemon_info[14])
         myjinengbuttons = []
         dijinengbuttons = []
@@ -2596,6 +2608,7 @@ async def pokemon_fight_pk(
         mesg = ''
         jieshu = 0
         myjinenglist = re.split(',', mypokemon_info[14])
+        myjinenglist = await get_use_jineng_list(myjinenglist,myinfo[18],mypokemon_info[16])
         dijinenglist = re.split(',', dipokemon_info[14])
         myjinengbuttons = []
         dijinengbuttons = []

@@ -643,6 +643,7 @@ async def pokemon_fight_pipei(
         nowpokeid = await FIGHT.get_new_pokeid(fightid,myuid)
         mypokemon_info = await get_pokeon_info(myuid, nowpokeid)
         myjinenglist = re.split(',', mypokemon_info[14])
+        myjinenglist = await get_use_jineng_list(myjinenglist,nowpokeid,mypokemon_info[16])
         dijinenglist = re.split(',', dipokemon_info[14])
         myjinengbuttons = []
         dijinengbuttons = []
@@ -776,6 +777,7 @@ async def pokemon_fight_dungeon(
         mypokemon_info = await get_pokeon_info(myuid, pokeid)
         jineng_use = jinenguseinfo[pokeid]
         myjinenglist = re.split(',', mypokemon_info[14])
+        myjinenglist = await get_use_jineng_list(myjinenglist,pokeid,mypokemon_info[16])
         dijinenglist = re.split(',', dipokemon_info[14])
         myjinengbuttons = []
         dijinengbuttons = []

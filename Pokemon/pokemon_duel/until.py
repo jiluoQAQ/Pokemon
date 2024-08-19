@@ -83,7 +83,7 @@ async def update_shux_info(info, sxname, uplevel, uptype):
 
 
 async def get_mingzhong(jineng_mz, my_mngzhong, di_shanbi, changdi):
-    if jineng_mz == '-':
+    if jineng_mz == '—':
         return 1
     jineng_b = (255 * int(jineng_mz)) / 100
     mingzhong_lv = int(my_mngzhong) - int(di_shanbi)
@@ -236,6 +236,79 @@ async def get_shanghai_zt(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chan
     else:
         mes = mes + f'\n{diinfo[0]}失去了战斗能力'
 
+    return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+
+# Z招式
+async def get_shanghai_z(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, **kwargs):
+    # 0NAME,1属性,2LV,3HP,4ATK,5DEF,6SP.ATK,7SP.DEF,8SPD,9攻击等级,10防御等级,11特攻等级,12特防等级,13速度等级,14要害等级,15闪避等级,16命中等级,17剩余血量
+    jinenginfo = JINENG_LIST[jineng]
+
+    if dizhuangtai[1][0] == '无敌' and int(dizhuangtai[1][1]) > 0:
+        mes = f'{diinfo[0]}处于保护状态，技能无效'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+
+    ismingzhong = await get_mingzhong(jinenginfo[3], myinfo[16], diinfo[15], changdi)
+    tianqi_xz = float(TIANQIXZ_LIST[changdi[0][0]][jinenginfo[0]])
+    if tianqi_xz == 0:
+        mes = f'{myinfo[0]}使用了技能{jineng}，{changdi[0][0]}天气，{jinenginfo[0]}属性技能无效'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+    # print(myinfo)
+    # print(diinfo)
+    if ismingzhong == 0:
+        mes = f'{myinfo[0]}使用了技能{jineng}，技能未命中'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+    shuxing_xz = await get_shanghai_beilv(jinenginfo[0], diinfo[1])
+    # print('shuxing_xz:' + str(shuxing_xz))
+    if shuxing_xz == 0:
+        mes = f'{myinfo[0]}使用了技能{jineng}，没有效果'
+        return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
+    benxi_xz = await get_shuxing_xiuzheng(jinenginfo[0], myinfo[1])
+
+    # print('benxi_xz:' + str(benxi_xz))
+    yaohai_xz = await get_yaohai(myinfo[14])
+    # print('yaohai_xz:' + str(yaohai_xz))
+    mywlatk = await get_nowshuxing(myinfo[4], myinfo[9], '物攻', myinfo[1], changdi[0][0])
+    diwldef = await get_nowshuxing(diinfo[5], diinfo[10], '物防', diinfo[1], changdi[0][0])
+    myspatk = await get_nowshuxing(myinfo[6], myinfo[11], '特攻', myinfo[1], changdi[0][0])
+    dispdef = await get_nowshuxing(diinfo[7], diinfo[12], '特防', diinfo[1], changdi[0][0])
+    
+    if mywlatk >= myspatk:
+        myatk = mywlatk
+        didef = diwldef
+    else:
+        myatk = myspatk
+        didef = dispdef
+    
+    shanghai = await get_shanghai_num(
+        jinenginfo[2],
+        myinfo[2],
+        myatk,
+        didef,
+        yaohai_xz,
+        shuxing_xz,
+        benxi_xz,
+        tianqi_xz,
+    )
+
+    # 灼伤状态我方物理伤害减半
+    if int(myzhuangtai[0][1]) > 0 and str(myzhuangtai[0][0]) == '灼伤' and str(jinenginfo[1]) == '物理':
+        shanghai = int(shanghai * 0.5)
+
+    lasthp = diinfo[17] - shanghai
+    diinfo[17] = lasthp
+    # print('shanghai:' + str(shanghai))
+    mes = f'{myinfo[0]}使用了技能{jineng}，'
+    if shuxing_xz > 1:
+        mes = mes + '效果拔群，'
+    elif shuxing_xz < 1:
+        mes = mes + '效果不理想，'
+    if yaohai_xz > 1:
+        mes = mes + '命中要害，'
+    mes = mes + f'对{diinfo[0]}造成了{shanghai}点伤害'
+    if diinfo[17] > 0:
+        mes = mes + f'\n{diinfo[0]}剩余血量{diinfo[17]}'
+    else:
+        mes = mes + f'\n{diinfo[0]}失去了战斗能力'
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
 
 # 无加成伤害技能

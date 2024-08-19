@@ -6,6 +6,7 @@ import json
 import pytz
 import time
 from .pokeconfg import *
+from collections import Counter
 from .until import *
 from pathlib import Path
 from datetime import datetime
@@ -19,6 +20,7 @@ with Path.open(Excel_path / 'prop.json', encoding='utf-8') as f:
     prop_dict = json.load(f)
     proplist = prop_dict['proplist']
     bossproplist = prop_dict['bossproplist']
+    propgachalist = prop_dict['gachalist']
 
 TEXT_PATH = Path(__file__).parent / 'texture2D'
 
@@ -71,14 +73,17 @@ async def pokemon_help_prop(bot, ev: Event):
 4、购买道具【道具名】【数量】(购买道具,数量默认为1)
 5、兑换道具【道具名】【数量】(兑换首领商店道具,数量默认为1)
 6、使用道具【道具名】【精灵名】【数量】(对宝可梦使用道具,数量默认为1)
-7、我的道具(查看我的道具列表)
-8、我的学习机(查看我的招式学习机列表)
-9、查看交易所(【类型】【名称】)(查看交易所寄售的商品，类型名称可为空)
-10、交易所上架【类型】【名称】【数量】【单价】(上架物品到交易所，例：交易所上架 精灵蛋 皮丘 5 8888)
-11、交易所购买【商品ID】【数量】(交易所购买商品，数量默认为1)
-12、我的寄售(查看我寄售在交易所的商品)
-13、赠送物品【类型】【名称】【数量】【赠送对象昵称】(给予xxx对象物品道具/精灵蛋，数量默认为1)
-14、回收道具【道具名】【数量】(商店出售道具,数量默认为1)
+7、携带道具【道具名】【精灵名】(让精灵携带道具)
+8、取下道具【精灵名】(取下精灵的携带道具)
+9、抽取道具【数量】（进行道具扭蛋，概率获得专属Z纯晶）
+10、我的道具(查看我的道具列表)
+11、我的学习机(查看我的招式学习机列表)
+12、查看交易所(【类型】【名称】)(查看交易所寄售的商品，类型名称可为空)
+13、交易所上架【类型】【名称】【数量】【单价】(上架物品到交易所，例：交易所上架 精灵蛋 皮丘 5 8888)
+14、交易所购买【商品ID】【数量】(交易所购买商品，数量默认为1)
+15、我的寄售(查看我寄售在交易所的商品)
+16、赠送物品【类型】【名称】【数量】【赠送对象昵称】(给予xxx对象物品道具/精灵蛋，数量默认为1)
+17、回收道具【道具名】【数量】(商店出售道具,数量默认为1)
 注：
 交易所寄售的商品出售成功会收取10%的手续费
 PS
@@ -338,7 +343,7 @@ async def boss_prop_buy(bot, ev: Event):
                 at_sender=True,
             )
         await SCORE.update_shengwang(uid, 0 - use_score)
-        if propinfo['type'] == '消耗品':
+        if propinfo['type'] == '消耗品' or propinfo['type'] == 'Z纯晶':
             await POKE._add_pokemon_prop(uid, propname, propnum)
             mes = f'恭喜！您花费了{use_score}首领币成功购买了{propnum}件{propname}'
             buttons = [
@@ -361,6 +366,64 @@ async def boss_prop_buy(bot, ev: Event):
         return await bot.send(
             '无法找到该道具，请输入正确的道具名称。', at_sender=True
         )
+
+@sv_pokemon_prop.on_command(['携带道具'])
+async def prop_xiedai(bot, ev: Event):
+    args = ev.text.split()
+    uid = ev.user_id
+    if len(args) != 2:
+        return await bot.send('请输入 携带道具+道具名称+精灵名 用空格隔开',at_sender=True,)
+    propname = args[0]
+    pokename = args[1]
+    bianhao = await get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    propkeylist = proplist.keys()
+    if propname not in propkeylist:
+        return await bot.send(
+            '无法找到该道具，请输入正确的道具名称。', at_sender=True
+        )
+    propinfo = proplist[propname]
+    if propinfo['type'] != 'Z纯晶':
+        return await bot.send(
+            '该道具无法携带，请替换其他道具。', at_sender=True
+        )
+    pokemon_info = await get_pokeon_info(uid, bianhao)
+    if pokemon_info == 0:
+        return await bot.send(
+            f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
+        )
+    mes = f"您的宝可梦{CHARA_NAME[bianhao][0]}"
+    if pokemon_info[16] is not None:
+        mes += f"\n取下了道具{pokemon_info[16]}"
+        await POKE._add_pokemon_prop(uid, pokemon_info[16] , 1)
+    mes += f"\n携带了道具{propname}"
+    await POKE._add_pokemon_prop(uid, propname, -1)
+    await POKE._add_pokemon_xiedai(uid, bianhao, propname)
+    await bot.send(mes, at_sender=True)
+
+@sv_pokemon_prop.on_command(['取下道具'])
+async def prop_xiedai_del(bot, ev: Event):
+    args = ev.text.split()
+    uid = ev.user_id
+    if len(args) != 1:
+        return await bot.send('请输入 取下道具+精灵名 用空格隔开',at_sender=True,)
+    pokename = args[0]
+    bianhao = await get_poke_bianhao(pokename)
+    if bianhao == 0:
+        return await bot.send('请输入正确的宝可梦名称。', at_sender=True)
+    pokemon_info = await get_pokeon_info(uid, bianhao)
+    if pokemon_info == 0:
+        return await bot.send(
+            f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
+        )
+    if pokemon_info[16] is None:
+        return await bot.send('您的宝可梦没有携带道具哦。', at_sender=True)
+    mes = f"您的宝可梦{CHARA_NAME[bianhao][0]}"
+    mes += f"\n取下了道具{pokemon_info[16]}"
+    await POKE._add_pokemon_prop(uid, pokemon_info[16] , 1)
+    await POKE._add_pokemon_xiedai(uid, bianhao, '')
+    await bot.send(mes, at_sender=True)
 
 @sv_pokemon_prop.on_command(['使用道具'])
 async def prop_use(bot, ev: Event):
@@ -943,6 +1006,62 @@ async def open_pm_hongbao(bot, ev: Event):
     ]
     await bot.send_option(mes, buttons)
 
+@sv_pokemon_prop.on_command(['抽取道具'])
+async def add_equip_gacha(bot, ev: Event):
+    args = ev.text.split()      #文本提取
+    uid = ev.user_id
+    gacha_DUNDCORE = 10000  #单抽所需金币
+    if len(args) == 1:
+        if args[0].isdigit():
+            gachanum = int(args[0])
+        else:
+            gachanum = 1
+    else:
+        gachanum = 1 
+    
+    if gachanum > 100:
+        gachanum = 100
+
+    need_score = gacha_DUNDCORE*gachanum
+    my_score = await SCORE.get_score(uid)
+
+    if need_score>my_score:
+        return await bot.send(f'抽卡需要{need_score}金币\n您的金币不足：{my_score}，无法抽卡哦', at_sender=True)
+
+    results = []
+    for _ in range(gachanum):
+        total_weight = sum([info["weight"] for info in propgachalist.values()])
+        # 生成随机数，范围从1到总权重
+        random_weight = int(math.floor(random.uniform(1, total_weight)))
+
+        # 累加权重，直到找到对应的等级
+        running_total = 0
+        tier = None
+        for tier_name, info in propgachalist.items():
+            running_total += info["weight"]
+            if random_weight <= running_total:
+                tier = tier_name
+                break
+
+        # 从对应的等级中随机选取一张卡牌
+        propname = random.choice(propgachalist[tier]["names"])
+        results.append(propname)
+    
+    result_count = Counter(results)
+    get_gachalist = ''
+    for propname, propnum in result_count.items():
+        await POKE._add_pokemon_prop(uid, propname, propnum)
+        get_gachalist += f"\n{propname}: {propnum}个"
+
+    last_score = my_score - need_score
+    await SCORE.update_score(uid, 0-need_score)
+    msg = f"消耗{need_score}金币，剩余金币{last_score}\n累计抽取{gachanum}次获得的道具为：{get_gachalist}"
+    buttons = [
+        Button('✅兑换道具', '兑换道具', '✅兑换道具', action=2),
+        Button('📖道具信息', '道具信息', '📖道具信息', action=2),
+    ]
+    await bot.send_option(msg, buttons)
+
 # 每日0点执行交易所7天无销售商品自动下架
 @scheduler.scheduled_job('cron', hour ='*')
 async def down_exchange_day():
@@ -963,7 +1082,6 @@ async def down_exchange_day():
         await POKE.delete_exchange(exchange_info[0])
         down_num += 1
     logger.info(f'今日已执行{down_num}件交易所超期商品下架')
-
 
 
 
