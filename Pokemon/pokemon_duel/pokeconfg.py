@@ -4143,7 +4143,7 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
             await bot.send(mes)
         if diinfo[17] <= 0:
             mes = f'{myinfo[0]}战胜了【首领】{POKEMON_LIST[bianhao2][0]}'
-                await bot.send(mes)
+            #await bot.send(mes)
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
