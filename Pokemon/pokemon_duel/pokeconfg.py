@@ -124,6 +124,7 @@ async def add_pokemon(uid, bianhao, startype=0):
         jineng = jineng + jinengname
         shul = shul + 1
     pokemon_info.append(jineng)
+    pokemon_info.append(0)
     pokemon_info.append('')
     await POKE._add_pokemon_info(uid, bianhao, pokemon_info)
     return pokemon_info
@@ -145,7 +146,7 @@ async def new_pokemon_gt(uid, bianhao, startype=0):
         else:
             gt_num = int(math.floor(random.uniform(1, 32)))
         pokemon_info.append(gt_num)
-    for num in range(7, 15):
+    for num in range(7, 17):
         pokemon_info.append(my_pokemon_info[num])
     await POKE._add_pokemon_info(uid, bianhao, pokemon_info, my_pokemon_info[15])
     return pokemon_info

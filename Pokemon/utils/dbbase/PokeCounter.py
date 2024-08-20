@@ -1174,6 +1174,7 @@ class PokeCounter:
             nl_spd,
             xingge,
             jineng,
+            newexp,
             xiedai,
         ) = pokemon_info
         # print(pokemon_info)

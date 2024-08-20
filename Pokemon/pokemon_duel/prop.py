@@ -394,7 +394,6 @@ async def prop_xiedai(bot, ev: Event):
             f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
     mes = f"您的宝可梦{CHARA_NAME[bianhao][0]}"
-    print(pokemon_info[16])
     if pokemon_info[16] is not None or pokemon_info[16] != '':
         if pokemon_info[16] in propkeylist:
             mes += f"\n取下了道具{pokemon_info[16]}"
@@ -419,7 +418,6 @@ async def prop_xiedai_del(bot, ev: Event):
         return await bot.send(
             f'您还没有{CHARA_NAME[bianhao][0]}。', at_sender=True
         )
-    print(pokemon_info[16])
     if pokemon_info[16] is None or pokemon_info[16] == '':
         return await bot.send('您的宝可梦没有携带道具哦。', at_sender=True)
     propkeylist = proplist.keys()
@@ -1036,8 +1034,8 @@ async def add_equip_gacha(bot, ev: Event):
         return await bot.send(f'抽卡需要{need_score}金币\n您的金币不足：{my_score}，无法抽卡哦', at_sender=True)
 
     results = []
+    total_weight = sum([info["weight"] for info in propgachalist.values()])
     for _ in range(gachanum):
-        total_weight = sum([info["weight"] for info in propgachalist.values()])
         # 生成随机数，范围从1到总权重
         random_weight = int(math.floor(random.uniform(1, total_weight)))
 
