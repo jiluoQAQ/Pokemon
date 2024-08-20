@@ -384,10 +384,13 @@ async def prop_xiedai(bot, ev: Event):
             '无法找到该道具，请输入正确的道具名称。', at_sender=True
         )
     propinfo = proplist[propname]
-    if propinfo['type'] != 'Z纯晶':
+    if propinfo['type'] != 'Z纯晶' and propinfo['type'] != '进化石':
         return await bot.send(
             '该道具无法携带，请替换其他道具。', at_sender=True
         )
+    mypropnum = await POKE._get_pokemon_prop(uid, propname)
+    if mypropnum == 0:
+        return await bot.send(f'您还没有{propname}哦。', at_sender=True)
     pokemon_info = await get_pokeon_info(uid, bianhao)
     if pokemon_info == 0:
         return await bot.send(

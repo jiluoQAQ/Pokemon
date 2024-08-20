@@ -95,6 +95,14 @@ async def get_use_jineng_list(jinenglist, pokemonid, xiedai = ''):
             jinenglist.append(proplist[xiedai]['use'][1])
     return jinenglist
 
+async def get_use_mega_flag(pokemonid, xiedai = ''):
+    if xiedai == '':
+        return 0
+    if proplist[xiedai]['type'] == '进化石':
+        if int(proplist[xiedai]['use'][0]) == int(pokemonid):
+            return int(proplist[xiedai]['use'][1])
+    return 0
+
 # 添加宝可梦，随机生成个体值
 async def add_pokemon(uid, bianhao, startype=0):
     pokemon_info = []
@@ -1732,61 +1740,82 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
     mesg = ''
     while fight_flag == 0:
         jieshu = 0
-        myjinenglist = re.split(',', mypokemon_info[14])
-        myjinenglist = await get_use_jineng_list(myjinenglist,myinfo[18],mypokemon_info[16])
-        dijinenglist = re.split(',', dipokemon_info[14])
-        myjinengbuttons = []
-        dijinengbuttons = []
-        my_ues_jineng_list = []
-        button_user_input = []
-        button_user_input.append(uid)
-        for myjn in myjinenglist:
-            jn_use_num_my = jineng_use.count(myjn)
-            jineng_info1 = JINENG_LIST[myjn]
-            myjn_but = f'{myjn}({int(jineng_info1[4])-int(jn_use_num_my)}/{int(jineng_info1[4])})'
-            myjn_name = myjn
-            if int(jn_use_num_my) < int(jineng_info1[4]):
-                my_ues_jineng_list.append(myjn)
-                myjinengbuttons.append(Button(myjn_but, myjn_but, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input))
-        if len(my_ues_jineng_list) == 0:
-            my_ues_jineng_list.append('挣扎')
-            myjinengbuttons = [Button('挣扎', '挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input)]
-        my_ues_jineng_list.append('逃跑')
-        myjinengbuttons.append(Button('逃跑', '逃跑', '逃跑', action=2, permisson=0, specify_user_ids=button_user_input))
-        jineng1_use = 0
-        puthmy = 0
-        runmynum = 0
-        try:
-            async with timeout(FIGHT_TIME):
-                while jineng1_use == 0:
-                    if runmynum == 0:
-                        myresp = await bot.receive_resp(
-                            f'{mesg}\n\n{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
-                            myjinengbuttons,
-                            unsuported_platform=True
-                        )
-                        if myresp is not None:
-                            mys = myresp.text
-                            uidmy = myresp.user_id
-                            if str(uidmy) == str(uid):
-                                if mys in my_ues_jineng_list:
-                                    jineng1 = mys
-                                    jineng1_use = 1
-                        runmynum = 1
-                    else:
-                        myresp = await bot.receive_mutiply_resp()
-                        if myresp is not None:
-                            mys = myresp.text
-                            uidmy = myresp.user_id
-                            if str(uidmy) == str(uid):
-                                if mys in my_ues_jineng_list:
-                                    jineng1 = mys
-                                    jineng1_use = 1
-        except asyncio.TimeoutError:
-            my_ues_jineng_list.remove('逃跑')
-            jineng1 = await now_use_jineng(
-                myinfo, diinfo, my_ues_jineng_list, dijinenglist, changdi
-            )
+        ues_jineng_flag = 0
+        while ues_jineng_flag == 0:
+            myjinenglist = re.split(',', mypokemon_info[14])
+            myjinenglist = await get_use_jineng_list(myjinenglist,myinfo[18],mypokemon_info[16])
+            dijinenglist = re.split(',', dipokemon_info[14])
+            myjinengbuttons = []
+            dijinengbuttons = []
+            my_ues_jineng_list = []
+            button_user_input = []
+            button_user_input.append(uid)
+            for myjn in myjinenglist:
+                jn_use_num_my = jineng_use.count(myjn)
+                jineng_info1 = JINENG_LIST[myjn]
+                myjn_but = f'{myjn}({int(jineng_info1[4])-int(jn_use_num_my)}/{int(jineng_info1[4])})'
+                myjn_name = myjn
+                if int(jn_use_num_my) < int(jineng_info1[4]):
+                    my_ues_jineng_list.append(myjn)
+                    myjinengbuttons.append(Button(myjn_but, myjn_but, myjn_but, action=1, permisson=0, specify_user_ids=button_user_input))
+            if len(my_ues_jineng_list) == 0:
+                my_ues_jineng_list.append('挣扎')
+                myjinengbuttons = [Button('挣扎', '挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input)]
+        
+            mega_poke_id = await get_use_mega_flag(myinfo[18],mypokemon_info[16])
+            print(mega_poke_id)
+            print(myinfo)
+            if mega_poke_id > 0:
+                my_ues_jineng_list.append('mega进化')
+                myjinengbuttons.append(Button('mega进化', 'mega进化', 'mega进化', action=2, permisson=0, specify_user_ids=button_user_input))
+            my_ues_jineng_list.append('逃跑')
+            myjinengbuttons.append(Button('逃跑', '逃跑', '逃跑', action=2, permisson=0, specify_user_ids=button_user_input))
+            jineng1_use = 0
+            puthmy = 0
+            runmynum = 0
+            try:
+                async with timeout(FIGHT_TIME):
+                    while jineng1_use == 0:
+                        if runmynum == 0:
+                            myresp = await bot.receive_resp(
+                                f'{mesg}\n\n{myname}请在{FIGHT_TIME}秒内选择一个技能使用!',
+                                myjinengbuttons,
+                                unsuported_platform=True
+                            )
+                            if myresp is not None:
+                                mys = myresp.text
+                                uidmy = myresp.user_id
+                                if str(uidmy) == str(uid):
+                                    if mys in my_ues_jineng_list:
+                                        jineng1 = mys
+                                        jineng1_use = 1
+                            runmynum = 1
+                        else:
+                            myresp = await bot.receive_mutiply_resp()
+                            if myresp is not None:
+                                mys = myresp.text
+                                uidmy = myresp.user_id
+                                if str(uidmy) == str(uid):
+                                    if mys in my_ues_jineng_list:
+                                        jineng1 = mys
+                                        jineng1_use = 1
+            except asyncio.TimeoutError:
+                my_ues_jineng_list.remove('逃跑')
+                if 'mega进化' in my_ues_jineng_list:
+                    my_ues_jineng_list.remove('mega进化')
+                jineng1 = await now_use_jineng(
+                    myinfo, diinfo, my_ues_jineng_list, dijinenglist, changdi
+                )
+            
+            if jineng1 == 'mega进化':
+                myinfo = await new_pokemon_info(mega_poke_id, mypokemon_info)
+                startype = await POKE.get_pokemon_star(uid, int(POKEMON_LIST[mega_poke_id][8]))
+                myinfo[0] = f'{starlist[startype]}{myinfo[0]}'
+                mesg = f"您的宝可梦进化成了{myinfo[0]}"
+            
+            if jineng1 == '逃跑' or jineng1 in myjinenglist:
+                ues_jineng_flag = 1
+        
         if jineng1 == '逃跑':
             await bot.send(f'{myname}逃跑了')
             myinfo[17] = 0
@@ -4098,7 +4127,7 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
             dipokemon_info = await get_pokeon_info_boss(bianhao2, bossinfo, boss_level)
             diinfo = await new_pokemon_info_boss(bianhao2, dipokemon_info, boss_num)
         if myinfo[3] == myinfo[17]:
-            mes += f'{myname}派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
+            mes += f'{myname}派出了精灵\n{myinfo[0]} Lv.{mypokemon_info[0]}\n'
         if boss_num == 0:
             mes += f'首领精灵出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
         else:
@@ -4110,21 +4139,10 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
             mypokelist = []
             return mypokelist, dipokelist
         if myinfo[17] <= 0:
-            mes = f'【首领】{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            mes = f'【首领】{POKEMON_LIST[bianhao2][0]}战胜了{myinfo[0]}'
             await bot.send(mes)
         if diinfo[17] <= 0:
-            mesg = f'{POKEMON_LIST[bianhao1][0]}战胜了【首领】{POKEMON_LIST[bianhao2][0]}'
-            # 我方获得经验/努力值奖励
-            if myinfo[17] > 0:
-                mes, myinfo, mypokemon_info = await get_win_reward(
-                    uid,
-                    bianhao1,
-                    myinfo,
-                    mypokemon_info,
-                    bianhao2,
-                    dipokemon_info[0],
-                )
-                mesg += f'\n{mes}'
+            mes = f'{myinfo[0]}战胜了【首领】{POKEMON_LIST[bianhao2][0]}'
                 await bot.send(mes)
         if myinfo[17] <= 0:
             myinfo = []
@@ -4165,7 +4183,7 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
             diinfo = await new_pokemon_info_boss_sj(bianhao2, dipokemon_info, boss_num)
             boss_hp = diinfo[3]
         if myinfo[3] == myinfo[17]:
-            mes += f'{myname}派出了精灵\n{starlist[startype]}{POKEMON_LIST[bianhao1][0]} Lv.{mypokemon_info[0]}\n'
+            mes += f'{myname}派出了精灵\n{starlist[startype]}{myinfo[0]} Lv.{mypokemon_info[0]}\n'
         if boss_num == 0:
             mes += f'【世界首领】出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
         else:
@@ -4180,25 +4198,11 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
             return shanghai
         boss_hp = diinfo[17]
         if myinfo[17] <= 0:
-            mes = f'【世界首领】{POKEMON_LIST[bianhao2][0]}战胜了{POKEMON_LIST[bianhao1][0]}'
+            mes = f'【世界首领】{POKEMON_LIST[bianhao2][0]}战胜了{myinfo[0]}'
             await bot.send(mes)
         if diinfo[17] <= 0:
-            mesg = f'{POKEMON_LIST[bianhao1][0]}战胜了【世界首领】{POKEMON_LIST[bianhao2][0]}'
-            # 我方获得经验/努力值奖励
-            if myinfo[17] > 0:
-                mes, myinfo, mypokemon_info = await get_win_reward(
-                    uid,
-                    bianhao1,
-                    myinfo,
-                    mypokemon_info,
-                    bianhao2,
-                    dipokemon_info[0],
-                )
-                mesg += f'\n{mes}'
-                if len(mypokelist) > 1:
-                    expmes = await get_win_exp(uid, bianhao1, dipokemon_info[0], bianhao2, mypokelist)
-                    mesg += f'\n{expmes}'
-                await bot.send(mesg)
+            mes = f'{myinfo[0]}战胜了【世界首领】{POKEMON_LIST[bianhao2][0]}'
+            #await bot.send(mes)
         if myinfo[17] <= 0:
             myinfo = []
             myzhuangtai = [['无', 0], ['无', 0]]
