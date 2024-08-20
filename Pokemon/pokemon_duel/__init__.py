@@ -833,7 +833,7 @@ async def my_pokemon_gt_up(bot, ev: Event):
                     gt_max_sl += 1
             if gt_max_sl >= gt_max_num:
                 rest_flag = 3
-            for num in range(7, 15):
+            for num in range(7, 17):
                 pokemon_info.append(my_pokemon_info[num])
         await POKE.update_pokemon_starrush(uid, jishu)
         if rest_flag == 0:
