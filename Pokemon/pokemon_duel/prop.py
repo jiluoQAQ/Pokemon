@@ -604,7 +604,7 @@ async def prop_use(bot, ev: Event):
             my_pokemon_info.append(pokemon_info[0])
             for num in range(1, 7):
                 my_pokemon_info.append(31)
-            for num in range(7, 15):
+            for num in range(7, 17):
                 my_pokemon_info.append(pokemon_info[num])
             await POKE._add_pokemon_info(uid, bianhao, my_pokemon_info, pokemon_info[15])
             await POKE._add_pokemon_prop(uid, '金色王冠', -1)
@@ -628,7 +628,7 @@ async def prop_use(bot, ev: Event):
                 return await bot.send(mes)
             my_pokemon_info = []
             my_pokemon_info.append(pokemon_info[0])
-            for num in range(1, 15):
+            for num in range(1, 17):
                 my_pokemon_info.append(pokemon_info[num])
             my_pokemon_info[up_key_list[up_name]] = 31
             await POKE._add_pokemon_prop(uid, '银色王冠', -1)

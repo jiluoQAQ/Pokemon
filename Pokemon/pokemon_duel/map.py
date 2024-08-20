@@ -1886,6 +1886,8 @@ async def give_pokemon_gm(bot, ev: Event):
     pokemon_info.append(args[14])
     pokemon_info.append(args[15])
     pokemon_info.append(args[16])
+    pokemon_info.append(0)
+    pokemon_info.append('')
     await POKE._add_pokemon_info(suid, bianhao, pokemon_info)
     mes = f"精灵发放成功，{sname}获得了{propname} Lv.{args[2]}"
     await bot.send(mes)
