@@ -96,6 +96,8 @@ async def get_use_jineng_list(jinenglist, pokemonid, xiedai = ''):
     return jinenglist
 
 async def get_use_mega_flag(pokemonid, xiedai = ''):
+    if int(pokemonid) == 384:
+        return 384901
     if xiedai == '':
         return 0
     if proplist[xiedai]['type'] == '进化石':
@@ -1732,7 +1734,7 @@ async def pokemon_fight_s(
         changdi,
     )
 
-async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use):
+async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use,mega_flag):
     shul = 1
     fight_flag = 0
     last_jineng1 = ''
@@ -1761,13 +1763,12 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
             if len(my_ues_jineng_list) == 0:
                 my_ues_jineng_list.append('挣扎')
                 myjinengbuttons = [Button('挣扎', '挣扎', '挣扎', action=1, permisson=0, specify_user_ids=button_user_input)]
-        
-            mega_poke_id = await get_use_mega_flag(myinfo[18],mypokemon_info[16])
-            print(mega_poke_id)
-            print(myinfo)
-            if mega_poke_id > 0:
-                my_ues_jineng_list.append('mega进化')
-                myjinengbuttons.append(Button('mega进化', 'mega进化', 'mega进化', action=2, permisson=0, specify_user_ids=button_user_input))
+            
+            if mega_flag == 0:
+                mega_poke_id = await get_use_mega_flag(myinfo[18],mypokemon_info[16])
+                if mega_poke_id > 0:
+                    my_ues_jineng_list.append('mega进化')
+                    myjinengbuttons.append(Button('mega进化', 'mega进化', 'mega进化', action=2, permisson=0, specify_user_ids=button_user_input))
             my_ues_jineng_list.append('逃跑')
             myjinengbuttons.append(Button('逃跑', '逃跑', '逃跑', action=2, permisson=0, specify_user_ids=button_user_input))
             jineng1_use = 0
@@ -1812,6 +1813,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
                 startype = await POKE.get_pokemon_star(uid, int(POKEMON_LIST[mega_poke_id][8]))
                 myinfo[0] = f'{starlist[startype]}{myinfo[0]}'
                 mesg = f"您的宝可梦进化成了{myinfo[0]}"
+                mega_flag = 1
             
             if jineng1 == '逃跑' or jineng1 in myjinenglist:
                 ues_jineng_flag = 1
@@ -2183,7 +2185,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
         if jieshu == 1:
             fight_flag = 1
     await bot.send(mesg)
-    return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use
+    return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use, mega_flag
 
 async def fight_dungeon_now(myinfo,diinfo,myzhuangtai,dizhuangtai,jineng1,jineng2,changdi,jineng_use1,name1):
     jieshu = 0
@@ -4109,6 +4111,7 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
     diinfo = []
     jineng_use = []
     boss_num = 0
+    mega_flag = 0
     max_my_num = len(mypokelist)
     max_di_num = len(dipokelist)
     while len(mypokelist) > 0 and len(dipokelist) > 0:
@@ -4134,7 +4137,7 @@ async def fight_boss(bot, ev, uid, mypokelist, dipokelist, boss_level, myname, b
             mes += f'首领精灵复苏了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
         await bot.send(mes)
         
-        myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use)
+        myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use,mega_flag = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use,mega_flag)
         if jineng_use[len(jineng_use) - 1] == '逃跑':
             mypokelist = []
             return mypokelist, dipokelist
@@ -4166,6 +4169,7 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
     boss_num = 0
     shanghai = 0
     boss_hp = 0
+    mega_flag = 0
     while len(mypokelist) > 0 and boss_num < 30:
         mes = f'第{changci}场\n'
         mes += f"{myname}剩余精灵{len(mypokelist)}只\n【世界首领】{CHARA_NAME[bossinfo['bossid']][0]}序列{boss_num + 1}\n"
@@ -4183,14 +4187,14 @@ async def fight_boss_sj(bot, ev, uid, mypokelist, myname, bossinfo):
             diinfo = await new_pokemon_info_boss_sj(bianhao2, dipokemon_info, boss_num)
             boss_hp = diinfo[3]
         if myinfo[3] == myinfo[17]:
-            mes += f'{myname}派出了精灵\n{starlist[startype]}{myinfo[0]} Lv.{mypokemon_info[0]}\n'
+            mes += f'{myname}派出了精灵\n{myinfo[0]} Lv.{mypokemon_info[0]}\n'
         if boss_num == 0:
             mes += f'【世界首领】出现了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
         else:
             mes += f'【世界首领】复苏了\n{POKEMON_LIST[bianhao2][0]} Lv.{dipokemon_info[0]}\n'
         await bot.send(mes)
         
-        myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use)
+        myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,jineng_use,mega_flag = await pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changdi,mypokemon_info,dipokemon_info,myname,uid,jineng_use,mega_flag)
         if boss_hp > diinfo[17]:
             shanghai = shanghai + boss_hp - diinfo[17]
         if jineng_use[len(jineng_use) - 1] == '逃跑':

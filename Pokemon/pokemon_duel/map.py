@@ -1720,7 +1720,7 @@ async def new_pokemom_show(bot, ev: Event):
         if didianlist[didian]['type'] == '野外':
             didianlistkey[didianlist[didian]['fname']].append(didian)
     mes = '野生宝可梦大量出现了'
-    chara_id_list = list(POKEMON_LIST.keys())
+    chara_id_list = list(CHARA_NAME.keys())
     for jinyongid in jinyonglist:
         chara_id_list.remove(jinyongid)
     for diqu in diqulist:
@@ -2042,7 +2042,7 @@ async def refresh_pokemon_day():
         if didianlist[didian]['type'] == '野外':
             didianlistkey[didianlist[didian]['fname']].append(didian)
     mes = '野生宝可梦大量出现了'
-    chara_id_list = list(POKEMON_LIST.keys())
+    chara_id_list = list(CHARA_NAME.keys())
     for jinyongid in jinyonglist:
         chara_id_list.remove(jinyongid)
     for diqu in diqulist:

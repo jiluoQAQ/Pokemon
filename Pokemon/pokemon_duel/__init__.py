@@ -68,9 +68,10 @@ async def pokemon_help(bot, ev: Event):
 async def pokemon_gonggao(bot, ev: Event):
     msg = """
        宝可梦更新公告：
-后续更新计划：
-1、携带类道具Z纯晶-携带后可以使用一次对应的Z技能
-其他暂定
+2024-8-21
+1、完成战斗中mega进化系统
+2024-8-20
+1、尝试添加mega进化
 2024-8-19
 1、添加抽取道具
 2、添加携带道具Z纯晶

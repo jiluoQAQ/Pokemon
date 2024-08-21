@@ -214,6 +214,14 @@ async def draw_pokemon_info(uid, pokemon_info, bianhao):
         sr_font_28,
         'rm',
     )
+    if pokemon_info[16] is not None or pokemon_info[16] != '':
+        img_draw.text(
+            (818, 618),
+            f'携带物：{pokemon_info[16]}',
+            (0, 0, 0),
+            sr_font_28,
+            'rm',
+        )
     # 画属性类型
     shuxinglist = re.split(',', POKEMON_LIST[bianhao][7])
     for shul, shuxing in enumerate(shuxinglist):

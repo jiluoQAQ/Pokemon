@@ -196,7 +196,7 @@ async def buy_random_egg(bot, ev: Event):
     mapinfo = await POKE._get_map_now(uid)
     name = mapinfo[2]
     mes = f'{name}\n'
-    chara_id_list = list(POKEMON_LIST.keys())
+    chara_id_list = list(CHARA_NAME.keys())
     for jinyongid in jinyonglist_random_egg:
         chara_id_list.remove(jinyongid)
     egg_num = daily_random_egg.get_num(uid)
@@ -232,7 +232,10 @@ async def buy_random_egg(bot, ev: Event):
                 await SCORE.update_score(uid, -100000)
                 await POKE._add_pokemon_egg(uid, eggid, 1)
                 add_egg_num = add_egg_num + 1
-        mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
+        if pokemonid in jinyonglist:
+            mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋🎉🎉\n'
+        else:
+            mes += f'您花费了100000金币，获得了{CHARA_NAME[eggid][0]}精灵蛋\n'
     daily_random_egg.increase(uid, add_egg_num)
     buttons = [
         Button('✅再开一个', '购买随机精灵蛋', '✅再开一个', action=1),
@@ -1059,7 +1062,12 @@ async def add_equip_gacha(bot, ev: Event):
     get_gachalist = ''
     for propname, propnum in result_count.items():
         await POKE._add_pokemon_prop(uid, propname, propnum)
-        get_gachalist += f"\n{propname}: {propnum}个"
+        showicon = ''
+        for tier_name, info in propgachalist.items():
+            if propname in info['names']:
+                if tier_name == 'SSR' or tier_name == 'SSSR':
+                    showicon = '🎉🎉'
+        get_gachalist += f"\n{propname}: {propnum}个{showicon}"
 
     last_score = my_score - need_score
     await SCORE.update_score(uid, 0-need_score)
