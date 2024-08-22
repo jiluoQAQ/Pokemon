@@ -1823,7 +1823,7 @@ async def pokemon_fight_boss(bot,ev,myinfo,diinfo,myzhuangtai,dizhuangtai,changd
             myinfo[17] = 0
             jieshu = 1
             jineng_use.append('逃跑')
-            return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use
+            return myinfo, diinfo, myzhuangtai, dizhuangtai, changdi, jineng_use, mega_flag
         
         jinenginfo1 = JINENG_LIST[jineng1]
         jineng_use.append(jineng1)

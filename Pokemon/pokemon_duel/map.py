@@ -335,7 +335,7 @@ async def map_ts_auto_end(bot, ev: Event):
     fight_count = Counter(sampled_fight_list)
     for fight_pokeid in fight_count:
         mypokeexplist = await get_auto_win_exp(fight_level, fight_pokeid, mypokelist, mypokelevellist, mypokeexplist, fight_count[fight_pokeid])
-    get_score = (int(didianlist[this_map]['need']) + 1) * 300 * ts_fight_num
+    get_score = (int(didianlist[this_map]['need']) + 1) * 800 * ts_fight_num
     await SCORE.update_score(uid, get_score)
     msg += f"获得金币{get_score}\n"
     
@@ -772,7 +772,7 @@ async def get_ts_info_pic(bot, ev: Event):
                         'lm',
                     )
 
-                    get_score = (int(didianlist[this_map]['need']) + 1) * 300
+                    get_score = (int(didianlist[this_map]['need']) + 1) * 200
                     await SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
                     img_draw.text(
@@ -949,7 +949,7 @@ async def get_ts_info_wenzi(bot, ev: Event):
                 if len(dipokelist) == 0:
                     mes += f'\n您打败了{diname}\n'
 
-                    get_score = (int(didianlist[this_map]['need']) + 1) * 300
+                    get_score = (int(didianlist[this_map]['need']) + 1) * 200
                     await SCORE.update_score(uid, get_score)
                     mes += f'您获得了{get_score}金钱'
                 await bot.send_option(mes, buttons)
