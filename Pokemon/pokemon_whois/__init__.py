@@ -819,6 +819,7 @@ async def pokemon_whois(bot: Bot, ev: Event):
         async with timeout(ONE_TURN_TIME):
             while True:
                 resp = await bot.receive_mutiply_resp()
+                print(resp)
                 if resp is not None:
                     s = resp.text.strip()
                     gid = resp.group_id

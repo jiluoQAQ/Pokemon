@@ -286,11 +286,10 @@ async def map_ts_auto_end(bot, ev: Event):
     if mapinfo[4] == 0:
         return await bot.send('您没有处于探索中哦~', at_sender=True)
     starttime = mapinfo[5]
-    
+    await POKE.update_map_autoinfo(uid, 0, 0)
     this_map = mapinfo[1]
     jiangetime = now_time - starttime
     if jiangetime < 900:
-        await POKE.update_map_autoinfo(uid, 0, 0)
         return await bot.send('自动探索时间小于15分钟，无法获得奖励~', at_sender=True)
     msg = ''
     ts_min_time = math.ceil(jiangetime/60)
@@ -403,7 +402,6 @@ async def map_ts_auto_end(bot, ev: Event):
         exp_mes += await add_exp(uid, pokeid, mypokeexplist[pokeid])
     if exp_mes:
         msg += f"\n经验结算{exp_mes}"
-    await POKE.update_map_autoinfo(uid, 0, 0)
     await bot.send(msg, at_sender=True)
 
 @sv_pokemon_tansuo.on_fullmatch(['野外探索'])
