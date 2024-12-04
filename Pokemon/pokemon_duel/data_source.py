@@ -28,6 +28,8 @@ jinengfuncs = [
     Jinengfunc(("魂舞烈音爆",), hwlyb),
     Jinengfunc(("天气",), changdi_change),
     Jinengfunc(("Z招式",), get_shanghai_z),
+    Jinengfunc(("戏法空间",), trickroom_change),
+
 ]
 
 async def make_jineng_use(
