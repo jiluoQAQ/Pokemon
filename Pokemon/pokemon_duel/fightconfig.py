@@ -575,6 +575,18 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
             else:
                 changdi[0][1] = shengyutianqi
                 changdi_mesg = changdi_mesg + f'{changdi[0][0]}持续中\n'
+                
+        if int(changdi[1][1]) > 0 and changdi[1][0] != False:
+            shengyutianqi = int(changdi[1][1]) - 1
+            if shengyutianqi == 0:
+                changdi_mesg = (
+                    changdi_mesg + f'{changdi[0][0]}停止了，消失了\n'
+                )
+                changdi[1][0] = False
+                changdi[1][1] = 99
+            else:
+                changdi[1][1] = shengyutianqi
+                changdi_mesg = changdi_mesg + '戏法空间持续中\n'
         mesg = mesg + changdi_mesg
         await FIGHT.update_fight_info(fightid,uid1,myinfo,myzhuangtai)
         await FIGHT.update_fight_info(fightid,uid2,diinfo,dizhuangtai)
