@@ -173,7 +173,10 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
         if jineng1 in xianzhi or jineng2 in xianzhi:
             if jineng1 in xianzhi and jineng2 in xianzhi:
                 if mysd < disd:
-                    myxianshou = 0
+                    if changdi[1][0] == False:
+                        myxianshou = 0
+                    else:
+                        myxianshou = 1
             else:
                 if jineng1 in xianzhi:
                     myxianshou = 1
@@ -182,7 +185,10 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
         elif jineng1 in youxian or jineng2 in youxian:
             if jineng1 in youxian and jineng2 in youxian:
                 if mysd < disd:
-                    myxianshou = 0
+                    if changdi[1][0] == False:
+                        myxianshou = 0
+                    else:
+                        myxianshou = 1
             else:
                 if jineng1 in youxian:
                     myxianshou = 1
@@ -190,7 +196,10 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
                     myxianshou = 0
         else:
             if mysd < disd:
-                myxianshou = 0
+                if changdi[1][0] == False:
+                    myxianshou = 0
+                else:
+                    myxianshou = 1
         
         # 双方出手
         my_mesg = ''
