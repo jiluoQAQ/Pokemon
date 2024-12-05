@@ -1586,10 +1586,10 @@ async def changdi_change(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, chang
 
 async def trickroom_change(jineng, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi):
     jinenginfo = JINENG_LIST[jineng]
-    if changdi[1][0] == False:
-        changdi[1][0] = True:
+    if changdi[2][0] == False:
+        changdi[2][0] = True:
     else:
-        changdi[1][0] = False:
-    changdi[1][1] = 4
+        changdi[2][0] = False:
+    changdi[2][1] = 4
     mes = f"{myinfo[0]}使用了技能{jineng}\n扭曲了时空！"
     return mes, myinfo, diinfo, myzhuangtai, dizhuangtai, changdi
