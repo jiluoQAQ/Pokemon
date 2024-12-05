@@ -170,6 +170,7 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
             disd = int(mysd * 0.5)
         # 先手判断
         myxianshou = 1
+        '''
         if jineng1 in xianzhi or jineng2 in xianzhi:
             if jineng1 in xianzhi and jineng2 in xianzhi:
                 if mysd < disd:
@@ -200,7 +201,54 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
                     myxianshou = 0
                 else:
                     myxianshou = 1
-        
+        '''
+        if mysd < disd:
+            if jineng1 in youxian and jineng2 in youxian:
+                if changdi[2][0] == False:
+                    myxianshou = 0
+                    '无空间都是先制 我比对面慢
+                else:
+                    myxianshou = 1
+                    '有空间都是先制 我比对面慢
+            else:
+                if jineng1 in xianzhi:
+                    myxianshou = 1
+                    '我是先制
+                elif jineng2 in xianzhi:
+                    myxianshou = 0
+                    '对面是先制
+                else:
+                    '都不是先制
+                    if changdi[2][0] == False:
+                        myxianshou = 0
+                        '无空间都不是先制 我比对面慢
+                    else:
+                        myxianshou = 1
+                        '有空间都不是先制 我比对面慢
+        else:
+            if jineng1 in youxian and jineng2 in youxian:
+                if changdi[2][0] == False:
+                    myxianshou = 1
+                    '无空间都是先制 我比对面快
+                else:
+                    myxianshou = 0
+                    '有空间都是先制 我比对面快
+            else:
+                if jineng1 in xianzhi:
+                    myxianshou = 1
+                    '我是先制
+                elif jineng2 in xianzhi:
+                    myxianshou = 0
+                    '对面是先制
+                else:
+                    '都不是先制
+                    if changdi[2][0] == False:
+                        myxianshou = 1
+                        '无空间都不是先制 我比对面快
+                    else:
+                        myxianshou = 0
+                        '有空间都不是先制 我比对面快
+            
         # 双方出手
         my_mesg = ''
         di_mesg = ''
