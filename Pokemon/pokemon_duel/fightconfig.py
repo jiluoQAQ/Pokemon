@@ -173,7 +173,7 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
         if jineng1 in xianzhi or jineng2 in xianzhi:
             if jineng1 in xianzhi and jineng2 in xianzhi:
                 if mysd < disd:
-                    if changdi[1][0] == False:
+                    if changdi[2][0] == False:
                         myxianshou = 0
                     else:
                         myxianshou = 1
@@ -185,7 +185,7 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
         elif jineng1 in youxian or jineng2 in youxian:
             if jineng1 in youxian and jineng2 in youxian:
                 if mysd < disd:
-                    if changdi[1][0] == False:
+                    if changdi[2][0] == False:
                         myxianshou = 0
                     else:
                         myxianshou = 1
@@ -196,7 +196,7 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
                     myxianshou = 0
         else:
             if mysd < disd:
-                if changdi[1][0] == False:
+                if changdi[2][0] == False:
                     myxianshou = 0
                 else:
                     myxianshou = 1
@@ -585,16 +585,16 @@ async def fight_pipei_now(fightid,uid1,uid2,name1,name2):
                 changdi[0][1] = shengyutianqi
                 changdi_mesg = changdi_mesg + f'{changdi[0][0]}持续中\n'
                 
-        if int(changdi[1][1]) > 0 and changdi[1][0] != False:
-            shengyutianqi = int(changdi[1][1]) - 1
+        if int(changdi[2][1]) > 0 and changdi[2][0] != False:
+            shengyutianqi = int(changdi[2][1]) - 1
             if shengyutianqi == 0:
                 changdi_mesg = (
-                    changdi_mesg + f'{changdi[0][0]}停止了，消失了\n'
+                    changdi_mesg + f'扭曲的时空恢复原状了\n'
                 )
-                changdi[1][0] = False
-                changdi[1][1] = 99
+                changdi[2][0] = False
+                changdi[2][1] = 99
             else:
-                changdi[1][1] = shengyutianqi
+                changdi[2][1] = shengyutianqi
                 changdi_mesg = changdi_mesg + '戏法空间持续中\n'
         mesg = mesg + changdi_mesg
         await FIGHT.update_fight_info(fightid,uid1,myinfo,myzhuangtai)
