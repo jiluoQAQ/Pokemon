@@ -21,16 +21,31 @@ asyncio_mode = "auto"
 requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
 
+[project]
+authors = [
+    {name = "jiluoQAQ", email = "376148946@qq.com"},
+]
+license = {text = "GPL-3.0-or-later"}
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "pygtrie>=2.5.0",
+    "tomli>=2.2.1",
+]
+name = "Pokemon"
+version = "1.0.0"
+description = "宝可梦小游戏插件"
+readme = "README.md"
+
 [tool.poetry]
-name = "StarRailUID"
-version = "0.1.0"
-description = ""
-authors = ["qwerdvd <2450899274@qq.com>"]
+name = "Pokemon"
+version = "1.0.0"
+description = "宝可梦小游戏插件"
+authors = ["jiluoQAQ"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8.1"
+python = ">=3.10,<4.0"
 
 [[tool.poetry.source]]
 name = "USTC"
